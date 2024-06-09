@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class WavePainter extends CustomPainter {
+  late BuildContext context;
   @override
   void paint(Canvas canvas, Size size) {
+    //BuildContext context;
     var paint = Paint()
-      ..color = Colors.white
+      ..color = Colors.grey.shade200
       ..style = PaintingStyle.fill;
 
     var path = Path();
@@ -23,3 +25,4 @@ class WavePainter extends CustomPainter {
     return false;
   }
 }
+

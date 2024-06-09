@@ -1,0 +1,137 @@
+===> LES PAGES PRINCIPALES :
+
+TOUT UTILISATEUR
+- page principale (home page)
+- page d'achat de produits (la page lorsqu'on veut passer la commande d'un produit)
+- page de messagerie
+- // page d'inscription (probablement différente selon le profil vendeur/client)
+- page de connexion
+- page de profil (présentation des information de l'utilisateur courant)
+- page de suppression de compte (page présentatant les différentes implications de la suppression de compte avec le bouton de suppression)
+- page panier (page illustrant les différents produits ajoutés au panier)
+- page pour les favoris (page illustrant les différents produits ajoutés aux favoris)
+- page de choix de profil (profil vendeur ou client)
+- page de politiques de confidentialité (page de présentation de la politique de confidentialité)
+- pages d'acceuil ou de bienvenu (les premières pages de l'app avant l'inscription)
+
+VENDEURS
+- page de création de produits (page permettant au vendeur d'ajouter/créer un nouveau produit dans sa boutique)
+- pages de création de boutique (ensemble des pages comportant les différentes informations nécessaires pour la création d'une boutique)
+- page d'inventaire de produits (page présentant les différents produits d'une boutique)
+- page d'édition de produits (page de modification des attributs d'un produit)
+- page d'inventaire des commandes (page présentant les différentes commandes sur boutique : commande effectuées, commandes en attente, commandes en cours)
+- page d'inscription pour vendeur
+- page de choix du sous-secteur (page présentant les différents sous-secteurs  : poulet, poisson, restaurant, etc.)
+
+CLIENTS
+- page de présentation d'une boutique (page de description d'une boutique coté client et de présentation des différents produits de la boutique)
+- page de présentation d'un produits (page de description d'un produit donné avec ses différents attributs)
+- page d'inventaire des boutiques (page présentant les différentes boutiques disponibles)
+- // page d'inventaire des produits d'une boutique
+- page d'avis-clients pour boutique (page permettant à un client de donner un avis sur une boutique)
+- page d'avis-clients pour produit (page permettant à un client de donner un avis sur un produit après achat)
+- page d'inscription pour client
+- page pour Google Map (pour la localisation des boutiques)
+- page pour l'inventaire des produits populaires (page présentant que les produits les plus vendus)
+- page pour l'inventaire des boutiques populaires (page présentant que les boutiques qui font plus de ventes)
+- page pour l'inventaire des boutiques selon leur note (boutiques 5 étoiles, 4 étoiles, etc.)
+
+
+
+
+===> LES PAGES SECONDAIRES
+
+TOUT UTILISATEURS
+- page pour l'inventaire des catégories (pages présentant les différentes catégories de produits disponibles)
+- page pour méthode de paiement
+- page pour la calculatrice
+
+VENDEURS
+
+CLIENTS
+- page pour l'historique de commandes
+- page pour l'historique de navigation
+- page pour les filtres de recherche
+
+
+**********************************************************************************************************************
+
+- pages d'acceuil ou de bienvenu (les premières pages de l'app avant l'inscription).u
+{
+	- page de lancement
+	{
+		- (au milieu)
+			- logo
+		- (en bas)
+			- Powered by Smart Solution Innova.texte
+	}
+
+	- page avantage 1
+	{
+		- (en haut)
+			- Bénin Poulet.texte
+			- Passer.texte (à droite)
+		- (au milieu)
+			- image illustrative
+			- avantage
+			- dot indicator
+		- (en bas)
+			- Suivant.bouton
+	}
+
+	- page avantage n.page avantage 1
+}
+
+- page de connexion
+{
+	-
+	-
+}
+
+- page d'inscription.v
+{
+	- pages de creation de boutique
+	{
+		- page de commencement
+		{
+			-
+			-
+		}
+
+		- page de choix de sous-secteurs
+		{
+			-
+			-
+		}
+
+		- page de d'indentité fiscale
+		{
+			-
+			-
+		}
+
+		- page d'infos livraison
+		{
+			-
+			-
+		}
+
+		- page d'authentification KYC
+		{
+			-
+			-
+		}
+	}
+
+	-
+}
+
+
+
+
+***********************************************************
+Déjà fait :
+
+FRONT-END
+    - first page : page de lancement
+    - login page : page de connexion

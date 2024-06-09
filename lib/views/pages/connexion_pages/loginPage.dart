@@ -1,6 +1,7 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,33 +37,33 @@ class _LoginPageState extends State<LoginPage> {
           ),
           // Contenu avec forme sinusoïdale
           Positioned(
-            top: appHeightSize(context)*0.31, // superposition avec l'image
+            top: appHeightSize(context)*0.3, // superposition avec l'image
             left: 0,
             right: 0,
 
             child: CustomPaint(
               painter: WavePainter(),
               child: Container(
-
+                height: appHeightSize(context)*0.7,
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: ListView(
+                  /*mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,*/
                   children: [
-                    SizedBox(height: appHeightSize(context)*0.1),
-                    // Ajustez cette valeur pour laisser de l'espace pour la sinusoïde
+                    SizedBox(height: appHeightSize(context)*0.02),
                     Text(
                       'Bienvenue !',
                       style: TextStyle(
                         fontSize: largeText()*1.5,
                         fontWeight: FontWeight.bold,
+                        color: primaryColor
                       ),
                     ),
                     const SizedBox(height: 20),
-                    AppTextField(label: 'Nom d\'utilisateur', height: appHeightSize(context)*0.07 , width: appWidthSize(context)*0.9, prefixIcon: Icons.account_circle,color: Colors.grey.shade100, controller: _nameController,),
+                    AppTextField(label: 'Nom d\'utilisateur', height: appHeightSize(context)*0.07 , width: appWidthSize(context)*0.9, prefixIcon: Icons.account_circle,color: Colors.grey.shade300, controller: _nameController,),
                     const SizedBox(height: 20),
-                    AppTextField(label: 'Mot de passe', height: appHeightSize(context)*0.07 , width: appWidthSize(context)*0.9, color: Colors.grey.shade100,isPassword: true, controller: _passWordController,),
-                    const SizedBox(height: 20),
+                    AppTextField(label: 'Mot de passe', height: appHeightSize(context)*0.07 , width: appWidthSize(context)*0.9, color: Colors.grey.shade300,isPassword: true, controller: _passWordController,),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -70,20 +71,21 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Checkbox(
                               value: false,
-                              onChanged: (value) {},
+                              onChanged: (value) {
+                              },
                             ),
-                            const Text('Se souvenir'),
+                            AppText(text: 'Se souvenir', color: Theme.of(context).colorScheme.primary, ),
                           ],
                         ),
                         TextButton(
                           onPressed: () {
                             // Ajouter une action pour mot de passe oublié
                           },
-                          child: const Text('Mot de passe oublié ?'),
+                          child: AppText(text: 'Mot de passe oublié ?', color: primaryColor,),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: appHeightSize(context)*0.03),
                     GestureDetector(
                       onTap: (){
                         setState(() {
@@ -105,21 +107,66 @@ class _LoginPageState extends State<LoginPage> {
                       )
                       :  Text('Connexion', style: TextStyle(color: Colors.white, fontSize: largeText()),)),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    Divider(color: Colors.grey.shade400,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(width: 1,),
-                        TextButton(
-                          onPressed: () {
-                            // Ajouter une action pour le bouton d'inscription
+                        GestureDetector(
+                          onTap : (){
+                            setState(() {
+                              isLoggedIn = !isLoggedIn;
+                            });
                           },
-                          child:
-                              const Text("Vous n'avez pas de compte? S'inscrire"),
+                          child: Container(
+                              height: appHeightSize(context)*0.05,
+                              width: appHeightSize(context)*0.06,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/logos/google.png', fit: BoxFit.contain,),
+                              )),
                         ),
-                        SizedBox(width: 1,),
+                        SizedBox(width: appWidthSize(context)*0.15,),
+                        GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              isLoggedIn = !isLoggedIn;
+                            });
+                          },
+                          child: Container(
+                              height: appHeightSize(context)*0.05,
+                              width: appHeightSize(context)*0.06,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset('assets/logos/apple.png', fit: BoxFit.contain,),
+                              )),
+                        ),
                       ],
                     ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(
+                           text: 'Vous n\'avez pas de compte ?' ,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+
+                        // le clic devrait conduire sur la page d'inscription
+                        TextButton(onPressed: (){}, child: AppText(
+                          text: 'S\'inscrire',
+                         color: primaryColor
+                        )),
+                      ],
+                    )
                   ],
                 ),
               ),

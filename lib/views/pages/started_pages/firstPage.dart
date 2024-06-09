@@ -1,9 +1,11 @@
 
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../../widgets/app_shaderMask.dart';
+import '../../../utils/transitions.dart';
+
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -48,7 +50,7 @@ class _FirstPageState extends State<FirstPage> {
       builder: (context, orientation) {
         return Scaffold(
           //backgroundColor: Theme.of(context).colorScheme.surface,
-            backgroundColor: primaryColor ,
+            backgroundColor: primaryColor,
             body: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Center(
@@ -71,11 +73,14 @@ class _FirstPageState extends State<FirstPage> {
                       onEnd: (){
                         setState(() {
                           _isLoading = !_isLoading;
+                          Navigator.of(context).push(Transitions.glissement(const LoginPage()));
                           _isLoading? logo = 'assets/logos/logoNoir.png' : logo = 'assets/logos/logoBlanc.png';
                           duration = duration + 2;
+
                         });
                         if(duration == 6){
                           Navigator.pushReplacementNamed(context, '/login');
+                          //Navigator.of(context).push(Transitions.rotation(const LoginPage()));
                         }
 
                       },
@@ -106,3 +111,4 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 }
+
