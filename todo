@@ -135,3 +135,7 @@ Déjà fait :
 FRONT-END
     - first page : page de lancement
     - login page : page de connexion
+    - gestion des thèmes : dark mode, light mode
+    ***
+    - création du dialogue de choix de profil
+    - création des pages de bienvenue

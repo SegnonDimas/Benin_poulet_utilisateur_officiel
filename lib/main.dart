@@ -1,6 +1,8 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
+import 'package:benin_poulet/views/pages/inscription_pages/choixProfilPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
+import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -50,12 +52,12 @@ class MyApp extends StatelessWidget {
           labelSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
         ),
       ),*/
-      //home: const Placeholder(),
+      home: const PresentationPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/login'  : (context) => const LoginPage(),
       },
-      initialRoute: '/firstPage',
+      //initialRoute: '/firstPage',
     );
   }
 }

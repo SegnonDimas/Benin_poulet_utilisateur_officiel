@@ -9,6 +9,7 @@ class AppText extends StatefulWidget {
   final TextOverflow? overflow;
   final TextAlign? textAlign;
   final Color? color;
+  final int? maxLine;
   final String text;
   BuildContext? context;
 
@@ -21,6 +22,7 @@ class AppText extends StatefulWidget {
     this.overflow = TextOverflow.ellipsis,
     this.textAlign = TextAlign.start,
     this.color,
+    this.maxLine,
     this.context,
     required this.text,
   });
@@ -37,6 +39,7 @@ class _AppTextState extends State<AppText> {
     return Text(
       textAlign: widget.textAlign,
       widget.text,
+      maxLines: widget.maxLine,
       style: TextStyle(
           fontSize: widget.fontSize,
           fontWeight: widget.fontWeight,
@@ -44,6 +47,7 @@ class _AppTextState extends State<AppText> {
           color: widget.color,
           overflow: widget.overflow,
           fontStyle: widget.fontStyle,
+
         //color: (widget.context != null && widget.color == null) || (widget.color != null && widget.context == null)
         //? widget.color,
         //: Colors.black,

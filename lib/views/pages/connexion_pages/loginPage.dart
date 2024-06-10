@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: Theme.of(context).primaryColor,
       body: Stack(
         children: [
           // Image d'arrière-plan
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   /*mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,*/
                   children: [
-                    SizedBox(height: appHeightSize(context)*0.02),
+                    SizedBox(height: appHeightSize(context)*0.04),
                     Text(
                       'Bienvenue !',
                       style: TextStyle(
@@ -119,8 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           },
                           child: Container(
-                              height: appHeightSize(context)*0.05,
-                              width: appHeightSize(context)*0.06,
+                              height: appHeightSize(context)*0.06,
+                              width: appHeightSize(context)*0.07,
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(15)
@@ -138,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                             });
                           },
                           child: Container(
-                              height: appHeightSize(context)*0.05,
-                              width: appHeightSize(context)*0.06,
+                              height: appHeightSize(context)*0.06,
+                              width: appHeightSize(context)*0.07,
                               decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.primary,
                                   borderRadius: BorderRadius.circular(15)
@@ -160,8 +160,78 @@ class _LoginPageState extends State<LoginPage> {
                           color: Theme.of(context).colorScheme.primary,
                         ),
 
-                        // le clic devrait conduire sur la page d'inscription
-                        TextButton(onPressed: (){}, child: AppText(
+                        // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
+                        TextButton(
+                            onPressed: (){
+                              showDialog(context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: AppText(text: 'Que comptez-vous faire sur l\'application ?', fontSize: mediumText(), maxLine: 2, textAlign: TextAlign.center,),
+                                      content: SizedBox(
+                                        height: appHeightSize(context)*0.17,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height : appHeightSize(context)*0.06,
+                                                decoration : BoxDecoration(
+                                                  color: primaryColor,
+                                                  borderRadius: BorderRadius.circular(15)
+                                                  ),
+                                                child: Row(
+                                                  mainAxisAlignment : MainAxisAlignment.center,
+                                                  children: [
+                                                    const Icon(Icons.monetization_on_outlined, color: Colors.white,),
+                                                    SizedBox(width: appWidthSize(context)*0.05,),
+                                                    AppText(text: 'Vendre', fontSize: mediumText(), color: Colors.white,),
+                                                    SizedBox(width: appWidthSize(context)*0.05,),
+                                                    Icon(Icons.arrow_forward_ios,size: largeText(), color: Colors.white,),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height : appHeightSize(context)*0.06,
+                                                decoration : BoxDecoration(
+                                                    color: primaryColor,
+                                                    borderRadius: BorderRadius.circular(15)
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment : MainAxisAlignment.center,
+                                                  children: [
+                                                    const Icon(Icons.shopping_cart_outlined, color: Colors.white,),
+                                                    SizedBox(width: appWidthSize(context)*0.05,),
+                                                    AppText(text: 'Acheter', fontSize: mediumText(), color: Colors.white,),
+                                                    SizedBox(width: appWidthSize(context)*0.05,),
+                                                    Icon(Icons.arrow_forward_ios, size: largeText(), color: Colors.white,),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      icon: CircleAvatar(
+                                        radius: appHeightSize(context)*0.05,
+                                          child: Icon(Icons.question_mark, size: largeText()*2, color: Colors.red,)),
+                                      iconColor: Colors.green,
+                                      elevation: 25,
+                                      shadowColor: Theme.of(context).colorScheme.inversePrimary,
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: AppText(text: 'Annuler', color: Theme.of(context).colorScheme.inversePrimary,),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },);
+                            }, child: AppText(
                           text: 'S\'inscrire',
                          color: primaryColor
                         )),
