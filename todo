@@ -135,7 +135,21 @@ Déjà fait :
 FRONT-END
     - first page : page de lancement
     - login page : page de connexion
+    ***
     - gestion des thèmes : dark mode, light mode
     ***
     - création du dialogue de choix de profil
     - création des pages de bienvenue
+    ***
+
+
+À faire :
+    - pages d'inscription pour vendeurs
+        - page d'inscription
+        -
+    - page d'inscription pour clients
+
+
+À supprimer :
+    - /inscriptio_pages/choixProfil.dart
+    - /widgets/app_dialog.dart

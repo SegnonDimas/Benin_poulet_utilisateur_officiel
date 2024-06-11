@@ -71,6 +71,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Être livré'),
   ];
 
+  /// initStat
   @override
   void initState() {
     selectedPage = 0;
@@ -82,6 +83,8 @@ class _PresentationPageState extends State<PresentationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      /// corps de la page
         body: SafeArea(
       child: Column(
         children: [
@@ -93,9 +96,16 @@ class _PresentationPageState extends State<PresentationPage> {
                   selectedPage = index;
                 });
               },
+              // bloquer le scroll depuis cette pageView
               physics: const NeverScrollableScrollPhysics(),
+
+              // liste des pages de la pageView
               children: List.generate(views.length, (index) {
-                return ListView(children: [
+                // listView, structure de chaque page de la pageView
+                return ListView(
+                    children: [
+
+                  /// logo + titre
                   Padding(
                     padding: EdgeInsets.only(
                         top: appHeightSize(context) * 0.02,
@@ -104,15 +114,18 @@ class _PresentationPageState extends State<PresentationPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+
+                        // logo de Bénin poulet
                         CircleAvatar(
                           radius: appHeightSize(context) * 0.03,
-                          //backgroundColor: Theme.of(context)
                           child: Image.asset(
                             'assets/logos/logoBlanc.png',
                             fit: BoxFit.fill,
                             height: appHeightSize(context) * 0.03,
                           ),
                         ),
+
+                        // le titre : Bénin Poulet (de la pageView)
                         Text(
                           views[index].title,
                           style: TextStyle(
@@ -120,12 +133,14 @@ class _PresentationPageState extends State<PresentationPage> {
                               color: primaryColor,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 1,
                         )
                       ],
                     ),
                   ),
+
+                  /// texte : Passer
                   Padding(
                     padding: EdgeInsets.only(
                         top: appHeightSize(context) * 0.04,
@@ -134,7 +149,7 @@ class _PresentationPageState extends State<PresentationPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 1,
                         ),
                         selectedPage == views.length - 1
@@ -297,6 +312,8 @@ class _PresentationPageState extends State<PresentationPage> {
                       ],
                     ),
                   ),
+
+                  /// corps mutable (scrollable) de la pageView
                   SizedBox(
                       height: MediaQuery.of(context).size.height * 0.6,
                       child: PageView.builder(
@@ -311,33 +328,17 @@ class _PresentationPageState extends State<PresentationPage> {
                           itemCount: views.length,
                           itemBuilder: (context, index) {
                             return SizedBox(
+                              // image + description
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  /*Container(
-                                    height: appHeightSize(context) * 0.3,
-                                    width: appHeightSize(context) * 0.3,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          appHeightSize(context)),
-                                      *//*shape: BoxShape.circle,*//*
-                                      border: Border(),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .inversePrimary),
-                                      ],
-                                      image: DecorationImage(
-                                        image: AssetImage(views[index].image),
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),*/
+                                  // image caractéristique de chaque page
                                   Image.asset(views[index].image, height: appHeightSize(context)*0.3,),
+                                  //espace
                                   SizedBox(
                                     height: appHeightSize(context) * 0.05,
                                   ),
+                                  //description
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Center(
@@ -345,6 +346,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
+                                        // titre description
                                         Text(
                                           views[index].descriptionTitle,
                                           style: TextStyle(
@@ -354,9 +356,11 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   .colorScheme
                                                   .inversePrimary),
                                         ),
+                                        //espace
                                         SizedBox(
                                           height: appHeightSize(context) * 0.01,
                                         ),
+                                        //description
                                         Text(
                                           views[index].description,
                                           textAlign: TextAlign.center,
@@ -373,7 +377,9 @@ class _PresentationPageState extends State<PresentationPage> {
                               ),
                             );
                           })),
-                  selectedPage == views.length - 1
+
+                      // PageViewDotIndicator (ne l'afficher à cette possition que l'orsqu'on n'est pas sur la dernière page de la pageView)
+                      selectedPage == views.length - 1
                       ? PageViewDotIndicator(
                           currentItem: selectedPage,
                           count: views.length,
@@ -396,12 +402,16 @@ class _PresentationPageState extends State<PresentationPage> {
                           },
                         )
                       : Container(),
-                  SizedBox(
-                    height: appHeightSize(context) * 0.1,
-                  ),
-                  selectedPage == views.length - 1
+                      //espace
+                      SizedBox(
+                        height: appHeightSize(context) * 0.1,
+                      ),
+
+                      // le bouton d'inscription (ne l'afficher que l'orsqu'on est sur la dernière page de la pageView)
+                      selectedPage == views.length - 1
                       ? GestureDetector(
                           onTap: () {
+                            // dialog de choix du profil vendeur/client
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -533,14 +543,14 @@ class _PresentationPageState extends State<PresentationPage> {
                                 left: appWidthSize(context) * 0.05,
                                 right: appWidthSize(context) * 0.05),
                             child: Container(
-                                height: appHeightSize(context) * 0.07,
+                                height: appHeightSize(context) * 0.06,
                                 width: appHeightSize(context) * 0.3,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: primaryColor,
                                   borderRadius: BorderRadius.circular(15),
                                   /*shape: BoxShape.circle,*/
-                                  border: Border(),
+                                  border: const Border(),
                                   boxShadow: [
                                     BoxShadow(
                                         color: Theme.of(context)

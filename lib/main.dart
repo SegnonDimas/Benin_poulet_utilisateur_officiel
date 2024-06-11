@@ -1,6 +1,5 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
-import 'package:benin_poulet/views/pages/inscription_pages/choixProfilPage.dart';
+import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
@@ -10,11 +9,10 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(
-      ChangeNotifierProvider(
-        create: (context) => ThemeProvider(),
-        child: const MyApp(),
-      ));
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -52,13 +50,14 @@ class MyApp extends StatelessWidget {
           labelSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
         ),
       ),*/
-      home: const PresentationPage(),
+      home: const InscriptionPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
-        '/login'  : (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(),
+        '/presentationPage': (context) => const PresentationPage(),
+        '/inscriptionPage': (context) => const InscriptionPage(),
       },
       //initialRoute: '/firstPage',
     );
   }
 }
-

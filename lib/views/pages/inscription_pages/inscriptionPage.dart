@@ -5,20 +5,30 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../utils/wave_painter.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class InscriptionPage extends StatefulWidget {
+  const InscriptionPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<InscriptionPage> createState() => _InscriptionPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _nameController = TextEditingController();
+class _InscriptionPageState extends State<InscriptionPage> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _passWordController = TextEditingController();
+  final TextEditingController _confirmPassWordController =
+      TextEditingController();
+  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  String initialCountry = 'BJ';
+  PhoneNumber number = PhoneNumber(
+    isoCode: 'BJ',
+  );
   bool isLoggedIn = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,24 +37,27 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           // Image d'arrière-plan
           Positioned(
-            top: 0,
+            top: appHeightSize(context) * 0.05,
             left: 0,
             right: 0,
             child: Image.asset(
-              'assets/images/login2.png',
-              fit: BoxFit.cover,
+              'assets/icons/signup.png',
+              fit: BoxFit.fitHeight,
+              height: appHeightSize(context) * 0.15,
+              width: appWidthSize(context) * 0.5,
+              color: primaryColor,
             ),
           ),
           // Contenu avec forme sinusoïdale
           Positioned(
-            top: appHeightSize(context) * 0.3, // superposition avec l'image
+            top: appHeightSize(context) * 0.2, // superposition avec l'image
             left: 0,
             right: 0,
 
             child: CustomPaint(
               painter: WavePainter(),
               child: Container(
-                height: appHeightSize(context) * 0.7,
+                height: appHeightSize(context) * 0.8,
                 padding: const EdgeInsets.all(20),
                 child: ListView(
                   /*mainAxisSize: MainAxisSize.min,
@@ -59,50 +72,113 @@ class _LoginPageState extends State<LoginPage> {
                           color: primaryColor),
                     ),
                     const SizedBox(height: 20),
-                    AppTextField(
-                      label: 'Nom d\'utilisateur',
-                      height: appHeightSize(context) * 0.07,
+
+                    // Nom et Prenom
+                    SizedBox(
                       width: appWidthSize(context) * 0.9,
-                      prefixIcon: Icons.account_circle,
-                      color: Colors.grey.shade300,
-                      controller: _nameController,
+                      height: appHeightSize(context) * 0.08,
+                      child: ListView(
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          AppTextField(
+                            label: 'Nom',
+                            height: appHeightSize(context) * 0.07,
+                            width: appWidthSize(context) * 0.42,
+                            prefixIcon: Icons.account_circle,
+                            color: Colors.grey.shade300,
+                            controller: _firstNameController,
+                          ),
+                          SizedBox(width: appWidthSize(context) * 0.06),
+                          AppTextField(
+                            label: 'Prénom',
+                            height: appHeightSize(context) * 0.07,
+                            width: appWidthSize(context) * 0.42,
+                            prefixIcon: Icons.account_circle,
+                            color: Colors.grey.shade300,
+                            controller: _lastNameController,
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
+
+                    // Numéro de téléphone
+                    Container(
+                      alignment: Alignment.center,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey.shade300,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InternationalPhoneNumberInput(
+                          onInputChanged: (PhoneNumber number) {
+                            // le numéro de téléphone saisi.
+                            print(number.phoneNumber);
+                          },
+                          onInputValidated: (bool value) {
+                            // true, si le numéro saisi est correct; false sinon.
+                            print('Valeur : $value');
+                          },
+                          hintText: 'Numéro de téléphone',
+                          errorMessage: 'Numéro non valide',
+                          locale: 'NG',
+                          selectorConfig: const SelectorConfig(
+                              selectorType: PhoneInputSelectorType.DIALOG,
+                              useBottomSheetSafeArea: true,
+                              setSelectorButtonAsPrefixIcon: true,
+                              leadingPadding: 10),
+                          ignoreBlank: false,
+                          autoValidateMode: AutovalidateMode.disabled,
+                          selectorTextStyle: TextStyle(color: Colors.grey),
+                          textStyle: TextStyle(color: Colors.black),
+                          initialValue: number,
+                          textFieldController: _phoneNumbercontroller,
+                          formatInput: true,
+                          autoFocus: false,
+                          autoFocusSearch: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputBorder: const OutlineInputBorder(),
+                          inputDecoration: InputDecoration(
+                            border: InputBorder.none,
+                            label: AppText(
+                              text: 'Numéro de téléphone',
+                              color: Colors.grey,
+                            ),
+                          ),
+                          onSaved: (PhoneNumber number) {
+                            print('On Saved: $number');
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Mot de passe
                     AppTextField(
                       label: 'Mot de passe',
-                      height: appHeightSize(context) * 0.07,
+                      height: appHeightSize(context) * 0.08,
                       width: appWidthSize(context) * 0.9,
                       color: Colors.grey.shade300,
                       isPassword: true,
                       controller: _passWordController,
                     ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: false,
-                              onChanged: (value) {},
-                            ),
-                            AppText(
-                              text: 'Se souvenir',
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Ajouter une action pour mot de passe oublié
-                          },
-                          child: AppText(
-                            text: 'Mot de passe oublié ?',
-                            color: primaryColor,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 20),
+
+                    // Confirmation de mot de passe
+                    AppTextField(
+                      label: 'Confirmer mot de passe',
+                      height: appHeightSize(context) * 0.08,
+                      width: appWidthSize(context) * 0.9,
+                      color: Colors.grey.shade300,
+                      isPassword: true,
+                      controller: _confirmPassWordController,
                     ),
+
                     SizedBox(height: appHeightSize(context) * 0.03),
                     GestureDetector(
                       onTap: () {
@@ -123,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.white,
                                 )
                               : Text(
-                                  'Connexion',
+                                  'Inscription',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: largeText()),
@@ -185,25 +261,35 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AppText(
-                          text: 'Vous n\'avez pas de compte ?',
+                          text: 'Avez-vous déjà de compte ?',
                           color: Theme.of(context).colorScheme.primary,
                         ),
 
                         // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                         TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/presentationPage');
+                              _showSnackBar('message');
+
+                              //Navigator.pushNamed(context, '/presentationPage');
                             },
                             child: AppText(
-                                text: 'S\'inscrire', color: primaryColor)),
+                                text: 'Se connecter', color: primaryColor)),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
       ),
     );
   }
