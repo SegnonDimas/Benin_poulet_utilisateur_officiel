@@ -33,251 +33,255 @@ class _InscriptionPageState extends State<InscriptionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: Stack(
+      body: ListView(
         children: [
           // Image d'arrière-plan
-          Positioned(
-            top: appHeightSize(context) * 0.05,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'assets/icons/signup.png',
-              fit: BoxFit.fitHeight,
-              height: appHeightSize(context) * 0.15,
-              width: appWidthSize(context) * 0.5,
-              color: primaryColor,
-            ),
+          Image.asset(
+            'assets/icons/signup.png',
+            fit: BoxFit.fitHeight,
+            height: appHeightSize(context) * 0.15,
+            width: appWidthSize(context) * 0.5,
+            color: primaryColor,
           ),
           // Contenu avec forme sinusoïdale
-          Positioned(
-            top: appHeightSize(context) * 0.2, // superposition avec l'image
-            left: 0,
-            right: 0,
-
-            child: CustomPaint(
-              painter: WavePainter(),
-              child: Container(
-                height: appHeightSize(context) * 0.8,
-                padding: const EdgeInsets.all(20),
-                child: ListView(
-                  /*mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,*/
-                  children: [
-                    SizedBox(height: appHeightSize(context) * 0.04),
-                    Text(
+          CustomPaint(
+            painter: WavePainter(),
+            child: Container(
+              height: appHeightSize(context) * 0.85,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                /*mainAxisSize: MainAxisSize.min,*/
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: appHeightSize(context) * 0.07),
+                  ShaderMask(
+                    blendMode: BlendMode
+                        .srcATop, // Choisissez le mode de fusion selon vos préférences
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.inversePrimary,
+                          Theme.of(context).colorScheme.inversePrimary,
+                          primaryColor,
+                          primaryColor,
+                          primaryColor,
+                        ], // Couleurs de votre dégradé
+                        tileMode: TileMode.clamp,
+                      ).createShader(bounds);
+                    },
+                    child: Text(
                       'Bienvenue !',
                       style: TextStyle(
                           fontSize: largeText() * 1.5,
                           fontWeight: FontWeight.bold,
                           color: primaryColor),
                     ),
-                    const SizedBox(height: 20),
+                  ),
+                  const SizedBox(height: 10),
 
-                    // Nom et Prenom
-                    SizedBox(
-                      width: appWidthSize(context) * 0.9,
-                      height: appHeightSize(context) * 0.08,
-                      child: ListView(
-                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          AppTextField(
-                            label: 'Nom',
-                            height: appHeightSize(context) * 0.07,
-                            width: appWidthSize(context) * 0.42,
-                            prefixIcon: Icons.account_circle,
-                            color: Colors.grey.shade300,
-                            controller: _firstNameController,
-                          ),
-                          SizedBox(width: appWidthSize(context) * 0.06),
-                          AppTextField(
-                            label: 'Prénom',
-                            height: appHeightSize(context) * 0.07,
-                            width: appWidthSize(context) * 0.42,
-                            prefixIcon: Icons.account_circle,
-                            color: Colors.grey.shade300,
-                            controller: _lastNameController,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Numéro de téléphone
-                    Container(
-                      alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey.shade300,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InternationalPhoneNumberInput(
-                          onInputChanged: (PhoneNumber number) {
-                            // le numéro de téléphone saisi.
-                            print(number.phoneNumber);
-                          },
-                          onInputValidated: (bool value) {
-                            // true, si le numéro saisi est correct; false sinon.
-                            print('Valeur : $value');
-                          },
-                          hintText: 'Numéro de téléphone',
-                          errorMessage: 'Numéro non valide',
-                          locale: 'NG',
-                          selectorConfig: const SelectorConfig(
-                              selectorType: PhoneInputSelectorType.DIALOG,
-                              useBottomSheetSafeArea: true,
-                              setSelectorButtonAsPrefixIcon: true,
-                              leadingPadding: 10),
-                          ignoreBlank: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          selectorTextStyle: TextStyle(color: Colors.grey),
-                          textStyle: TextStyle(color: Colors.black),
-                          initialValue: number,
-                          textFieldController: _phoneNumbercontroller,
-                          formatInput: true,
-                          autoFocus: false,
-                          autoFocusSearch: true,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputBorder: const OutlineInputBorder(),
-                          inputDecoration: InputDecoration(
-                            border: InputBorder.none,
-                            label: AppText(
-                              text: 'Numéro de téléphone',
-                              color: Colors.grey,
-                            ),
-                          ),
-                          onSaved: (PhoneNumber number) {
-                            print('On Saved: $number');
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Mot de passe
-                    AppTextField(
-                      label: 'Mot de passe',
-                      height: appHeightSize(context) * 0.08,
-                      width: appWidthSize(context) * 0.9,
-                      color: Colors.grey.shade300,
-                      isPassword: true,
-                      controller: _passWordController,
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Confirmation de mot de passe
-                    AppTextField(
-                      label: 'Confirmer mot de passe',
-                      height: appHeightSize(context) * 0.08,
-                      width: appWidthSize(context) * 0.9,
-                      color: Colors.grey.shade300,
-                      isPassword: true,
-                      controller: _confirmPassWordController,
-                    ),
-
-                    SizedBox(height: appHeightSize(context) * 0.03),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isLoggedIn = !isLoggedIn;
-                        });
-                      },
-                      child: Container(
-                          alignment: Alignment.center,
+                  // Nom et Prenom
+                  SizedBox(
+                    width: appWidthSize(context) * 0.9,
+                    height: appHeightSize(context) * 0.08,
+                    child: ListView(
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        AppTextField(
+                          label: 'Nom',
                           height: appHeightSize(context) * 0.07,
-                          width: appWidthSize(context) * 0.9,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: primaryColor),
-                          child: isLoggedIn
-                              ? const CupertinoActivityIndicator(
-                                  radius: 20.0, // Taille du spinner
-                                  color: Colors.white,
-                                )
-                              : Text(
-                                  'Inscription',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: largeText()),
-                                )),
-                    ),
-                    const SizedBox(height: 10),
-                    Divider(
-                      color: Colors.grey.shade400,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isLoggedIn = !isLoggedIn;
-                            });
-                          },
-                          child: Container(
-                              height: appHeightSize(context) * 0.06,
-                              width: appHeightSize(context) * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/logos/google.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
+                          width: appWidthSize(context) * 0.42,
+                          prefixIcon: Icons.account_circle,
+                          color: Colors.grey.shade300,
+                          controller: _firstNameController,
                         ),
-                        SizedBox(
-                          width: appWidthSize(context) * 0.15,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isLoggedIn = !isLoggedIn;
-                            });
-                          },
-                          child: Container(
-                              height: appHeightSize(context) * 0.06,
-                              width: appHeightSize(context) * 0.07,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/logos/apple.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
+                        SizedBox(width: appWidthSize(context) * 0.06),
+                        AppTextField(
+                          label: 'Prénom',
+                          height: appHeightSize(context) * 0.07,
+                          width: appWidthSize(context) * 0.42,
+                          prefixIcon: Icons.account_circle,
+                          color: Colors.grey.shade300,
+                          controller: _lastNameController,
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AppText(
-                          text: 'Avez-vous déjà de compte ?',
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                  ),
+                  const SizedBox(height: 20),
 
-                        // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
-                        TextButton(
-                            onPressed: () {
-                              _showSnackBar('message');
-
-                              //Navigator.pushNamed(context, '/presentationPage');
-                            },
-                            child: AppText(
-                                text: 'Se connecter', color: primaryColor)),
-                      ],
+                  // Numéro de téléphone
+                  Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.grey.shade300,
                     ),
-                  ],
-                ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InternationalPhoneNumberInput(
+                        onInputChanged: (PhoneNumber number) {
+                          // le numéro de téléphone saisi.
+                          print(number.phoneNumber);
+                        },
+                        onInputValidated: (bool value) {
+                          // true, si le numéro saisi est correct; false sinon.
+                          print('Valeur : $value');
+                        },
+                        hintText: 'Numéro de téléphone',
+                        errorMessage: 'Numéro non valide',
+                        locale: 'NG',
+                        selectorConfig: const SelectorConfig(
+                            selectorType: PhoneInputSelectorType.DIALOG,
+                            useBottomSheetSafeArea: true,
+                            setSelectorButtonAsPrefixIcon: true,
+                            leadingPadding: 10),
+                        ignoreBlank: false,
+                        autoValidateMode: AutovalidateMode.disabled,
+                        selectorTextStyle: TextStyle(color: Colors.grey),
+                        textStyle: TextStyle(color: Colors.black),
+                        initialValue: number,
+                        textFieldController: _phoneNumbercontroller,
+                        formatInput: true,
+                        autoFocus: false,
+                        autoFocusSearch: true,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            signed: true, decimal: true),
+                        inputBorder: const OutlineInputBorder(),
+                        inputDecoration: InputDecoration(
+                          border: InputBorder.none,
+                          label: AppText(
+                            text: 'Numéro de téléphone',
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onSaved: (PhoneNumber number) {
+                          print('On Saved: $number');
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Mot de passe
+                  AppTextField(
+                    label: 'Mot de passe',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.9,
+                    color: Colors.grey.shade300,
+                    isPassword: true,
+                    controller: _passWordController,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Confirmation de mot de passe
+                  AppTextField(
+                    label: 'Confirmer mot de passe',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.9,
+                    color: Colors.grey.shade300,
+                    isPassword: true,
+                    controller: _confirmPassWordController,
+                  ),
+
+                  SizedBox(height: appHeightSize(context) * 0.03),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isLoggedIn = !isLoggedIn;
+                      });
+                    },
+                    child: Container(
+                        alignment: Alignment.center,
+                        height: appHeightSize(context) * 0.07,
+                        width: appWidthSize(context) * 0.9,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: primaryColor),
+                        child: isLoggedIn
+                            ? const CupertinoActivityIndicator(
+                                radius: 20.0, // Taille du spinner
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Inscription',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: largeText()),
+                              )),
+                  ),
+                  const SizedBox(height: 10),
+                  Divider(
+                    color: Colors.grey.shade400,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isLoggedIn = !isLoggedIn;
+                          });
+                        },
+                        child: Container(
+                            height: appHeightSize(context) * 0.06,
+                            width: appHeightSize(context) * 0.07,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'assets/logos/google.png',
+                                fit: BoxFit.contain,
+                              ),
+                            )),
+                      ),
+                      SizedBox(
+                        width: appWidthSize(context) * 0.15,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isLoggedIn = !isLoggedIn;
+                          });
+                        },
+                        child: Container(
+                            height: appHeightSize(context) * 0.06,
+                            width: appHeightSize(context) * 0.07,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'assets/logos/apple.png',
+                                fit: BoxFit.contain,
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppText(
+                        text: 'Avez-vous déjà de compte ?',
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+
+                      // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
+                      TextButton(
+                          onPressed: () {
+                            _showSnackBar('message');
+
+                            //Navigator.pushNamed(context, '/presentationPage');
+                          },
+                          child: AppText(
+                              text: 'Se connecter', color: primaryColor)),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
