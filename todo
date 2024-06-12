@@ -141,15 +141,16 @@ FRONT-END
     - création du dialogue de choix de profil
     - création des pages de bienvenue
     ***
+    - page d'inscription pour clients
+
 
 
 À faire :
     - pages d'inscription pour vendeurs
         - page d'inscription
         -
-    - page d'inscription pour clients
+    - page de connexion pour vendeur
 
 
 À supprimer :
-    - /inscriptio_pages/choixProfil.dart
-    - /widgets/app_dialog.dart
+    -

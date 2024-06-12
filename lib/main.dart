@@ -50,14 +50,14 @@ class MyApp extends StatelessWidget {
           labelSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
         ),
       ),*/
-      home: const InscriptionPage(),
+      //home: const InscriptionPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
-        '/login': (context) => const LoginPage(),
+        '/loginPage': (context) => const LoginPage(),
         '/presentationPage': (context) => const PresentationPage(),
         '/inscriptionPage': (context) => const InscriptionPage(),
       },
-      //initialRoute: '/firstPage',
+      initialRoute: '/firstPage',
     );
   }
 }
