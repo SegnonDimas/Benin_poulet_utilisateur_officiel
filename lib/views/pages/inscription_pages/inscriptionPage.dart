@@ -300,6 +300,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       AppText(
                         text: 'Avez-vous déjà de compte ?',
                         color: Theme.of(context).colorScheme.primary,
+                        fontSize: smallText() * 1.2,
                       ),
 
                       // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
@@ -308,7 +309,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                             Navigator.pushNamed(context, '/loginPage');
                           },
                           child: AppText(
-                              text: 'Se connecter', color: primaryColor)),
+                            text: 'Se connecter',
+                            color: primaryColor,
+                            fontSize: smallText() * 1.2,
+                          )),
                     ],
                   ),
                 ],
@@ -353,7 +357,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       _showSnackBar(context, 'Les mots de passe ne sont pas identiques');
     } else {
       // fonction pour l'inscription
-      AthentificationServices.signUp();
+      AthentificationServices.signup();
       // snack bar
       _showAwesomeSnackBar(
           context,

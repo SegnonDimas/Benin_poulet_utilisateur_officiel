@@ -1,4 +1,5 @@
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
+import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/loginPage': (context) => const LoginPage(),
         '/presentationPage': (context) => const PresentationPage(),
         '/inscriptionPage': (context) => const InscriptionPage(),
+        '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
       },
       initialRoute: '/firstPage',
     );

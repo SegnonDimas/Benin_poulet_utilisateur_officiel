@@ -6,22 +6,23 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginWithEmailPage extends StatefulWidget {
+  const LoginWithEmailPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginWithEmailPage> createState() => _LoginWithEmailPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
   final TextEditingController _passWordController = TextEditingController();
-  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
   String initialCountry = 'BJ';
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
   bool isLoggedIn = false;
@@ -33,13 +34,48 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Theme.of(context).primaryColor,
       body: ListView(
         children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: appHeightSize(context) * 0.05,
+                    width: appHeightSize(context) * 0.05,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(
+                        appHeightSize(context),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: mediumText(),
+                      weight: 50,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
           // Image d'arrière-plan
           Image.asset(
-            'assets/images/login2.png',
+            'assets/logos/email.png',
             fit: BoxFit.fitHeight,
-            height: appHeightSize(context) * 0.2,
+            height: appHeightSize(context) * 0.15,
             //width: appWidthSize(context) * 0.5,
           ),
+
+          SizedBox(height: appHeightSize(context) * 0.05),
 
           // Contenu avec forme sinusoïdale
           CustomPaint(
@@ -51,70 +87,26 @@ class _LoginPageState extends State<LoginPage> {
                 /*mainAxisSize: MainAxisSize.min,*/
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: appHeightSize(context) * 0.08),
-                  Text(
+                  SizedBox(height: appHeightSize(context) * 0.11),
+                  /* Text(
                     'Bienvenue !',
                     style: TextStyle(
                         fontSize: largeText() * 1.5,
                         fontWeight: FontWeight.bold,
                         color: primaryColor),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 20),*/
 
                   /// Formulaire de connexion
 
-                  // numéro de téléphone
-                  Container(
-                    alignment: Alignment.center,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey.shade300,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InternationalPhoneNumberInput(
-                        onInputChanged: (PhoneNumber number) {
-                          // le numéro de téléphone saisi.
-                          print(number.phoneNumber);
-                        },
-                        onInputValidated: (bool value) {
-                          // true, si le numéro saisi est correct; false sinon.
-                          print('Valeur : $value');
-                        },
-                        hintText: 'Numéro de téléphone',
-                        errorMessage: 'Numéro non valide',
-                        locale: 'NG',
-                        selectorConfig: const SelectorConfig(
-                            selectorType: PhoneInputSelectorType.DIALOG,
-                            useBottomSheetSafeArea: true,
-                            setSelectorButtonAsPrefixIcon: true,
-                            leadingPadding: 10),
-                        ignoreBlank: false,
-                        autoValidateMode: AutovalidateMode.disabled,
-                        selectorTextStyle: const TextStyle(color: Colors.grey),
-                        textStyle: const TextStyle(color: Colors.black),
-                        initialValue: number,
-                        textFieldController: _phoneNumbercontroller,
-                        formatInput: true,
-                        autoFocus: false,
-                        autoFocusSearch: true,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            signed: true, decimal: true),
-                        inputBorder: const OutlineInputBorder(),
-                        inputDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          label: AppText(
-                            text: 'Numéro de téléphone',
-                            color: Colors.grey,
-                          ),
-                        ),
-                        onSaved: (PhoneNumber number) {
-                          print('On Saved: $number');
-                        },
-                      ),
-                    ),
+                  // Adresse Email
+                  AppTextField(
+                    label: 'Adresse Email',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.9,
+                    color: Colors.grey.shade300,
+                    controller: _passWordController,
+                    prefixIcon: Icons.email,
                   ),
                   const SizedBox(height: 20),
 
@@ -231,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // méthode de connexion Google, Apple et Email
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //Google
                       GestureDetector(
@@ -254,9 +246,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             )),
                       ),
-                      /* SizedBox(
+                      SizedBox(
                         width: appWidthSize(context) * 0.15,
-                      ),*/
+                      ),
 
                       //Apple
                       GestureDetector(
@@ -275,30 +267,6 @@ class _LoginPageState extends State<LoginPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
                                 'assets/logos/apple.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
-                      ),
-
-                      //Email
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isLoggedIn = !isLoggedIn;
-                          });
-                          Navigator.of(context)
-                              .pushNamed('/loginWithEmailPage');
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/email.png',
                                 fit: BoxFit.contain,
                               ),
                             )),
@@ -340,13 +308,12 @@ class _LoginPageState extends State<LoginPage> {
   /// login()
   Future<void> login() async {
     print('''
-    :::: numéro => ${_phoneNumbercontroller.text}
+    :::: numéro => ${_emailcontroller.text}
     :::: mot de passe => ${_passWordController.text}
      ''');
 
-    if (_phoneNumbercontroller.text.isEmpty ||
-        _phoneNumbercontroller.text == "") {
-      _showSnackBar(context, 'Veuillez saisir votre numéro de téléphone');
+    if (_emailcontroller.text.isEmpty || _emailcontroller.text == "") {
+      _showSnackBar(context, 'Veuillez saisir votre adresse email');
     } else if (_passWordController.text.isEmpty ||
         _passWordController.text == "") {
       _showSnackBar(context, 'Veuillez saisir votre mot de passe');

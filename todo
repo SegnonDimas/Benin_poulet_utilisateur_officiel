@@ -142,6 +142,7 @@ FRONT-END
     - création des pages de bienvenue
     ***
     - page d'inscription pour clients
+    ***
 
 
 
@@ -151,6 +152,18 @@ FRONT-END
         -
     - page de connexion pour vendeur
 
+    - page d'inscription avec Google
+    - page d'inscription avec email
+    - page d'insciption avec Apple
+    - page de connexion avec Google
+    - page de connexion avec email
+    - page de connexion avec Apple
+
 
 À supprimer :
     -
+
+À utiliser :
+    - flutter_card_swiper 7.0.1
+    - flutter_slidable
+    - slide_to_act 2.0.2
