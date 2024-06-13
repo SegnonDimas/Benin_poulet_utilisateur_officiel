@@ -1,3 +1,4 @@
+import 'package:benin_poulet/tests/timeline_tile.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
@@ -28,31 +29,8 @@ class MyApp extends StatelessWidget {
       theme: Provider.of<ThemeProvider>(context).themeData,
       darkTheme: darkMode,
       title: 'Bénin Poulet',
-      /*theme: ThemeData(
 
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
-        useMaterial3: true,
-
-        // textTheme
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-          displayMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-          displaySmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-          headlineLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-          headlineMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-          headlineSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-          titleLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-          titleMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-          titleSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-          bodyLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-          bodyMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-          bodySmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-          labelLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-          labelMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-          labelSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-        ),
-      ),*/
-      //home: const SignupWithEmailPage(),
+      //home: const TimelineTilePage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -60,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/inscriptionPage': (context) => const InscriptionPage(),
         '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
+        '/timelineTilePage': (context) => const TimelineTilePage(),
       },
       initialRoute: '/firstPage',
     );

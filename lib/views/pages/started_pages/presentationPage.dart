@@ -171,47 +171,56 @@ class _PresentationPageState extends State<PresentationPage> {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Container(
-                                                  height:
-                                                      appHeightSize(context) *
-                                                          0.06,
-                                                  decoration: BoxDecoration(
-                                                    color: primaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const Icon(
-                                                        Icons
-                                                            .monetization_on_outlined,
-                                                        color: Colors.white,
-                                                      ),
-                                                      SizedBox(
-                                                        width: appWidthSize(
-                                                                context) *
-                                                            0.05,
-                                                      ),
-                                                      AppText(
-                                                        text: 'Vendre',
-                                                        fontSize: mediumText(),
-                                                        color: Colors.white,
-                                                      ),
-                                                      SizedBox(
-                                                        width: appWidthSize(
-                                                                context) *
-                                                            0.05,
-                                                      ),
-                                                      Icon(
-                                                        Icons.arrow_forward_ios,
-                                                        size: largeText(),
-                                                        color: Colors.white,
-                                                      ),
-                                                    ],
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            '/timelineTilePage');
+                                                  },
+                                                  child: Container(
+                                                    height:
+                                                        appHeightSize(context) *
+                                                            0.06,
+                                                    decoration: BoxDecoration(
+                                                      color: primaryColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        const Icon(
+                                                          Icons
+                                                              .monetization_on_outlined,
+                                                          color: Colors.white,
+                                                        ),
+                                                        SizedBox(
+                                                          width: appWidthSize(
+                                                                  context) *
+                                                              0.05,
+                                                        ),
+                                                        AppText(
+                                                          text: 'Vendre',
+                                                          fontSize:
+                                                              mediumText(),
+                                                          color: Colors.white,
+                                                        ),
+                                                        SizedBox(
+                                                          width: appWidthSize(
+                                                                  context) *
+                                                              0.05,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_forward_ios,
+                                                          size: largeText(),
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -439,41 +448,50 @@ class _PresentationPageState extends State<PresentationPage> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            height:
-                                                appHeightSize(context) * 0.06,
-                                            decoration: BoxDecoration(
-                                                color: primaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Icon(
-                                                  Icons
-                                                      .monetization_on_outlined,
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(
-                                                  width: appWidthSize(context) *
-                                                      0.05,
-                                                ),
-                                                AppText(
-                                                  text: 'Vendre',
-                                                  fontSize: mediumText(),
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(
-                                                  width: appWidthSize(context) *
-                                                      0.05,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_forward_ios,
-                                                  size: largeText(),
-                                                  color: Colors.white,
-                                                ),
-                                              ],
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pushNamed(
+                                                  '/timelineTilePage');
+                                            },
+                                            child: Container(
+                                              height:
+                                                  appHeightSize(context) * 0.06,
+                                              decoration: BoxDecoration(
+                                                  color: primaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  const Icon(
+                                                    Icons
+                                                        .monetization_on_outlined,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        appWidthSize(context) *
+                                                            0.05,
+                                                  ),
+                                                  AppText(
+                                                    text: 'Vendre',
+                                                    fontSize: mediumText(),
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        appWidthSize(context) *
+                                                            0.05,
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_forward_ios,
+                                                    size: largeText(),
+                                                    color: Colors.white,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

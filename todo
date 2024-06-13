@@ -143,6 +143,8 @@ FRONT-END
     ***
     - page d'inscription pour clients
     ***
+    - page de connexion avec Email
+    - page d'inscription avec Email
 
 
 
@@ -152,12 +154,6 @@ FRONT-END
         -
     - page de connexion pour vendeur
 
-    - page d'inscription avec Google
-    - page d'inscription avec email
-    - page d'insciption avec Apple
-    - page de connexion avec Google
-    - page de connexion avec email
-    - page de connexion avec Apple
 
 
 À supprimer :
@@ -167,3 +163,10 @@ FRONT-END
     - flutter_card_swiper 7.0.1
     - flutter_slidable
     - slide_to_act 2.0.2
+
+
+Icons :
+    - Icons.storefront
+    - Icons.grid_view_rounded,
+    - Icons.motorcycle
+    - Icons.fingerprint_sharp
