@@ -13,16 +13,18 @@ import '../../../services/authentification_services.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
 
-class LoginWithEmailPage extends StatefulWidget {
-  const LoginWithEmailPage({super.key});
+class SignupWithEmailPage extends StatefulWidget {
+  const SignupWithEmailPage({super.key});
 
   @override
-  State<LoginWithEmailPage> createState() => _LoginWithEmailPageState();
+  State<SignupWithEmailPage> createState() => _SignupWithEmailPageState();
 }
 
-class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
+class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
   final TextEditingController _passWordController = TextEditingController();
   final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _passWordConfirmController =
+      TextEditingController();
   String initialCountry = 'BJ';
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
   bool isLoggedIn = false;
@@ -75,8 +77,6 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
             //width: appWidthSize(context) * 0.5,
           ),
 
-          SizedBox(height: appHeightSize(context) * 0.05),
-
           // Contenu avec forme sinusoïdale
           CustomPaint(
             painter: WavePainter(),
@@ -87,7 +87,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                 /*mainAxisSize: MainAxisSize.min,*/
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: appHeightSize(context) * 0.11),
+                  SizedBox(height: appHeightSize(context) * 0.1),
                   /* Text(
                     'Bienvenue !',
                     style: TextStyle(
@@ -118,6 +118,17 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     color: Colors.grey.shade300,
                     isPassword: true,
                     controller: _passWordController,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // confirmation de mot de passe
+                  AppTextField(
+                    label: 'Confirmer mot de passe',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.9,
+                    color: Colors.grey.shade300,
+                    isPassword: true,
+                    controller: _passWordConfirmController,
                   ),
                   const SizedBox(height: 5),
 
@@ -173,7 +184,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     onTap: () {
                       setState(() {
                         isLoggedIn = !isLoggedIn;
-                        emailLogin();
+                        emailSignup();
                       });
                     },
                     child: Container(
@@ -279,7 +290,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppText(
-                        text: 'Vous n\'avez pas de compte ?',
+                        text: 'Avez-vous déjà de compte ?',
                         color: Theme.of(context).colorScheme.primary,
                         fontSize: smallText() * 1.2,
                       ),
@@ -287,10 +298,10 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                       // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                       TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/presentationPage');
+                            Navigator.pushNamed(context, '/loginPage');
                           },
                           child: AppText(
-                            text: 'S\'inscrire',
+                            text: 'Se connecter',
                             color: primaryColor,
                             fontSize: smallText() * 1.2,
                           )),
@@ -305,8 +316,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
     );
   }
 
-  /// emailLogin()
-  Future<void> emailLogin() async {
+  /// emailSignup()
+  Future<void> emailSignup() async {
     print('''
     :::: numéro => ${_emailcontroller.text}
     :::: mot de passe => ${_passWordController.text}
@@ -319,7 +330,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
       _showSnackBar(context, 'Veuillez saisir votre mot de passe');
     } else {
       // fonction pour l'inscription
-      AthentificationServices.emailLogin();
+      AthentificationServices.emailSignup();
       // snack bar
       _showAwesomeSnackBar(
           context,

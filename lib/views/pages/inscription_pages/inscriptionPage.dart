@@ -242,7 +242,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
                   // méthodes d'inscription Google et de Apple
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       // logo Google
                       GestureDetector(
@@ -265,9 +265,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
                               ),
                             )),
                       ),
-                      SizedBox(
+                      /*SizedBox(
                         width: appWidthSize(context) * 0.15,
-                      ),
+                      ),*/
 
                       // logo Apple
                       GestureDetector(
@@ -286,6 +286,31 @@ class _InscriptionPageState extends State<InscriptionPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
                                 'assets/logos/apple.png',
+                                fit: BoxFit.contain,
+                              ),
+                            )),
+                      ),
+
+                      //Email
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSignUp = !isSignUp;
+                          });
+                          Navigator.of(context).pushNamed(
+                            '/signupWithEmailPage',
+                          );
+                        },
+                        child: Container(
+                            height: appHeightSize(context) * 0.06,
+                            width: appHeightSize(context) * 0.07,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'assets/logos/email.png',
                                 fit: BoxFit.contain,
                               ),
                             )),
