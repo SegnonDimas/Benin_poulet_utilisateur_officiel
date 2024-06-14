@@ -1,7 +1,7 @@
-import 'package:benin_poulet/tests/timeline_tile.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
+import 'package:benin_poulet/views/pages/inscription_pages/inscription_vendeurPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/signupWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkMode,
       title: 'Bénin Poulet',
 
-      home: const TimelineTilePage(),
+      home: const InscriptionVendeurPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         '/inscriptionPage': (context) => const InscriptionPage(),
         '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
-        '/timelineTilePage': (context) => const TimelineTilePage(),
+        '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
       },
       //initialRoute: '/firstPage',
     );

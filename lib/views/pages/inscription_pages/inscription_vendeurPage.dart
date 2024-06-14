@@ -7,16 +7,16 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-import '../widgets/app_timeline_tile.dart';
+import '../../../widgets/app_timeline_tile.dart';
 
-class TimelineTilePage extends StatefulWidget {
-  const TimelineTilePage({super.key});
+class InscriptionVendeurPage extends StatefulWidget {
+  const InscriptionVendeurPage({super.key});
 
   @override
-  State<TimelineTilePage> createState() => _TimelineTilePageState();
+  State<InscriptionVendeurPage> createState() => _InscriptionVendeurPageState();
 }
 
-class _TimelineTilePageState extends State<TimelineTilePage> {
+class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
   int pageIndex = 0;
 
   /*Suivre l'index de la page actuelle. Cela permet d'écouter les changements de valeur et de reconstruire les AppTimelineTile en conséquence.*/
