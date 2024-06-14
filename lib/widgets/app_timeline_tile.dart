@@ -25,6 +25,7 @@ class AppTimelineTile extends StatefulWidget {
   Widget? indicator;
   Widget? startChild;
   Widget? endChild;
+  Function()? onTap;
 
   AppTimelineTile({
     super.key,
@@ -51,6 +52,7 @@ class AppTimelineTile extends StatefulWidget {
     this.hasIndicator = true,
     this.isFirst = false,
     this.isLast = false,
+    this.onTap,
   });
 
   @override
@@ -62,31 +64,35 @@ class _AppTimelineTileState extends State<AppTimelineTile> {
   Widget build(BuildContext context) {
     return Flexible(
       flex: 1,
-      child: TimelineTile(
-        alignment: widget.alignment!,
-        axis: widget.axis!,
-        indicatorStyle: IndicatorStyle(
-          iconStyle: IconStyle(
-            iconData: widget.icon!,
-            color: widget.iconColor!,
-            fontSize: widget.iconSize,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: TimelineTile(
+          alignment: widget.alignment!,
+          axis: widget.axis!,
+          indicatorStyle: IndicatorStyle(
+            iconStyle: IconStyle(
+              iconData: widget.icon!,
+              color: widget.iconColor!,
+              fontSize: widget.iconSize,
+            ),
+            color: widget.color!,
+            width: widget.width!,
+            height: widget.height!,
+            indicator: widget.indicator,
+            indicatorXY: widget.indicatorXY!,
+            drawGap: widget.drawGap!,
           ),
-          color: widget.color!,
-          width: widget.width!,
-          height: widget.height!,
-          indicator: widget.indicator,
-          indicatorXY: widget.indicatorXY!,
-          drawGap: widget.drawGap!,
+          beforeLineStyle: LineStyle(
+              color: widget.beforeLineColor!,
+              thickness: widget.beforeLineWeight!),
+          afterLineStyle: LineStyle(
+              color: widget.afterLineColor!,
+              thickness: widget.afterLineWeight!),
+          lineXY: widget.lineXY,
+          isLast: widget.isLast!,
+          isFirst: widget.isFirst!,
+          hasIndicator: widget.hasIndicator!,
         ),
-        beforeLineStyle: LineStyle(
-            color: widget.beforeLineColor!,
-            thickness: widget.beforeLineWeight!),
-        afterLineStyle: LineStyle(
-            color: widget.afterLineColor!, thickness: widget.afterLineWeight!),
-        lineXY: widget.lineXY,
-        isLast: widget.isLast!,
-        isFirst: widget.isFirst!,
-        hasIndicator: widget.hasIndicator!,
       ),
     );
   }

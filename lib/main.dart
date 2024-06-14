@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkMode,
       title: 'Bénin Poulet',
 
-      //home: const TimelineTilePage(),
+      home: const TimelineTilePage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
         '/timelineTilePage': (context) => const TimelineTilePage(),
       },
-      initialRoute: '/firstPage',
+      //initialRoute: '/firstPage',
     );
   }
 }

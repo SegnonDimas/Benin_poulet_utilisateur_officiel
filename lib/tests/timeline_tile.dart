@@ -1,4 +1,6 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/pages/creation_boutique/fiscalitePage.dart';
+import 'package:benin_poulet/views/pages/creation_boutique/infoBoutiquePage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -19,6 +21,7 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
 
   /*Suivre l'index de la page actuelle. Cela permet d'écouter les changements de valeur et de reconstruire les AppTimelineTile en conséquence.*/
   final ValueNotifier<int> _pageIndexNotifier = ValueNotifier<int>(0);
+  final PageController _pageViewController = PageController();
 
   final List<String> _title = [
     'Commençons à créer votre boutique',
@@ -37,20 +40,14 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
   ];
 
   final List<Widget> _pages = [
-    Container(
-      color: Colors.grey.shade300,
-      height: 200,
-      width: 300,
-    ),
+    InfoBoutiquePage(),
     Container(
       color: Colors.grey,
       height: 200,
       width: 300,
     ),
-    Container(
-      color: Colors.grey.shade400,
-      height: 400,
-      width: 300,
+    FiscalitePage(
+      indexSuivant: 4,
     ),
     Container(
       color: Colors.grey.shade300,
@@ -64,101 +61,287 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
     ),
   ];
 
+  int indexed = 0;
+  int fixedIndex = 0;
+  int position = 0;
+  int ontapIndex = 0;
+
+  @override
+  void initState() {
+    _pageViewController.addListener(() {
+      setState(() {
+        position = _pageViewController.page!.toInt();
+      });
+    });
+    _pageIndexNotifier.value = position;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: AppText(
-              text: 'Bénin Poulet',
-              fontSize: largeText() * 1.2,
-              color: primaryColor,
-            ),
-          ),
-          SizedBox(
-            height: appHeightSize(context) * 0.1,
-            width: appWidthSize(context),
-            child: Wrap(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(1, (index) {
-              return ValueListenableBuilder<int>(
-                valueListenable: _pageIndexNotifier,
-                builder: (context, value, child) {
-                  String title = _title[value];
-                  String description = _description[value];
-
-                  return SizedBox(
-                      height: appHeightSize(context) * 0.1,
-                      width: appWidthSize(context),
-                      child: ListTile(
-                        title: AppText(
-                          text: title,
-                          fontSize: mediumText(),
-                          fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: SizedBox(
+          child: Stack(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Positioned(
+                top: 0,
+                child: SizedBox(
+                  height: appHeightSize(context) * 0.2,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: appHeightSize(context) * 0.04,
+                        width: appWidthSize(context),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: AppText(
+                            text: 'Bénin Poulet',
+                            fontSize: largeText() * 1.3,
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        subtitle: AppText(
-                          text: description,
-                          fontSize: smallText() * 1.2,
-                        ),
-                      ));
-                },
-              );
-            })),
-          ),
-          SizedBox(
-            height: appHeightSize(context) * 0.07,
-            width: appWidthSize(context),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                /* ValueListenableBuilder : J'ai utilisé ValueListenableBuilder<int> autour de chaque AppTimelineTile pour reconstruire ces tuiles lorsque la valeur de _pageIndexNotifier change.*/
-                return ValueListenableBuilder<int>(
-                  valueListenable: _pageIndexNotifier,
-                  builder: (context, value, child) {
-                    Color tileColor =
-                        (value >= index) ? primaryColor : Colors.grey.shade300;
-                    Color iconColor = (value >= index)
-                        ? Colors.grey.shade200
-                        : Colors.grey.shade600;
-                    Color lineColor = (value > index - 1)
-                        ? primaryColor
-                        : Colors.grey.shade300;
+                      ),
+                      SizedBox(
+                        height: appHeightSize(context) * 0.1,
+                        width: appWidthSize(context),
+                        child: Wrap(
+                            //mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(1, (index) {
+                          return ValueListenableBuilder<int>(
+                            valueListenable: _pageIndexNotifier,
+                            builder: (context, value, child) {
+                              String title = _title[value];
+                              String description = _description[value];
 
-                    return AppTimelineTile(
-                      axis: TimelineAxis.horizontal,
-                      isFirst: index == 0,
-                      isLast: index == 4,
-                      index: index + 1,
-                      icon: _getIconForIndex(index),
-                      iconColor: iconColor,
-                      color: tileColor,
-                      afterLineColor: lineColor,
-                      beforeLineColor: lineColor,
-                      height: 40,
-                    );
-                  },
-                );
-              }),
-            ),
+                              return SizedBox(
+                                  height: appHeightSize(context) * 0.1,
+                                  width: appWidthSize(context),
+                                  child: ListTile(
+                                    title: AppText(
+                                      text: title,
+                                      fontSize: mediumText(),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    subtitle: AppText(
+                                      text: description,
+                                      fontSize: smallText() * 1.2,
+                                    ),
+                                  ));
+                            },
+                          );
+                        })),
+                      ),
+                      SizedBox(
+                        height: appHeightSize(context) * 0.06,
+                        width: appWidthSize(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(5, (index) {
+                            /* ValueListenableBuilder : J'ai utilisé ValueListenableBuilder<int> autour de chaque AppTimelineTile pour reconstruire ces tuiles lorsque la valeur de _pageIndexNotifier change.*/
+                            return ValueListenableBuilder<int>(
+                              valueListenable: _pageIndexNotifier,
+                              builder: (context, value, child) {
+                                Color tileColor = (value >= index)
+                                    ? primaryColor
+                                    : Colors.grey.shade300;
+                                Color iconColor = (value >= index)
+                                    ? Colors.grey.shade200
+                                    : Colors.grey.shade600;
+                                Color lineColor = (value > index - 1)
+                                    ? primaryColor
+                                    : Colors.grey.shade300;
+
+                                return AppTimelineTile(
+                                  axis: TimelineAxis.horizontal,
+                                  isFirst: index == 0,
+                                  isLast: index == 4,
+                                  index: index + 1,
+                                  icon: _getIconForIndex(index),
+                                  iconSize: mediumText() * 1.5,
+                                  iconColor: iconColor,
+                                  color: tileColor,
+                                  afterLineColor: lineColor,
+                                  beforeLineColor: lineColor,
+                                  afterLineWeight: 2,
+                                  beforeLineWeight: 2,
+                                  height: 40,
+                                  onTap: () {
+                                    print('''
+                                     indexed ==> $index
+                                    ''');
+                                    setState(() {
+                                      position = index;
+                                      _pageViewController.jumpToPage(index);
+                                      _pageIndexNotifier.value = position;
+                                    });
+                                  },
+                                );
+                              },
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: appHeightSize(context) * 0.01,
+                child: SizedBox(
+                    height: appHeightSize(context) * 0.75,
+                    width: appWidthSize(context),
+                    child: ListView(
+                      children: [
+                        SizedBox(
+                          height: appHeightSize(context) * 0.67,
+                          width: appWidthSize(context),
+                          child: PageView.builder(
+                              itemCount: _pages.length,
+                              controller: _pageViewController,
+                              allowImplicitScrolling: true,
+                              onPageChanged: (index) {
+                                position = index;
+
+                                setState(() {});
+                                print('''
+                                index   ==> $index
+                                indexed ==> $indexed 
+                                ''');
+
+                                _pageIndexNotifier.value = index;
+                              },
+                              itemBuilder: (BuildContext context, index) {
+                                print('''
+                              ItemBuilder
+                                index   ==> $index
+                                indexed ==> $indexed 
+                                ''');
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                      height: 400,
+                                      width: 100,
+                                      child: _pages[_pageIndexNotifier.value]),
+                                );
+                              }),
+                        ),
+
+                        // bouton Suivant/précédent
+                        SizedBox(
+                          height: appHeightSize(context) * 0.07,
+                          width: appWidthSize(context),
+                          child: Row(
+                            mainAxisAlignment: position == 0
+                                ? MainAxisAlignment.center
+                                : MainAxisAlignment.spaceEvenly,
+                            children: [
+                              //bouton précédent
+                              position != 0
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        /*  if (position > 0) {
+                                          setState(() {
+                                            _pageIndexNotifier.value =
+                                                position - 1;
+                                            position = position - 1;
+                                          });
+                                        }*/
+
+                                        if (position == 0) {
+                                          _pageViewController.initialPage;
+                                        } else {
+                                          //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+                                          _pageViewController.previousPage(
+                                              duration: const Duration(
+                                                  milliseconds: 1000),
+                                              curve: Curves.linear);
+                                          position =
+                                              _pageViewController.page!.toInt();
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left:
+                                              0, //appWidthSize(context) * 0.03,
+                                          right: 0,
+                                        ), //appWidthSize(context) * 0.03),
+                                        child: Container(
+                                            alignment: Alignment.center,
+                                            height:
+                                                appHeightSize(context) * 0.07,
+                                            width: appWidthSize(context) * 0.45,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: primaryColor),
+                                            child: Text(
+                                              'Précédent',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: mediumText() * 1.2),
+                                            )),
+                                      ),
+                                    )
+                                  : Container(),
+
+                              //bouton suivant
+                              GestureDetector(
+                                onTap: () {
+                                  /*if (position < _pages.length - 1) {
+                                    setState(() {
+                                      _pageIndexNotifier.value =
+                                          position + 1;
+                                      position = position + 1;
+                                    });
+                                  }*/
+
+                                  if (position == _pages.length - 1) {
+                                    //_pageViewController.initialPage;
+                                  } else {
+                                    //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+                                    _pageViewController.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        curve: Curves.linear);
+                                    position =
+                                        _pageViewController.page!.toInt();
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 0, //appWidthSize(context) * 0.03,
+                                    right: 0,
+                                  ), //appWidthSize(context) * 0.03),
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      height: appHeightSize(context) * 0.07,
+                                      width: position == 0
+                                          ? appWidthSize(context) * 0.9
+                                          : appWidthSize(context) * 0.45,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: primaryColor),
+                                      child: Text(
+                                        'Suivant',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: mediumText() * 1.2),
+                                      )),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ],
           ),
-          SizedBox(
-              height: appHeightSize(context) * 0.8,
-              width: appWidthSize(context),
-              child: PageView.builder(
-                  itemCount: _pages.length,
-                  onPageChanged: (index) {
-                    _pageIndexNotifier.value = index;
-                  },
-                  itemBuilder: (BuildContext context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                          height: 400, width: 100, child: _pages[index]),
-                    );
-                  })),
-        ],
+        ),
       ),
     );
   }
@@ -172,7 +355,7 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
       case 1:
         return Icons.grid_view_rounded;
       case 2:
-        return Icons.euro;
+        return Icons.credit_card;
       case 3:
         return Icons.motorcycle;
       case 4:
@@ -181,4 +364,6 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
         return Icons.circle;
     }
   }
+
+  // Widget page4 = FiscalitePage(indexSuivant: 3);
 }
