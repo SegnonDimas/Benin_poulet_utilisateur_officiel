@@ -84,6 +84,7 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
         child: SizedBox(
           child: Stack(
             //crossAxisAlignment: CrossAxisAlignment.start,
+            alignment: AlignmentDirectional.bottomCenter,
             children: [
               Positioned(
                 top: 0,
@@ -128,6 +129,8 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
                                     subtitle: AppText(
                                       text: description,
                                       fontSize: smallText() * 1.2,
+                                      overflow: TextOverflow.visible,
+                                      maxLine: 2,
                                     ),
                                   ));
                             },
@@ -190,6 +193,7 @@ class _TimelineTilePageState extends State<TimelineTilePage> {
               ),
               Positioned(
                 bottom: appHeightSize(context) * 0.01,
+                top: appHeightSize(context) * 0.2,
                 child: SizedBox(
                     height: appHeightSize(context) * 0.75,
                     width: appWidthSize(context),

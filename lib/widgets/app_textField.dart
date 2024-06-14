@@ -9,6 +9,7 @@ class AppTextField extends StatefulWidget {
   final Color? color;
   final TextEditingController controller;
   final Function(String)? onChanged;
+  final TextInputType? keyboardType;
   //final IconData suffixIcon;
   bool? isPassword;
   AppTextField(
@@ -21,7 +22,8 @@ class AppTextField extends StatefulWidget {
       required this.width,
       this.color = Colors.white,
       required this.controller,
-      this.onChanged});
+      this.onChanged,
+      this.keyboardType});
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -40,11 +42,14 @@ class _AppTextFieldState extends State<AppTextField> {
           //border: Border.all(color: Colors.red)
           ),
       child: widget.isPassword!
+
+          /// mot de passe
           ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: widget.controller,
                 obscureText: !click,
+                keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
                 style: TextStyle(color: Colors.grey.shade800),
                 decoration: InputDecoration(
@@ -85,11 +90,14 @@ class _AppTextFieldState extends State<AppTextField> {
                 ),
               ),
             )
+
+          /// pas mot de passe
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 obscureText: false,
                 controller: widget.controller,
+                keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
                 style: TextStyle(
                     color: Colors.grey.shade800,
