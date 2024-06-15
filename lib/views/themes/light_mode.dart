@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 ThemeData lightMode = ThemeData(
   /// colorScheme
   colorScheme: ColorScheme.light(
-      surface: Colors.grey.shade300,
-      primary: Colors.grey.shade400,
-      secondary: Colors.grey.shade300,
-      tertiary: Colors.white,
-      inversePrimary: Colors.grey.shade800,
-      inverseSurface: Colors.grey.shade600
+    surface: Colors.grey.shade300,
+    background: Colors.grey.shade100,
+    primary: Colors.grey.shade400,
+    secondary: Colors.grey.shade300,
+    tertiary: Colors.white,
+    inversePrimary: Colors.grey.shade800,
+    inverseSurface: Colors.grey.shade600,
   ),
 
   /// buttonTheme
-  buttonTheme: const ButtonThemeData(
-  ),
+  buttonTheme: const ButtonThemeData(),
 
   /// textTheme
   textTheme: const TextTheme(

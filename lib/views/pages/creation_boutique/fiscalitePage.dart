@@ -9,11 +9,6 @@ import '../../colors/app_colors.dart';
 import '../../sizes/app_sizes.dart';
 
 class FiscalitePage extends StatefulWidget {
-  int indexSuivant;
-
-  FiscalitePage({
-    required this.indexSuivant,
-  });
   @override
   FiscalitePageState createState() {
     return FiscalitePageState();
@@ -30,7 +25,6 @@ class FiscalitePageState extends State<FiscalitePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
-  int indexSuivant = 4;
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
 
   @override

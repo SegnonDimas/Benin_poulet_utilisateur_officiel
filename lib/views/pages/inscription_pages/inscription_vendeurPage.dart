@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../widgets/app_timeline_tile.dart';
+import '../creation_boutique/choixCategoriePage.dart';
 
 class InscriptionVendeurPage extends StatefulWidget {
   const InscriptionVendeurPage({super.key});
@@ -40,15 +41,14 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
   ];
 
   final List<Widget> _pages = [
+    // page 1 : infos boutique
     InfoBoutiquePage(),
-    Container(
-      color: Colors.grey,
-      height: 200,
-      width: 300,
-    ),
-    FiscalitePage(
-      indexSuivant: 4,
-    ),
+
+    // page 2 : choix categorie
+    ChoixCategoriePage(),
+
+    // page 3 : fiscalité
+    FiscalitePage(),
     Container(
       color: Colors.grey.shade300,
       height: 200,
@@ -208,21 +208,11 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               allowImplicitScrolling: true,
                               onPageChanged: (index) {
                                 position = index;
-
-                                setState(() {});
-                                print('''
-                                index   ==> $index
-                                indexed ==> $indexed 
-                                ''');
-
-                                _pageIndexNotifier.value = index;
+                                setState(() {
+                                  _pageIndexNotifier.value = index;
+                                });
                               },
                               itemBuilder: (BuildContext context, index) {
-                                print('''
-                              ItemBuilder
-                                index   ==> $index
-                                indexed ==> $indexed 
-                                ''');
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SizedBox(
@@ -243,16 +233,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                 : MainAxisAlignment.spaceEvenly,
                             children: [
                               //bouton précédent
-                              position != 0
+                              /*position != 0
                                   ? GestureDetector(
                                       onTap: () {
-                                        /*  if (position > 0) {
-                                          setState(() {
-                                            _pageIndexNotifier.value =
-                                                position - 1;
-                                            position = position - 1;
-                                          });
-                                        }*/
 
                                         if (position == 0) {
                                           _pageViewController.initialPage;
@@ -289,19 +272,11 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                             )),
                                       ),
                                     )
-                                  : Container(),
+                                  : Container(),*/
 
                               //bouton suivant
                               GestureDetector(
                                 onTap: () {
-                                  /*if (position < _pages.length - 1) {
-                                    setState(() {
-                                      _pageIndexNotifier.value =
-                                          position + 1;
-                                      position = position + 1;
-                                    });
-                                  }*/
-
                                   if (position == _pages.length - 1) {
                                     //_pageViewController.initialPage;
                                   } else {
@@ -324,7 +299,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                       height: appHeightSize(context) * 0.07,
                                       width: position == 0
                                           ? appWidthSize(context) * 0.9
-                                          : appWidthSize(context) * 0.45,
+                                          : appWidthSize(context) * 0.9,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(15),
