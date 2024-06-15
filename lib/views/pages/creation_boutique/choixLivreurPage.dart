@@ -156,7 +156,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
             ),
             AppText(
               text:
-                  'Pour l\'instant vous ne pouvez pas livrer vos produits vous-même',
+                  'Pour l\'instant, vous ne pouvez pas livrer vos produits vous-même',
               color: Colors.grey.shade400,
               overflow: TextOverflow.visible,
               fontSize: mediumText() * 0.8,
@@ -187,12 +187,13 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
             AppTextField(
               label:
                   '', //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
-              height: appHeightSize(context) * 0.12,
+              height: appHeightSize(context) * 0.08,
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
               prefixIcon: Icons.not_listed_location_rounded,
               color: Colors.grey.shade200,
-              maxLines: 3,
+              //maxLines: 3,
+              expands: true,
             ),
 
             /// CRITIQUÉ : car le vendeur peut être en train de créer son compte hors de sa boutique
@@ -218,6 +219,9 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               prefixIcon: Icons.location_on_outlined,
               color: Colors.grey.shade200,
               maxLines: 3,
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),

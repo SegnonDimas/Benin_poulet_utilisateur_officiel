@@ -52,7 +52,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     FiscalitePage(),
 
     // page 4 : choix livreur
-    ChoixLivreurPage(),
+    const ChoixLivreurPage(),
 
     Container(
       color: Colors.grey.shade400,
@@ -86,8 +86,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
             //crossAxisAlignment: CrossAxisAlignment.start,
             alignment: AlignmentDirectional.bottomCenter,
             children: [
+              /// l'en-tête de la page
               Positioned(
-                top: 0,
+                top: appHeightSize(context) * 0.03,
                 child: SizedBox(
                   height: appHeightSize(context) * 0.2,
                   child: Column(
@@ -191,9 +192,11 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                   ),
                 ),
               ),
+
+              /// le corps de la page
               Positioned(
                 bottom: appHeightSize(context) * 0.01,
-                top: appHeightSize(context) * 0.2,
+                top: appHeightSize(context) * 0.23,
                 child: SizedBox(
                     height: appHeightSize(context) * 0.75,
                     width: appWidthSize(context),
@@ -223,7 +226,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               }),
                         ),
 
-                        // bouton Suivant/précédent
+                        /// bouton Suivant/précédent
                         SizedBox(
                           height: appHeightSize(context) * 0.07,
                           width: appWidthSize(context),
@@ -232,48 +235,6 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                 ? MainAxisAlignment.center
                                 : MainAxisAlignment.spaceEvenly,
                             children: [
-                              //bouton précédent
-                              /*position != 0
-                                  ? GestureDetector(
-                                      onTap: () {
-
-                                        if (position == 0) {
-                                          _pageViewController.initialPage;
-                                        } else {
-                                          //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-                                          _pageViewController.previousPage(
-                                              duration: const Duration(
-                                                  milliseconds: 1000),
-                                              curve: Curves.linear);
-                                          position =
-                                              _pageViewController.page!.toInt();
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left:
-                                              0, //appWidthSize(context) * 0.03,
-                                          right: 0,
-                                        ), //appWidthSize(context) * 0.03),
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            height:
-                                                appHeightSize(context) * 0.07,
-                                            width: appWidthSize(context) * 0.45,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: primaryColor),
-                                            child: Text(
-                                              'Précédent',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: mediumText() * 1.2),
-                                            )),
-                                      ),
-                                    )
-                                  : Container(),*/
-
                               //bouton suivant
                               GestureDetector(
                                 onTap: () {

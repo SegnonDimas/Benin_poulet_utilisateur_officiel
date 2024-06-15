@@ -127,7 +127,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                     pressElevation: 20,
                     side: BorderSide.none,
                     padding: const EdgeInsets.only(
-                        top: 15, bottom: 15, left: 7, right: 7),
+                        top: 20, bottom: 20, left: 7, right: 7),
                     selected: _mobileMoney == 'Celtiis',
                     backgroundColor: Colors.grey.shade200,
                     shadowColor: Theme.of(context).colorScheme.inversePrimary,
@@ -157,7 +157,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                       pressElevation: 20,
                       side: BorderSide.none,
                       padding: const EdgeInsets.only(
-                          top: 15, bottom: 15, left: 7, right: 7),
+                          top: 20, bottom: 20, left: 7, right: 7),
                       selected: _mobileMoney == 'MTN',
                       tooltip: 'Recevoir de l\'argent par MTN Money',
                       backgroundColor: Colors.grey.shade200,
@@ -187,7 +187,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                     pressElevation: 20,
                     side: BorderSide.none,
                     padding: const EdgeInsets.only(
-                        top: 15, bottom: 15, left: 7, right: 7),
+                        top: 20, bottom: 20, left: 7, right: 7),
                     selected: _mobileMoney == 'Moov Africa',
                     tooltip: 'Recevoir de l\'argent par Moov Money',
                     backgroundColor: Colors.grey.shade200,

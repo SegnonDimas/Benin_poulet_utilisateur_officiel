@@ -1,5 +1,6 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
+
+import '../views/sizes/text_sizes.dart';
 
 class AppTextField extends StatefulWidget {
   final String label;
@@ -12,6 +13,8 @@ class AppTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final Color? prefixIconColor;
   final int maxLines;
+  final int minLines;
+  final bool? expands;
   //final IconData suffixIcon;
   bool? isPassword;
   AppTextField({
@@ -28,6 +31,8 @@ class AppTextField extends StatefulWidget {
     this.keyboardType,
     this.prefixIconColor = Colors.grey,
     this.maxLines = 1,
+    this.expands = false,
+    this.minLines = 1,
   });
 
   @override
@@ -57,8 +62,11 @@ class _AppTextFieldState extends State<AppTextField> {
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
                 maxLines: widget.maxLines,
+                minLines: widget.minLines,
+                expands: widget.expands!,
                 style: TextStyle(color: Colors.grey.shade800),
                 decoration: InputDecoration(
+                  floatingLabelAlignment: FloatingLabelAlignment.start,
                   border: InputBorder.none,
                   //isDense: true,
                   label: Text(
@@ -66,7 +74,9 @@ class _AppTextFieldState extends State<AppTextField> {
                     style:
                         TextStyle(color: Colors.grey, fontSize: mediumText()),
                   ),
-                  floatingLabelStyle: TextStyle(fontSize: mediumText()),
+                  labelStyle: TextStyle(fontSize: mediumText()),
+                  //labelText: widget.label,
+                  //hintStyle: TextStyle(fontSize: mediumText()),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
                   /* border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15.0),

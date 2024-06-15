@@ -105,6 +105,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     color: Colors.grey.shade300,
                     controller: _firstNameController,
                     prefixIcon: CupertinoIcons.person_alt_circle,
+                    //minLines: 4,
                   ),
                   const SizedBox(height: 10),
 
