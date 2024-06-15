@@ -173,9 +173,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                     const EdgeInsets.all(8.0),
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                            '/timelineTilePage');
+                                                    Navigator.of(context).pushNamed(
+                                                        '/inscriptionVendeurPage');
                                                   },
                                                   child: Container(
                                                     height:
@@ -451,7 +450,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                           child: GestureDetector(
                                             onTap: () {
                                               Navigator.of(context).pushNamed(
-                                                  '/timelineTilePage');
+                                                  '/inscriptionVendeurPage');
                                             },
                                             child: Container(
                                               height:

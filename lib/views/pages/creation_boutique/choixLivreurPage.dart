@@ -192,7 +192,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               controller: _emplacementController,
               prefixIcon: Icons.not_listed_location_rounded,
               color: Colors.grey.shade200,
-              maxLine: 3,
+              maxLines: 3,
             ),
 
             /// CRITIQUÉ : car le vendeur peut être en train de créer son compte hors de sa boutique
@@ -217,7 +217,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               controller: _emplacementController,
               prefixIcon: Icons.location_on_outlined,
               color: Colors.grey.shade200,
-              maxLine: 3,
+              maxLines: 3,
             ),
           ],
         ),

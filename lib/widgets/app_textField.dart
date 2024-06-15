@@ -11,7 +11,7 @@ class AppTextField extends StatefulWidget {
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final Color? prefixIconColor;
-  final int? maxLine;
+  final int maxLines;
   //final IconData suffixIcon;
   bool? isPassword;
   AppTextField({
@@ -27,7 +27,7 @@ class AppTextField extends StatefulWidget {
     this.onChanged,
     this.keyboardType,
     this.prefixIconColor = Colors.grey,
-    this.maxLine = 1,
+    this.maxLines = 1,
   });
 
   @override
@@ -56,8 +56,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 obscureText: !click,
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
-                maxLines: widget.maxLine,
-                expands: true,
+                maxLines: widget.maxLines,
                 style: TextStyle(color: Colors.grey.shade800),
                 decoration: InputDecoration(
                   border: InputBorder.none,

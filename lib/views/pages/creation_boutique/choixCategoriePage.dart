@@ -18,6 +18,8 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
       description: 'Tout produit qui concerne les volailles',
       imgUrl: 'assets/images/poulet.png',
       isSelected: false,
+      height: 90,
+      width: 90,
     ),
 
     // boeuf
@@ -27,6 +29,8 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
           'Tout produit qui concerne le bétail, exceptionnellement le Boeuf',
       imgUrl: 'assets/images/boeuf.png',
       isSelected: false,
+      height: 90,
+      width: 90,
     ),
 
     // mouton
@@ -36,6 +40,8 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
           'Tout produit qui concerne le bétail, exceptionnellement le Mouton',
       imgUrl: 'assets/images/mouton.png',
       isSelected: false,
+      height: 90,
+      width: 90,
     ),
 
     // poisson
@@ -44,6 +50,8 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
       description: 'Tout produit qui concerne la pisciculture et la pêche',
       imgUrl: 'assets/images/poisson.png',
       isSelected: false,
+      height: 90,
+      width: 90,
     ),
 
     // restaurant
@@ -52,6 +60,8 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
       description: 'Lorsque vous êtes un restaurant',
       imgUrl: 'assets/images/restaurant.png',
       isSelected: false,
+      height: 90,
+      width: 90,
     ),
   ];
 

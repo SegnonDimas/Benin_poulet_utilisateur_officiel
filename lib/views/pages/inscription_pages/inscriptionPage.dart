@@ -66,8 +66,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
                         colors: [
-                          Theme.of(context).colorScheme.inversePrimary,
-                          Theme.of(context).colorScheme.inversePrimary,
+                          /*Theme.of(context).colorScheme.inversePrimary,
+                          Theme.of(context).colorScheme.inversePrimary,*/
                           primaryColor,
                           primaryColor,
                           primaryColor,

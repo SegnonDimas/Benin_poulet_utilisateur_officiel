@@ -151,7 +151,7 @@ FRONT-END
         - page info boutique
         - page choix secteur/catégorie
         ***
-
+        - page choix livreur
 
 
 
@@ -159,7 +159,6 @@ FRONT-END
     - pages de connexion pour vendeurs
         -
     - pages de d'inscription pour vendeur
-        - page choix livreur
         - pages authentification
             - page
 
