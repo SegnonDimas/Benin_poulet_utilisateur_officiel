@@ -1,4 +1,5 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/pages/creation_boutique/choixLivreurPage.dart';
 import 'package:benin_poulet/views/pages/creation_boutique/fiscalitePage.dart';
 import 'package:benin_poulet/views/pages/creation_boutique/infoBoutiquePage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
@@ -49,11 +50,10 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
 
     // page 3 : fiscalité
     FiscalitePage(),
-    Container(
-      color: Colors.grey.shade300,
-      height: 200,
-      width: 100,
-    ),
+
+    // page 4 : choix livreur
+    ChoixLivreurPage(),
+
     Container(
       color: Colors.grey.shade400,
       height: 200,

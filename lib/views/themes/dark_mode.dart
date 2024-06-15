@@ -8,7 +8,7 @@ ThemeData darkMode = ThemeData(
       secondary: const Color.fromARGB(255, 56, 56, 56),
       tertiary: const Color.fromARGB(255, 68, 68, 68),
       //inversePrimary: Color.fromARGB(255, 37, 37, 37),
-      inversePrimary: Colors.grey.shade500,
+      inversePrimary: Colors.grey.shade200,
       inverseSurface: Colors.grey.shade400),
 
   // textTheme

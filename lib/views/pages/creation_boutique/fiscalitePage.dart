@@ -47,12 +47,19 @@ class FiscalitePageState extends State<FiscalitePage> {
               title: AppText(
                 text: 'Particulier',
                 fontSize: smallText() * 1.3,
-                fontWeight: FontWeight.bold,
+                fontWeight: _sellerType == 'Particulier'
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: _sellerType == 'Particulier'
+                    ? Theme.of(context).colorScheme.inversePrimary
+                    : Colors.grey,
               ),
               leading: Radio<String>(
                 value: 'Particulier',
                 groupValue: _sellerType,
                 activeColor: primaryColor,
+                focusColor: Colors.grey,
+                hoverColor: Colors.grey,
                 onChanged: (String? value) {
                   setState(() {
                     _sellerType = value!;
@@ -68,12 +75,19 @@ class FiscalitePageState extends State<FiscalitePage> {
                 text: 'Entreprise ou Société individuelle',
                 fontSize: smallText() * 1.3,
                 overflow: TextOverflow.visible,
-                fontWeight: FontWeight.bold,
+                fontWeight: _sellerType == 'Entreprise ou Société individuelle'
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: _sellerType == 'Entreprise ou Société individuelle'
+                    ? Theme.of(context).colorScheme.inversePrimary
+                    : Colors.grey,
               ),
               leading: Radio<String>(
                 value: 'Entreprise ou Société individuelle',
                 groupValue: _sellerType,
                 activeColor: primaryColor,
+                focusColor: Colors.grey,
+                hoverColor: Colors.grey,
                 onChanged: (String? value) {
                   setState(() {
                     _sellerType = value!;

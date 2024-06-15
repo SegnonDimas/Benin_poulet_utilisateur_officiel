@@ -148,6 +148,10 @@ FRONT-END
     ***
     - pages d'inscriptions pour vendeurs
         - page fiscalité
+        - page info boutique
+        - page choix secteur/catégorie
+        ***
+
 
 
 
@@ -155,9 +159,9 @@ FRONT-END
     - pages de connexion pour vendeurs
         -
     - pages de d'inscription pour vendeur
-        - page infos boutique
-        - page secteur/catégorie
         - page choix livreur
+        - pages authentification
+            - page
 
 
 
@@ -169,6 +173,8 @@ FRONT-END
     - flutter_card_swiper 7.0.1
     - flutter_slidable
     - slide_to_act 2.0.2
+    - overlay_tooltip
+    - flutter_local_notifications 17.1.2
 
 
 Icons :

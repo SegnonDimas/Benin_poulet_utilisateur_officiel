@@ -10,20 +10,25 @@ class AppTextField extends StatefulWidget {
   final TextEditingController controller;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
+  final Color? prefixIconColor;
+  final int? maxLine;
   //final IconData suffixIcon;
   bool? isPassword;
-  AppTextField(
-      {super.key,
-      required this.label,
-      this.prefixIcon = Icons.home,
-      /*required this.suffixIcon,*/
-      this.isPassword = false,
-      required this.height,
-      required this.width,
-      this.color = Colors.white,
-      required this.controller,
-      this.onChanged,
-      this.keyboardType});
+  AppTextField({
+    super.key,
+    required this.label,
+    this.prefixIcon = Icons.home,
+    /*required this.suffixIcon,*/
+    this.isPassword = false,
+    required this.height,
+    required this.width,
+    this.color = Colors.white,
+    required this.controller,
+    this.onChanged,
+    this.keyboardType,
+    this.prefixIconColor = Colors.grey,
+    this.maxLine = 1,
+  });
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -51,13 +56,16 @@ class _AppTextFieldState extends State<AppTextField> {
                 obscureText: !click,
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
+                maxLines: widget.maxLine,
+                expands: true,
                 style: TextStyle(color: Colors.grey.shade800),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   //isDense: true,
                   label: Text(
                     widget.label,
-                    style: const TextStyle(color: Colors.grey),
+                    style:
+                        TextStyle(color: Colors.grey, fontSize: mediumText()),
                   ),
                   floatingLabelStyle: TextStyle(fontSize: mediumText()),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
@@ -65,10 +73,9 @@ class _AppTextFieldState extends State<AppTextField> {
                   borderRadius: BorderRadius.all(Radius.circular(15.0),
                   ),
                 ),*/
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.lock,
-                    color: Colors
-                        .grey /*Theme.of(context).colorScheme.inversePrimary*/,
+                    color: widget.prefixIconColor,
                   ),
                   suffixIcon: GestureDetector(
                       onTap: () {
@@ -118,8 +125,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 ),*/
                   prefixIcon: Icon(
                     widget.prefixIcon,
-                    color:
-                        Colors.grey /*Theme.of(context).colorScheme.primary*/,
+                    color: widget.prefixIconColor,
                   ),
                 ),
               ),
