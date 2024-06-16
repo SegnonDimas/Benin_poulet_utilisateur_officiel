@@ -95,8 +95,9 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
                     color: Theme.of(context).colorScheme.surface,
-                    controller: _passWordController,
+                    controller: _emailcontroller,
                     prefixIcon: Icons.email,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
 

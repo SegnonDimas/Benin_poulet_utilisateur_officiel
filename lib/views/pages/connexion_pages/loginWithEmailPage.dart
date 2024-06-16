@@ -86,14 +86,6 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: appHeightSize(context) * 0.11),
-                  /* Text(
-                    'Bienvenue !',
-                    style: TextStyle(
-                        fontSize: largeText() * 1.5,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor),
-                  ),
-                  const SizedBox(height: 20),*/
 
                   /// Formulaire de connexion
 
@@ -105,6 +97,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     color: Theme.of(context).colorScheme.surface,
                     controller: _passWordController,
                     prefixIcon: Icons.email,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
 
@@ -115,7 +108,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     width: appWidthSize(context) * 0.9,
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
-                    controller: _passWordController,
+                    controller: _emailcontroller,
                   ),
                   const SizedBox(height: 5),
 

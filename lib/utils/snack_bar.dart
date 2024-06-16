@@ -11,6 +11,7 @@ class AppSnackBar {
         content: AppText(
           text: message,
           color: Theme.of(context).colorScheme.inverseSurface,
+          overflow: TextOverflow.visible,
         ),
         backgroundColor: Theme.of(context!).colorScheme.surface,
         elevation: 3,

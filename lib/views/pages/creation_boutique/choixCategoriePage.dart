@@ -14,7 +14,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
   final List<Categorie> _categorie = [
     // poulet/volaille
     Categorie(
-      activeColor: primaryColor,
+      activeColor: primaryColor.withOpacity(0.9),
       description: 'Tout produit qui concerne les volailles',
       imgUrl: 'assets/images/poulet.png',
       isSelected: false,
@@ -201,9 +201,9 @@ class _CategorieState extends State<Categorie> {
                   text: widget.description!,
                   overflow: TextOverflow.visible,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Icon(Icons.info_outline, color: Colors.grey.shade600),
+                child: const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(Icons.info_outline, color: Colors.white),
                 ))
           ],
         ),
