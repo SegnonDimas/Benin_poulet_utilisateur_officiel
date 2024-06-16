@@ -64,7 +64,9 @@ class _AppTextFieldState extends State<AppTextField> {
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 expands: widget.expands!,
-                style: TextStyle(color: Colors.grey.shade800),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                ),
                 decoration: InputDecoration(
                   floatingLabelAlignment: FloatingLabelAlignment.start,
                   border: InputBorder.none,
@@ -116,7 +118,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
                 style: TextStyle(
-                    color: Colors.grey.shade800,
+                    color: Theme.of(context).colorScheme.inverseSurface,
                     overflow: TextOverflow.ellipsis),
                 decoration: InputDecoration(
                   border: InputBorder.none,

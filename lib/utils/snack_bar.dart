@@ -2,16 +2,20 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 
 import '../views/sizes/app_sizes.dart';
+import '../widgets/app_text.dart';
 
 class AppSnackBar {
   static void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context!).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context!).colorScheme.inversePrimary,
-        elevation: 5,
+        content: AppText(
+          text: message,
+          color: Theme.of(context).colorScheme.inverseSurface,
+        ),
+        backgroundColor: Theme.of(context!).colorScheme.surface,
+        elevation: 3,
         duration: const Duration(seconds: 6),
-        closeIconColor: Colors.grey.shade600,
+        closeIconColor: Theme.of(context).colorScheme.inverseSurface,
         showCloseIcon: true,
         // permettre de
         behavior: SnackBarBehavior.floating,

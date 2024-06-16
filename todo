@@ -134,7 +134,7 @@ Déjà fait :
 
 FRONT-END
     - first page : page de lancement
-    - login page : page de connexion
+    - login page : page de connexion :::::::::::::::::::::::::::
     ***
     - gestion des thèmes : dark mode, light mode
     ***
@@ -182,3 +182,8 @@ Icons :
     - Icons.grid_view_rounded,
     - Icons.motorcycle
     - Icons.fingerprint_sharp
+
+
+Réglé :
+    - login page : page de connexion
+    - snack_bar.dart

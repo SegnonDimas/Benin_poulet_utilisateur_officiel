@@ -1,4 +1,3 @@
-import 'package:benin_poulet/tests/themes.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkMode,
       title: 'Bénin Poulet',
 
-      home: const ThemesPage(),
+      //home: const ThemesPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
         '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
       },
-      //initialRoute: '/firstPage',
+      initialRoute: '/firstPage',
     );
   }
 }

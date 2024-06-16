@@ -12,7 +12,7 @@ ThemeData lightMode = ThemeData(
     tertiary: Colors.white,
     inversePrimary: Colors.grey.shade800,
     //inverseSurface: Colors.grey.shade600,
-    inverseSurface: Color.fromRGBO(35, 34, 30, 1),
+    inverseSurface: const Color.fromRGBO(45, 50, 59, 1.0),
   ),
 
   /// buttonTheme
