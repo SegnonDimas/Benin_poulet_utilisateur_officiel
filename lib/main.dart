@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkMode,
       title: 'Bénin Poulet',
 
-      //home: const ThemesPage(),
+      //  home: const InscriptionVendeurPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),

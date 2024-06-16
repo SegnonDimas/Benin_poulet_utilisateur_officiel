@@ -1,4 +1,5 @@
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -52,7 +53,10 @@ class FiscalitePageState extends State<FiscalitePage> {
                     : FontWeight.normal,
                 color: _sellerType == 'Particulier'
                     ? Theme.of(context).colorScheme.inversePrimary
-                    : Colors.grey,
+                    : Theme.of(context)
+                        .colorScheme
+                        .inverseSurface
+                        .withOpacity(0.3),
               ),
               leading: Radio<String>(
                 value: 'Particulier',
@@ -80,7 +84,10 @@ class FiscalitePageState extends State<FiscalitePage> {
                     : FontWeight.normal,
                 color: _sellerType == 'Entreprise ou Société individuelle'
                     ? Theme.of(context).colorScheme.inversePrimary
-                    : Colors.grey,
+                    : Theme.of(context)
+                        .colorScheme
+                        .inverseSurface
+                        .withOpacity(0.3),
               ),
               leading: Radio<String>(
                 value: 'Entreprise ou Société individuelle',
@@ -98,7 +105,7 @@ class FiscalitePageState extends State<FiscalitePage> {
             ),
             //SizedBox(height: 20),
             Divider(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.secondary,
             ),
 
             // Mobile money
@@ -122,14 +129,19 @@ class FiscalitePageState extends State<FiscalitePage> {
                   ChoiceChip(
                     label: AppText(
                       text: 'Celtiis',
-                      color: isCeltiis ? Colors.white : Colors.grey,
+                      color: isCeltiis
+                          ? Colors.white
+                          : Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withAlpha(50),
                     ),
                     pressElevation: 20,
                     side: BorderSide.none,
                     padding: const EdgeInsets.only(
                         top: 20, bottom: 20, left: 7, right: 7),
                     selected: _mobileMoney == 'Celtiis',
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     shadowColor: Theme.of(context).colorScheme.inversePrimary,
                     selectedColor: primaryColor,
                     checkmarkColor: Colors.white,
@@ -152,7 +164,12 @@ class FiscalitePageState extends State<FiscalitePage> {
                     child: ChoiceChip(
                       label: AppText(
                         text: 'MTN',
-                        color: isMtn ? Colors.white : Colors.grey,
+                        color: isMtn
+                            ? Colors.white
+                            : Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withAlpha(50),
                       ),
                       pressElevation: 20,
                       side: BorderSide.none,
@@ -160,7 +177,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                           top: 20, bottom: 20, left: 7, right: 7),
                       selected: _mobileMoney == 'MTN',
                       tooltip: 'Recevoir de l\'argent par MTN Money',
-                      backgroundColor: Colors.grey.shade200,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                       shadowColor: Theme.of(context).colorScheme.inversePrimary,
                       selectedColor: primaryColor,
                       checkmarkColor: Colors.white,
@@ -182,7 +199,12 @@ class FiscalitePageState extends State<FiscalitePage> {
                   ChoiceChip(
                     label: AppText(
                       text: 'Moov Africa',
-                      color: isMoov ? Colors.white : Colors.grey,
+                      color: isMoov
+                          ? Colors.white
+                          : Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withAlpha(50),
                     ),
                     pressElevation: 20,
                     side: BorderSide.none,
@@ -190,7 +212,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                         top: 20, bottom: 20, left: 7, right: 7),
                     selected: _mobileMoney == 'Moov Africa',
                     tooltip: 'Recevoir de l\'argent par Moov Money',
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     shadowColor: Theme.of(context).colorScheme.inversePrimary,
                     selectedColor: primaryColor,
                     checkmarkColor: Colors.white,
@@ -218,65 +240,15 @@ class FiscalitePageState extends State<FiscalitePage> {
 
             // Numéro de téléphone
             const SizedBox(height: 20),
-            Container(
-              alignment: Alignment.center,
-              height: MediaQuery.of(context).size.height * 0.08,
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey.shade200,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InternationalPhoneNumberInput(
-                  onInputChanged: (PhoneNumber number) {
-                    // le numéro de téléphone saisi.
-                    print(number.phoneNumber);
-                  },
-                  onInputValidated: (bool value) {
-                    // true, si le numéro saisi est correct; false sinon.
-                    print('Valeur : $value');
-                  },
-                  hintText: 'Numéro de téléphone',
-                  errorMessage: 'Numéro non valide',
-                  locale: 'NG',
-                  selectorConfig: const SelectorConfig(
-                      selectorType: PhoneInputSelectorType.DIALOG,
-                      useBottomSheetSafeArea: true,
-                      setSelectorButtonAsPrefixIcon: true,
-                      leadingPadding: 10),
-                  ignoreBlank: false,
-                  autoValidateMode: AutovalidateMode.disabled,
-                  selectorTextStyle: const TextStyle(color: Colors.grey),
-                  textStyle: const TextStyle(color: Colors.black),
-                  initialValue: number,
-                  textFieldController: _phoneNumbercontroller,
-                  formatInput: true,
-                  autoFocus: false,
-                  autoFocusSearch: true,
-                  keyboardType: const TextInputType.numberWithOptions(
-                      signed: true, decimal: true),
-                  inputBorder: const OutlineInputBorder(),
-                  inputDecoration: InputDecoration(
-                    border: InputBorder.none,
-                    label: AppText(
-                      text: 'Numéro de téléphone',
-                      color: Colors.grey,
-                    ),
-                  ),
-                  onSaved: (PhoneNumber number) {
-                    print('On Saved: $number');
-                  },
-                ),
-              ),
-            ),
+            AppPhoneTextField(controller: _phoneNumbercontroller),
             const SizedBox(height: 20),
 
+            // Nom prénom
             AppTextField(
               label: 'Nom Prénom',
               height: appHeightSize(context) * 0.08,
               width: appWidthSize(context) * 0.9,
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.surface,
               controller: _nameController,
               prefixIcon: CupertinoIcons.person_alt_circle,
             ),
@@ -289,8 +261,12 @@ class FiscalitePageState extends State<FiscalitePage> {
               child: AppText(
                 text:
                     "Vous pouvez faire des modifications après dans les paramètres",
-                color: Colors.grey.shade500,
-                fontSize: smallText(),
+                color: Theme.of(context)
+                    .colorScheme
+                    .inverseSurface
+                    .withOpacity(0.2),
+                overflow: TextOverflow.visible,
+                fontSize: smallText() * 1.1,
               ),
             ),
 

@@ -31,9 +31,10 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: ListView(
         children: [
+          /// bouton Retour
           Row(
             children: [
               Padding(
@@ -47,17 +48,14 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     height: appHeightSize(context) * 0.05,
                     width: appHeightSize(context) * 0.05,
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(
                         appHeightSize(context),
                       ),
                     ),
                     child: Icon(
                       Icons.arrow_back_ios,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                       size: mediumText(),
                       weight: 50,
                     ),
@@ -104,7 +102,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     label: 'Adresse Email',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     controller: _passWordController,
                     prefixIcon: Icons.email,
                   ),
@@ -115,7 +113,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     label: 'Mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordController,
                   ),
@@ -236,7 +234,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -261,7 +259,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -72,7 +72,10 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                               : FontWeight.normal,
                           color: _smartSolutions == 'OUI'
                               ? Theme.of(context).colorScheme.inversePrimary
-                              : Colors.grey,
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withAlpha(50),
                         ),
                         leading: Radio<String>(
                           value: 'OUI',
@@ -128,7 +131,10 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                               : FontWeight.normal,
                           color: _smartSolutions == 'NON'
                               ? Theme.of(context).colorScheme.inversePrimary
-                              : Colors.grey,
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withAlpha(50),
                         ),
                         leading: Radio<String>(
                           value: 'NON',
@@ -157,7 +163,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
             AppText(
               text:
                   'Pour l\'instant, vous ne pouvez pas livrer vos produits vous-même',
-              color: Colors.grey.shade400,
+              color: Theme.of(context).colorScheme.inverseSurface.withAlpha(40),
               overflow: TextOverflow.visible,
               fontSize: mediumText() * 0.8,
             ),
@@ -167,7 +173,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
 
             // divider
             Divider(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.surface,
             ),
             const SizedBox(
               height: 20,
@@ -191,7 +197,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
               prefixIcon: Icons.not_listed_location_rounded,
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.surface,
               //maxLines: 3,
               expands: true,
             ),
@@ -217,7 +223,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
               prefixIcon: Icons.location_on_outlined,
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.surface,
               maxLines: 3,
             ),
             const SizedBox(

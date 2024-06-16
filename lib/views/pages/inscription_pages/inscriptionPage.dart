@@ -4,6 +4,7 @@ import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +35,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: ListView(
         children: [
           /// Image d'arrière-plan
@@ -92,7 +93,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     label: 'Nom',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     controller: _lastNameController,
                     prefixIcon: CupertinoIcons.person_alt_circle,
                   ),
@@ -102,7 +103,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     label: 'Prénom',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     controller: _firstNameController,
                     prefixIcon: CupertinoIcons.person_alt_circle,
                     //minLines: 4,
@@ -110,58 +111,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   const SizedBox(height: 10),
 
                   // Numéro de téléphone
-                  Container(
-                    alignment: Alignment.center,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.grey.shade300,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InternationalPhoneNumberInput(
-                        onInputChanged: (PhoneNumber number) {
-                          // le numéro de téléphone saisi.
-                          print(number.phoneNumber);
-                        },
-                        onInputValidated: (bool value) {
-                          // true, si le numéro saisi est correct; false sinon.
-                          print('Valeur : $value');
-                        },
-                        hintText: 'Numéro de téléphone',
-                        errorMessage: 'Numéro non valide',
-                        locale: 'NG',
-                        selectorConfig: const SelectorConfig(
-                            selectorType: PhoneInputSelectorType.DIALOG,
-                            useBottomSheetSafeArea: true,
-                            setSelectorButtonAsPrefixIcon: true,
-                            leadingPadding: 10),
-                        ignoreBlank: false,
-                        autoValidateMode: AutovalidateMode.disabled,
-                        selectorTextStyle: const TextStyle(color: Colors.grey),
-                        textStyle: const TextStyle(color: Colors.black),
-                        initialValue: number,
-                        textFieldController: _phoneNumbercontroller,
-                        formatInput: true,
-                        autoFocus: false,
-                        autoFocusSearch: true,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            signed: true, decimal: true),
-                        inputBorder: const OutlineInputBorder(),
-                        inputDecoration: InputDecoration(
-                          border: InputBorder.none,
-                          label: AppText(
-                            text: 'Numéro de téléphone',
-                            color: Colors.grey,
-                          ),
-                        ),
-                        onSaved: (PhoneNumber number) {
-                          print('On Saved: $number');
-                        },
-                      ),
-                    ),
-                  ),
+                  AppPhoneTextField(controller: _phoneNumbercontroller),
                   const SizedBox(height: 10),
 
                   // Mot de passe
@@ -169,7 +119,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     label: 'Mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordController,
                   ),
@@ -180,7 +130,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     label: 'Confirmer mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _confirmPassWordController,
                   ),
@@ -256,7 +206,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -266,9 +216,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
                               ),
                             )),
                       ),
-                      /*SizedBox(
-                        width: appWidthSize(context) * 0.15,
-                      ),*/
 
                       // logo Apple
                       GestureDetector(
@@ -281,7 +228,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -306,7 +253,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -390,7 +337,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
           'Inscription Réussie',
           'Votre inscription est effectuée avec succès',
           ContentType.success,
-          Colors.green);
+          primaryColor);
     }
   }
 }

@@ -8,7 +8,7 @@ ThemeData lightMode = ThemeData(
     background: const Color.fromRGBO(245, 246, 250, 1.0),
     surface: const Color.fromRGBO(220, 221, 225, 150),
     primary: Colors.grey.shade400,
-    secondary: Colors.grey.shade300,
+    secondary: const Color.fromRGBO(220, 221, 225, 50),
     tertiary: Colors.white,
     inversePrimary: Colors.grey.shade800,
     //inverseSurface: Colors.grey.shade600,

@@ -129,6 +129,7 @@ class _CategorieState extends State<Categorie> {
   @override
   void initState() {
     widget.isSelected = false;
+    //widget.disabledColor = Colors.grey;
     super.initState();
   }
 
@@ -157,13 +158,18 @@ class _CategorieState extends State<Categorie> {
               height: widget.height,
               width: widget.width,
               decoration: BoxDecoration(
-                  color: istap ? widget.activeColor : widget.disabledColor,
+                  color: istap
+                      ? widget.activeColor
+                      : Theme.of(context)
+                          .colorScheme
+                          .surface, //widget.disabledColor,
                   borderRadius: BorderRadius.circular(15)),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Image.asset(
                   widget.imgUrl!,
                   fit: BoxFit.contain,
+                  color: Colors.black,
                   //color: Theme.of(context).colorScheme.surface,
                 ),
               ),
@@ -174,7 +180,7 @@ class _CategorieState extends State<Categorie> {
                 showBarrier: true,
                 controller: _controller,
                 popupDirection: TooltipDirection.down,
-                backgroundColor: Theme.of(context).colorScheme.tertiary,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 left: appWidthSize(context) * 0.05,
                 right: appWidthSize(context) * 0.05,
                 arrowTipDistance: 15.0,
@@ -195,12 +201,9 @@ class _CategorieState extends State<Categorie> {
                   text: widget.description!,
                   overflow: TextOverflow.visible,
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                  ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(Icons.info_outline, color: Colors.grey.shade600),
                 ))
           ],
         ),

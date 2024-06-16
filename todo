@@ -139,19 +139,19 @@ FRONT-END
     - gestion des thèmes : dark mode, light mode
     ***
     - création du dialogue de choix de profil
-    - création des pages de bienvenue
+    - création des pages de bienvenue ::::::::::::::::::::::::::
     ***
-    - page d'inscription pour clients
+    - page d'inscription pour clients ::::::::::::::::::::::::::
     ***
-    - page de connexion avec Email
-    - page d'inscription avec Email
+    - page de connexion avec Email :::::::::::::::::::::::::::::
+    - page d'inscription avec Email ::::::::::::::::::::::::::::
     ***
-    - pages d'inscriptions pour vendeurs
-        - page fiscalité
-        - page info boutique
-        - page choix secteur/catégorie
+    - pages d'inscriptions pour vendeurs :::::::::::::::::::::::
+        - page fiscalité :::::::::::::::::::::::::::::::::::::::
+        - page info boutique :::::::::::::::::::::::::::::::::::
+        - page choix secteur/catégorie :::::::::::::::::::::::::
         ***
-        - page choix livreur
+        - page choix livreur :::::::::::::::::::::::::::::::::::
         ***
 
 
@@ -187,3 +187,12 @@ Icons :
 Réglé :
     - login page : page de connexion
     - snack_bar.dart
+    *****
+    - pages de bienvenue
+    - page incription pour clients
+    - page de connecion avec email
+    - page d'inscription avec email
+    - page choix secteurs
+    - page fiscalité
+    - page choix livreur
+    - page principale d'inscription pour vendeur (TimelineTile principalement)

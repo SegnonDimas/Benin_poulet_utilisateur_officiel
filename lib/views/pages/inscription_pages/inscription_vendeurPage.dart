@@ -37,7 +37,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     'Dites-nous-en plus sur votre boutique',
     'Aidez les clients à comprendre ce que votre boutique offre',
     'Vos informations sont chiffrées de bout en bout',
-    'Confier vos livraisons à notre flotte de livreur expérimentée',
+    'Confiez vos livraisons à notre flotte de livreur expérimentée',
     'Tous nos vendeurs sont vérifiés pour rassurer nos clients',
   ];
 
@@ -122,15 +122,22 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                   height: appHeightSize(context) * 0.1,
                                   width: appWidthSize(context),
                                   child: ListTile(
+                                    //titre
                                     title: AppText(
                                       text: title,
                                       fontSize: mediumText(),
                                       fontWeight: FontWeight.bold,
                                     ),
+
+                                    //description
                                     subtitle: AppText(
                                       text: description,
                                       fontSize: smallText() * 1.2,
                                       overflow: TextOverflow.visible,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                          .withAlpha(200),
                                       maxLine: 2,
                                     ),
                                   ));
@@ -150,13 +157,16 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               builder: (context, value, child) {
                                 Color tileColor = (value >= index)
                                     ? primaryColor
-                                    : Colors.grey.shade300;
+                                    : Theme.of(context).colorScheme.surface;
                                 Color iconColor = (value >= index)
                                     ? Colors.grey.shade200
-                                    : Colors.grey.shade600;
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface
+                                        .withAlpha(60); //Colors.grey.shade600;
                                 Color lineColor = (value > index - 1)
                                     ? primaryColor
-                                    : Colors.grey.shade300;
+                                    : Theme.of(context).colorScheme.surface;
 
                                 return AppTimelineTile(
                                   axis: TimelineAxis.horizontal,
@@ -200,8 +210,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                 child: SizedBox(
                     height: appHeightSize(context) * 0.75,
                     width: appWidthSize(context),
-                    child: ListView(
+                    child: Stack(
                       children: [
+                        /// les sous-pages
                         SizedBox(
                           height: appHeightSize(context) * 0.67,
                           width: appWidthSize(context),
@@ -220,60 +231,63 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: SizedBox(
                                       height: 400,
-                                      width: 100,
+                                      //width: 100,
                                       child: _pages[_pageIndexNotifier.value]),
                                 );
                               }),
                         ),
 
                         /// bouton Suivant/précédent
-                        SizedBox(
-                          height: appHeightSize(context) * 0.07,
-                          width: appWidthSize(context),
-                          child: Row(
-                            mainAxisAlignment: position == 0
-                                ? MainAxisAlignment.center
-                                : MainAxisAlignment.spaceEvenly,
-                            children: [
-                              //bouton suivant
-                              GestureDetector(
-                                onTap: () {
-                                  if (position == _pages.length - 1) {
-                                    //_pageViewController.initialPage;
-                                  } else {
-                                    //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-                                    _pageViewController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 1000),
-                                        curve: Curves.linear);
-                                    position =
-                                        _pageViewController.page!.toInt();
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 0, //appWidthSize(context) * 0.03,
-                                    right: 0,
-                                  ), //appWidthSize(context) * 0.03),
-                                  child: Container(
-                                      alignment: Alignment.center,
-                                      height: appHeightSize(context) * 0.07,
-                                      width: position == 0
-                                          ? appWidthSize(context) * 0.9
-                                          : appWidthSize(context) * 0.9,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: primaryColor),
-                                      child: Text(
-                                        'Suivant',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: mediumText() * 1.2),
-                                      )),
+                        Positioned(
+                          bottom: appHeightSize(context) * 0.01,
+                          child: SizedBox(
+                            height: appHeightSize(context) * 0.07,
+                            width: appWidthSize(context),
+                            child: Row(
+                              mainAxisAlignment: position == 0
+                                  ? MainAxisAlignment.center
+                                  : MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //bouton suivant
+                                GestureDetector(
+                                  onTap: () {
+                                    if (position == _pages.length - 1) {
+                                      //_pageViewController.initialPage;
+                                    } else {
+                                      //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+                                      _pageViewController.nextPage(
+                                          duration: const Duration(
+                                              milliseconds: 1000),
+                                          curve: Curves.linear);
+                                      position =
+                                          _pageViewController.page!.toInt();
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 0, //appWidthSize(context) * 0.03,
+                                      right: 0,
+                                    ), //appWidthSize(context) * 0.03),
+                                    child: Container(
+                                        alignment: Alignment.center,
+                                        height: appHeightSize(context) * 0.07,
+                                        width: position == 0
+                                            ? appWidthSize(context) * 0.9
+                                            : appWidthSize(context) * 0.9,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: primaryColor),
+                                        child: Text(
+                                          'Suivant',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: mediumText() * 1.2),
+                                        )),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
