@@ -98,6 +98,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     controller: _emailcontroller,
                     prefixIcon: Icons.email,
                     keyboardType: TextInputType.emailAddress,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 20),
 
@@ -109,6 +111,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordController,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 20),
 
@@ -120,6 +124,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordConfirmController,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 5),
 

@@ -69,6 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                   // numéro de téléphone
                   AppPhoneTextField(
                     controller: _phoneNumbercontroller,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 20),
 
@@ -80,6 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordController,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 5),
 

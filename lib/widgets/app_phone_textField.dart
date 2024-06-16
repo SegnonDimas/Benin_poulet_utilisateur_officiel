@@ -8,6 +8,8 @@ class AppPhoneTextField extends StatefulWidget {
   final String? errorMessage;
   final String? label;
   final Color? labelColor;
+  final Color? fontColor;
+  final double? fontSize;
   final TextEditingController controller;
   late Function(PhoneNumber)? onSeved;
   late Function(PhoneNumber)? onInputChanged;
@@ -24,6 +26,8 @@ class AppPhoneTextField extends StatefulWidget {
     this.onSeved,
     this.onInputChanged,
     this.onInputValidated,
+    this.fontColor = Colors.black,
+    this.fontSize = 16,
   });
 
   @override
@@ -78,8 +82,11 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
           autoValidateMode: AutovalidateMode.disabled,
           selectorTextStyle: const TextStyle(color: Colors.grey),
           textStyle: TextStyle(
-            color: Theme.of(context).colorScheme.inverseSurface,
-          ),
+              color: widget.fontColor,
+              fontSize: widget
+                  .fontSize //Theme.of(context).colorScheme.inverseSurface,
+
+              ),
           initialValue: number,
           textFieldController: widget.controller!,
           formatInput: true,

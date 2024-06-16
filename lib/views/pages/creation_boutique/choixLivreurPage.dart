@@ -198,6 +198,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               controller: _emplacementController,
               prefixIcon: Icons.not_listed_location_rounded,
               color: Theme.of(context).colorScheme.surface,
+              fontSize: mediumText() * 0.9,
+              fontColor: Theme.of(context).colorScheme.inversePrimary,
               //maxLines: 3,
               expands: true,
             ),
@@ -225,6 +227,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               prefixIcon: Icons.location_on_outlined,
               color: Theme.of(context).colorScheme.surface,
               maxLines: 3,
+              fontSize: mediumText() * 0.9,
+              fontColor: Theme.of(context).colorScheme.inversePrimary,
             ),
             const SizedBox(
               height: 10,

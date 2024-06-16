@@ -15,6 +15,8 @@ class AppTextField extends StatefulWidget {
   final int maxLines;
   final int minLines;
   final bool? expands;
+  final double? fontSize;
+  final Color? fontColor;
   //final IconData suffixIcon;
   bool? isPassword;
   AppTextField({
@@ -33,6 +35,8 @@ class AppTextField extends StatefulWidget {
     this.maxLines = 1,
     this.expands = false,
     this.minLines = 1,
+    this.fontSize = 16,
+    this.fontColor = Colors.black,
   });
 
   @override
@@ -65,8 +69,9 @@ class _AppTextFieldState extends State<AppTextField> {
                 minLines: widget.minLines,
                 expands: widget.expands!,
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.inverseSurface,
-                ),
+                    color: widget.fontColor,
+                    //Theme.of(context).colorScheme.inverseSurface,
+                    fontSize: widget.fontSize!),
                 decoration: InputDecoration(
                   floatingLabelAlignment: FloatingLabelAlignment.start,
                   border: InputBorder.none,
@@ -118,7 +123,9 @@ class _AppTextFieldState extends State<AppTextField> {
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.inverseSurface,
+                    color: widget.fontColor,
+                    fontSize: widget
+                        .fontSize, //Theme.of(context).colorScheme.inverseSurface,
                     overflow: TextOverflow.ellipsis),
                 decoration: InputDecoration(
                   border: InputBorder.none,

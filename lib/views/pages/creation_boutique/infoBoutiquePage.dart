@@ -47,6 +47,8 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
                 controller: _nomBoutiqueController,
                 prefixIcon: Icons.storefront,
                 color: Theme.of(context).colorScheme.surface,
+                fontSize: mediumText() * 0.9,
+                fontColor: Theme.of(context).colorScheme.inversePrimary,
               ),
 
               const SizedBox(
@@ -74,7 +76,11 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
               const SizedBox(
                 height: 10,
               ),
-              AppPhoneTextField(controller: _numeroBoutiqueController),
+              AppPhoneTextField(
+                controller: _numeroBoutiqueController,
+                fontSize: mediumText() * 0.9,
+                fontColor: Theme.of(context).colorScheme.inversePrimary,
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -103,6 +109,8 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
                 prefixIcon: Icons.email_outlined,
                 color: Theme.of(context).colorScheme.surface,
                 keyboardType: TextInputType.emailAddress,
+                fontSize: mediumText() * 0.9,
+                fontColor: Theme.of(context).colorScheme.inversePrimary,
               ),
               const SizedBox(
                 height: 10,

@@ -96,6 +96,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     color: Theme.of(context).colorScheme.surface,
                     controller: _lastNameController,
                     prefixIcon: CupertinoIcons.person_alt_circle,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 10),
                   //prenom
@@ -106,12 +108,18 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     color: Theme.of(context).colorScheme.surface,
                     controller: _firstNameController,
                     prefixIcon: CupertinoIcons.person_alt_circle,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                     //minLines: 4,
                   ),
                   const SizedBox(height: 10),
 
                   // Numéro de téléphone
-                  AppPhoneTextField(controller: _phoneNumbercontroller),
+                  AppPhoneTextField(
+                    controller: _phoneNumbercontroller,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                  ),
                   const SizedBox(height: 10),
 
                   // Mot de passe
@@ -122,6 +130,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _passWordController,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 10),
 
@@ -133,6 +143,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _confirmPassWordController,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   SizedBox(height: appHeightSize(context) * 0.03),
 

@@ -98,6 +98,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     controller: _passWordController,
                     prefixIcon: Icons.email,
                     keyboardType: TextInputType.emailAddress,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 20),
 
@@ -109,6 +111,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     color: Theme.of(context).colorScheme.surface,
                     isPassword: true,
                     controller: _emailcontroller,
+                    fontSize: mediumText() * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
                   ),
                   const SizedBox(height: 5),
 

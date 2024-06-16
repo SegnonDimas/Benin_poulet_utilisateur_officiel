@@ -240,7 +240,11 @@ class FiscalitePageState extends State<FiscalitePage> {
 
             // Numéro de téléphone
             const SizedBox(height: 20),
-            AppPhoneTextField(controller: _phoneNumbercontroller),
+            AppPhoneTextField(
+              controller: _phoneNumbercontroller,
+              fontSize: mediumText() * 0.9,
+              fontColor: Theme.of(context).colorScheme.inversePrimary,
+            ),
             const SizedBox(height: 20),
 
             // Nom prénom
@@ -251,6 +255,8 @@ class FiscalitePageState extends State<FiscalitePage> {
               color: Theme.of(context).colorScheme.surface,
               controller: _nameController,
               prefixIcon: CupertinoIcons.person_alt_circle,
+              fontSize: mediumText() * 0.9,
+              fontColor: Theme.of(context).colorScheme.inversePrimary,
             ),
 
             const SizedBox(height: 20),
