@@ -1,7 +1,5 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/creation_boutique/choixLivreurPage.dart';
-import 'package:benin_poulet/views/pages/creation_boutique/fiscalitePage.dart';
-import 'package:benin_poulet/views/pages/creation_boutique/infoBoutiquePage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/authentification/authentificationPage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -9,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../widgets/app_timeline_tile.dart';
-import '../creation_boutique/choixCategoriePage.dart';
+import '../vendeur_pages/creation_boutique/choixCategoriePage.dart';
+import '../vendeur_pages/creation_boutique/choixLivreurPage.dart';
+import '../vendeur_pages/creation_boutique/fiscalitePage.dart';
+import '../vendeur_pages/creation_boutique/infoBoutiquePage.dart';
 
 class InscriptionVendeurPage extends StatefulWidget {
   const InscriptionVendeurPage({super.key});
@@ -54,11 +55,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     // page 4 : choix livreur
     const ChoixLivreurPage(),
 
-    Container(
-      color: Colors.grey.shade400,
-      height: 200,
-      width: 200,
-    ),
+    const AuthentificationVendeurPage(),
   ];
 
   int indexed = 0;
@@ -150,7 +147,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         width: appWidthSize(context),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (index) {
+                          children: List.generate(_pages.length, (index) {
                             /* ValueListenableBuilder : J'ai utilisé ValueListenableBuilder<int> autour de chaque AppTimelineTile pour reconstruire ces tuiles lorsque la valeur de _pageIndexNotifier change.*/
                             return ValueListenableBuilder<int>(
                               valueListenable: _pageIndexNotifier,
@@ -171,7 +168,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                 return AppTimelineTile(
                                   axis: TimelineAxis.horizontal,
                                   isFirst: index == 0,
-                                  isLast: index == 4,
+                                  isLast: index == _pages.length - 1,
                                   index: index + 1,
                                   icon: _getIconForIndex(index),
                                   iconSize: mediumText() * 1.5,
@@ -214,7 +211,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                       children: [
                         /// les sous-pages
                         SizedBox(
-                          height: appHeightSize(context) * 0.67,
+                          height: position != _pages.length - 1
+                              ? appHeightSize(context) * 0.67
+                              : appHeightSize(context) * 0.75,
                           width: appWidthSize(context),
                           child: PageView.builder(
                               itemCount: _pages.length,
@@ -238,58 +237,63 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         ),
 
                         /// bouton Suivant/précédent
-                        Positioned(
-                          bottom: appHeightSize(context) * 0.01,
-                          child: SizedBox(
-                            height: appHeightSize(context) * 0.07,
-                            width: appWidthSize(context),
-                            child: Row(
-                              mainAxisAlignment: position == 0
-                                  ? MainAxisAlignment.center
-                                  : MainAxisAlignment.spaceEvenly,
-                              children: [
-                                //bouton suivant
-                                GestureDetector(
-                                  onTap: () {
-                                    if (position == _pages.length - 1) {
-                                      //_pageViewController.initialPage;
-                                    } else {
-                                      //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-                                      _pageViewController.nextPage(
-                                          duration: const Duration(
-                                              milliseconds: 1000),
-                                          curve: Curves.linear);
-                                      position =
-                                          _pageViewController.page!.toInt();
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 0, //appWidthSize(context) * 0.03,
-                                      right: 0,
-                                    ), //appWidthSize(context) * 0.03),
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        height: appHeightSize(context) * 0.07,
-                                        width: position == 0
-                                            ? appWidthSize(context) * 0.9
-                                            : appWidthSize(context) * 0.9,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            color: primaryColor),
-                                        child: Text(
-                                          'Suivant',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: mediumText() * 1.2),
-                                        )),
+                        position != _pages.length - 1
+                            ? Positioned(
+                                bottom: appHeightSize(context) * 0.01,
+                                child: SizedBox(
+                                  height: appHeightSize(context) * 0.07,
+                                  width: appWidthSize(context),
+                                  child: Row(
+                                    mainAxisAlignment: position == 0
+                                        ? MainAxisAlignment.center
+                                        : MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      //bouton suivant
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (position == _pages.length - 1) {
+                                            //_pageViewController.initialPage;
+                                          } else {
+                                            //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+                                            _pageViewController.nextPage(
+                                                duration: const Duration(
+                                                    milliseconds: 1000),
+                                                curve: Curves.linear);
+                                            position = _pageViewController.page!
+                                                .toInt();
+                                          }
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left:
+                                                0, //appWidthSize(context) * 0.03,
+                                            right: 0,
+                                          ), //appWidthSize(context) * 0.03),
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              height:
+                                                  appHeightSize(context) * 0.07,
+                                              width: position == 0
+                                                  ? appWidthSize(context) * 0.9
+                                                  : appWidthSize(context) * 0.9,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: primaryColor),
+                                              child: Text(
+                                                'Suivant',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        mediumText() * 1.2),
+                                              )),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              )
+                            : Container(),
                       ],
                     )),
               ),

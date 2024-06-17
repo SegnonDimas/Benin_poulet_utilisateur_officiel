@@ -17,8 +17,10 @@ class AppTextField extends StatefulWidget {
   final bool? expands;
   final double? fontSize;
   final Color? fontColor;
-  //final IconData suffixIcon;
   bool? isPassword;
+  bool? readOnly;
+  Function()? onTap;
+
   AppTextField({
     super.key,
     required this.label,
@@ -37,6 +39,8 @@ class AppTextField extends StatefulWidget {
     this.minLines = 1,
     this.fontSize = 16,
     this.fontColor = Colors.black,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -122,6 +126,8 @@ class _AppTextFieldState extends State<AppTextField> {
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 onChanged: widget.onChanged,
+                onTap: widget.onTap,
+                readOnly: widget.readOnly!,
                 style: TextStyle(
                     color: widget.fontColor,
                     fontSize: widget

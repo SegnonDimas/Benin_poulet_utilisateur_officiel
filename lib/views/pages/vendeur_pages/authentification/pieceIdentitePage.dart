@@ -4,19 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-import '../../../widgets/app_text.dart';
-import '../../../widgets/app_textField.dart';
-import '../../colors/app_colors.dart';
-import '../../sizes/app_sizes.dart';
+import '../../../../widgets/app_text.dart';
+import '../../../../widgets/app_textField.dart';
+import '../../../colors/app_colors.dart';
+import '../../../sizes/app_sizes.dart';
 
-class FiscalitePage extends StatefulWidget {
+class PieceIdentitePage extends StatefulWidget {
   @override
-  FiscalitePageState createState() {
-    return FiscalitePageState();
+  PieceIdentitePageState createState() {
+    return PieceIdentitePageState();
   }
 }
 
-class FiscalitePageState extends State<FiscalitePage> {
+class PieceIdentitePageState extends State<PieceIdentitePage> {
   String _sellerType = 'Particulier';
   String _mobileMoney = '';
   bool isMtn = false;
