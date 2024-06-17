@@ -1,13 +1,11 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_phone_textField.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:benin_poulet/widgets/app_shaderMask.dart';
+import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-
-import '../../../../widgets/app_text.dart';
-import '../../../../widgets/app_textField.dart';
-import '../../../colors/app_colors.dart';
-import '../../../sizes/app_sizes.dart';
 
 class PieceIdentitePage extends StatefulWidget {
   @override
@@ -22,6 +20,23 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
   bool isMtn = false;
   bool isMoov = false;
   bool isCeltiis = false;
+
+  final List<String> _titrePiece = [
+    'Carte d\'identité',
+    'CIP',
+    'Permis de conduire',
+    'Passeport',
+  ];
+
+  final List<String> _descriptionPiece = [
+    'Créez votre boutique avec votre carte d\'identité',
+    'Créez votre boutique avec votre CIP',
+    'Créez votre boutique avec votre Permis de conduire',
+    'Créez votre boutique avec votre Passeport',
+  ];
+
+  // La variable qui stocke le pays sélectionné
+  String? _selectedCountry = 'Bénin';
   final _paymentNumberController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumbercontroller = TextEditingController();
@@ -36,249 +51,179 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
         child: ListView(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            // sélection pays
+            // texte
             AppText(
-              text: 'Sur le plan fiscal, quel type de vendeur êtes-vous ?',
-              fontSize: mediumText(),
-              fontWeight: FontWeight.bold,
-              overflow: TextOverflow.visible,
-            ),
-
-            //Particulier
-            ListTile(
-              title: AppText(
-                text: 'Particulier',
-                fontSize: smallText() * 1.3,
-                fontWeight: _sellerType == 'Particulier'
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-                color: _sellerType == 'Particulier'
-                    ? Theme.of(context).colorScheme.inversePrimary
-                    : Theme.of(context)
-                        .colorScheme
-                        .inverseSurface
-                        .withOpacity(0.3),
-              ),
-              leading: Radio<String>(
-                value: 'Particulier',
-                groupValue: _sellerType,
-                activeColor: primaryColor,
-                focusColor: Colors.grey,
-                hoverColor: Colors.grey,
-                onChanged: (String? value) {
-                  setState(() {
-                    _sellerType = value!;
-                  });
-                },
-              ),
-              horizontalTitleGap: 0,
-            ),
-
-            // Entreprise ou Société individuelle
-            ListTile(
-              title: AppText(
-                text: 'Entreprise ou Société individuelle',
-                fontSize: smallText() * 1.3,
-                overflow: TextOverflow.visible,
-                fontWeight: _sellerType == 'Entreprise ou Société individuelle'
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-                color: _sellerType == 'Entreprise ou Société individuelle'
-                    ? Theme.of(context).colorScheme.inversePrimary
-                    : Theme.of(context)
-                        .colorScheme
-                        .inverseSurface
-                        .withOpacity(0.3),
-              ),
-              leading: Radio<String>(
-                value: 'Entreprise ou Société individuelle',
-                groupValue: _sellerType,
-                activeColor: primaryColor,
-                focusColor: Colors.grey,
-                hoverColor: Colors.grey,
-                onChanged: (String? value) {
-                  setState(() {
-                    _sellerType = value!;
-                  });
-                },
-              ),
-              horizontalTitleGap: 0,
-            ),
-            //SizedBox(height: 20),
-            Divider(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-
-            // Mobile money
-            AppText(
-              text: 'Mobile Money',
-              fontSize: mediumText(),
-              fontWeight: FontWeight.bold,
+              text: 'Sélectionnez le pays d\'origine de votre pièce',
+              fontSize: smallText() * 1.1,
             ),
             const SizedBox(
               height: 10,
             ),
-
-            SizedBox(
-              height: appHeightSize(context) * 0.1,
-              width: appWidthSize(context),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  // Celtiis
-                  ChoiceChip(
-                    label: AppText(
-                      text: 'Celtiis',
-                      color: isCeltiis
-                          ? Colors.white
-                          : Theme.of(context)
-                              .colorScheme
-                              .inverseSurface
-                              .withAlpha(50),
-                    ),
-                    pressElevation: 20,
-                    side: BorderSide.none,
-                    padding: const EdgeInsets.only(
-                        top: 20, bottom: 20, left: 7, right: 7),
-                    selected: _mobileMoney == 'Celtiis',
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    shadowColor: Theme.of(context).colorScheme.inversePrimary,
-                    selectedColor: primaryColor,
-                    checkmarkColor: Colors.white,
-                    tooltip: 'Recevoir de l\'argent par Celtiis Money',
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isCeltiis = selected;
-                        isMoov = false;
-                        isMtn = false;
-                        _mobileMoney = selected ? 'Celtiis' : '';
-                      });
-                    },
+            //choix pays
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 10, top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    bottom: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    left: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    right: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
                   ),
-
-                  // MTN
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: appWidthSize(context) * 0.05,
-                        right: appWidthSize(context) * 0.05),
-                    child: ChoiceChip(
-                      label: AppText(
-                        text: 'MTN',
-                        color: isMtn
-                            ? Colors.white
-                            : Theme.of(context)
-                                .colorScheme
-                                .inverseSurface
-                                .withAlpha(50),
+                  borderRadius: BorderRadius.circular(15)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppText(text: '$_selectedCountry'),
+                  AppShaderMask(
+                    child: CountryListPick(
+                      appBar: AppBar(
+                        title: AppText(text: 'Choisissez votre pays'),
                       ),
-                      pressElevation: 20,
-                      side: BorderSide.none,
-                      padding: const EdgeInsets.only(
-                          top: 20, bottom: 20, left: 7, right: 7),
-                      selected: _mobileMoney == 'MTN',
-                      tooltip: 'Recevoir de l\'argent par MTN Money',
-                      backgroundColor: Theme.of(context).colorScheme.surface,
-                      shadowColor: Theme.of(context).colorScheme.inversePrimary,
-                      selectedColor: primaryColor,
-                      checkmarkColor: Colors.white,
-                      onSelected: (bool selected) {
+                      theme: CountryTheme(
+                          isShowFlag: false,
+                          isShowTitle: false,
+                          isShowCode: false,
+                          isDownIcon: true,
+                          showEnglishName: true,
+                          labelColor: primaryColor,
+                          alphabetSelectedBackgroundColor: primaryColor,
+                          searchHintText: 'Recherchez votre pays...',
+                          searchText: 'Rechercher',
+                          lastPickText: 'Sélectionné précédemment  ',
+                          initialSelection: '+229'),
+                      initialSelection: '+229',
+                      // or
+                      // initialSelection: 'BJ'
+                      onChanged: (code) {
                         setState(() {
-                          isMtn = selected;
-                          isMoov = false;
-                          isCeltiis = false;
-                          print('Celtiis ==>' + '$isCeltiis');
-                          print('Mtn ==>' + '$isMtn');
-                          print('Moov ==>' + '$isMoov');
-                          _mobileMoney = selected ? 'MTN' : '';
+                          _selectedCountry = code!.name;
                         });
+                        print(code!.name);
+                        print(code!.code);
+                        print(code!.dialCode);
+                        print(code!.flagUri);
                       },
                     ),
-                  ),
-
-                  // Moov Africa
-                  ChoiceChip(
-                    label: AppText(
-                      text: 'Moov Africa',
-                      color: isMoov
-                          ? Colors.white
-                          : Theme.of(context)
-                              .colorScheme
-                              .inverseSurface
-                              .withAlpha(50),
-                    ),
-                    pressElevation: 20,
-                    side: BorderSide.none,
-                    padding: const EdgeInsets.only(
-                        top: 20, bottom: 20, left: 7, right: 7),
-                    selected: _mobileMoney == 'Moov Africa',
-                    tooltip: 'Recevoir de l\'argent par Moov Money',
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    shadowColor: Theme.of(context).colorScheme.inversePrimary,
-                    selectedColor: primaryColor,
-                    checkmarkColor: Colors.white,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isMoov = selected;
-                        isCeltiis = false;
-                        isMtn = false;
-                        print('Celtiis ==>' + '$isCeltiis');
-                        print('Mtn ==>' + '$isMtn');
-                        print('Moov ==>' + '$isMoov');
-                        _mobileMoney = selected ? 'Moov Africa' : '';
-                      });
-                    },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: appHeightSize(context) * 0.02),
-            AppText(
-              text: 'Numéro de paiement',
-              fontSize: mediumText(),
-              fontWeight: FontWeight.bold,
+            const SizedBox(
+              height: 20,
             ),
-
-            // Numéro de téléphone
-            const SizedBox(height: 20),
-            AppPhoneTextField(
-              controller: _phoneNumbercontroller,
-              fontSize: mediumText() * 0.9,
-              fontColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            const SizedBox(height: 20),
-
-            // Nom prénom
-            AppTextField(
-              label: 'Nom Prénom',
-              height: appHeightSize(context) * 0.08,
-              width: appWidthSize(context) * 0.9,
-              color: Theme.of(context).colorScheme.surface,
-              controller: _nameController,
-              prefixIcon: CupertinoIcons.person_alt_circle,
-              fontSize: mediumText() * 0.9,
-              fontColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-
-            const SizedBox(height: 20),
-
-            // texte
+            // liste des pièces
             SizedBox(
-              width: appWidthSize(context) * 0.8,
-              child: AppText(
-                text:
-                    "Vous pouvez faire des modifications après dans les paramètres",
-                color: Theme.of(context)
-                    .colorScheme
-                    .inverseSurface
-                    .withOpacity(0.2),
-                overflow: TextOverflow.visible,
-                fontSize: smallText() * 1.1,
+              //height: appHeightSize(context) * 0.05,
+              //width: appWidthSize(context) * 0.8,
+              child: Column(
+                children: List.generate(_titrePiece.length, (index) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
+                    child: ModelPieceIdentite(
+                      title: _titrePiece[index],
+                      description: _descriptionPiece[index],
+                    ),
+                  );
+                }),
               ),
-            ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
+class ModelPieceIdentite extends StatefulWidget {
+  late bool? isSelected;
+  final String? title;
+  final String? description;
+  ModelPieceIdentite(
+      {super.key,
+      this.isSelected = false,
+      this.title = '',
+      this.description = ''});
+
+  @override
+  State<ModelPieceIdentite> createState() => _ModelPieceIdentiteState();
+}
+
+class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: appHeightSize(context) * 0.09,
+      width: appWidthSize(context) * 0.9,
+      //padding: const EdgeInsets.only(left: 16.0, right: 10, top: 5, bottom: 5),
+      decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Theme.of(context).colorScheme.surface),
+            bottom: BorderSide(color: Theme.of(context).colorScheme.surface),
+            left: BorderSide(color: Theme.of(context).colorScheme.surface),
+            right: BorderSide(color: Theme.of(context).colorScheme.surface),
+          ),
+          borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            !widget.isSelected!
+                ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.isSelected = !widget.isSelected!;
+                      });
+                    },
+                    child: Icon(
+                      Icons.circle_outlined,
+                      color: Theme.of(context).colorScheme.surface,
+                    ))
+                : GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        widget.isSelected = !widget.isSelected!;
+                      });
+                    },
+                    child: Icon(
+                      Icons.circle,
+                      color: primaryColor,
+                    ),
+                  ),
             SizedBox(
-              height: appHeightSize(context) * 0.02,
+              width: appWidthSize(context) * 0.05,
             ),
+            SizedBox(
+              height: appHeightSize(context) * 0.07,
+              width: appWidthSize(context) * 0.7,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    text: widget.title!,
+                    fontSize: mediumText() * 0.9,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    width: appWidthSize(context) * 0.7,
+                    child: AppText(
+                      text: widget.description!,
+                      fontSize: smallText(),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

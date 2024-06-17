@@ -19,6 +19,7 @@ void main() {
   ));
 }
 
+// pour la reconnaissance de la langue de l'App en fonction de l'amplacement de l'utilisateur
 mixin AppLocale {
   static const String title = 'title';
   static const String thisIs = 'thisIs';

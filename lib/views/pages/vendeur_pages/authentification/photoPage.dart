@@ -1,238 +1,221 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_shaderMask.dart';
+import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
-import 'package:super_tooltip/super_tooltip.dart';
-
-import '../../../../widgets/app_text.dart';
-import '../../../colors/app_colors.dart';
-import '../../../sizes/text_sizes.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhotoPage extends StatefulWidget {
-  const PhotoPage({super.key});
-
   @override
-  State<PhotoPage> createState() => _PhotoPageState();
+  PhotoPageState createState() {
+    return PhotoPageState();
+  }
 }
 
-class _PhotoPageState extends State<PhotoPage> {
-  final _controllerOui = SuperTooltipController();
-  final _controllerNon = SuperTooltipController();
-  final TextEditingController _emplacementController = TextEditingController();
-  String _smartSolutions = 'OUI';
+class PhotoPageState extends State<PhotoPage> {
+  String _sellerType = 'Particulier';
+  String _mobileMoney = '';
+  bool isMtn = false;
+  bool isMoov = false;
+  bool isCeltiis = false;
+
+  final List<String> _titrePiece = [
+    'Le recto de votre pièce',
+    'Le verso de votre pièce',
+    'Selfie'
+  ];
+
+  final List<String> _descriptionPiece = [
+    'chargez la photo',
+    'chargez la photo',
+    'prendre une photo'
+  ];
+
+  final List<String> _trailing = [
+    'prendre une photo',
+    'prendre une photo',
+    'Je suis'
+        ''
+  ];
+
+  // La variable qui stocke le pays sélectionné
+  String? _selectedCountry = 'Bénin';
+  final _paymentNumberController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  String initialCountry = 'BJ';
+  PhoneNumber number = PhoneNumber(isoCode: 'BJ');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
-          children: [
-            // le choix du livreur
-            SizedBox(
-              height: appHeightSize(context) * 0.05,
-              width: appWidthSize(context) * 0.9,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SuperTooltip(
-                    showBarrier: true,
-                    controller: _controllerOui,
-                    popupDirection: TooltipDirection.up,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    left: appWidthSize(context) * 0.05,
-                    right: appWidthSize(context) * 0.05,
-                    arrowTipDistance: 15.0,
-                    arrowBaseWidth: 20.0,
-                    arrowLength: 15.0,
-                    borderWidth: 0.0,
-                    constraints: BoxConstraints(
-                      minHeight: appHeightSize(context) * 0.03,
-                      maxHeight: appHeightSize(context) * 0.3,
-                      minWidth: appWidthSize(context) * 0.3,
-                      maxWidth: appWidthSize(context) * 0.7,
-                    ),
-                    showCloseButton: ShowCloseButton.none,
-                    touchThroughAreaShape: ClipAreaShape.rectangle,
-                    touchThroughAreaCornerRadius: 30,
-                    barrierColor: const Color.fromARGB(26, 47, 55, 47),
-                    content: AppText(
-                      text:
-                          'Nous engagerons nos partenaires professionnels pour assurer vos livraisons pour des raisons de sécurité',
-                      overflow: TextOverflow.visible,
-                    ),
-                    child: SizedBox(
-                      height: appHeightSize(context) * 0.05,
-                      width: appWidthSize(context) * 0.4,
-                      child: ListTile(
-                        title: AppText(
-                          text: 'OUI',
-                          fontSize: smallText() * 1.3,
-                          fontWeight: _smartSolutions == 'OUI'
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: _smartSolutions == 'OUI'
-                              ? Theme.of(context).colorScheme.inversePrimary
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withAlpha(50),
-                        ),
-                        leading: Radio<String>(
-                          value: 'OUI',
-                          groupValue: _smartSolutions,
-                          activeColor: primaryColor,
-                          focusColor: Colors.grey,
-                          hoverColor: Colors.grey,
-                          onChanged: (String? value) {
-                            setState(() {
-                              _smartSolutions = value!;
-                            });
-                          },
-                        ),
-                        horizontalTitleGap: 0,
-                      ),
-                    ),
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // sélection pays
+            // texte
+            AppText(
+              text: 'Sélectionnez le pays d\'origine de votre pièce',
+              fontSize: smallText() * 1.1,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            //choix pays
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 10, top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    bottom: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    left: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
+                    right: BorderSide(
+                        color: Theme.of(context).colorScheme.surface),
                   ),
-                  SuperTooltip(
-                    showBarrier: true,
-                    controller: _controllerNon,
-                    popupDirection: TooltipDirection.up,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
-                    left: appWidthSize(context) * 0.05,
-                    right: appWidthSize(context) * 0.05,
-                    arrowTipDistance: 15.0,
-                    arrowBaseWidth: 20.0,
-                    arrowLength: 15.0,
-                    borderWidth: 0.0,
-                    constraints: BoxConstraints(
-                      minHeight: appHeightSize(context) * 0.03,
-                      maxHeight: appHeightSize(context) * 0.3,
-                      minWidth: appWidthSize(context) * 0.3,
-                      maxWidth: appWidthSize(context) * 0.7,
-                    ),
-                    showCloseButton: ShowCloseButton.none,
-                    touchThroughAreaShape: ClipAreaShape.rectangle,
-                    touchThroughAreaCornerRadius: 30,
-                    barrierColor: const Color.fromARGB(26, 47, 55, 47),
-                    content: AppText(
-                      text:
-                          'Pour l\'instant vous ne pouvez pas livrer vos produits vous-même',
-                      overflow: TextOverflow.visible,
-                    ),
-                    child: SizedBox(
-                      height: appHeightSize(context) * 0.05,
-                      width: appWidthSize(context) * 0.4,
-                      child: ListTile(
-                        title: AppText(
-                          text: 'NON',
-                          fontSize: smallText() * 1.3,
-                          fontWeight: _smartSolutions == 'NON'
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: _smartSolutions == 'NON'
-                              ? Theme.of(context).colorScheme.inversePrimary
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withAlpha(50),
-                        ),
-                        leading: Radio<String>(
-                          value: 'NON',
-                          groupValue: _smartSolutions,
-                          activeColor: primaryColor,
-                          focusColor: Colors.grey,
-                          hoverColor: Colors.grey,
-                          autofocus: true,
-                          toggleable: true,
-                          onChanged: (String? value) {
-                            setState(() {
-                              //_smartSolutions = value!;
-                            });
-                          },
-                        ),
-                        horizontalTitleGap: 0,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppText(text: '$_selectedCountry'),
+                  AppShaderMask(
+                    child: CountryListPick(
+                      appBar: AppBar(
+                        title: AppText(text: 'Choisissez votre pays'),
                       ),
+                      theme: CountryTheme(
+                          isShowFlag: false,
+                          isShowTitle: false,
+                          isShowCode: false,
+                          isDownIcon: true,
+                          showEnglishName: true,
+                          labelColor: primaryColor,
+                          alphabetSelectedBackgroundColor: primaryColor,
+                          searchHintText: 'Recherchez votre pays...',
+                          searchText: 'Rechercher',
+                          lastPickText: 'Sélectionné précédemment  ',
+                          initialSelection: '+229'),
+                      initialSelection: '+229',
+                      // or
+                      // initialSelection: 'BJ'
+                      onChanged: (code) {
+                        setState(() {
+                          _selectedCountry = code!.name;
+                        });
+                        print(code!.name);
+                        print(code!.code);
+                        print(code!.dialCode);
+                        print(code!.flagUri);
+                      },
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(
-              height: 10,
-            ),
-            AppText(
-              text:
-                  'Pour l\'instant, vous ne pouvez pas livrer vos produits vous-même',
-              color: Theme.of(context).colorScheme.inverseSurface.withAlpha(40),
-              overflow: TextOverflow.visible,
-              fontSize: mediumText() * 0.8,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-
-            // divider
-            Divider(
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            const SizedBox(
               height: 20,
             ),
+            // liste des pièces
+            SizedBox(
+              //height: appHeightSize(context) * 0.05,
+              //width: appWidthSize(context) * 0.8,
+              child: Column(
+                children: List.generate(_titrePiece.length, (index) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
+                    child: ModelPhotoSelecteur(
+                      title: _titrePiece[index],
+                      description: _descriptionPiece[index],
+                      trailing: _trailing[index],
+                    ),
+                  );
+                }),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-            // description de l'emplacement
-            AppText(
-              text:
-                  'Spécifier l\'emplacement de votre boutique pour la récupération des commandes par nos livreurs',
-              overflow: TextOverflow.visible,
-              fontSize: mediumText() * 0.8,
-              color: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            AppTextField(
-              label:
-                  '', //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
-              height: appHeightSize(context) * 0.08,
-              width: appWidthSize(context) * 0.9,
-              controller: _emplacementController,
-              prefixIcon: Icons.not_listed_location_rounded,
-              color: Theme.of(context).colorScheme.surface,
-              fontSize: mediumText() * 0.9,
-              fontColor: Theme.of(context).colorScheme.inversePrimary,
-              //maxLines: 3,
-              expands: true,
-            ),
+class ModelPhotoSelecteur extends StatefulWidget {
+  late String? trailing;
+  final String? title;
+  final String? description;
+  ModelPhotoSelecteur(
+      {super.key, this.trailing = '', this.title = '', this.description = ''});
 
-            /// CRITIQUÉ : car le vendeur peut être en train de créer son compte hors de sa boutique
-            // partage de l'emplacement
-            const SizedBox(
-              height: 20,
+  @override
+  State<ModelPhotoSelecteur> createState() => _ModelPhotoSelecteurState();
+}
+
+class _ModelPhotoSelecteurState extends State<ModelPhotoSelecteur> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: appHeightSize(context) * 0.09,
+      width: appWidthSize(context) * 0.9,
+      //padding: const EdgeInsets.only(left: 16.0, right: 10, top: 5, bottom: 5),
+      decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Theme.of(context).colorScheme.surface),
+            bottom: BorderSide(color: Theme.of(context).colorScheme.surface),
+            left: BorderSide(color: Theme.of(context).colorScheme.surface),
+            right: BorderSide(color: Theme.of(context).colorScheme.surface),
+          ),
+          borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset('assets/icons/img.png',
+                height: appHeightSize(context) * 0.07,
+                width: appWidthSize(context) * 0.12,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.6)),
+            SizedBox(
+              width: appWidthSize(context) * 0.005,
             ),
-            AppText(
-              text: 'Veuillez partager avec nous votre emplacement',
-              overflow: TextOverflow.visible,
-              fontSize: mediumText() * 0.8,
-              color: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            AppTextField(
-              label:
-                  '', //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
-              height: appHeightSize(context) * 0.08,
-              width: appWidthSize(context) * 0.9,
-              controller: _emplacementController,
-              prefixIcon: Icons.location_on_outlined,
-              color: Theme.of(context).colorScheme.surface,
-              maxLines: 3,
-              fontSize: mediumText() * 0.9,
-              fontColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            SizedBox(
+                height: appHeightSize(context) * 0.07,
+                width: appWidthSize(context) * 0.7,
+                child: ListTile(
+                    //minVerticalPadding: 0,
+                    minTileHeight: 5,
+                    //minLeadingWidth: 0,
+                    //horizontalTitleGap: 2,
+
+                    title: AppText(
+                      text: widget.title!,
+                      fontSize: mediumText() * 0.8,
+                    ),
+                    subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                            text: widget.description!,
+                            fontSize: smallText() * 0.8,
+                            color: primaryColor,
+                          ),
+                          AppText(
+                            text: '${widget.trailing!}',
+                            fontSize: smallText() * 0.8,
+                            color: primaryColor,
+                          ),
+                        ])))
           ],
         ),
       ),
