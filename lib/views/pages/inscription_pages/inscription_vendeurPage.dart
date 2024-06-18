@@ -1,5 +1,5 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/authentification/authentificationPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';

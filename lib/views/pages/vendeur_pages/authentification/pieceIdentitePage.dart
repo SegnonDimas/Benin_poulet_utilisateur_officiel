@@ -69,37 +69,42 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // pays sélectionné
-                  AppText(text: '$_selectedCountry'),
+                  SizedBox(
+                      width: appWidthSize(context) * 0.6,
+                      child: AppText(text: '$_selectedCountry')),
                   // sélecteur de pays
-                  AppShaderMask(
-                    child: CountryListPick(
-                      appBar: AppBar(
-                        title: AppText(text: 'Choisissez votre pays'),
+                  SizedBox(
+                    //width: appWidthSize(context) * 0.25,
+                    child: AppShaderMask(
+                      child: CountryListPick(
+                        appBar: AppBar(
+                          title: AppText(text: 'Choisissez votre pays'),
+                        ),
+                        theme: CountryTheme(
+                            isShowFlag: false,
+                            isShowTitle: false,
+                            isShowCode: false,
+                            isDownIcon: true,
+                            showEnglishName: true,
+                            labelColor: primaryColor,
+                            alphabetSelectedBackgroundColor: primaryColor,
+                            searchHintText: 'Recherchez votre pays...',
+                            searchText: 'Rechercher',
+                            lastPickText: 'Sélectionné précédemment  ',
+                            initialSelection: '+229'),
+                        initialSelection: '+229',
+                        // or
+                        // initialSelection: 'BJ'
+                        onChanged: (code) {
+                          setState(() {
+                            _selectedCountry = code!.name;
+                          });
+                          print(code!.name);
+                          print(code!.code);
+                          print(code!.dialCode);
+                          print(code!.flagUri);
+                        },
                       ),
-                      theme: CountryTheme(
-                          isShowFlag: false,
-                          isShowTitle: false,
-                          isShowCode: false,
-                          isDownIcon: true,
-                          showEnglishName: true,
-                          labelColor: primaryColor,
-                          alphabetSelectedBackgroundColor: primaryColor,
-                          searchHintText: 'Recherchez votre pays...',
-                          searchText: 'Rechercher',
-                          lastPickText: 'Sélectionné précédemment  ',
-                          initialSelection: '+229'),
-                      initialSelection: '+229',
-                      // or
-                      // initialSelection: 'BJ'
-                      onChanged: (code) {
-                        setState(() {
-                          _selectedCountry = code!.name;
-                        });
-                        print(code!.name);
-                        print(code!.code);
-                        print(code!.dialCode);
-                        print(code!.flagUri);
-                      },
                     ),
                   ),
                 ],

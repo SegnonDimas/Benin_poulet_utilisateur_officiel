@@ -1,4 +1,5 @@
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ class ResumeTextField extends StatelessWidget {
             text: attribut!,
             color:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
+            fontSize: smallText() * 1.1,
           ),
           AppText(
               text: valeur!,

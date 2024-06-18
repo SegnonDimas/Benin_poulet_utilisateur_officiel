@@ -134,40 +134,43 @@ Déjà fait :
 
 FRONT-END
     - first page : page de lancement
-    - login page : page de connexion :::::::::::::::::::::::::::
+    - login page : page de connexion :
     ***
     - gestion des thèmes : dark mode, light mode
     ***
     - création du dialogue de choix de profil
-    - création des pages de bienvenue ::::::::::::::::::::::::::
+    - création des pages de bienvenue
     ***
-    - page d'inscription pour clients ::::::::::::::::::::::::::
+    - page d'inscription pour clients
     ***
-    - page de connexion avec Email :::::::::::::::::::::::::::::
-    - page d'inscription avec Email ::::::::::::::::::::::::::::
+    - page de connexion avec Email
+    - page d'inscription avec Email
     ***
-    - pages d'inscriptions pour vendeurs :::::::::::::::::::::::
-        - page fiscalité :::::::::::::::::::::::::::::::::::::::
-        - page info boutique :::::::::::::::::::::::::::::::::::
-        - page choix secteur/catégorie :::::::::::::::::::::::::
+    - pages d'inscriptions pour vendeurs
+        - page fiscalité
+        - page info boutique
+        - page choix secteur/catégorie
         ***
-        - page choix livreur :::::::::::::::::::::::::::::::::::
+        - page choix livreur
         ***
+        - page d'authentification
+            - page infos personnelles
+            - page pièces d'identité
+            - page photo pièce
+            - page resumé des informations d'authentification
+            - page de validation
 
 
 
 À faire :
-    - pages de connexion pour vendeurs
-        -
-    - pages de d'inscription pour vendeur
-        - pages authentification
-            - page
+    - pages d'Accueil pour vendeur
 
 
 
 
 À supprimer :
     -
+
 
 À utiliser :
     - flutter_card_swiper 7.0.1
@@ -185,16 +188,6 @@ Icons :
 
 
 Réglé :
-    - login page : page de connexion
-    - snack_bar.dart
-    *****
-    - pages de bienvenue
-    - page incription pour clients
-    - page de connecion avec email
-    - page d'inscription avec email
-    - page choix secteurs
-    - page fiscalité
-    - page choix livreur
-    - page principale d'inscription pour vendeur (TimelineTile principalement)
+    -
 
 

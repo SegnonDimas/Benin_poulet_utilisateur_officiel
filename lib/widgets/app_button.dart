@@ -3,12 +3,22 @@ import 'package:flutter/material.dart';
 class AppButton extends StatefulWidget {
   final Widget child;
   final Color? color;
+  final Color? borderColor;
   final double? radius;
   final double? height;
   final double? width;
   final VoidCallback onTap;
 
-  const AppButton({super.key, required this.child, this.color = Colors.white, this.radius = 15, this.height = 70, required this.onTap, this.width = 140, });
+  const AppButton({
+    super.key,
+    required this.child,
+    this.color = Colors.white,
+    this.radius = 15,
+    this.height = 70,
+    required this.onTap,
+    this.width = 140,
+    this.borderColor = Colors.transparent,
+  });
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -26,9 +36,14 @@ class _AppButtonState extends State<AppButton> {
         decoration: BoxDecoration(
           color: widget.color!,
           borderRadius: BorderRadius.circular(widget.radius!),
+          border: Border(
+            top: BorderSide(color: widget.borderColor!),
+            bottom: BorderSide(color: widget.borderColor!),
+            left: BorderSide(color: widget.borderColor!),
+            right: BorderSide(color: widget.borderColor!),
+          ),
         ),
         child: widget.child,
-
       ),
     );
   }

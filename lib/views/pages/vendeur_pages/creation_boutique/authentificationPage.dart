@@ -269,7 +269,8 @@ class _AuthentificationVendeurPageState
                                 GestureDetector(
                                   onTap: () {
                                     if (position == _pages.length - 1) {
-                                      //_pageViewController.initialPage;
+                                      Navigator.pushReplacementNamed(
+                                          context, '/validationPage');
                                     } else {
                                       //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
                                       _pageViewController.nextPage(
