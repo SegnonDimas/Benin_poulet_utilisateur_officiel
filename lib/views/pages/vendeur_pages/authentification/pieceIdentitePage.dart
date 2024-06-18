@@ -5,7 +5,6 @@ import 'package:benin_poulet/widgets/app_shaderMask.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PieceIdentitePage extends StatefulWidget {
   @override
@@ -15,12 +14,6 @@ class PieceIdentitePage extends StatefulWidget {
 }
 
 class PieceIdentitePageState extends State<PieceIdentitePage> {
-  String _sellerType = 'Particulier';
-  String _mobileMoney = '';
-  bool isMtn = false;
-  bool isMoov = false;
-  bool isCeltiis = false;
-
   final List<String> _titrePiece = [
     'Carte d\'identité',
     'CIP',
@@ -37,11 +30,7 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
 
   // La variable qui stocke le pays sélectionné
   String? _selectedCountry = 'Bénin';
-  final _paymentNumberController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
-  PhoneNumber number = PhoneNumber(isoCode: 'BJ');
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +40,7 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
         child: ListView(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // sélection pays
+            /// sélection pays
             // texte
             AppText(
               text: 'Sélectionnez le pays d\'origine de votre pièce',
@@ -79,7 +68,9 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // pays sélectionné
                   AppText(text: '$_selectedCountry'),
+                  // sélecteur de pays
                   AppShaderMask(
                     child: CountryListPick(
                       appBar: AppBar(
@@ -117,7 +108,8 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
             const SizedBox(
               height: 20,
             ),
-            // liste des pièces
+
+            /// liste des pièces
             SizedBox(
               //height: appHeightSize(context) * 0.05,
               //width: appWidthSize(context) * 0.8,
@@ -133,7 +125,10 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                   );
                 }),
               ),
-            )
+            ),
+            SizedBox(
+              height: appHeightSize(context) * 0.08,
+            ),
           ],
         ),
       ),
@@ -164,10 +159,22 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
       //padding: const EdgeInsets.only(left: 16.0, right: 10, top: 5, bottom: 5),
       decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Theme.of(context).colorScheme.surface),
-            bottom: BorderSide(color: Theme.of(context).colorScheme.surface),
-            left: BorderSide(color: Theme.of(context).colorScheme.surface),
-            right: BorderSide(color: Theme.of(context).colorScheme.surface),
+            top: BorderSide(
+                color: !widget.isSelected!
+                    ? Theme.of(context).colorScheme.surface
+                    : primaryColor),
+            bottom: BorderSide(
+                color: !widget.isSelected!
+                    ? Theme.of(context).colorScheme.surface
+                    : primaryColor),
+            left: BorderSide(
+                color: !widget.isSelected!
+                    ? Theme.of(context).colorScheme.surface
+                    : primaryColor),
+            right: BorderSide(
+                color: !widget.isSelected!
+                    ? Theme.of(context).colorScheme.surface
+                    : primaryColor),
           ),
           borderRadius: BorderRadius.circular(15)),
       child: Padding(

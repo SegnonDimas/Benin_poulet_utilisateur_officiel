@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: darkMode,
       title: 'Bénin Poulet',
 
-      home: const InscriptionVendeurPage(),
+      // home: const InscriptionVendeurPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
         '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
       },
-      //initialRoute: '/firstPage',
+      initialRoute: '/firstPage',
     );
   }
 }

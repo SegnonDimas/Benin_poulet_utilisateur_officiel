@@ -38,7 +38,7 @@ class _AuthentificationVendeurPageState
     'Mettez des informations correctes et vérifiées',
     'Mettez des informations correctes et vérifiées',
     'Mettez des informations correctes et vérifiées',
-    'Mettez des informations correctes et vérifiées',
+    'Rassurez-vous avoir mis des informations correctes, vérifiées et valides',
   ];
 
   final List<Widget> _pages = [
@@ -295,12 +295,21 @@ class _AuthentificationVendeurPageState
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             color: primaryColor),
-                                        child: Text(
-                                          'Suivant',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: mediumText() * 1.2),
-                                        )),
+                                        child: position != _pages.length - 1
+                                            ? Text(
+                                                'Suivant',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        mediumText() * 1.2),
+                                              )
+                                            : Text(
+                                                'Soumettre',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        mediumText() * 1.2),
+                                              )),
                                   ),
                                 ),
                               ],
