@@ -84,7 +84,7 @@ class ValidationPage extends StatelessWidget {
 
           AppButton(
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/vendeurHomePage');
+              Navigator.pushReplacementNamed(context, '/vendeurMainPage');
             },
             height: appHeightSize(context) * 0.065,
             width: appWidthSize(context) * 0.9,

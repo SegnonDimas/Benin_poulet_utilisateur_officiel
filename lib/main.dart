@@ -6,7 +6,7 @@ import 'package:benin_poulet/views/pages/inscription_pages/signupWithEmailPage.d
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/validationPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/v_homePage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -55,16 +55,16 @@ class _MyAppState extends State<MyApp> {
           'en',
           AppLocale.EN,
           countryCode: 'US',
-          fontFamily: 'Font EN',
+          //fontFamily: 'Font EN',
         ),
         const MapLocale(
           'fr',
           AppLocale.FR,
           countryCode: 'FR',
-          fontFamily: 'Font FR',
+          //fontFamily: 'Font FR',
         ),
       ],
-      initLanguageCode: 'en',
+      initLanguageCode: 'fr',
     );
     _localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
@@ -82,9 +82,10 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
       darkTheme: darkMode,
+      //themeMode: ThemeMode.light,
       title: 'Bénin Poulet',
 
-      //home: const ValidationPage(),
+      home: const VMainPage(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),
@@ -94,10 +95,10 @@ class _MyAppState extends State<MyApp> {
         '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
         '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
         '/validationPage': (context) => const ValidationPage(),
-        '/vendeurHomePage': (context) => const VHomePage(),
+        '/vendeurMainPage': (context) => const VMainPage(),
       },
       //
-      initialRoute: '/firstPage',
+      //initialRoute: '/firstPage',
     );
   }
 }

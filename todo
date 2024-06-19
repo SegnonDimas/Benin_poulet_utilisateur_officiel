@@ -159,11 +159,22 @@ FRONT-END
             - page photo pièce
             - page resumé des informations d'authentification
             - page de validation
+        ***
+        - pages principales pour vendeur
+            - MainPage (VMainPage)
+            - Home page (VHomePage)
+            -
+
+            
 
 
 
 À faire :
     - pages d'Accueil pour vendeur
+    - page de produits vendeur
+    - page de commandes
+    - page de discussion
+    - page de réglages
 
 
 
@@ -178,6 +189,7 @@ FRONT-END
     - slide_to_act 2.0.2
     - overlay_tooltip
     - flutter_local_notifications 17.1.2
+    - curved_navigation_bar
 
 
 Icons :
@@ -185,6 +197,7 @@ Icons :
     - Icons.grid_view_rounded,
     - Icons.motorcycle
     - Icons.fingerprint_sharp
+    - Icons.shield
 
 
 Réglé :

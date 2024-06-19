@@ -47,6 +47,7 @@ dependencies:
   shared_preferences: ^2.2.3
   country_list_pick: ^1.0.1+6
   dotted_line: ^3.2.2
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +108,14 @@ flutter:
     - family: MontserratSemiBold
       fonts:
         - asset: assets/fonts/MontserratSemiBold.otf
+
+    - family: PoppinsSemiBold
+      fonts:
+        - asset: assets/fonts/Poppins/PoppinsSemiBold.ttf #assets/fonts/Poppins/PoppinsSemiBold.ttf
+
+    - family: PoppinsBold
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

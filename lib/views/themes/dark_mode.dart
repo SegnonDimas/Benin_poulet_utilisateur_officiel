@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData darkMode = ThemeData(
+  /// colorScheme
   colorScheme: ColorScheme.dark(
     //surface: Colors.grey.shade800,
     //background: Colors.grey.shade900,
@@ -15,22 +16,41 @@ ThemeData darkMode = ThemeData(
     inverseSurface: const Color.fromRGBO(220, 221, 225, 150),
   ),
 
-  // textTheme
+  /// textTheme
   textTheme: const TextTheme(
-    displayLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-    displayMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-    displaySmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-    headlineLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-    headlineMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-    headlineSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-    titleLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-    titleMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-    titleSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-    bodyLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-    bodyMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-    bodySmall: TextStyle(fontFamily: 'MontserratSemiBold'),
-    labelLarge: TextStyle(fontFamily: 'MontserratSemiBold'),
-    labelMedium: TextStyle(fontFamily: 'MontserratSemiBold'),
-    labelSmall: TextStyle(fontFamily: 'MontserratSemiBold'),
+    displayLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    displayMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    displaySmall: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineSmall: TextStyle(fontFamily: 'PoppinsBold'),
+    titleLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    titleMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    titleSmall: TextStyle(fontFamily: 'PoppinsBold'),
+    bodyLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    bodyMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    bodySmall: TextStyle(fontFamily: 'PoppinsBold'),
+    labelLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    labelMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    labelSmall: TextStyle(fontFamily: 'PoppinsBold'),
+  ),
+
+  /// primaryTextTheme
+  primaryTextTheme: const TextTheme(
+    displayLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    displayMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    displaySmall: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    headlineSmall: TextStyle(fontFamily: 'PoppinsBold'),
+    titleLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    titleMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    titleSmall: TextStyle(fontFamily: 'PoppinsBold'),
+    bodyLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    bodyMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    bodySmall: TextStyle(fontFamily: 'PoppinsBold'),
+    labelLarge: TextStyle(fontFamily: 'PoppinsBold'),
+    labelMedium: TextStyle(fontFamily: 'PoppinsBold'),
+    labelSmall: TextStyle(fontFamily: 'PoppinsBold'),
   ),
 ); // ColorScheme.dark
