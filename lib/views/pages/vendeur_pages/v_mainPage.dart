@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/pages/vendeur_pages/v_commandeListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_homePage.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,7 @@ class _VMainPageState extends State<VMainPage> {
     Center(
       child: AppText(text: 'Products page'),
     ),
-    Center(
-      child: AppText(text: 'Commandes page'),
-    ),
+    const VCommandeListPage(),
     Center(
       child: AppText(text: 'Messages page'),
     ),

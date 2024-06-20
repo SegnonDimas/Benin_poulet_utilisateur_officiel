@@ -193,9 +193,10 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
 
                   /// les attributs de la boutique
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ModelAttributBoutique(
-                          width: appWidthSize(context) * 0.3,
+                          width: appWidthSize(context) * 0.25,
                           icon: const Icon(
                             Icons.star,
                             color: Colors.amber,
@@ -203,7 +204,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                           value: "4.5",
                           description: '25 avis'),
                       ModelAttributBoutique(
-                          width: appWidthSize(context) * 0.3,
+                          width: appWidthSize(context) / 3.2,
                           icon: Icon(
                             Icons.recycling,
                             color: primaryColor,
@@ -211,7 +212,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                           value: "800 F",
                           description: 'Livraison'),
                       ModelAttributBoutique(
-                          width: appWidthSize(context) * 0.3,
+                          width: appWidthSize(context) / 3.2,
                           icon: const Icon(
                             Icons.timer_rounded,
                             color: Colors.deepPurple,
@@ -306,6 +307,7 @@ class ModelAttributBoutique extends StatelessWidget {
         child: ListTile(
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               icon,
               AppText(
