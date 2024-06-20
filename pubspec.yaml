@@ -48,6 +48,7 @@ dependencies:
   country_list_pick: ^1.0.1+6
   dotted_line: ^3.2.2
   curved_navigation_bar: ^1.0.6
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:

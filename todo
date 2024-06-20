@@ -159,13 +159,14 @@ FRONT-END
             - page photo pièce
             - page resumé des informations d'authentification
             - page de validation
-        ***
-        - pages principales pour vendeur
-            - MainPage (VMainPage)
+    ***
+    - pages principales pour vendeur
+        - MainPage (VMainPage)
             - Home page (VHomePage)
-            -
+                - Ma boutique page (VPresentationBoutiquePage)
+                -
 
-            
+
 
 
 

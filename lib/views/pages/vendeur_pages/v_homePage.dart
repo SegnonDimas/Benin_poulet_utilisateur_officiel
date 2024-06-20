@@ -3,8 +3,6 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
-//import 'package:flutter/cupertino.dart';
-
 class VHomePage extends StatefulWidget {
   const VHomePage({super.key});
 
@@ -13,9 +11,11 @@ class VHomePage extends StatefulWidget {
 }
 
 class _VHomePageState extends State<VHomePage> {
+  // liste des sessions
   final List<ModelSession> _sessions = [
     const ModelSession(
       title: 'Ma boutique',
+      routeName: '/vendeurPresentationBoutiquePage',
     ),
     const ModelSession(title: 'Campage'),
     const ModelSession(title: 'Statistiques'),
@@ -27,8 +27,11 @@ class _VHomePageState extends State<VHomePage> {
     const SizedBox espace = SizedBox(
       height: 20,
     );
+
+    /// corps de la page
     return ListView(
       children: [
+        /// texte de bienvenue
         SizedBox(
             height: appHeightSize(context) * 0.1,
             width: appWidthSize(context),
@@ -43,13 +46,22 @@ class _VHomePageState extends State<VHomePage> {
               ),
             )),
         //espace,
+
+        /// présentation du portefeuille
         ModelPortefeuille(
           solde: 400000,
         ),
+
+        /// liste des sessions
         SizedBox(
           width: appWidthSize(context),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          height: appHeightSize(context) * 0.15,
+          child: ListView(
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.only(
+                left: appWidthSize(context) * 0.05,
+                right: appWidthSize(context) * 0.05),
             children: _sessions,
           ),
         ),
@@ -197,11 +209,13 @@ class ModelSession extends StatefulWidget {
   final String? title;
   final String? imgUrl;
   final double? radius;
+  final String? routeName;
   const ModelSession(
       {super.key,
       this.title = 'Titre',
       this.imgUrl = 'assets/images/img.png',
-      this.radius = 35});
+      this.radius = 35,
+      this.routeName});
 
   @override
   State<ModelSession> createState() => _ModelSessionState();
@@ -210,25 +224,30 @@ class ModelSession extends StatefulWidget {
 class _ModelSessionState extends State<ModelSession> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(appHeightSize(context) * 0.01),
-          child: Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, widget.routeName ?? '/vendeurMainPage');
+      },
+      child: Column(
+        children: [
+          Padding(
             padding: EdgeInsets.all(appHeightSize(context) * 0.01),
-            height: widget.radius! * 2,
-            width: widget.radius! * 2,
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(10000)),
-            child: Container(),
+            child: Container(
+              padding: EdgeInsets.all(appHeightSize(context) * 0.01),
+              height: widget.radius! * 2,
+              width: widget.radius! * 2,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(10000)),
+              child: Container(),
+            ),
           ),
-        ),
-        AppText(
-          text: widget.title!,
-          fontSize: mediumText() * 0.7,
-        )
-      ],
+          AppText(
+            text: widget.title!,
+            fontSize: mediumText() * 0.7,
+          )
+        ],
+      ),
     );
   }
 }

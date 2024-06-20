@@ -4,7 +4,7 @@ class AppButton extends StatefulWidget {
   final Widget child;
   final Color? color;
   final Color? borderColor;
-  final double? radius;
+  final double? bordeurRadius;
   final double? height;
   final double? width;
   final VoidCallback onTap;
@@ -13,7 +13,7 @@ class AppButton extends StatefulWidget {
     super.key,
     required this.child,
     this.color = Colors.white,
-    this.radius = 15,
+    this.bordeurRadius = 15,
     this.height = 70,
     required this.onTap,
     this.width = 140,
@@ -35,7 +35,7 @@ class _AppButtonState extends State<AppButton> {
         width: widget.width,
         decoration: BoxDecoration(
           color: widget.color!,
-          borderRadius: BorderRadius.circular(widget.radius!),
+          borderRadius: BorderRadius.circular(widget.bordeurRadius!),
           border: Border(
             top: BorderSide(color: widget.borderColor!),
             bottom: BorderSide(color: widget.borderColor!),

@@ -6,6 +6,7 @@ import 'package:benin_poulet/views/pages/inscription_pages/signupWithEmailPage.d
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/validationPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/v_presentationBoutiquePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
@@ -96,6 +97,8 @@ class _MyAppState extends State<MyApp> {
         '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
         '/validationPage': (context) => const ValidationPage(),
         '/vendeurMainPage': (context) => const VMainPage(),
+        '/vendeurPresentationBoutiquePage': (context) =>
+            const VPresentationBoutiquePage(),
       },
       //
       //initialRoute: '/firstPage',

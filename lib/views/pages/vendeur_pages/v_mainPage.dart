@@ -13,9 +13,13 @@ class VMainPage extends StatefulWidget {
 }
 
 class _VMainPageState extends State<VMainPage> {
-  final PageController _pageViewController = PageController(initialPage: 0);
+  // page view controller
+  final PageController _pageViewController = PageController(
+    initialPage: 0,
+  );
 
-  final List<Icon> bottomNavigationBarItems = [
+  // liste des icônes du bottomNavigationBar
+  final List<Icon> _bottomNavigationBarItems = [
     Icon(
       Icons.storefront,
       size: largeText() * 1.2,
@@ -31,22 +35,21 @@ class _VMainPageState extends State<VMainPage> {
     ),
   ];
 
+  // liste des pages de la page principale
   final List<Widget> _pages = [
-    VHomePage(),
+    const VHomePage(),
     Center(
       child: AppText(text: 'Products page'),
     ),
     Center(
-      child: Container(child: AppText(text: 'Commandes page')),
+      child: AppText(text: 'Commandes page'),
     ),
     Center(
       child: AppText(text: 'Messages page'),
     ),
-    Center(
-      child: AppText(text: 'Account page'),
-    ),
   ];
 
+  // liste des titres de l'AppBar (en fonction de l'index de la page currentPagee
   final List<Widget> _pagesTitle = [
     AppText(text: 'Accueil'),
     AppText(text: 'Produits'),
@@ -54,13 +57,14 @@ class _VMainPageState extends State<VMainPage> {
     AppText(text: 'Messages'),
   ];
 
-  int current = 0;
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      ///AppBar
       appBar: AppBar(
-        title: _pagesTitle[current],
+        title: _pagesTitle[currentPage],
         actions: const [
           Padding(
             padding: EdgeInsets.all(16.0),
@@ -68,39 +72,50 @@ class _VMainPageState extends State<VMainPage> {
           )
         ],
       ),
+
+      /// corps de l'app
       body: Center(
-        child: PageView(
+        child: PageView.builder(
+          itemCount: _pages.length,
           controller: _pageViewController,
           onPageChanged: (index) {
             setState(() {
-              current = index;
+              if (index == _pages.length) {
+                currentPage = _pages.length - 1;
+              } else {
+                currentPage = index;
+              }
             });
           },
-          children: _pages,
+          itemBuilder: (BuildContext context, int index) {
+            return _pages[currentPage];
+          },
+
+          /*controller: _pageViewController,
+          onPageChanged: (index) {
+            setState(() {
+              currentPage = index;
+            });
+          },
+          children: _pages,*/
         ),
       ),
 
-      /*Center(
-        child: Center(child : AppText(
-          text: 'Welcom to your home page',
-        ),
-      ),*/
+      /// bottomNavigationBar
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor:
-            Colors.transparent, //Theme.of(context).colorScheme.background,
+        backgroundColor: Colors.transparent,
         color: Theme.of(context).colorScheme.surface,
         //buttonBackgroundColor: primaryColor,
         //selectedColor: Colors.white,
         //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
-        items: bottomNavigationBarItems,
-
-        index: current,
+        items: _bottomNavigationBarItems,
+        index: currentPage,
         onTap: (index) {
           //Handle button tap
           setState(() {
-            current = index;
-            //_pageViewController.jumpToPage(current);
-            _pageViewController.animateToPage(current,
+            currentPage = index;
+            //_pageViewController.jumpToPage(currentPage);
+            _pageViewController.animateToPage(currentPage,
                 duration: const Duration(milliseconds: 600),
                 curve: Curves.easeOut);
           });
