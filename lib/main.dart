@@ -1,3 +1,4 @@
+import 'package:benin_poulet/tests/blurryContainer.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
@@ -86,7 +87,7 @@ class _MyAppState extends State<MyApp> {
       //themeMode: ThemeMode.light,
       title: 'Bénin Poulet',
 
-      home: const VMainPage(),
+      home: const BlurryContainers(),
       routes: {
         '/firstPage': (context) => const FirstPage(),
         '/loginPage': (context) => const LoginPage(),

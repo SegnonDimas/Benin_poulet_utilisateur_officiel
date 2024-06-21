@@ -171,17 +171,10 @@ FRONT-END
 
 
 À faire :
-    - pages d'Accueil pour vendeur
     - page de produits vendeur
     - page de commandes
     - page de discussion
     - page de réglages
-
-
-
-
-À supprimer :
-    -
 
 
 À utiliser :
@@ -189,8 +182,13 @@ FRONT-END
     - flutter_slidable
     - slide_to_act 2.0.2
     - overlay_tooltip
+    - super_tooltip
     - flutter_local_notifications 17.1.2
+    - awesome_notifications
     - curved_navigation_bar
+    - blurrycontainer
+    - pro_animated_blur
+    - timer_snackbar
 
 
 Icons :
@@ -199,9 +197,5 @@ Icons :
     - Icons.motorcycle
     - Icons.fingerprint_sharp
     - Icons.shield
-
-
-Réglé :
-    -
 
 

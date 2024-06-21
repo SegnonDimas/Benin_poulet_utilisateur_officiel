@@ -78,6 +78,7 @@ class ModelPortefeuille extends StatefulWidget {
   late Color? foregroundColor;
   final String? title;
   final int? solde;
+
   ModelPortefeuille({
     super.key,
     this.height = 100,

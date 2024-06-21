@@ -22,7 +22,6 @@ class FiscalitePageState extends State<FiscalitePage> {
   bool isMtn = false;
   bool isMoov = false;
   bool isCeltiis = false;
-  final _paymentNumberController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
@@ -119,52 +118,21 @@ class FiscalitePageState extends State<FiscalitePage> {
             ),
 
             SizedBox(
-              height: appHeightSize(context) * 0.1,
+              height: appHeightSize(context) * 0.08,
               width: appWidthSize(context),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  // Celtiis
-                  ChoiceChip(
-                    label: AppText(
-                      text: 'Celtiis',
-                      color: isCeltiis
-                          ? Colors.white
-                          : Theme.of(context)
-                              .colorScheme
-                              .inverseSurface
-                              .withAlpha(50),
-                    ),
-                    pressElevation: 20,
-                    side: BorderSide.none,
-                    padding: const EdgeInsets.only(
-                        top: 20, bottom: 20, left: 7, right: 7),
-                    selected: _mobileMoney == 'Celtiis',
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    shadowColor: Theme.of(context).colorScheme.inversePrimary,
-                    selectedColor: primaryColor,
-                    checkmarkColor: Colors.white,
-                    tooltip: 'Recevoir de l\'argent par Celtiis Money',
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isCeltiis = selected;
-                        isMoov = false;
-                        isMtn = false;
-                        _mobileMoney = selected ? 'Celtiis' : '';
-                      });
-                    },
-                  ),
-
-                  // MTN
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: appWidthSize(context) * 0.05,
-                        right: appWidthSize(context) * 0.05),
-                    child: ChoiceChip(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: appWidthSize(context) * 0.025,
+                ),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    // Celtiis
+                    ChoiceChip(
                       label: AppText(
-                        text: 'MTN',
-                        color: isMtn
+                        text: 'Celtiis',
+                        color: isCeltiis
                             ? Colors.white
                             : Theme.of(context)
                                 .colorScheme
@@ -174,61 +142,98 @@ class FiscalitePageState extends State<FiscalitePage> {
                       pressElevation: 20,
                       side: BorderSide.none,
                       padding: const EdgeInsets.only(
-                          top: 20, bottom: 20, left: 7, right: 7),
-                      selected: _mobileMoney == 'MTN',
-                      tooltip: 'Recevoir de l\'argent par MTN Money',
+                          top: 10, bottom: 10, left: 7, right: 7),
+                      selected: _mobileMoney == 'Celtiis',
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      shadowColor: Theme.of(context).colorScheme.inversePrimary,
+                      selectedColor: primaryColor,
+                      checkmarkColor: Colors.white,
+                      tooltip: 'Recevoir de l\'argent par Celtiis Money',
+                      onSelected: (bool selected) {
+                        setState(() {
+                          isCeltiis = selected;
+                          isMoov = false;
+                          isMtn = false;
+                          _mobileMoney = selected ? 'Celtiis' : '';
+                        });
+                      },
+                    ),
+
+                    // MTN
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: appWidthSize(context) * 0.05,
+                          right: appWidthSize(context) * 0.05),
+                      child: ChoiceChip(
+                        label: AppText(
+                          text: 'MTN',
+                          color: isMtn
+                              ? Colors.white
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withAlpha(50),
+                        ),
+                        pressElevation: 20,
+                        side: BorderSide.none,
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 7, right: 7),
+                        selected: _mobileMoney == 'MTN',
+                        tooltip: 'Recevoir de l\'argent par MTN Money',
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        shadowColor:
+                            Theme.of(context).colorScheme.inversePrimary,
+                        selectedColor: primaryColor,
+                        checkmarkColor: Colors.white,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            isMtn = selected;
+                            isMoov = false;
+                            isCeltiis = false;
+                            print('Celtiis ==>' + '$isCeltiis');
+                            print('Mtn ==>' + '$isMtn');
+                            print('Moov ==>' + '$isMoov');
+                            _mobileMoney = selected ? 'MTN' : '';
+                          });
+                        },
+                      ),
+                    ),
+
+                    // Moov Africa
+                    ChoiceChip(
+                      label: AppText(
+                        text: 'Moov Africa',
+                        color: isMoov
+                            ? Colors.white
+                            : Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withAlpha(50),
+                      ),
+                      pressElevation: 20,
+                      side: BorderSide.none,
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 7, right: 7),
+                      selected: _mobileMoney == 'Moov Africa',
+                      tooltip: 'Recevoir de l\'argent par Moov Money',
                       backgroundColor: Theme.of(context).colorScheme.surface,
                       shadowColor: Theme.of(context).colorScheme.inversePrimary,
                       selectedColor: primaryColor,
                       checkmarkColor: Colors.white,
                       onSelected: (bool selected) {
                         setState(() {
-                          isMtn = selected;
-                          isMoov = false;
+                          isMoov = selected;
                           isCeltiis = false;
+                          isMtn = false;
                           print('Celtiis ==>' + '$isCeltiis');
                           print('Mtn ==>' + '$isMtn');
                           print('Moov ==>' + '$isMoov');
-                          _mobileMoney = selected ? 'MTN' : '';
+                          _mobileMoney = selected ? 'Moov Africa' : '';
                         });
                       },
                     ),
-                  ),
-
-                  // Moov Africa
-                  ChoiceChip(
-                    label: AppText(
-                      text: 'Moov Africa',
-                      color: isMoov
-                          ? Colors.white
-                          : Theme.of(context)
-                              .colorScheme
-                              .inverseSurface
-                              .withAlpha(50),
-                    ),
-                    pressElevation: 20,
-                    side: BorderSide.none,
-                    padding: const EdgeInsets.only(
-                        top: 20, bottom: 20, left: 7, right: 7),
-                    selected: _mobileMoney == 'Moov Africa',
-                    tooltip: 'Recevoir de l\'argent par Moov Money',
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    shadowColor: Theme.of(context).colorScheme.inversePrimary,
-                    selectedColor: primaryColor,
-                    checkmarkColor: Colors.white,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isMoov = selected;
-                        isCeltiis = false;
-                        isMtn = false;
-                        print('Celtiis ==>' + '$isCeltiis');
-                        print('Mtn ==>' + '$isMtn');
-                        print('Moov ==>' + '$isMoov');
-                        _mobileMoney = selected ? 'Moov Africa' : '';
-                      });
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(height: appHeightSize(context) * 0.02),
