@@ -3,13 +3,13 @@ import 'package:benin_poulet/views/pages/vendeur_pages/authentification/infoPers
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/photoPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/pieceIdentitePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/resumePage.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
+import '../../../../widgets/app_text.dart';
 import '../../../../widgets/app_timeline_tile.dart';
+import '../../../sizes/app_sizes.dart';
+import '../../../sizes/text_sizes.dart';
 
 class AuthentificationVendeurPage extends StatefulWidget {
   const AuthentificationVendeurPage({super.key});

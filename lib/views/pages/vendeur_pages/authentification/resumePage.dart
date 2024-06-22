@@ -1,8 +1,7 @@
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../models/model_resumeTextFormFiel.dart';
 
 class ResumePage extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class _ResumePageState extends State<ResumePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(children: [
-          const ResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Nom',
             valeur: 'Nom',
           ),
@@ -24,7 +23,7 @@ class _ResumePageState extends State<ResumePage> {
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Prenom',
             valeur: 'Prenom',
           ),
@@ -32,7 +31,7 @@ class _ResumePageState extends State<ResumePage> {
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Date et lieu de naissance',
             valeur: 'DD/MM/YYYY-Lieu',
           ),
@@ -40,7 +39,7 @@ class _ResumePageState extends State<ResumePage> {
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Adresse',
             valeur: 'Adresse',
           ),
@@ -48,7 +47,7 @@ class _ResumePageState extends State<ResumePage> {
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Type de pièce',
             valeur: 'Type de pièce',
           ),
@@ -57,33 +56,6 @@ class _ResumePageState extends State<ResumePage> {
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
         ]),
-      ),
-    );
-  }
-}
-
-class ResumeTextField extends StatelessWidget {
-  final String? attribut;
-  final String? valeur;
-  const ResumeTextField({super.key, this.attribut, this.valeur});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: appHeightSize(context) * 0.04, bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          AppText(
-            text: attribut!,
-            color:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
-            fontSize: smallText() * 1.1,
-          ),
-          AppText(
-              text: valeur!,
-              color: Theme.of(context).colorScheme.inversePrimary),
-        ],
       ),
     );
   }

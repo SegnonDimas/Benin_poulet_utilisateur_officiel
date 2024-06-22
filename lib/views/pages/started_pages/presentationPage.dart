@@ -5,6 +5,8 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
+import '../../../models/model_presentationPage.dart';
+
 class PresentationPage extends StatefulWidget {
   const PresentationPage({super.key});
 
@@ -18,9 +20,9 @@ class _PresentationPageState extends State<PresentationPage> {
   final PageController _pageViewController = PageController();
 
   // list 'views' contenant les informations des différentes pageView
-  List<PageModel> views = [
+  List<ModelPresentationPage> views = [
     //pageView 1
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description: "Bienvenue sur notre application Bénin Poulet ...",
         image: "assets/images/welcome.png",
@@ -28,7 +30,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Bienvenue'),
 
     //pageView 2
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description:
             "Créez une boutique et faites découvrir votre ferme à travers le monde ...",
@@ -37,7 +39,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Créer'),
 
     //pageView 3
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description:
             "Explorez les produits et boutiques disponibles sur l'app...",
@@ -46,7 +48,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Explorer'),
 
     //pageView 4
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description:
             "Recherchez des produits et boutiques disponibles à proximité...",
@@ -55,7 +57,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Rechercher'),
 
     //pageView 5
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description:
             "Commandez ce que vous comptez et payer en toute sécurité ...",
@@ -64,7 +66,7 @@ class _PresentationPageState extends State<PresentationPage> {
         descriptionTitle: 'Commander'),
 
     //pageView 6
-    PageModel(
+    ModelPresentationPage(
         title: "Bénin Poulet",
         description: "Soyez livrés en toute sécurité ...",
         image: "assets/images/receive.png",
@@ -787,15 +789,4 @@ class _PresentationPageState extends State<PresentationPage> {
           ),
         ));
   }
-}
-
-class PageModel {
-  final String title, description, image, nextMsg, descriptionTitle;
-  PageModel({
-    required this.title,
-    required this.description,
-    required this.image,
-    required this.nextMsg,
-    required this.descriptionTitle,
-  });
 }

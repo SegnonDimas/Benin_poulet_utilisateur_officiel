@@ -1,9 +1,14 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 
-class BlurryContainers extends StatelessWidget {
+class BlurryContainers extends StatefulWidget {
   const BlurryContainers({super.key});
 
+  @override
+  State<BlurryContainers> createState() => _BlurryContainersState();
+}
+
+class _BlurryContainersState extends State<BlurryContainers> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
