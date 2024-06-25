@@ -1,3 +1,4 @@
+import 'package:benin_poulet/models/model_session.dart';
 import 'package:flutter/material.dart';
 
 import '../views/sizes/app_sizes.dart';
@@ -8,9 +9,13 @@ import '../widgets/app_text.dart';
 class ModelPortefeuille extends StatefulWidget {
   final double? height;
   final double? width;
+  final double? radius;
   late Color? backgroundColor;
   late Color? foregroundColor;
-  final String? title;
+  final String? titrePrincipal;
+  final String? titreSession1;
+  final String? titreSession2;
+  final String? titreSession3;
   final int? solde;
 
   ModelPortefeuille({
@@ -19,8 +24,12 @@ class ModelPortefeuille extends StatefulWidget {
     this.width = 200,
     this.backgroundColor = const Color.fromARGB(179, 0, 96, 216),
     this.foregroundColor = Colors.white,
-    this.title = 'Portefeuille',
+    this.titrePrincipal = 'Portefeuille',
     this.solde = 0,
+    this.radius,
+    this.titreSession1 = 'Recharger ',
+    this.titreSession2 = 'Retrait',
+    this.titreSession3 = 'Historique',
   });
 
   @override
@@ -59,7 +68,7 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText(
-                      text: widget.title!,
+                      text: widget.titrePrincipal!,
                       fontSize: smallText() * 0.9,
                       color: widget.foregroundColor,
                     ),
@@ -77,7 +86,35 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(
+                    ModelSession(
+                      radius: widget.radius ?? 30,
+                      height: widget.height! / 1.1,
+                      width: widget.width! / 3.5,
+                      title: widget.titreSession1,
+                      titleColor: Colors.white,
+                      maxLine: 1,
+                      padding: 2,
+                    ),
+                    ModelSession(
+                      radius: widget.radius ?? 30,
+                      height: widget.height! / 1.1,
+                      width: widget.width! / 3.5,
+                      title: widget.titreSession2,
+                      titleColor: Colors.white,
+                      maxLine: 1,
+                      padding: 2,
+                    ),
+                    ModelSession(
+                      radius: widget.radius ?? 30,
+                      height: widget.height! / 1.1,
+                      width: widget.width! / 3.5,
+                      title: widget.titreSession3,
+                      titleColor: Colors.white,
+                      maxLine: 1,
+                      padding: 2,
+                    ),
+
+                    /*SizedBox(
                       width: widget.width! / 5,
                       child: ListView(
                         children: [
@@ -93,8 +130,8 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                           )
                         ],
                       ),
-                    ),
-                    SizedBox(
+                    ),*/
+                    /*SizedBox(
                       width: widget.width! / 5,
                       child: ListView(
                         children: [
@@ -110,8 +147,9 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                           )
                         ],
                       ),
-                    ),
-                    SizedBox(
+                    ),*/
+
+                    /*SizedBox(
                       width: widget.width! / 5,
                       child: ListView(
                         children: [
@@ -127,7 +165,7 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                           )
                         ],
                       ),
-                    )
+                    )*/
                   ],
                 ),
               )

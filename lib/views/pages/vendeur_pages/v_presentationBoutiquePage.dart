@@ -129,7 +129,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                               bottom: 0,
                               left: appWidthSize(context) * 0.06,
                               //right: 0,
-                              child: SizedBox(
+                              child: Container(
                                 height: appHeightSize(context) * 0.12,
                                 width: appHeightSize(context) * 0.125,
                                 child: Stack(

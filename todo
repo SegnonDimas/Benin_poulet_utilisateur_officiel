@@ -201,3 +201,29 @@ Icons :
 
 À consulter :
     - https://docs.flutter.dev/codelabs
+
+
+Page commandes :
+    AppBar:
+        * Actif/inactif/occupé
+            - Actif : possibilité de passer des commandes
+            - inactif : les clients ne pourront pas passer des commandes
+            - occupé : possibilité de recevoir de commandes, sauf que les commandes porront prendre plus de temps que prévu pour se faire livrer
+
+        * Trier
+            - Ranger les commandes selon celle qui doivent être très vite livées
+
+    BottomNavigationBar:
+        * Nouvelles
+            - commande en attente d'acceptation
+
+        * en cours
+            - commandes en cours de prépération
+
+        * prête
+
+        * historique
+
+
+Page ma boutique :
+    - la durée indiquée sur la boutque (à repenser)

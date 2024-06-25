@@ -1,6 +1,5 @@
 import 'package:benin_poulet/views/pages/vendeur_pages/v_commandeListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_homePage.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../widgets/app_text.dart';
@@ -101,7 +100,7 @@ class _VMainPageState extends State<VMainPage> {
       ),
 
       /// bottomNavigationBar
-      bottomNavigationBar: CurvedNavigationBar(
+      /* bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
         color: Theme.of(context).colorScheme.surface,
         //buttonBackgroundColor: primaryColor,
@@ -119,7 +118,7 @@ class _VMainPageState extends State<VMainPage> {
                 curve: Curves.easeOut);
           });
         },
-      ),
+      ),*/
     );
   }
 }

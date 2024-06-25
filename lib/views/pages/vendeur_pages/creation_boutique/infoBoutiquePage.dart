@@ -1,10 +1,10 @@
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../../widgets/app_phone_textField.dart';
 import '../../../../widgets/app_textField.dart';
 
 class InfoBoutiquePage extends StatefulWidget {

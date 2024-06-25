@@ -36,65 +36,85 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: appHeightSize(context) * 0.06,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      appBar: AppBar(
+        title: AppText(text: 'Commandes'),
+      ),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: appHeightSize(context),
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: AppText(text: '${_listCommande.length} commandes'),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: appHeightSize(context) * 0.05,
-                  width: appWidthSize(context) * 0.4,
-                  decoration: BoxDecoration(
-                    color: _statutSelected == 'Actifs'
-                        ? primaryColor
-                        : _statutSelected == 'En attente'
-                            ? Colors.amber
-                            : _statutSelected == 'Annulées'
-                                ? Colors.redAccent
-                                : Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: DropdownButton<String>(
-                    hint: AppText(
-                      text: _statutSelected,
-                      color: Colors.white,
+              /// nombre de commandes + choix de commandes à afficher
+              SizedBox(
+                height: appHeightSize(context) * 0.06,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: AppText(text: '${_listCommande.length} commandes'),
                     ),
-                    value: _statutSelected,
-                    //focusColor: primaryColor,
-                    items: _statut.map((String statut) {
-                      return DropdownMenuItem<String>(
-                        value: statut,
-                        child: AppText(
-                          text: statut,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: appHeightSize(context) * 0.05,
+                        width: appWidthSize(context) * 0.4,
+                        decoration: BoxDecoration(
+                          color: _statutSelected == 'Actifs'
+                              ? primaryColor
+                              : _statutSelected == 'En attente'
+                                  ? Colors.amber
+                                  : _statutSelected == 'Annulées'
+                                      ? Colors.redAccent
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _statutSelected = newValue!;
-                      });
-                    },
-                  ),
+                        child: DropdownButton<String>(
+                          hint: AppText(
+                            text: _statutSelected,
+                            color: Colors.white,
+                          ),
+                          value: _statutSelected,
+                          //focusColor: primaryColor,
+                          items: _statut.map((String statut) {
+                            return DropdownMenuItem<String>(
+                              value: statut,
+                              child: AppText(
+                                text: statut,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _statutSelected = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+              //espace
+              SizedBox(
+                height: appHeightSize(context) * 0.01,
+              ),
+
+              /// liste des commandes
+              Expanded(
+                child: ListView(
+                  children: _listCommande,
+                ),
+              )
             ],
           ),
         ),
-        Expanded(
-          child: ListView(
-            children: _listCommande,
-          ),
-        )
-      ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../views/sizes/app_sizes.dart';
@@ -58,7 +59,10 @@ class ModelCommande extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppText(text: nomClient),
+            AppText(
+              text: nomClient,
+              color: primaryColor,
+            ),
             SizedBox(
               //width: appWidthSize(context) * 0.4,
               child: Row(
@@ -93,6 +97,7 @@ class ModelCommande extends StatelessWidget {
                   ),
                   AppText(
                     text: date!,
+                    color: primaryColor,
                   )
                 ],
               ),
