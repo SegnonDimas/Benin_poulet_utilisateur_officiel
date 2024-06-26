@@ -1,4 +1,3 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 
 class AppText extends StatefulWidget {
@@ -17,7 +16,7 @@ class AppText extends StatefulWidget {
     super.key,
     this.fontSize = 14,
     this.fontWeight = FontWeight.normal,
-    this.fontFamily = 'MontserratSemiBold',
+    this.fontFamily = 'PoppinsSemiBold',
     this.fontStyle = FontStyle.normal,
     this.overflow = TextOverflow.ellipsis,
     this.textAlign = TextAlign.start,
@@ -41,12 +40,12 @@ class _AppTextState extends State<AppText> {
       widget.text,
       maxLines: widget.maxLine,
       style: TextStyle(
-          fontSize: widget.fontSize,
-          fontWeight: widget.fontWeight,
-          fontFamily: widget.fontFamily,
-          color: widget.color,
-          overflow: widget.overflow,
-          fontStyle: widget.fontStyle,
+        fontSize: widget.fontSize,
+        fontWeight: widget.fontWeight,
+        fontFamily: widget.fontFamily,
+        color: widget.color,
+        overflow: widget.overflow,
+        fontStyle: widget.fontStyle,
 
         //color: (widget.context != null && widget.color == null) || (widget.color != null && widget.context == null)
         //? widget.color,

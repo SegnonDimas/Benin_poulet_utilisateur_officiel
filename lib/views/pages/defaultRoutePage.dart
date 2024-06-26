@@ -7,9 +7,15 @@ class DefaultRoutePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: AppText(text: 'Default Route'),
-      ),
+      appBar: AppBar(title: AppText(text: 'Default Route'), actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: Icon(
+            Icons.warning_amber,
+            color: Colors.amber,
+          ),
+        ),
+      ]),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

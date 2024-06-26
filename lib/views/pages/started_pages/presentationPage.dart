@@ -131,7 +131,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                   style: TextStyle(
                                       fontSize: largeText() * 1.3,
                                       color: primaryColor,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.w900),
                                 ),
                                 const SizedBox(
                                   width: 1,
@@ -420,7 +420,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   style: TextStyle(
                                                       fontSize: largeText(),
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                          FontWeight.w900,
                                                       color: primaryColor),
                                                 ),
                                                 //espace
