@@ -25,18 +25,17 @@ class ValidationPage extends StatelessWidget {
           ),
           espace,
           espace,
-          espace,
           Center(
             child: Container(
-              height: appHeightSize(context) * 0.25,
-              width: appHeightSize(context) * 0.25,
+              height: appHeightSize(context) * 0.3,
+              width: appHeightSize(context) * 0.3,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(appHeightSize(context)),
-                  color: primaryColor),
+                  color: Colors.orange),
               child: Icon(
                 Icons.hourglass_bottom_outlined,
                 color: Colors.white,
-                size: largeText() * 3,
+                size: largeText() * 5,
               ),
             ),
           ),
@@ -61,14 +60,31 @@ class ValidationPage extends StatelessWidget {
           espace,
 
           AppButton(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/vendeurMainPage');
+            },
             height: appHeightSize(context) * 0.065,
             width: appWidthSize(context) * 0.9,
             color: primaryColor,
+            //borderColor: primaryColor,
+            child: AppText(
+              text: 'Continuer',
+              fontSize: largeText() * 0.9,
+              color: Colors.white,
+            ),
+          ),
+          espace,
+
+          AppButton(
+            onTap: () {},
+            height: appHeightSize(context) * 0.065,
+            width: appWidthSize(context) * 0.9,
+            color: Theme.of(context).colorScheme.surface,
+            borderColor: primaryColor,
             child: AppText(
               text: 'Nous contacter',
               fontSize: largeText() * 0.9,
-              color: Colors.white,
+              //color: Colors.white,
             ),
           ),
           Padding(
@@ -80,22 +96,6 @@ class ValidationPage extends StatelessWidget {
               fontSize: smallText(),
             ),
           ),
-          espace,
-
-          AppButton(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/vendeurMainPage');
-            },
-            height: appHeightSize(context) * 0.065,
-            width: appWidthSize(context) * 0.9,
-            color: Theme.of(context).colorScheme.surface,
-            borderColor: primaryColor,
-            child: AppText(
-              text: 'Continuer',
-              fontSize: largeText() * 0.9,
-              color: primaryColor,
-            ),
-          )
         ],
       ),
     ));
