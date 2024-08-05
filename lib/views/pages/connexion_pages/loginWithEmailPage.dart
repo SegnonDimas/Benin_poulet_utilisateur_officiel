@@ -67,7 +67,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
 
           // Image d'arrière-plan
           Image.asset(
-            'assets/logos/email.png',
+            'assets/logos/email2.png',
             fit: BoxFit.fitHeight,
             height: appHeightSize(context) * 0.15,
             //width: appWidthSize(context) * 0.5,
