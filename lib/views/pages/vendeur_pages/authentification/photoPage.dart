@@ -27,17 +27,12 @@ class PhotoPageState extends State<PhotoPage> {
   ];
 
   final List<String> _descriptionPiece = [
-    'chargez la photo',
-    'chargez la photo',
+    'charger la photo',
+    'charger la photo',
     'prendre une photo'
   ];
 
-  final List<String> _trailing = [
-    'prendre une photo',
-    'prendre une photo',
-    'Je suis'
-        ''
-  ];
+  final List<String> _trailing = ['prendre une photo', 'prendre une photo', ''];
 
   // La variable qui stocke le pays sélectionné
   String? _selectedCountry = 'Bénin';
@@ -58,22 +53,19 @@ class PhotoPageState extends State<PhotoPage> {
             // sélection pays
             // texte
             AppText(
-              text: 'Sélectionnez le pays d\'origine de votre pièce',
+              text: 'Prendre en photo votre pièce',
               fontSize: smallText() * 1.1,
             ),
             const SizedBox(
               height: 10,
             ),
 
-            const SizedBox(
-              height: 20,
-            ),
             // liste des pièces
             SizedBox(
               //height: appHeightSize(context) * 0.05,
               //width: appWidthSize(context) * 0.8,
               child: Column(
-                children: List.generate(_titrePiece.length, (index) {
+                children: List.generate(_titrePiece.length - 1, (index) {
                   return Padding(
                     padding:
                         EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
@@ -81,6 +73,37 @@ class PhotoPageState extends State<PhotoPage> {
                       title: _titrePiece[index],
                       description: _descriptionPiece[index],
                       trailing: _trailing[index],
+                    ),
+                  );
+                }),
+              ),
+            ),
+            // espace
+            const SizedBox(
+              height: 20,
+            ),
+
+            // texte
+            AppText(
+              text: 'Prendre une photo de vous avec votre pièce',
+              fontSize: smallText() * 1.1,
+            ),
+            // espace
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              //height: appHeightSize(context) * 0.05,
+              //width: appWidthSize(context) * 0.8,
+              child: Column(
+                children: List.generate(1, (index) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
+                    child: ModelPhotoSelecteur(
+                      title: _titrePiece[2],
+                      description: _descriptionPiece[2],
+                      trailing: _trailing[2],
                     ),
                   );
                 }),
