@@ -28,6 +28,22 @@ class _VHomePageState extends State<VHomePage> {
       title: 'Mes Commandes',
       routeName: '/vendeurCommandeListPage',
     ),
+    const ModelSession(
+      title: 'Campagnes',
+      //routeName: '/vendeurPresentationBoutiquePage',
+    ),
+    const ModelSession(
+      title: 'Performances',
+      routeName: '/vendeurPresentationBoutiquePage',
+    ),
+    const ModelSession(
+      title: 'Calculatrice',
+      //routeName: '/vendeurPresentationBoutiquePage',
+    ),
+    const ModelSession(
+      title: 'Coursiers',
+      //routeName: '/vendeurPresentationBoutiquePage',
+    ),
     const ModelSession(title: 'Mon profil'),
   ];
 

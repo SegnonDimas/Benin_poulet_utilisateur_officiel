@@ -17,8 +17,17 @@ class VPresentationBoutiquePage extends StatefulWidget {
 }
 
 class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
-  final int pourcentageProfil = 50;
+  final int pourcentageProfil = 90;
   final String nomBoutique = 'Le Poulailler';
+  final List<String> avisClients = [
+    'Service client bien rendu',
+    'Livraison rapide',
+    'Le produit livré est de qualité meilleure',
+    'Super',
+    'Je recommande vivement',
+    'je suis satisfait'
+  ];
+  bool voirAvisClient = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,7 +279,155 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                 ],
               ),
             ),
-          )
+          ),
+
+          /// infos boutique
+          // nom boutique
+          ListTile(
+            leading: const Icon(Icons.storefront),
+            title: AppText(
+              text: 'Nom de la boutique',
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: mediumText(),
+            ),
+            subtitle: AppText(
+              text: nomBoutique,
+            ),
+            trailing: Icon(
+              Icons.edit_note_rounded,
+              color: primaryColor,
+            ),
+          ),
+
+          // Secteurs d'activité
+          ListTile(
+            leading: const Icon(Icons.grid_view),
+            title: AppText(
+              text: 'Secteurs d\'activité',
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: mediumText(),
+            ),
+            subtitle: Wrap(
+              spacing: 5,
+              runSpacing: 5,
+              children: [
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'Poulet'),
+                    onTap: () {}),
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'Boeuf'),
+                    onTap: () {}),
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'Restaurant'),
+                    onTap: () {}),
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    //width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'Poulet gauliath'),
+                    onTap: () {}),
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'mouton'),
+                    onTap: () {}),
+                AppButton(
+                    height: appHeightSize(context) * 0.05,
+                    width: appWidthSize(context) * 0.25,
+                    color: Theme.of(context).colorScheme.surface,
+                    child: AppText(text: 'oeuf'),
+                    onTap: () {}),
+              ],
+            ),
+            isThreeLine: true,
+          ),
+
+          // Adresse boutique
+          ListTile(
+            leading: const Icon(Icons.location_on_outlined),
+            title: AppText(
+              text: 'Adresse de la boutique',
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: mediumText(),
+            ),
+            subtitle: AppText(
+              text: 'Abomey-Calavi',
+            ),
+            trailing: Icon(
+              Icons.edit_note_rounded,
+              color: primaryColor,
+            ),
+          ),
+
+          // Horaire boutique
+          ListTile(
+            leading: const Icon(Icons.timer_rounded),
+            title: AppText(
+              text: 'Heures d\'activité',
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: mediumText(),
+            ),
+            subtitle: AppText(
+              text: 'Tous les jours',
+            ),
+            trailing: Icon(
+              Icons.edit_note_rounded,
+              color: primaryColor,
+            ),
+          ),
+
+          /// avis clients
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppText(
+                text: 'Voir les avis clients (${avisClients.length})',
+                color: primaryColor,
+              ),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      voirAvisClient = !voirAvisClient;
+                    });
+                  },
+                  icon: voirAvisClient
+                      ? const Icon(Icons.keyboard_arrow_down_rounded)
+                      : const Icon(Icons.keyboard_arrow_up_outlined))
+            ],
+          ),
+          !voirAvisClient
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(avisClients.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppText(
+                                text: 'avis ${index + 1}',
+                                fontSize: smallText(),
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              AppText(text: avisClients[index]),
+                            ],
+                          ),
+                        );
+                      })),
+                ),
         ],
       ),
     );
