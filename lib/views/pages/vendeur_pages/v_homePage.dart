@@ -34,7 +34,7 @@ class _VHomePageState extends State<VHomePage> {
     ),
     const ModelSession(
       title: 'Performances',
-      routeName: '/vendeurPresentationBoutiquePage',
+      //routeName: '/vendeurPresentationBoutiquePage',
     ),
     const ModelSession(
       title: 'Calculatrice',
@@ -50,14 +50,14 @@ class _VHomePageState extends State<VHomePage> {
   // liste des icônes du bottomNavigationBar
   final List<Icon> _bottomNavigationBarItems = [
     Icon(
-      Icons.storefront,
+      Icons.home_filled,
       size: largeText() * 1.2,
     ),
-    Icon(Icons.edit_calendar_rounded, size: largeText() * 1.2),
+    /*Icon(Icons.edit_calendar_rounded, size: largeText() * 1.2),
     Icon(
       Icons.payment,
       size: largeText() * 1.2,
-    ),
+    ),*/
     Icon(
       Icons.wechat_rounded,
       size: largeText() * 1.2,
@@ -107,13 +107,17 @@ class _VHomePageState extends State<VHomePage> {
           /// liste des sessions
           SizedBox(
             width: appWidthSize(context),
-            height: appHeightSize(context) * 0.15,
-            child: Wrap(
-              alignment: WrapAlignment.spaceAround,
-              //spacing: appWidthSize(context) * 0.001,
-              runSpacing: appHeightSize(context) * 0.0,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: _sessions,
+            //height: appHeightSize(context) * 0.15,
+            child: Column(
+              children: [
+                Wrap(
+                  alignment: WrapAlignment.spaceAround,
+                  //spacing: appWidthSize(context) * 0.001,
+                  runSpacing: appHeightSize(context) * 0.0,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: _sessions,
+                ),
+              ],
             ),
           ),
         ],

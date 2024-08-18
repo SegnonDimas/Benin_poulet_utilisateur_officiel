@@ -295,7 +295,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  /// login()
+  /// login() function
   Future<void> login() async {
     print('''
     :::: numéro => ${_phoneNumbercontroller.text}

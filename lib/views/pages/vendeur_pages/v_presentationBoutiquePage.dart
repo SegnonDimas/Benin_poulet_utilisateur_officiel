@@ -400,7 +400,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                       voirAvisClient = !voirAvisClient;
                     });
                   },
-                  icon: voirAvisClient
+                  icon: !voirAvisClient
                       ? const Icon(Icons.keyboard_arrow_down_rounded)
                       : const Icon(Icons.keyboard_arrow_up_outlined))
             ],

@@ -35,7 +35,7 @@ class ModelSession extends StatefulWidget {
 class _ModelSessionState extends State<ModelSession> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.pushNamed(context, widget.routeName ?? '/defaultRoutePage');
       },
