@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
       //themeMode: ThemeMode.light,
       title: 'Bénin Poulet',
 
-      //home: const LoginPage(),
+      //home: const StateWithBloc(),
       routes: routes,
 
       initialRoute: '/firstPage',

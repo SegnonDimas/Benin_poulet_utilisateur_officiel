@@ -98,14 +98,20 @@ def user_name (name):
 
 # création d'un utilisateur
 @app.post("/users/", description='Création d\'un nouvel utilisateur')
-def create_user(user: User):
+async def create_user(user: User) :
     #Vérifier si un utilisateur existait déjà avec ce même id
     for existing_user in users_db:
         if existing_user.id == user.id:
             raise HTTPException(status_code=404, detail= f'Utilisateur avec cet id ({user.id}) existe déjà')
+
+    query = UserModel.__table__.insert().values(id=user.id, name=user.name, age=user.age)
+    await database.execute(query)
+
     users_db.append(user)
     print(users_db)
-    return {"message" : f"Utilisateur {user.name} créé avec succès", "user": user}
+
+    #return {"message" : f"Utilisateur {user.name} créé avec succès", "user": user}, user
+    return user
 
 # mise à jour d'un utilisateur
 @app.put("/users/{user_id}", description='Mise à jour d\'un utilisateur')
