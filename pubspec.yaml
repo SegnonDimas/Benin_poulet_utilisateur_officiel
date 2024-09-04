@@ -55,6 +55,8 @@ dependencies:
   google_maps_flutter_web: ^0.5.8
   flutter_bloc: ^8.1.6
   bloc: ^8.1.4
+  circular_countdown_timer: ^0.2.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

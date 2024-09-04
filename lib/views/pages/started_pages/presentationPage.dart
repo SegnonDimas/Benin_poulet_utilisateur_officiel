@@ -116,12 +116,15 @@ class _PresentationPageState extends State<PresentationPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // logo de Bénin poulet
-                                CircleAvatar(
-                                  radius: appHeightSize(context) * 0.03,
-                                  child: Image.asset(
-                                    'assets/logos/logoBlanc.png',
-                                    fit: BoxFit.fill,
-                                    height: appHeightSize(context) * 0.03,
+                                Hero(
+                                  tag: 'logoTag',
+                                  child: CircleAvatar(
+                                    radius: appHeightSize(context) * 0.03,
+                                    child: Image.asset(
+                                      'assets/logos/logoBlanc.png',
+                                      fit: BoxFit.fill,
+                                      height: appHeightSize(context) * 0.03,
+                                    ),
                                   ),
                                 ),
 

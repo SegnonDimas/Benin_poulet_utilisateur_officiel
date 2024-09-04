@@ -49,6 +49,7 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
                 color: Theme.of(context).colorScheme.surface,
                 fontSize: mediumText() * 0.9,
                 fontColor: Theme.of(context).colorScheme.inversePrimary,
+                onChanged: (String string) {},
               ),
 
               const SizedBox(

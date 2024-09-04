@@ -19,15 +19,22 @@ class VPresentationBoutiquePage extends StatefulWidget {
 class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
   final int pourcentageProfil = 90;
   final String nomBoutique = 'Le Poulailler';
+  final double shopNote = 4.5;
+  final double balanceMonetaire = 45000;
+  final int dureeMin = 20;
+  final int dureeMax = 35;
   final List<String> avisClients = [
     'Service client bien rendu',
     'Livraison rapide',
-    'Le produit livré est de qualité meilleure',
+    'Le produit livré est de qualité meilleure. Je compte revenir pour d\'autres produits' +
+        'Le produit livré est de qualité meilleure. Je compte revenir pour d\'autres produits' +
+        'Le produit livré est de qualité meilleure. Je compte revenir pour d\'autres produits',
     'Super',
     'Je recommande vivement',
     'je suis satisfait'
   ];
   bool voirAvisClient = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,17 +156,15 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                       bottom: appHeightSize(context) * 0.01,
                                       top: 0,
                                       child: DottedBorder(
-                                        color: primaryColor.withOpacity(
-                                            0.8), // Couleur de la bordure
-                                        strokeWidth:
-                                            1.5, // Largeur de la bordure
-                                        dashPattern: const [
-                                          5,
-                                          6
-                                        ], // Modèle des pointillés : longueur et espace
+                                        color: primaryColor.withOpacity(0.8),
+                                        // Couleur de la bordure
+                                        strokeWidth: 1.5,
+                                        // Largeur de la bordure
+                                        dashPattern: const [5, 6],
+                                        // Modèle des pointillés : longueur et espace
                                         borderType: BorderType.RRect,
-                                        radius: const Radius.circular(
-                                            20), // Rayon des coins pour un effet arrondi
+                                        radius: const Radius.circular(20),
+                                        // Rayon des coins pour un effet arrondi
                                         child: Container(
                                           alignment: Alignment.center,
                                           height: appHeightSize(context) * 0.11,
@@ -206,30 +211,39 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ModelAttributBoutique(
-                          width: appWidthSize(context) * 0.25,
-                          icon: const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          value: "4.5",
-                          description: '25 avis'),
-                      ModelAttributBoutique(
-                          width: appWidthSize(context) / 3.2,
-                          icon: Icon(
-                            Icons.recycling,
-                            color: primaryColor,
-                          ),
-                          value: "800 F",
-                          description: 'Livraison'),
-                      ModelAttributBoutique(
-                          width: appWidthSize(context) / 3.2,
-                          icon: const Icon(
-                            Icons.timer_rounded,
-                            color: Colors.deepPurple,
-                          ),
-                          value: "20-25",
-                          description: 'Mins')
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.25,
+                            icon: const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            value: "$shopNote",
+                            description: '${avisClients.length} avis'),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.35,
+                            icon: Icon(
+                              Icons.recycling,
+                              color: primaryColor,
+                            ),
+                            value: "$balanceMonetaire F",
+                            description: 'Livraison'),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.35,
+                            icon: const Icon(
+                              Icons.timer_rounded,
+                              color: Colors.deepPurple,
+                            ),
+                            value: "$dureeMin-$dureeMax",
+                            description: 'Mins'),
+                      )
                     ],
                   ),
 
@@ -387,47 +401,42 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
           ),
 
           /// avis clients
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppText(
-                text: 'Voir les avis clients (${avisClients.length})',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ExpansionTile(
+              expandedAlignment: Alignment.topLeft,
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              leading: Icon(
+                Icons.emoji_emotions_outlined,
+                color: primaryColor,
+                //color: Theme.of(context).colorScheme.surface,
+              ),
+              title: AppText(
+                text: 'Voir avis clients (${avisClients.length})',
                 color: primaryColor,
               ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      voirAvisClient = !voirAvisClient;
-                    });
-                  },
-                  icon: !voirAvisClient
-                      ? const Icon(Icons.keyboard_arrow_down_rounded)
-                      : const Icon(Icons.keyboard_arrow_up_outlined))
-            ],
-          ),
-          !voirAvisClient
-              ? Container()
-              : Padding(
+              children: List.generate(avisClients.length, (index) {
+                return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(avisClients.length, (index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText(
-                                text: 'avis ${index + 1}',
-                                fontSize: smallText(),
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              AppText(text: avisClients[index]),
-                            ],
-                          ),
-                        );
-                      })),
-                ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText(
+                        text: 'avis ${index + 1}',
+                        fontSize: smallText(),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      AppText(
+                        text: avisClients[index],
+                        overflow: TextOverflow.fade,
+                        textAlign: TextAlign.justify,
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+          )
         ],
       ),
     );

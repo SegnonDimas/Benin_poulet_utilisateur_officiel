@@ -1,6 +1,6 @@
-import 'package:benin_poulet/bloc/blocLogic.dart';
+import 'package:benin_poulet/bloc/blocLogic/appColorsBlocLogic.dart';
 import 'package:benin_poulet/bloc/events/appColorsEvents.dart';
-import 'package:benin_poulet/bloc/states/AppColorsStates.dart';
+import 'package:benin_poulet/bloc/states/appColorsStates.dart';
 import 'package:benin_poulet/tests/stateManagement/bloc/counter.bloc.dart';
 import 'package:benin_poulet/tests/stateManagement/stateWithBloc.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';

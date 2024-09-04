@@ -66,11 +66,15 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
           ),
 
           // Image d'arrière-plan
-          Image.asset(
-            'assets/logos/email2.png',
-            fit: BoxFit.fitHeight,
-            height: appHeightSize(context) * 0.15,
-            //width: appWidthSize(context) * 0.5,
+          Hero(
+            tag: 'emailTag',
+            transitionOnUserGestures: true,
+            child: Image.asset(
+              'assets/logos/email2.png',
+              fit: BoxFit.fitHeight,
+              height: appHeightSize(context) * 0.15,
+              //width: appWidthSize(context) * 0.5,
+            ),
           ),
 
           SizedBox(height: appHeightSize(context) * 0.05),
@@ -221,50 +225,56 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //Google
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isLoggedIn = !isLoggedIn;
-                          });
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/google.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
+                      Hero(
+                        tag: 'googleTag',
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isLoggedIn = !isLoggedIn;
+                            });
+                          },
+                          child: Container(
+                              height: appHeightSize(context) * 0.06,
+                              width: appHeightSize(context) * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/logos/google.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              )),
+                        ),
                       ),
                       SizedBox(
                         width: appWidthSize(context) * 0.15,
                       ),
 
                       //Apple
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isLoggedIn = !isLoggedIn;
-                          });
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/apple.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
+                      Hero(
+                        tag: 'appleTag',
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isLoggedIn = !isLoggedIn;
+                            });
+                          },
+                          child: Container(
+                              height: appHeightSize(context) * 0.06,
+                              width: appHeightSize(context) * 0.07,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/logos/apple.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              )),
+                        ),
                       ),
                     ],
                   ),
