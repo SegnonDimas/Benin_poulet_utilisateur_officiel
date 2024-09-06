@@ -1,5 +1,5 @@
 import 'package:benin_poulet/routes.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/v_presentationBoutiquePage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/v_productsCategoriesListPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
       //themeMode: ThemeMode.light,
       title: 'Bénin Poulet',
 
-      home: const VPresentationBoutiquePage(),
+      home: const VProduitsListPage(),
       routes: routes,
 
       //initialRoute: '/firstPage',
