@@ -1,6 +1,8 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/model_commande.dart';
@@ -53,6 +55,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
     return Scaffold(
       appBar: AppBar(
         title: AppText(text: 'Commandes'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: SizedBox(
@@ -121,14 +124,59 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
               ),
 
               /// liste des commandes
-              Expanded(
-                child: ListView(
-                  children: _listCommande,
-                ),
-              ),
+              Expanded(child: ListView(children: _listCommande)),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: Theme.of(context).colorScheme.surface,
+        onTap: (index) {
+          // index;
+        },
+        items: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.notifications_active_outlined),
+              AppText(
+                text: 'Nouvelles',
+                fontSize: smallText() * 0.8,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.hourglass_top_rounded),
+              AppText(
+                text: 'En cours',
+                fontSize: smallText() * 0.8,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.shopping_cart_checkout_outlined),
+              AppText(
+                text: 'Prêtes',
+                fontSize: smallText() * 0.8,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.history_edu_outlined),
+              AppText(
+                text: 'Historique',
+                fontSize: smallText() * 0.8,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

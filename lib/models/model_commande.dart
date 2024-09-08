@@ -35,23 +35,17 @@ class ModelCommande extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.background,
             boxShadow: [
               BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .inversePrimary
-                      .withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
                   blurRadius: 3,
-                  offset: const Offset(1, 4),
+                  offset: const Offset(3, 4),
                   blurStyle: BlurStyle.inner),
               BoxShadow(
                   color: //Colors.red,
-                      Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.1),
-                  blurRadius: 2,
+                      Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                  blurRadius: 1,
                   blurStyle: BlurStyle.inner,
                   spreadRadius: 0)
             ]),

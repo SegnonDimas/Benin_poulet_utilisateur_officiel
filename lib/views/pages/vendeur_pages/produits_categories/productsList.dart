@@ -107,53 +107,53 @@ class _ProductsListState extends State<ProductsList> {
                           child: list_produits[index]));
                 }),
           ),
-          CurvedNavigationBar(
-            backgroundColor: Colors.transparent,
-            color: Theme.of(context).colorScheme.surface,
-            onTap: (index) {
-              // index;
-            },
-            items: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.notifications_active_outlined),
-                  AppText(
-                    text: 'Actifs',
-                    fontSize: smallText() * 0.8,
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.notifications_off_outlined),
-                  AppText(
-                    text: 'Inactifs',
-                    fontSize: smallText() * 0.8,
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.hourglass_top_rounded),
-                  AppText(
-                    text: 'En attente',
-                    fontSize: smallText() * 0.8,
-                  )
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.block),
-                  AppText(
-                    text: 'Suspendus',
-                    fontSize: smallText() * 0.8,
-                  ),
-                ],
+        ],
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: Theme.of(context).colorScheme.surface,
+        onTap: (index) {
+          // index;
+        },
+        items: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.notifications_active_outlined),
+              AppText(
+                text: 'Actifs',
+                fontSize: smallText() * 0.8,
               )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.notifications_off_outlined),
+              AppText(
+                text: 'Inactifs',
+                fontSize: smallText() * 0.8,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.hourglass_top_rounded),
+              AppText(
+                text: 'En attente',
+                fontSize: smallText() * 0.8,
+              )
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.block),
+              AppText(
+                text: 'Suspendus',
+                fontSize: smallText() * 0.8,
+              ),
             ],
           )
         ],
