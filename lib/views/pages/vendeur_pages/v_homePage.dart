@@ -1,3 +1,4 @@
+import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
@@ -35,7 +36,7 @@ class _VHomePageState extends State<VHomePage> {
     ),
     const ModelSession(
       title: 'Performances',
-      //routeName: '/vendeurPresentationBoutiquePage',
+      routeName: '/vendeurPerformancesPage',
     ),
     const ModelSession(
       title: 'Calculatrice',
@@ -127,7 +128,7 @@ class _VHomePageState extends State<VHomePage> {
         tag: 'ajoutProduit',
         child: AppButton(
           onTap: () {
-            Navigator.pushNamed(context, "/ajoutNouveauProduitPage");
+            Navigator.pushNamed(context, AppRoutes().AJOUTNOUVEAUPRODUITPAGE);
           },
           height: appHeightSize(context) * 0.07,
           width: appHeightSize(context) * 0.07,

@@ -10,6 +10,7 @@ import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajout
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/v_productsCategoriesListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_commandeListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/v_performancesPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_presentationBoutiquePage.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -28,6 +29,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/defaultRoutePage': (context) => const DefaultRoutePage(),
   '/vendeurProduitsListPage': (context) => const VProduitsListPage(),
   '/ajoutNouveauProduitPage': (context) => const AjoutNouveauProduitPage(),
+  '/vendeurPerformancesPage': (context) => const VPerformancesPage(),
 };
 
 class AppRoutes {
@@ -44,4 +46,5 @@ class AppRoutes {
   String DEFAULTROUTEPAGE = '/defaultRoutePage';
   String VENDEURPRODUITSLISTPAGE = '/vendeurProduitsListPage';
   String AJOUTNOUVEAUPRODUITPAGE = '/ajoutNouveauProduitPage';
+  String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
 }
