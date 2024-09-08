@@ -51,7 +51,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                       minWidth: appWidthSize(context) * 0.3,
                       maxWidth: appWidthSize(context) * 0.7,
                     ),
-                    showCloseButton: ShowCloseButton.none,
+                    showCloseButton: false,
                     touchThroughAreaShape: ClipAreaShape.rectangle,
                     touchThroughAreaCornerRadius: 30,
                     barrierColor: const Color.fromARGB(26, 47, 55, 47),
@@ -110,7 +110,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                       minWidth: appWidthSize(context) * 0.3,
                       maxWidth: appWidthSize(context) * 0.7,
                     ),
-                    showCloseButton: ShowCloseButton.none,
+                    showCloseButton: false,
                     touchThroughAreaShape: ClipAreaShape.rectangle,
                     touchThroughAreaCornerRadius: 30,
                     barrierColor: const Color.fromARGB(26, 47, 55, 47),
@@ -191,8 +191,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               height: 10,
             ),
             AppTextField(
-              label:
-                  '', //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
+              label: '',
+              //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
               height: appHeightSize(context) * 0.08,
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
@@ -219,8 +219,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               height: 10,
             ),
             AppTextField(
-              label:
-                  '', //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
+              label: '',
+              //'Calavi Kpota dans la von de l\'agence Celtiis Bénin',
               height: appHeightSize(context) * 0.08,
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,

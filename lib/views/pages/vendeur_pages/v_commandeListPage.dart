@@ -30,6 +30,20 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
         prix: '3000',
         idCommande: '4506B1',
         destination: 'Calavi Kpota'),
+    const ModelCommande(
+      nomClient: 'Hippolyte',
+      prix: '2400',
+      idCommande: '350A45',
+      destination: 'Zogbadjè',
+      duree: 2000,
+    ),
+    const ModelCommande(
+      nomClient: 'Mike',
+      prix: '3000',
+      idCommande: '4506B1',
+      destination: 'Calavi Kpota',
+      duree: 200,
+    ),
   ];
 
   String _statutSelected = 'En attente';
@@ -74,6 +88,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: DropdownButton<String>(
+                          underline: Container(),
                           hint: AppText(
                             text: _statutSelected,
                             color: Colors.white,
@@ -110,7 +125,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                 child: ListView(
                   children: _listCommande,
                 ),
-              )
+              ),
             ],
           ),
         ),

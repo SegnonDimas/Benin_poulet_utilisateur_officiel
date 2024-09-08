@@ -49,7 +49,9 @@ class _VProduitsListPageState extends State<VProduitsListPage>
                 color: primaryColor,
               )),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/ajoutNouveauProduitPage');
+              },
               icon: Icon(
                 Icons.add,
                 color: primaryColor,

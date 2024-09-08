@@ -1,5 +1,6 @@
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class _VHomePageState extends State<VHomePage> {
     ),
     const ModelSession(
       title: 'Mes produits',
-      //routeName: '/vendeurPresentationBoutiquePage',
+      routeName: '/vendeurProduitsListPage',
     ),
     const ModelSession(
       title: 'Mes Commandes',
@@ -121,6 +122,24 @@ class _VHomePageState extends State<VHomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: Hero(
+        tag: 'ajoutProduit',
+        child: AppButton(
+          onTap: () {
+            Navigator.pushNamed(context, "/ajoutNouveauProduitPage");
+          },
+          height: appHeightSize(context) * 0.07,
+          width: appHeightSize(context) * 0.07,
+          bordeurRadius: 17,
+          //appHeightSize(context) * 0.2,
+          color: const Color.fromARGB(179, 0, 96, 216),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            weight: 20.0,
+          ),
+        ),
       ),
 
       /// bottomNavigationBar

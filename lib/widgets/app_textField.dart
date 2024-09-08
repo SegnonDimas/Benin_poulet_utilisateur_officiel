@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import '../views/sizes/text_sizes.dart';
 
 class AppTextField extends StatefulWidget {
-  final String label;
+  final String? label;
   final IconData? prefixIcon;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final Color? color;
+  final String? hintText;
   final TextEditingController controller;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
@@ -17,30 +18,36 @@ class AppTextField extends StatefulWidget {
   final bool? expands;
   final double? fontSize;
   final Color? fontColor;
+  final InputBorder? border;
+  final Widget? suffix;
+  final Widget? suffixIcon;
   bool? isPassword;
   bool? readOnly;
   Function()? onTap;
 
   AppTextField({
     super.key,
-    required this.label,
-    this.prefixIcon = Icons.home,
-    /*required this.suffixIcon,*/
+    this.label,
+    this.prefixIcon,
+    this.suffix,
     this.isPassword = false,
-    required this.height,
-    required this.width,
-    this.color = Colors.white,
+    this.height,
+    this.width,
+    this.color,
     required this.controller,
     this.onChanged,
     this.keyboardType,
-    this.prefixIconColor = Colors.grey,
+    this.prefixIconColor,
     this.maxLines = 1,
     this.expands = false,
     this.minLines = 1,
     this.fontSize = 16,
-    this.fontColor = Colors.black,
+    this.fontColor,
     this.readOnly = false,
     this.onTap,
+    this.border,
+    this.hintText,
+    this.suffixIcon,
   });
 
   @override
@@ -49,14 +56,17 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   bool click = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      height: widget.height, //MediaQuery.of(context).size.height*0.095,
-      width: widget.width, //MediaQuery.of(context).size.width*0.95,
+      height: widget.height,
+      //MediaQuery.of(context).size.height*0.095,
+      width: widget.width,
+      //MediaQuery.of(context).size.width*0.95,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: widget.color!
+          borderRadius: BorderRadius.circular(15), color: widget.color
           //border: Border.all(color: Colors.red)
           ),
       child: widget.isPassword!
@@ -78,10 +88,11 @@ class _AppTextFieldState extends State<AppTextField> {
                     fontSize: widget.fontSize!),
                 decoration: InputDecoration(
                   floatingLabelAlignment: FloatingLabelAlignment.start,
-                  border: InputBorder.none,
+                  border: widget.border ?? InputBorder.none,
+                  hintText: widget.hintText,
                   //isDense: true,
                   label: Text(
-                    widget.label,
+                    widget.label ?? '',
                     style:
                         TextStyle(color: Colors.grey, fontSize: mediumText()),
                   ),
@@ -97,6 +108,7 @@ class _AppTextFieldState extends State<AppTextField> {
                     Icons.lock,
                     color: widget.prefixIconColor,
                   ),
+                  suffix: widget.suffix,
                   suffixIcon: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -125,6 +137,8 @@ class _AppTextFieldState extends State<AppTextField> {
                 obscureText: false,
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,
+                maxLines: widget.maxLines,
+                minLines: widget.minLines,
                 onChanged: widget.onChanged,
                 onTap: widget.onTap,
                 readOnly: widget.readOnly!,
@@ -134,10 +148,11 @@ class _AppTextFieldState extends State<AppTextField> {
                         .fontSize, //Theme.of(context).colorScheme.inverseSurface,
                     overflow: TextOverflow.ellipsis),
                 decoration: InputDecoration(
-                  border: InputBorder.none,
+                  border: widget.border ?? InputBorder.none,
+                  hintText: widget.hintText,
                   //isDense: true,
                   label: Text(
-                    widget.label,
+                    widget.label ?? '',
                     style: const TextStyle(color: Colors.grey),
                   ),
                   floatingLabelStyle: TextStyle(fontSize: mediumText()),
@@ -147,6 +162,8 @@ class _AppTextFieldState extends State<AppTextField> {
                   */ /*borderRadius: BorderRadius.all(Radius.circular(15.0),
                   ),*/ /*
                 ),*/
+                  suffix: widget.suffix,
+                  suffixIcon: widget.suffixIcon,
                   prefixIcon: Icon(
                     widget.prefixIcon,
                     color: widget.prefixIconColor,
