@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/defaultRoutePage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/firstPage': (context) => const FirstPage(),
+  '/loginPage': (context) => const LoginPage(),
   '/presentationPage': (context) => const PresentationPage(),
   '/inscriptionPage': (context) => const InscriptionPage(),
   '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
@@ -34,6 +36,7 @@ Map<String, Widget Function(BuildContext)> routes = {
 
 class AppRoutes {
   String FIRSTPAGE = '/firstPage';
+  String LOGINPAGE = '/loginPage';
   String PRESENTATIONPAGE = '/presentationPage';
   String INSCRIPTIONPAGE = '/inscriptionPage';
   String LOGINWITHEMAILPAGE = '/loginWithEmailPage';

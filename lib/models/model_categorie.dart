@@ -32,6 +32,7 @@ class ModelCategorie extends StatefulWidget {
 
 class _CategorieState extends State<ModelCategorie> {
   final _controller = SuperTooltipController();
+
   Future<bool> _willPopCallback() async {
     /*Si l'info-bulle est ouverte, nous n'affichons pas la page en appuyant sur le bouton Retour, mais fermons l'info-bulle.*/
     if (_controller.isVisible) {
@@ -110,7 +111,7 @@ class _CategorieState extends State<ModelCategorie> {
                   minWidth: appWidthSize(context) * 0.3,
                   maxWidth: appWidthSize(context) * 0.7,
                 ),
-                showCloseButton: ShowCloseButton.none,
+                showCloseButton: false,
                 touchThroughAreaShape: ClipAreaShape.rectangle,
                 touchThroughAreaCornerRadius: 30,
                 barrierColor: Color.fromARGB(26, 47, 55, 47),

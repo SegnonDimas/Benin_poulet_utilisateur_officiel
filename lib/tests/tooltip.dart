@@ -23,6 +23,7 @@ class ExamplePage extends StatefulWidget {
   const ExamplePage({
     Key? key,
   }) : super(key: key);
+
   @override
   State createState() => _ExamplePageState();
 }
@@ -48,6 +49,7 @@ class TargetWidget extends StatefulWidget {
 
 class _TargetWidgetState extends State<TargetWidget> {
   final _controller = SuperTooltipController();
+
   Future<bool> _willPopCallback() async {
     // If the tooltip is open we don't pop the page on a backbutton press
     // but close the ToolTip
@@ -83,7 +85,7 @@ class _TargetWidgetState extends State<TargetWidget> {
             minWidth: 0.0,
             maxWidth: 100,
           ),
-          showCloseButton: ShowCloseButton.none,
+          showCloseButton: false,
           touchThroughAreaShape: ClipAreaShape.rectangle,
           touchThroughAreaCornerRadius: 30,
           barrierColor: Color.fromARGB(26, 47, 45, 47),

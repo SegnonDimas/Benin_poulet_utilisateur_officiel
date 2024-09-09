@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/services/authentification_services.dart';
 import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
@@ -62,8 +63,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
                   // texte : 'Bienvenue !'
                   ShaderMask(
-                    blendMode: BlendMode
-                        .srcATop, // Choisissez le mode de fusion selon vos préférences
+                    blendMode: BlendMode.srcATop,
+                    // Choisissez le mode de fusion selon vos préférences
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
                         colors: [
@@ -291,7 +292,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                       // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                       TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/loginPage');
+                            Navigator.pushNamed(context, AppRoutes().LOGINPAGE);
                           },
                           child: AppText(
                             text: 'Se connecter',

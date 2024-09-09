@@ -34,7 +34,13 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: AppText(
+          text: 'Performances',
+          fontSize: mediumText(),
+        ),
+        centerTitle: true,
+      ),
       body: ListView(
         children: [
           /// liste des périodes
@@ -60,7 +66,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -90,7 +96,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -120,7 +126,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -150,7 +156,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -180,7 +186,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -210,7 +216,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                                 : Theme.of(context)
                                     .colorScheme
                                     .inversePrimary
-                                    .withOpacity(0.2),
+                                    .withOpacity(0.4),
                           ),
                           onTap: () {
                             setState(() {
@@ -312,7 +318,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
             padding: const EdgeInsets.only(left: 25.0, right: 25.0, bottom: 20),
             child: Divider(
               color:
-                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
+                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.4),
             ),
           ),
 

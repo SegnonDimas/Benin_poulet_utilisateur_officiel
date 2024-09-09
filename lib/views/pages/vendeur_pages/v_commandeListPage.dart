@@ -77,7 +77,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                       child: Container(
                         alignment: Alignment.center,
                         height: appHeightSize(context) * 0.05,
-                        width: appWidthSize(context) * 0.4,
+                        width: appWidthSize(context) * 0.35,
                         decoration: BoxDecoration(
                           color: _statutSelected == 'Actifs'
                               ? primaryColor

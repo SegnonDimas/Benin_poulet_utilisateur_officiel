@@ -163,7 +163,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
             AppText(
               text:
                   'Pour l\'instant, vous ne pouvez pas livrer vos produits vous-même',
-              color: Theme.of(context).colorScheme.inverseSurface.withAlpha(40),
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.3),
               overflow: TextOverflow.visible,
               fontSize: mediumText() * 0.8,
             ),

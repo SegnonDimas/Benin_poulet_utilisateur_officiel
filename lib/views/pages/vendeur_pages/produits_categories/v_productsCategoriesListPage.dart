@@ -69,8 +69,14 @@ class _VProduitsListPageState extends State<VProduitsListPage>
                 indicatorColor: primaryColor,
                 labelColor: primaryColor,
                 indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: Theme.of(context).colorScheme.primary,
-                unselectedLabelColor: Theme.of(context).colorScheme.primary,
+                dividerColor: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.4),
+                unselectedLabelColor: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.4),
                 tabs: [
                   Tab(child: AppText(text: 'Produits')),
                   Tab(
@@ -92,12 +98,18 @@ class _VProduitsListPageState extends State<VProduitsListPage>
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Icon(
                       Icons.search,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
                     ),
                   ),
                   hintStyle: WidgetStatePropertyAll(TextStyle(
                     fontSize: 13,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
                   ))),
             ),
           ),

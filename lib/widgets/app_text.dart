@@ -16,7 +16,7 @@ class AppText extends StatefulWidget {
     super.key,
     this.fontSize = 14,
     this.fontWeight = FontWeight.normal,
-    this.fontFamily = 'PoppinsSemiBold',
+    this.fontFamily,
     this.fontStyle = FontStyle.normal,
     this.overflow = TextOverflow.ellipsis,
     this.textAlign = TextAlign.start,

@@ -317,8 +317,8 @@ class FiscalitePageState extends State<FiscalitePage> {
                     "Vous pouvez faire des modifications après dans les paramètres",
                 color: Theme.of(context)
                     .colorScheme
-                    .inverseSurface
-                    .withOpacity(0.2),
+                    .inversePrimary
+                    .withOpacity(0.3),
                 overflow: TextOverflow.visible,
                 fontSize: smallText() * 1.1,
               ),

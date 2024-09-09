@@ -118,6 +118,12 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                           .colorScheme
                                           .inversePrimary
                                           .withOpacity(0.7)),
+                                  image: const DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                      'assets/images/pouletCouveuse.png',
+                                    ),
+                                  ),
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                               ),
@@ -132,11 +138,11 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                     width: appWidthSize(context) * 0.22,
                                     bordeurRadius: 5,
                                     borderColor: primaryColor,
-                                    color: primaryColor.withOpacity(0.3),
+                                    color: primaryColor.withOpacity(0.5),
                                     child: AppText(
                                       text: 'Miniature',
                                       fontSize: smallText(),
-                                      color: primaryColor,
+                                      color: Colors.white.withOpacity(0.8),
                                     ),
                                     onTap: () {})),
 
@@ -170,11 +176,18 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                           height: appHeightSize(context) * 0.11,
                                           width: appHeightSize(context) * 0.11,
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .surface),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surface,
+                                            image: const DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: AssetImage(
+                                                'assets/images/oeuf2.png',
+                                              ),
+                                            ),
+                                          ),
                                           child: AppText(
                                             text: 'Logo',
                                           ),
@@ -184,10 +197,16 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                     Positioned(
                                       right: 0,
                                       bottom: 0,
-                                      child: Icon(
-                                        Icons.add_circle_outline_outlined,
-                                        size: largeText() * 1.5,
-                                        color: primaryColor,
+                                      child: CircleAvatar(
+                                        radius: largeText() / 1.3,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        child: Icon(
+                                          Icons.add_circle_outline_outlined,
+                                          size: largeText() * 1.5,
+                                          color: primaryColor,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -301,7 +320,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
             leading: const Icon(Icons.storefront),
             title: AppText(
               text: 'Nom de la boutique',
-              color: Theme.of(context).colorScheme.primary,
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
               fontSize: mediumText(),
             ),
             subtitle: AppText(
@@ -318,7 +338,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
             leading: const Icon(Icons.grid_view),
             title: AppText(
               text: 'Secteurs d\'activité',
-              color: Theme.of(context).colorScheme.primary,
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
               fontSize: mediumText(),
             ),
             subtitle: Wrap(
@@ -371,7 +392,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
             leading: const Icon(Icons.location_on_outlined),
             title: AppText(
               text: 'Adresse de la boutique',
-              color: Theme.of(context).colorScheme.primary,
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
               fontSize: mediumText(),
             ),
             subtitle: AppText(
@@ -388,7 +410,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
             leading: const Icon(Icons.timer_rounded),
             title: AppText(
               text: 'Heures d\'activité',
-              color: Theme.of(context).colorScheme.primary,
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
               fontSize: mediumText(),
             ),
             subtitle: AppText(
@@ -422,9 +445,12 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppText(
-                        text: 'avis ${index + 1}',
-                        fontSize: smallText(),
-                        color: Theme.of(context).colorScheme.primary,
+                        text: 'Avis ${index + 1}',
+                        fontSize: smallText() * 1.1,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.4),
                       ),
                       AppText(
                         text: avisClients[index],

@@ -60,7 +60,10 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
                 text:
                     'Voici comment votre boutique apparaitra aux clients dans l\'application Bénin Poulet ',
                 fontSize: smallText() * 1.2,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3),
                 overflow: TextOverflow.visible,
               ),
               const SizedBox(
@@ -88,7 +91,10 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
               AppText(
                 text: 'Nous appelerons ce numéro en cas de nécessité ',
                 fontSize: smallText() * 1.2,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3),
                 overflow: TextOverflow.visible,
               ),
               const SizedBox(height: 20),
@@ -120,7 +126,10 @@ class _InfoBoutiquePageState extends State<InfoBoutiquePage> {
                 text:
                     'Nous vous enverrons des courriers concernant vos activités sur notre application ',
                 fontSize: smallText() * 1.2,
-                color: Theme.of(context).colorScheme.secondary,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3),
                 overflow: TextOverflow.visible,
               ),
             ],

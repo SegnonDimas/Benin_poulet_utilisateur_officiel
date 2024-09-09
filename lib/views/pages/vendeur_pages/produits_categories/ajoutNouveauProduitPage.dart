@@ -460,7 +460,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               fontWeight: FontWeight.w800,
               fontSize: smallText() * 0.9,
               color:
-                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
             ),
           ),
 

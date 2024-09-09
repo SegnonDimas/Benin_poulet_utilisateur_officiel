@@ -133,6 +133,10 @@ flutter:
     - family: PoppinsMedium
       fonts:
         - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+
+    - family: PoppinsLight
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
