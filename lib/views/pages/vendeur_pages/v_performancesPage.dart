@@ -55,7 +55,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: surAuj
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,
@@ -85,7 +85,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: sur7jours
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,
@@ -115,7 +115,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: sur30jours
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,
@@ -145,7 +145,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: sur3mois
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,
@@ -175,7 +175,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: sur6mois
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,
@@ -205,7 +205,7 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
                       child: AppButton(
                           color: sur1an
                               ? primaryColor
-                              : Theme.of(context).colorScheme.surface,
+                              : Theme.of(context).colorScheme.background,
                           width: appWidthSize(context) * 0.25,
                           height: appHeightSize(context) * 0.06,
                           bordeurRadius: 20,

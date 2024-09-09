@@ -180,7 +180,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                                 BorderRadius.circular(20),
                                             color: Theme.of(context)
                                                 .colorScheme
-                                                .surface,
+                                                .background,
                                             image: const DecorationImage(
                                               fit: BoxFit.cover,
                                               image: AssetImage(
@@ -272,39 +272,39 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                     runSpacing: 10,
                     children: [
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'Poulet'),
                           onTap: () {}),
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'Boeuf'),
                           onTap: () {}),
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'Restaurant'),
                           onTap: () {}),
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           //width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'Poulet gauliath'),
                           onTap: () {}),
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'mouton'),
                           onTap: () {}),
                       AppButton(
-                          height: appHeightSize(context) * 0.05,
+                          height: appHeightSize(context) * 0.04,
                           width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Theme.of(context).colorScheme.background,
                           child: AppText(text: 'oeuf'),
                           onTap: () {}),
                     ],
@@ -347,39 +347,39 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
               runSpacing: 5,
               children: [
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'Poulet'),
                     onTap: () {}),
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'Boeuf'),
                     onTap: () {}),
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'Restaurant'),
                     onTap: () {}),
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     //width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'Poulet gauliath'),
                     onTap: () {}),
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'mouton'),
                     onTap: () {}),
                 AppButton(
-                    height: appHeightSize(context) * 0.05,
+                    height: appHeightSize(context) * 0.04,
                     width: appWidthSize(context) * 0.25,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     child: AppText(text: 'oeuf'),
                     onTap: () {}),
               ],
@@ -432,7 +432,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
               leading: Icon(
                 Icons.emoji_emotions_outlined,
                 color: primaryColor,
-                //color: Theme.of(context).colorScheme.surface,
+                //color: Theme.of(context).colorScheme.background,
               ),
               title: AppText(
                 text: 'Voir avis clients (${avisClients.length})',

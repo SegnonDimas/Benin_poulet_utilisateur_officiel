@@ -1,4 +1,5 @@
 import 'package:benin_poulet/models/model_ProfilListTile.dart';
+import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -39,13 +40,16 @@ class _VProfilPageState extends State<VProfilPage> {
                     top: 0,
                     right: 0,
                     left: 0,
-                    child: Container(
-                      height: appHeightSize(context) * 0.15,
-                      width: appWidthSize(context),
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(profilPath))),
+                    child: Hero(
+                      tag: '2',
+                      child: Container(
+                        height: appHeightSize(context) * 0.15,
+                        width: appWidthSize(context),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(profilPath))),
+                      ),
                     ),
                   ),
 
@@ -82,21 +86,24 @@ class _VProfilPageState extends State<VProfilPage> {
                       top: appHeightSize(context) * 0.06,
                       right: appWidthSize(context) * 0.1,
                       left: appWidthSize(context) * 0.1,
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        height: appHeightSize(context) * 0.17,
-                        decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary,
-                                  width: 4,
-                                  strokeAlign: BorderSide.strokeAlignOutside),
-                            ),
-                            image:
-                                DecorationImage(image: AssetImage(profilPath)),
-                            shape: BoxShape.circle),
+                      child: Hero(
+                        tag: 'imageProfil',
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          height: appHeightSize(context) * 0.17,
+                          decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary,
+                                    width: 4,
+                                    strokeAlign: BorderSide.strokeAlignOutside),
+                              ),
+                              image: DecorationImage(
+                                  image: AssetImage(profilPath)),
+                              shape: BoxShape.circle),
+                        ),
                       )),
                 ],
               ),
@@ -106,11 +113,14 @@ class _VProfilPageState extends State<VProfilPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.verified_rounded,
-                    color: Colors.transparent,
+                Hero(
+                  tag: 'nomBoutique',
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.verified_rounded,
+                      color: Colors.transparent,
+                    ),
                   ),
                 ),
 
@@ -165,6 +175,14 @@ class _VProfilPageState extends State<VProfilPage> {
             const ProfilListTile(
                 title: 'Autorisations',
                 leadingIcon: Icons.verified_user_rounded),
+            ProfilListTile(
+              title: 'Portefeuille',
+              leadingIcon: Icons.payment_rounded,
+              onTap: () {
+                Navigator.pushNamed(
+                    context, AppRoutes().VENDEURPORTEFEUILLEPAGE);
+              },
+            ),
             const ProfilListTile(
                 title: 'Paramètres', leadingIcon: Icons.settings),
 
@@ -172,19 +190,23 @@ class _VProfilPageState extends State<VProfilPage> {
               height: appHeightSize(context) * 0.1,
             ),
 
+            /// bouton de déconnexion
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-              child: AppButton(
-                height: appHeightSize(context) * 0.07,
-                onTap: () {},
-                borderColor: Colors.red.shade600,
-                color: Colors.transparent,
-                child: AppText(
-                  textAlign: TextAlign.center,
-                  text: 'Se déconnecter',
-                  fontSize: mediumText(),
-                  fontWeight: FontWeight.w800,
-                  color: Colors.red.shade600,
+              child: Hero(
+                tag: '1',
+                child: AppButton(
+                  height: appHeightSize(context) * 0.07,
+                  onTap: () {},
+                  borderColor: Colors.red.shade600,
+                  color: Colors.transparent,
+                  child: AppText(
+                    textAlign: TextAlign.center,
+                    text: 'Se déconnecter',
+                    fontSize: mediumText(),
+                    fontWeight: FontWeight.w800,
+                    color: Colors.red.shade600,
+                  ),
                 ),
               ),
             )
