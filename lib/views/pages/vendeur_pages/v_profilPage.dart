@@ -2,6 +2,7 @@ import 'package:benin_poulet/models/model_ProfilListTile.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +166,28 @@ class _VProfilPageState extends State<VProfilPage> {
                 title: 'Autorisations',
                 leadingIcon: Icons.verified_user_rounded),
             const ProfilListTile(
-                title: 'Paramètres', leadingIcon: Icons.settings)
+                title: 'Paramètres', leadingIcon: Icons.settings),
+
+            SizedBox(
+              height: appHeightSize(context) * 0.1,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: AppButton(
+                height: appHeightSize(context) * 0.07,
+                onTap: () {},
+                borderColor: Colors.red.shade600,
+                color: Colors.transparent,
+                child: AppText(
+                  textAlign: TextAlign.center,
+                  text: 'Se déconnecter',
+                  fontSize: mediumText(),
+                  fontWeight: FontWeight.w800,
+                  color: Colors.red.shade600,
+                ),
+              ),
+            )
           ],
         ));
   }
