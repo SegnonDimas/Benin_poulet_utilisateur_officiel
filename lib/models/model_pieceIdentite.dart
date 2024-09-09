@@ -9,6 +9,7 @@ class ModelPieceIdentite extends StatefulWidget {
   late bool? isSelected;
   final String? title;
   final String? description;
+
   ModelPieceIdentite(
       {super.key,
       this.isSelected = false,
@@ -30,19 +31,19 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
           border: Border(
             top: BorderSide(
                 color: !widget.isSelected!
-                    ? Theme.of(context).colorScheme.surface
+                    ? Theme.of(context).colorScheme.background
                     : primaryColor),
             bottom: BorderSide(
                 color: !widget.isSelected!
-                    ? Theme.of(context).colorScheme.surface
+                    ? Theme.of(context).colorScheme.background
                     : primaryColor),
             left: BorderSide(
                 color: !widget.isSelected!
-                    ? Theme.of(context).colorScheme.surface
+                    ? Theme.of(context).colorScheme.background
                     : primaryColor),
             right: BorderSide(
                 color: !widget.isSelected!
-                    ? Theme.of(context).colorScheme.surface
+                    ? Theme.of(context).colorScheme.background
                     : primaryColor),
           ),
           borderRadius: BorderRadius.circular(15)),
@@ -61,7 +62,7 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
                     },
                     child: Icon(
                       Icons.circle_outlined,
-                      color: Theme.of(context).colorScheme.surface,
+                      color: Theme.of(context).colorScheme.background,
                     ))
                 : GestureDetector(
                     onTap: () {

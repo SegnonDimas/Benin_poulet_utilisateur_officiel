@@ -174,7 +174,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
 
             // divider
             Divider(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.background,
             ),
             const SizedBox(
               height: 20,
@@ -198,7 +198,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
               prefixIcon: Icons.not_listed_location_rounded,
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.background,
               fontSize: mediumText() * 0.9,
               fontColor: Theme.of(context).colorScheme.inversePrimary,
               //maxLines: 3,
@@ -226,7 +226,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
               width: appWidthSize(context) * 0.9,
               controller: _emplacementController,
               prefixIcon: Icons.location_on_outlined,
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.background,
               maxLines: 3,
               fontSize: mediumText() * 0.9,
               fontColor: Theme.of(context).colorScheme.inversePrimary,

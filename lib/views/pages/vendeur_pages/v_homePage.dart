@@ -42,11 +42,8 @@ class _VHomePageState extends State<VHomePage> {
       title: 'Calculatrice',
       //routeName: '/vendeurPresentationBoutiquePage',
     ),
-    const ModelSession(
-      title: 'Coursiers',
-      //routeName: '/vendeurPresentationBoutiquePage',
-    ),
-    const ModelSession(title: 'Mon profil'),
+    const ModelSession(title: 'Coursiers'),
+    const ModelSession(title: 'Mon profil', routeName: '/vendeurProfilPage'),
   ];
 
   // liste des icônes du bottomNavigationBar
@@ -146,7 +143,7 @@ class _VHomePageState extends State<VHomePage> {
       /// bottomNavigationBar
       /*bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
         //buttonBackgroundColor: primaryColor,
         //selectedColor: Colors.white,
         //unselectedColor: Theme.of(context).colorScheme.inversePrimary,

@@ -13,6 +13,7 @@ import 'package:benin_poulet/views/pages/vendeur_pages/v_commandeListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_performancesPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_presentationBoutiquePage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/v_profilPage.dart';
 import 'package:flutter/cupertino.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
@@ -32,6 +33,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurProduitsListPage': (context) => const VProduitsListPage(),
   '/ajoutNouveauProduitPage': (context) => const AjoutNouveauProduitPage(),
   '/vendeurPerformancesPage': (context) => const VPerformancesPage(),
+  '/vendeurProfilPage': (context) => const VProfilPage(),
 };
 
 class AppRoutes {
@@ -50,4 +52,5 @@ class AppRoutes {
   String VENDEURPRODUITSLISTPAGE = '/vendeurProduitsListPage';
   String AJOUTNOUVEAUPRODUITPAGE = '/ajoutNouveauProduitPage';
   String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
+  String VENDEURPROFILPAGE = '/vendeurProfilPage';
 }

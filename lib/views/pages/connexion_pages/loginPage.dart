@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                     label: 'Mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     isPassword: true,
                     controller: _passWordController,
                     fontSize: mediumText() * 0.9,
@@ -207,7 +207,8 @@ class _LoginPageState extends State<LoginPage> {
                               height: appHeightSize(context) * 0.06,
                               width: appHeightSize(context) * 0.07,
                               decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -235,7 +236,8 @@ class _LoginPageState extends State<LoginPage> {
                               height: appHeightSize(context) * 0.06,
                               width: appHeightSize(context) * 0.07,
                               decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -262,7 +264,8 @@ class _LoginPageState extends State<LoginPage> {
                               height: appHeightSize(context) * 0.06,
                               width: appHeightSize(context) * 0.07,
                               decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

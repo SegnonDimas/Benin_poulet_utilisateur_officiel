@@ -79,7 +79,7 @@ class ValidationPage extends StatelessWidget {
             onTap: () {},
             height: appHeightSize(context) * 0.065,
             width: appWidthSize(context) * 0.9,
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.background,
             borderColor: primaryColor,
             child: AppText(
               text: 'Nous contacter',

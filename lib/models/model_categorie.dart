@@ -80,7 +80,7 @@ class _CategorieState extends State<ModelCategorie> {
                       ? widget.activeColor
                       : Theme.of(context)
                           .colorScheme
-                          .surface, //widget.disabledColor,
+                          .background, //widget.disabledColor,
                   borderRadius: BorderRadius.circular(15)),
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -88,7 +88,7 @@ class _CategorieState extends State<ModelCategorie> {
                   widget.imgUrl!,
                   fit: BoxFit.contain,
                   color: Colors.black,
-                  //color: Theme.of(context).colorScheme.surface,
+                  //color: Theme.of(context).colorScheme.background,
                 ),
               ),
             ),
@@ -98,7 +98,7 @@ class _CategorieState extends State<ModelCategorie> {
                 showBarrier: true,
                 controller: _controller,
                 popupDirection: TooltipDirection.down,
-                backgroundColor: Theme.of(context).colorScheme.surface,
+                backgroundColor: Theme.of(context).colorScheme.background,
                 left: appWidthSize(context) * 0.05,
                 right: appWidthSize(context) * 0.05,
                 arrowTipDistance: 15.0,

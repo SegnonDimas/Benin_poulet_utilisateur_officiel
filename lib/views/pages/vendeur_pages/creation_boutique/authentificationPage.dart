@@ -100,7 +100,7 @@ class _AuthentificationVendeurPageState
                               builder: (context, value, child) {
                                 Color tileColor = (value >= index)
                                     ? primaryColor.withAlpha(100)
-                                    : Theme.of(context).colorScheme.surface;
+                                    : Theme.of(context).colorScheme.background;
                                 Color iconColor = (value >= index)
                                     ? primaryColor //Colors.grey.shade200
                                     : Theme.of(context)
@@ -109,7 +109,7 @@ class _AuthentificationVendeurPageState
                                         .withAlpha(60); //Colors.grey.shade600;
                                 Color lineColor = (value > index - 1)
                                     ? primaryColor.withAlpha(100)
-                                    : Theme.of(context).colorScheme.surface;
+                                    : Theme.of(context).colorScheme.background;
 
                                 return AppTimelineTile(
                                   axis: TimelineAxis.horizontal,
@@ -117,7 +117,8 @@ class _AuthentificationVendeurPageState
                                   isLast: index == _pages.length - 1,
                                   index: index + 1,
                                   icon: _getIconForIndex(index),
-                                  iconSize: 15, //mediumText() * 1.5,
+                                  iconSize: 15,
+                                  //mediumText() * 1.5,
                                   iconColor: iconColor,
                                   color: tileColor,
                                   afterLineColor: lineColor,
@@ -206,7 +207,7 @@ class _AuthentificationVendeurPageState
                                         child: Divider(
                                           color: Theme.of(context)
                                               .colorScheme
-                                              .surface,
+                                              .background,
                                         ),
                                       ),
                                     ],

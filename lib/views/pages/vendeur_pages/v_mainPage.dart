@@ -182,7 +182,7 @@ class _VMainPageState extends State<VMainPage> {
       /// bottomNavigationBar
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
         //buttonBackgroundColor: primaryColor,
         //selectedColor: Colors.white,
         //unselectedColor: Theme.of(context).colorScheme.inversePrimary,

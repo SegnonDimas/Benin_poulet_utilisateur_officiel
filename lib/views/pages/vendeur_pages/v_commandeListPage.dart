@@ -131,7 +131,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
         onTap: (index) {
           // index;
         },

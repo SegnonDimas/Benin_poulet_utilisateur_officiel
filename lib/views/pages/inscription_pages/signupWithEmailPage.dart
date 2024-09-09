@@ -50,7 +50,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     height: appHeightSize(context) * 0.05,
                     width: appHeightSize(context) * 0.05,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(
                         appHeightSize(context),
                       ),
@@ -94,7 +94,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     label: 'Adresse Email',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     controller: _emailcontroller,
                     prefixIcon: Icons.email,
                     keyboardType: TextInputType.emailAddress,
@@ -108,7 +108,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     label: 'Mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     isPassword: true,
                     controller: _passWordController,
                     fontSize: mediumText() * 0.9,
@@ -121,7 +121,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     label: 'Confirmer mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     isPassword: true,
                     controller: _passWordConfirmController,
                     fontSize: mediumText() * 0.9,
@@ -244,7 +244,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
+                                color: Theme.of(context).colorScheme.background,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -269,7 +269,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                             height: appHeightSize(context) * 0.06,
                             width: appHeightSize(context) * 0.07,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface,
+                                color: Theme.of(context).colorScheme.background,
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

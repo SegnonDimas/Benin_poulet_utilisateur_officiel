@@ -59,7 +59,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
         .map((categorie) => ModelCategorie(
               text: categorie,
               activeColor: primaryColor,
-              disabledColor: Theme.of(context).colorScheme.surface,
+              disabledColor: Theme.of(context).colorScheme.background,
               description: 'Ceci fait partie de vos activités',
             ))
         .toList();
@@ -71,7 +71,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
         .map((secteur) => ModelCategorie(
               text: secteur,
               activeColor: primaryColor,
-              disabledColor: Theme.of(context).colorScheme.surface,
+              disabledColor: Theme.of(context).colorScheme.background,
               description:
                   'Ceci fait partie des secteurs dans lequels vous intervenez',
             ))
@@ -168,7 +168,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
               ], //_categorie,
             ),
             Divider(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.background,
             ),
             AppText(
               text: 'Sélectionnez les catégories de votre activté :',
@@ -192,6 +192,7 @@ class ModelCategorie extends StatefulWidget {
   final String? description;
   final String? text;
   late bool? isSelected;
+
   ModelCategorie({
     super.key,
     this.backgroundColor,
@@ -210,6 +211,7 @@ class _ModelCategorieState extends State<ModelCategorie> {
   bool isSelected = false;
 
   final _controller = SuperTooltipController();
+
   Future<bool> _willPopCallback() async {
     /*Si l'info-bulle est ouverte, nous n'affichons pas la page en appuyant sur le bouton Retour, mais fermons l'info-bulle.*/
     if (_controller.isVisible) {
@@ -229,8 +231,8 @@ class _ModelCategorieState extends State<ModelCategorie> {
           if (isSelected) {
             widget.backgroundColor = widget.activeColor ?? primaryColor;
           } else {
-            widget.backgroundColor =
-                widget.disabledColor ?? Theme.of(context).colorScheme.surface;
+            widget.backgroundColor = widget.disabledColor ??
+                Theme.of(context).colorScheme.background;
           }
         });
       },
@@ -238,7 +240,7 @@ class _ModelCategorieState extends State<ModelCategorie> {
         message: 'Vous commercialisez ${widget.text}',
         decoration: Decoration.lerp(
             BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(5)),
             BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
@@ -253,7 +255,7 @@ class _ModelCategorieState extends State<ModelCategorie> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: widget.backgroundColor ??
-                  Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                  Theme.of(context).colorScheme.background.withOpacity(0.6),
               borderRadius: BorderRadius.circular(15),
               /* boxShadow: [
                   BoxShadow(
@@ -288,6 +290,7 @@ class ModelSecteur extends StatefulWidget {
   final String? text;
   late bool? isSelected;
   final Function()? onTap;
+
   ModelSecteur(
       {super.key,
       this.text,
@@ -304,6 +307,7 @@ class ModelSecteur extends StatefulWidget {
 
 class _ModelSecteurState extends State<ModelSecteur> {
   bool isSelected = false;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -312,7 +316,7 @@ class _ModelSecteurState extends State<ModelSecteur> {
         message: 'L\'un de vos secteurs d\'intervention est : ${widget.text}',
         decoration: Decoration.lerp(
             BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(5)),
             BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
@@ -327,7 +331,7 @@ class _ModelSecteurState extends State<ModelSecteur> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: widget.backgroundColor ??
-                  Theme.of(context).colorScheme.surface.withOpacity(0.6),
+                  Theme.of(context).colorScheme.background.withOpacity(0.6),
               borderRadius: BorderRadius.circular(15),
               /* boxShadow: [
                   BoxShadow(

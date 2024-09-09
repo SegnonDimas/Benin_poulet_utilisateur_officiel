@@ -147,7 +147,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                               top: 15, bottom: 15, left: 10, right: 7),
                           selected: _mobileMoney == 'Celtiis',
                           backgroundColor:
-                              Theme.of(context).colorScheme.surface,
+                              Theme.of(context).colorScheme.background,
                           shadowColor:
                               Theme.of(context).colorScheme.inversePrimary,
                           //selectedColor: primaryColor,
@@ -198,7 +198,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                             selected: _mobileMoney == 'MTN',
                             tooltip: 'Recevoir de l\'argent par MTN Money',
                             backgroundColor:
-                                Theme.of(context).colorScheme.surface,
+                                Theme.of(context).colorScheme.background,
                             shadowColor:
                                 Theme.of(context).colorScheme.inversePrimary,
                             //selectedColor: primaryColor,
@@ -248,7 +248,7 @@ class FiscalitePageState extends State<FiscalitePage> {
                           selected: _mobileMoney == 'Moov Africa',
                           tooltip: 'Recevoir de l\'argent par Moov Money',
                           backgroundColor:
-                              Theme.of(context).colorScheme.surface,
+                              Theme.of(context).colorScheme.background,
                           shadowColor:
                               Theme.of(context).colorScheme.inversePrimary,
                           selectedColor: primaryColor,
@@ -300,7 +300,7 @@ class FiscalitePageState extends State<FiscalitePage> {
               label: 'Nom Prénom',
               height: appHeightSize(context) * 0.08,
               width: appWidthSize(context) * 0.9,
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.background,
               controller: _nameController,
               prefixIcon: CupertinoIcons.person_alt_circle,
               fontSize: mediumText() * 0.9,

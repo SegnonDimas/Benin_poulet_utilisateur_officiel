@@ -64,10 +64,12 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   }
 
   void decrementerQuantite() {
-    setState(() {
-      _quantite = _quantite - 1;
-      quantiteController.text = _quantite.toString();
-    });
+    if (_quantite > 0) {
+      setState(() {
+        _quantite = _quantite - 1;
+        quantiteController.text = _quantite.toString();
+      });
+    }
   }
 
   final List<String> _sousCategoriesVolaille = [
@@ -110,9 +112,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   @override
   Widget build(BuildContext context) {
-    var divider = const Padding(
-      padding: EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Divider(),
+    var divider = Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: Divider(
+          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.2)),
     );
     return Scaffold(
       appBar: AppBar(

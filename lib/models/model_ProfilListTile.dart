@@ -34,7 +34,8 @@ class _ProfilListTileState extends State<ProfilListTile> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                color:
+                    Theme.of(context).colorScheme.background.withOpacity(0.8),
               ),
               child: Icon(
                 widget.leadingIcon,

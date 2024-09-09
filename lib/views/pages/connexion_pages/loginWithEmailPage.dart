@@ -48,14 +48,14 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     height: appHeightSize(context) * 0.05,
                     width: appHeightSize(context) * 0.05,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
+                      color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(
                         appHeightSize(context),
                       ),
                     ),
                     child: Icon(
                       Icons.arrow_back_ios,
-                      color: Theme.of(context).colorScheme.inverseSurface,
+                      color: Theme.of(context).colorScheme.background,
                       size: mediumText(),
                       weight: 50,
                     ),
@@ -98,7 +98,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     label: 'Adresse Email',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     controller: _passWordController,
                     prefixIcon: Icons.email,
                     keyboardType: TextInputType.emailAddress,
@@ -112,7 +112,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     label: 'Mot de passe',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     isPassword: true,
                     controller: _emailcontroller,
                     fontSize: mediumText() * 0.9,
@@ -237,7 +237,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                               height: appHeightSize(context) * 0.06,
                               width: appHeightSize(context) * 0.07,
                               decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -265,7 +266,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                               height: appHeightSize(context) * 0.06,
                               width: appHeightSize(context) * 0.07,
                               decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   borderRadius: BorderRadius.circular(15)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

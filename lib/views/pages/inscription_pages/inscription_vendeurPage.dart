@@ -154,7 +154,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               builder: (context, value, child) {
                                 Color tileColor = (value >= index)
                                     ? primaryColor
-                                    : Theme.of(context).colorScheme.surface;
+                                    : Theme.of(context).colorScheme.background;
                                 Color iconColor = (value >= index)
                                     ? Colors.grey.shade200
                                     : Theme.of(context)
@@ -163,7 +163,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                         .withAlpha(60); //Colors.grey.shade600;
                                 Color lineColor = (value > index - 1)
                                     ? primaryColor
-                                    : Theme.of(context).colorScheme.surface;
+                                    : Theme.of(context).colorScheme.background;
 
                                 return AppTimelineTile(
                                   axis: TimelineAxis.horizontal,
@@ -323,5 +323,5 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     }
   }
 
-  // Widget page4 = FiscalitePage(indexSuivant: 3);
+// Widget page4 = FiscalitePage(indexSuivant: 3);
 }

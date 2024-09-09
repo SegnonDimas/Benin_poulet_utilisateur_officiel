@@ -56,7 +56,7 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
       width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.background,
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),

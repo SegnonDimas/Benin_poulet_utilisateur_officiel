@@ -38,13 +38,14 @@ class ModelCommande extends StatelessWidget {
             color: Theme.of(context).colorScheme.background,
             boxShadow: [
               BoxShadow(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                  color:
+                      Theme.of(context).colorScheme.background.withOpacity(0.9),
                   blurRadius: 3,
                   offset: const Offset(3, 4),
                   blurStyle: BlurStyle.inner),
               BoxShadow(
                   color: //Colors.red,
-                      Theme.of(context).colorScheme.surface.withOpacity(0.9),
+                      Theme.of(context).colorScheme.background.withOpacity(0.9),
                   blurRadius: 1,
                   blurStyle: BlurStyle.inner,
                   spreadRadius: 0)
@@ -114,7 +115,7 @@ class ModelCommande extends StatelessWidget {
               duration: duree ?? 10800,
               isReverse: true,
               fillColor: Theme.of(context).colorScheme.inversePrimary,
-              //Theme.of(context).colorScheme.surface,
+              //Theme.of(context).colorScheme.background,
               ringColor: primaryColor,
               strokeWidth: 3.0,
               textStyle: TextStyle(

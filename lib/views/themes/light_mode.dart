@@ -5,9 +5,9 @@ ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
     //surface: Colors.grey.shade300,
     //background: Colors.grey.shade100,
-    background: const Color.fromRGBO(245, 246, 250, 1.0),
+    background: const Color.fromARGB(238, 229, 231, 235),
     //surface: const Color.fromRGBO(220, 221, 225, 150),
-    surface: Color.fromARGB(238, 229, 231, 235),
+    surface: const Color.fromRGBO(245, 246, 250, 1.0),
     primary: Colors.grey.shade400,
     secondary: const Color.fromRGBO(220, 221, 225, 50),
     tertiary: Colors.white,

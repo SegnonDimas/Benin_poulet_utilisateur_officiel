@@ -15,6 +15,7 @@ class ModelSession extends StatefulWidget {
   final double? padding;
   final int? maxLine;
   final Color? titleColor;
+
   const ModelSession({
     super.key,
     this.title = 'Titre',
@@ -55,7 +56,7 @@ class _ModelSessionState extends State<ModelSession> {
                 height: widget.radius! * 2,
                 width: widget.radius! * 2,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(10000)),
                 child: Container(),
               ),

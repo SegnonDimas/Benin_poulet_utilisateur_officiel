@@ -467,7 +467,7 @@ class _PresentationPageState extends State<PresentationPage> {
                             currentItem: selectedPage,
                             count: views.length,
                             unselectedColor:
-                                Theme.of(context).colorScheme.surface,
+                                Theme.of(context).colorScheme.background,
                             selectedColor: primaryColor,
                             borderRadius: BorderRadius.circular(300),
                             duration: const Duration(milliseconds: 200),

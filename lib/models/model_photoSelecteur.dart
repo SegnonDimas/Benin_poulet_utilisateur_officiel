@@ -9,6 +9,7 @@ class ModelPhotoSelecteur extends StatefulWidget {
   late String? trailing;
   final String? title;
   final String? description;
+
   ModelPhotoSelecteur(
       {super.key, this.trailing = '', this.title = '', this.description = ''});
 
@@ -25,10 +26,10 @@ class _ModelPhotoSelecteurState extends State<ModelPhotoSelecteur> {
       //padding: const EdgeInsets.only(left: 16.0, right: 10, top: 5, bottom: 5),
       decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Theme.of(context).colorScheme.surface),
-            bottom: BorderSide(color: Theme.of(context).colorScheme.surface),
-            left: BorderSide(color: Theme.of(context).colorScheme.surface),
-            right: BorderSide(color: Theme.of(context).colorScheme.surface),
+            top: BorderSide(color: Theme.of(context).colorScheme.background),
+            bottom: BorderSide(color: Theme.of(context).colorScheme.background),
+            left: BorderSide(color: Theme.of(context).colorScheme.background),
+            right: BorderSide(color: Theme.of(context).colorScheme.background),
           ),
           borderRadius: BorderRadius.circular(15)),
       child: Padding(
