@@ -209,6 +209,74 @@ Icons :
     - Icons.fingerprint_sharp
     - Icons.shield
 
+Icon(AntDesign.gitlab_fill),
+  Icon(AntDesign.sketch_outline),
+  Icon(AntDesign.environment_twotone),
+
+Icon(Bootstrap.google),
+  Icon(Bootstrap.bootstrap),
+  Icon(Bootstrap.github),
+
+Icon(BoxIcons.bxl_apple),
+  Icon(BoxIcons.bx_git_branch),
+  Icon(BoxIcons.bxs_cookie),
+
+Brand(Brands.icons8),
+  Brand(Brands.the_big_bang_theory),
+  Brand(Brands.android_studio),
+
+Icon(Clarity.map_outline_badged),
+  Icon(Clarity.application_solid),
+  Icon(Clarity.camera_line),
+
+Icon(EvaIcons.clipboard),
+  Icon(EvaIcons.flash),
+  Icon(EvaIcons.clipboard_outline),
+
+Flag(Flags.india),
+  Flag(Flags.united_kingdom),
+  Flag(Flags.united_states_of_america),
+
+Icon(FontAwesome.stripe_brand),
+  Icon(FontAwesome.folder_open),
+  Icon(FontAwesome.bug_solid),
+
+Icon(HeroIcons.printer),
+  Icon(HeroIcons.pencil_square),
+  Icon(HeroIcons.play_circle),
+
+Icon(Iconsax.cake_bold),
+  Icon(Iconsax.clock_bulk),
+  Icon(Iconsax.dollar_circle_outline),
+
+Icon(IonIcons.bug),
+  Icon(IonIcons.finger_print),
+  Icon(IonIcons.logo_react),
+
+Icon(LineAwesome.amazon),
+  Icon(LineAwesome.birthday_cake_solid),
+  Icon(LineAwesome.cc_visa),
+
+Icon(MingCute.knife_line),
+  Icon(MingCute.badminton_line),
+  Icon(MingCute.currency_bitcoin_fill),
+
+Icon(OctIcons.code_of_conduct),
+  Icon(OctIcons.copilot),
+  Icon(OctIcons.verified),
+
+Icon(PixelArtIcons.gif),
+  Icon(PixelArtIcons.human),
+  Icon(PixelArtIcons.heart),
+
+Icon(TeenyIcons.google_play_store),
+  Icon(TeenyIcons.heart),
+  Icon(TeenyIcons.android),
+
+Icon(ZondIcons.shield),
+  Icon(ZondIcons.trophy),
+  Icon(ZondIcons.coffee),
+
 
 À consulter :
     - https://docs.flutter.dev/codelabs

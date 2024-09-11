@@ -9,7 +9,7 @@ class AppTextField extends StatefulWidget {
   final double? width;
   final Color? color;
   final String? hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final Color? prefixIconColor;
@@ -19,8 +19,10 @@ class AppTextField extends StatefulWidget {
   final double? fontSize;
   final Color? fontColor;
   final InputBorder? border;
+  final Color? fileBorderColor;
   final Widget? suffix;
   final Widget? suffixIcon;
+  final Function(String?)? onSaved;
   bool? isPassword;
   bool? readOnly;
   Function()? onTap;
@@ -34,7 +36,7 @@ class AppTextField extends StatefulWidget {
     this.height,
     this.width,
     this.color,
-    required this.controller,
+    this.controller,
     this.onChanged,
     this.keyboardType,
     this.prefixIconColor,
@@ -48,6 +50,8 @@ class AppTextField extends StatefulWidget {
     this.border,
     this.hintText,
     this.suffixIcon,
+    this.onSaved,
+    this.fileBorderColor,
   });
 
   @override
@@ -66,9 +70,10 @@ class _AppTextFieldState extends State<AppTextField> {
       width: widget.width,
       //MediaQuery.of(context).size.width*0.95,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: widget.color
-          //border: Border.all(color: Colors.red)
-          ),
+          borderRadius: BorderRadius.circular(15),
+          color: widget.color,
+          border:
+              Border.all(color: widget.fileBorderColor ?? Colors.transparent)),
       child: widget.isPassword!
 
           /// mot de passe
@@ -82,6 +87,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 expands: widget.expands!,
+                onSaved: widget.onSaved,
                 style: TextStyle(
                     color: widget.fontColor,
                     //Theme.of(context).colorScheme.inverseSurface,

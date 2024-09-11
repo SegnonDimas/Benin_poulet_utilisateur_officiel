@@ -113,9 +113,9 @@ class _VProfilPageState extends State<VProfilPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Hero(
+                const Hero(
                   tag: 'nomBoutique',
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.verified_rounded,
@@ -179,8 +179,7 @@ class _VProfilPageState extends State<VProfilPage> {
               title: 'Portefeuille',
               leadingIcon: Icons.payment_rounded,
               onTap: () {
-                Navigator.pushNamed(
-                    context, AppRoutes().VENDEURPORTEFEUILLEPAGE);
+                Navigator.pushNamed(context, appRoutes.VENDEURPORTEFEUILLEPAGE);
               },
             ),
             const ProfilListTile(
@@ -191,10 +190,10 @@ class _VProfilPageState extends State<VProfilPage> {
             ),
 
             /// bouton de déconnexion
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Hero(
-                tag: '1',
+            Hero(
+              tag: '1',
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: AppButton(
                   height: appHeightSize(context) * 0.07,
                   onTap: () {},

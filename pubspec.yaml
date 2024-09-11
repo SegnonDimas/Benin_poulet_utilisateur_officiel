@@ -62,6 +62,8 @@ dependencies:
   image_picker: ^1.1.2
   redacted: ^1.0.12
   skeletonizer: ^1.4.2
+  iconsax: ^0.0.8
+  icons_plus: ^5.0.0
 
 dev_dependencies:
   flutter_test:

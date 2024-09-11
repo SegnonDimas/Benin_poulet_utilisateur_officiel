@@ -9,11 +9,14 @@ class AppPhoneTextField extends StatefulWidget {
   final String? label;
   final Color? labelColor;
   final Color? fontColor;
+  final Color? fileColor;
   final double? fontSize;
-  final TextEditingController controller;
+  final Color? fileBorderColor;
+  final TextEditingController? controller;
   late Function(PhoneNumber)? onSeved;
   late Function(PhoneNumber)? onInputChanged;
   late Function(bool)? onInputValidated;
+  final Function(String)? onFieldSubmitted;
 
   AppPhoneTextField({
     super.key,
@@ -22,12 +25,15 @@ class AppPhoneTextField extends StatefulWidget {
     this.errorMessage = 'numéro incorrect',
     this.label = 'Numéro de téléphone',
     this.labelColor = Colors.grey,
-    required this.controller,
+    this.controller,
     this.onSeved,
     this.onInputChanged,
     this.onInputValidated,
     this.fontColor = Colors.black,
     this.fontSize = 16,
+    this.onFieldSubmitted,
+    this.fileColor,
+    this.fileBorderColor,
   });
 
   @override
@@ -55,12 +61,14 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
       height: MediaQuery.of(context).size.height * 0.08,
       width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).colorScheme.background,
-      ),
+          borderRadius: BorderRadius.circular(15),
+          color: widget.fileColor ?? Theme.of(context).colorScheme.background,
+          border:
+              Border.all(color: widget.fileBorderColor ?? Colors.transparent)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: InternationalPhoneNumberInput(
+          onFieldSubmitted: widget.onFieldSubmitted,
           onInputChanged: widget.onInputChanged,
           /*(PhoneNumber number) {
             // le numéro de téléphone saisi.
@@ -88,7 +96,7 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
 
               ),
           initialValue: number,
-          textFieldController: widget.controller!,
+          textFieldController: widget.controller,
           formatInput: true,
           autoFocus: false,
           autoFocusSearch: true,

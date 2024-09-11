@@ -265,7 +265,7 @@ class _VPortefeuillePageState extends State<VPortefeuillePage> {
                     montantTranslation: '7500',
                     idTranslation: '8064122275',
                     typeTranslation: 'Entrée',
-                    taxeTranslation: '75')
+                    taxeTranslation: '75'),
               ],
             ),
           )

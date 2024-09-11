@@ -1,15 +1,21 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
+import 'package:benin_poulet/bloc/auth/auth_events.dart';
+import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
 import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/services/authentification_services.dart';
 import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/pages/userSimplePage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../utils/wave_painter.dart';
@@ -32,280 +38,414 @@ class _InscriptionPageState extends State<InscriptionPage> {
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
   bool isSignUp = false;
   double widthS = 0.0;
+  final _formKey = GlobalKey<FormState>();
+
+  String firstName = '';
+  String lastName = '';
+  String phoneNumber = '';
+  String password = '';
+  String confirmPassword = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: ListView(
-        children: [
-          /// Image d'arrière-plan
-          Image.asset(
-            //'assets/icons/signup.png',
-            "assets/icons/login14.png",
-            fit: BoxFit.fitHeight,
-            height: appHeightSize(context) * 0.15,
-            width: appWidthSize(context) * 0.5,
-            //color: primaryColor,
-          ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            /// Image d'arrière-plan
+            Image.asset(
+              //'assets/icons/signup.png',
+              "assets/icons/login14.png",
+              fit: BoxFit.fitHeight,
+              height: appHeightSize(context) * 0.2,
+              width: appWidthSize(context) * 0.5,
+              //color: primaryColor,
+            ),
 
-          /// Contenu avec forme sinusoïdale
-          CustomPaint(
-            painter: WavePainter(),
-            child: Container(
-              height: appHeightSize(context),
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                /*mainAxisSize: MainAxisSize.min,*/
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: appHeightSize(context) * 0.07),
+            /// Contenu avec forme sinusoïdale
+            SizedBox(
+              height: appHeightSize(context) * 0.8,
+              child: CustomPaint(
+                painter: WavePainter(
+                  color: Theme.of(context).colorScheme.surface,
+                ),
+                child: Container(
+                  height: appHeightSize(context),
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      /*mainAxisSize: MainAxisSize.min,*/
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: appHeightSize(context) * 0.07),
 
-                  // texte : 'Bienvenue !'
-                  ShaderMask(
-                    blendMode: BlendMode.srcATop,
-                    // Choisissez le mode de fusion selon vos préférences
-                    shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                        colors: [
-                          /*Theme.of(context).colorScheme.inversePrimary,
-                          Theme.of(context).colorScheme.inversePrimary,*/
-                          primaryColor,
-                          primaryColor,
-                          primaryColor,
-                        ], // Couleurs de votre dégradé
-                        tileMode: TileMode.clamp,
-                      ).createShader(bounds);
-                    },
-                    child: Text(
-                      'Bienvenue !',
-                      style: TextStyle(
-                          fontSize: largeText() * 1.5,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor),
+                        // texte : 'Bienvenue !'
+                        ShaderMask(
+                          blendMode: BlendMode.srcATop,
+                          // Choisissez le mode de fusion selon vos préférences
+                          shaderCallback: (Rect bounds) {
+                            return LinearGradient(
+                              colors: [
+                                /*Theme.of(context).colorScheme.inversePrimary,
+                                Theme.of(context).colorScheme.inversePrimary,*/
+                                primaryColor,
+                                primaryColor,
+                                primaryColor,
+                              ], // Couleurs de votre dégradé
+                              tileMode: TileMode.clamp,
+                            ).createShader(bounds);
+                          },
+                          child: Text(
+                            'Bienvenue !',
+                            style: TextStyle(
+                                fontSize: largeText() * 1.5,
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor),
+                          ),
+                        ),
+                        //const SizedBox(height: 10),
+
+                        /// Formulaire d'inscription
+
+                        SizedBox(
+                          height: appHeightSize(context) * 0.35,
+                          child: Form(
+                            key: _formKey,
+                            child: ListView(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height:
+                                                appHeightSize(context) * 0.25,
+                                            width: 5,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                              ),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inversePrimary
+                                                  .withOpacity(0.4),
+                                            ),
+                                          ),
+                                          Container(
+                                            height:
+                                                appHeightSize(context) * 0.2,
+                                            width: 5,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10),
+                                              ),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inversePrimary
+                                                  .withOpacity(0.1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Nom et Prenom
+                                    //nom
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          AppTextField(
+                                            label: 'Nom',
+                                            height:
+                                                appHeightSize(context) * 0.08,
+                                            width: appWidthSize(context) * 0.9,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            controller: _lastNameController,
+                                            prefixIcon: CupertinoIcons
+                                                .person_alt_circle,
+                                            fontSize: mediumText() * 0.9,
+                                            fontColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            onSaved: (value) =>
+                                                lastName = value!,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          //prenom
+                                          AppTextField(
+                                            label: 'Prénom',
+                                            height:
+                                                appHeightSize(context) * 0.08,
+                                            width: appWidthSize(context) * 0.9,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            controller: _firstNameController,
+                                            prefixIcon: CupertinoIcons
+                                                .person_alt_circle,
+                                            fontSize: mediumText() * 0.9,
+                                            fontColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            onSaved: (value) =>
+                                                firstName = value!,
+                                            //minLines: 4,
+                                          ),
+                                          const SizedBox(height: 10),
+
+                                          // Numéro de téléphone
+                                          AppPhoneTextField(
+                                            controller: _phoneNumbercontroller,
+                                            fontSize: mediumText() * 0.9,
+                                            fontColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            onFieldSubmitted: (value) =>
+                                                phoneNumber = value!,
+                                          ),
+                                          const SizedBox(height: 10),
+
+                                          // Mot de passe
+                                          AppTextField(
+                                            label: 'Mot de passe',
+                                            height:
+                                                appHeightSize(context) * 0.08,
+                                            width: appWidthSize(context) * 0.9,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            isPassword: true,
+                                            controller: _passWordController,
+                                            fontSize: mediumText() * 0.9,
+                                            fontColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            onSaved: (value) =>
+                                                password = value!,
+                                          ),
+                                          const SizedBox(height: 10),
+
+                                          // Confirmation de mot de passe
+                                          AppTextField(
+                                            label: 'Confirmer mot de passe',
+                                            height:
+                                                appHeightSize(context) * 0.08,
+                                            width: appWidthSize(context) * 0.9,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            isPassword: true,
+                                            controller:
+                                                _confirmPassWordController,
+                                            fontSize: mediumText() * 0.9,
+                                            fontColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            onSaved: (value) =>
+                                                confirmPassword = value!,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: appHeightSize(context) * 0.03),
+
+                        // bouton de l'inscription
+
+                        AppButton(
+                            height: appHeightSize(context) * 0.07,
+                            width: appWidthSize(context) * 0.9,
+                            color: primaryColor,
+                            onTap: () {
+                              signUp();
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                _formKey.currentState!.reset();
+                                setState(() {
+                                  isSignUp = !isSignUp;
+                                });
+                                context.read<AuthBloc>().add(
+                                      PhoneSignUpRequested(
+                                        firstName: firstName,
+                                        lastName: lastName,
+                                        phoneNumber: phoneNumber,
+                                        password: password,
+                                        confirmPassword: confirmPassword,
+                                      ),
+                                    );
+                                print(':::::: Je suis venu ici ::::::::');
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserSimplePage()));
+                              }
+                            },
+                            child: isSignUp
+                                ? const CupertinoActivityIndicator(
+                                    radius: 20.0, // Taille du spinner
+                                    color: Colors.white,
+                                  )
+                                : AppText(
+                                    text: 'Inscription',
+                                    fontSize: largeText(),
+                                    color: Colors.white,
+                                  )),
+
+                        const SizedBox(height: 20),
+
+                        /// Fin du formulaire d'inscription
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomSheet:
 
-                  /// Formulaire d'inscription
-                  // Nom et Prenom
-                  //nom
-                  AppTextField(
-                    label: 'Nom',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.background,
-                    controller: _lastNameController,
-                    prefixIcon: CupertinoIcons.person_alt_circle,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+          /// Autres options d'inscription
+
+          // texte : 'ou continuer avec'
+          SizedBox(
+        height: appHeightSize(context) * 0.17,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(
+                    width: 1,
                   ),
-                  const SizedBox(height: 10),
-                  //prenom
-                  AppTextField(
-                    label: 'Prénom',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.background,
-                    controller: _firstNameController,
-                    prefixIcon: CupertinoIcons.person_alt_circle,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                    //minLines: 4,
+                  AppText(
+                    text: "ou continuer avec",
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
+                    fontSize: smallText() * 1.2,
                   ),
-                  const SizedBox(height: 10),
-
-                  // Numéro de téléphone
-                  AppPhoneTextField(
-                    controller: _phoneNumbercontroller,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Mot de passe
-                  AppTextField(
-                    label: 'Mot de passe',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.background,
-                    isPassword: true,
-                    controller: _passWordController,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Confirmation de mot de passe
-                  AppTextField(
-                    label: 'Confirmer mot de passe',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.background,
-                    isPassword: true,
-                    controller: _confirmPassWordController,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  SizedBox(height: appHeightSize(context) * 0.03),
-
-                  // bouton de l'inscription
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSignUp = !isSignUp;
-                        signUp();
-                      });
-                    },
-                    child: Container(
-                        alignment: Alignment.center,
-                        height: appHeightSize(context) * 0.07,
-                        width: appWidthSize(context) * 0.9,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: primaryColor),
-                        child: isSignUp
-                            ? const CupertinoActivityIndicator(
-                                radius: 20.0, // Taille du spinner
-                                color: Colors.white,
-                              )
-                            : Text(
-                                'Inscription',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: largeText()),
-                              )),
-                  ),
-                  const SizedBox(height: 20),
-
-                  /// Fin du formulaire d'inscription
-
-                  /// Autres options d'inscription
-
-                  // texte : 'ou continuer avec'
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      AppText(
-                        text: "ou continuer avec",
-                        color: Colors.grey.shade500,
-                        fontSize: smallText() * 1.2,
-                      ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                    ],
-                  ),
-
-                  // divider
-                  Divider(
-                    color: Colors.grey.shade400,
-                  ),
-
-                  // méthodes d'inscription Google et de Apple
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // logo Google
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSignUp = !isSignUp;
-                          });
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.background,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/google.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
-                      ),
-
-                      // logo Apple
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSignUp = !isSignUp;
-                          });
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.background,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/apple.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
-                      ),
-
-                      //Email
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSignUp = !isSignUp;
-                          });
-                          Navigator.of(context).pushNamed(
-                            '/signupWithEmailPage',
-                          );
-                        },
-                        child: Container(
-                            height: appHeightSize(context) * 0.06,
-                            width: appHeightSize(context) * 0.07,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.background,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/logos/email.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
-
-                  // texte : 'Avez-vous déjà de compte ? Se connecter'
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppText(
-                        text: 'Avez-vous déjà de compte ?',
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: smallText() * 1.2,
-                      ),
-
-                      // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes().LOGINPAGE);
-                          },
-                          child: AppText(
-                            text: 'Se connecter',
-                            color: primaryColor,
-                            fontSize: smallText() * 1.2,
-                          )),
-                    ],
+                  const SizedBox(
+                    width: 1,
                   ),
                 ],
               ),
-            ),
+
+              // divider
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inversePrimary
+                      .withOpacity(0.4),
+                ),
+              ),
+
+              // méthodes d'inscription Google et de Apple
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  //Google
+                  Hero(
+                    tag: 'appleTag',
+                    child: ModelOptionDeConnexion(
+                      onTap: () {
+                        setState(() {
+                          isSignUp = !isSignUp;
+                        });
+                      },
+                      child: Image.asset(
+                        'assets/logos/google.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+
+                  //Apple
+                  Hero(
+                    tag: 'googleTag',
+                    child: ModelOptionDeConnexion(
+                      onTap: () {
+                        setState(() {
+                          isSignUp = !isSignUp;
+                        });
+                      },
+                      child: Image.asset(
+                        'assets/logos/apple.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+
+                  //Email
+                  Hero(
+                    tag: 'emailTag',
+                    child: ModelOptionDeConnexion(
+                      onTap: () {
+                        setState(() {
+                          isSignUp = !isSignUp;
+                        });
+                        Navigator.pushNamed(
+                            context, appRoutes.SIGNUPWITHEMAILPAGE);
+                      },
+                      child: Image.asset(
+                        'assets/logos/email2.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+
+              // texte : 'Avez-vous déjà de compte ? Se connecter'
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppText(
+                    text: 'Avez-vous déjà de compte ?',
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
+                    fontSize: smallText() * 1.2,
+                  ),
+
+                  // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes().LOGINPAGE);
+                      },
+                      child: AppText(
+                        text: 'Se connecter',
+                        color: primaryColor,
+                        fontSize: smallText() * 1.2,
+                      )),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

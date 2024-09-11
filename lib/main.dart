@@ -1,8 +1,9 @@
+import 'package:benin_poulet/blocProviders.dart';
 import 'package:benin_poulet/routes.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
@@ -69,19 +70,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      supportedLocales: _localization.supportedLocales,
-      localizationsDelegates: _localization.localizationsDelegates,
-      debugShowCheckedModeBanner: false,
-      theme: Provider.of<ThemeProvider>(context).themeData,
-      darkTheme: darkMode,
-      //themeMode: ThemeMode.light,
-      title: 'Bénin Poulet',
+    return MultiBlocProvider(
+      providers: providers,
+      child: GetMaterialApp(
+        supportedLocales: _localization.supportedLocales,
+        localizationsDelegates: _localization.localizationsDelegates,
+        debugShowCheckedModeBanner: false,
+        theme: Provider.of<ThemeProvider>(context).themeData,
+        darkTheme: darkMode,
+        //themeMode: ThemeMode.light,
+        title: 'Bénin Poulet',
 
-      home: const VMainPage(),
-      routes: routes,
+        //home: const VMainPage(),
+        routes: routes,
 
-      //initialRoute: '/firstPage',
+        initialRoute: '/firstPage',
+      ),
     );
   }
 }

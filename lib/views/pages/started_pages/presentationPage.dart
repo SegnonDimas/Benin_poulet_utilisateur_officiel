@@ -1,3 +1,4 @@
+import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -86,7 +87,7 @@ class _PresentationPageState extends State<PresentationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
 
         /// corps de la page
         body: SafeArea(
@@ -255,8 +256,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                           onTap: () {
                                                             Navigator.of(
                                                                     context)
-                                                                .pushNamed(
-                                                                    '/inscriptionPage');
+                                                                .pushNamed(appRoutes
+                                                                    .INSCRIPTIONPAGE);
                                                           },
                                                           child: Container(
                                                             height: appHeightSize(
@@ -318,10 +319,14 @@ class _PresentationPageState extends State<PresentationPage> {
                                                     radius:
                                                         appHeightSize(context) *
                                                             0.05,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .background,
                                                     child: Icon(
                                                       Icons.question_mark,
                                                       size: largeText() * 2,
-                                                      color: Colors.green,
+                                                      color: primaryColor,
                                                     )),
                                                 iconColor: Colors.white,
                                                 elevation: 25,
@@ -512,8 +517,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       Navigator.of(context)
-                                                          .pushNamed(
-                                                              '/inscriptionVendeurPage');
+                                                          .pushNamed(appRoutes
+                                                              .INSCRIPTIONVENDEURPAGE);
                                                     },
                                                     child: Container(
                                                       height: appHeightSize(
@@ -624,10 +629,13 @@ class _PresentationPageState extends State<PresentationPage> {
                                           icon: CircleAvatar(
                                               radius:
                                                   appHeightSize(context) * 0.05,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
                                               child: Icon(
                                                 Icons.question_mark,
                                                 size: largeText() * 2,
-                                                color: Colors.green,
+                                                color: primaryColor,
                                               )),
                                           iconColor: Colors.white,
                                           elevation: 25,

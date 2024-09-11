@@ -57,3 +57,5 @@ class AppRoutes {
   String VENDEURPROFILPAGE = '/vendeurProfilPage';
   String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
 }
+
+AppRoutes appRoutes = AppRoutes();

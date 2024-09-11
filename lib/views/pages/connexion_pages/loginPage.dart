@@ -1,4 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
+import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -32,280 +34,273 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: ListView(
-        children: [
-          // Image d'arrière-plan
-          Hero(
-            tag: 'logoTag',
-            child: Image.asset(
-              'assets/images/login2.png',
-              fit: BoxFit.fitHeight,
-              height: appHeightSize(context) * 0.2,
-              //width: appWidthSize(context) * 0.5,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Image d'arrière-plan
+            Hero(
+              tag: 'logoTag',
+              child: Image.asset(
+                'assets/images/login2.png',
+                fit: BoxFit.fitHeight,
+                height: appHeightSize(context) * 0.2,
+              ),
             ),
-          ),
 
-          // Contenu avec forme sinusoïdale
-          CustomPaint(
-            painter: WavePainter(),
-            child: Container(
-              height: appHeightSize(context) * 0.8,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                /*mainAxisSize: MainAxisSize.min,*/
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: appHeightSize(context) * 0.08),
-
-                  /// texte : Bienvenue
-                  Text(
-                    'Bienvenue !',
-                    style: TextStyle(
-                        fontSize: largeText() * 1.5,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor),
-                  ),
-                  const SizedBox(height: 20),
-
-                  /// Formulaire de connexion
-
-                  // numéro de téléphone
-                  AppPhoneTextField(
-                    controller: _phoneNumbercontroller,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // mot de passe
-                  AppTextField(
-                    label: 'Mot de passe',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
-                    color: Theme.of(context).colorScheme.background,
-                    isPassword: true,
-                    controller: _passWordController,
-                    fontSize: mediumText() * 0.9,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                  ),
-                  const SizedBox(height: 5),
-
-                  // Se souvenir / Mot de passe oublié
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // Contenu avec forme sinusoïdale
+            CustomPaint(
+              painter: WavePainter(
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: Container(
+                height: appHeightSize(context) * 0.8,
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // se souvenir
+                      SizedBox(height: appHeightSize(context) * 0.08),
+
+                      /// texte : Bienvenue
+                      Text(
+                        'Bienvenue !',
+                        style: TextStyle(
+                            fontSize: largeText() * 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor),
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Formulaire de connexion
+
+                      // numéro de téléphone
+                      AppPhoneTextField(
+                        controller: _phoneNumbercontroller,
+                        fontSize: mediumText() * 0.9,
+                        fontColor: Theme.of(context).colorScheme.inversePrimary,
+                        fileColor: Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(0.8),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // mot de passe
+                      AppTextField(
+                        label: 'Mot de passe',
+                        height: appHeightSize(context) * 0.08,
+                        width: appWidthSize(context) * 0.9,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(0.8),
+                        isPassword: true,
+                        controller: _passWordController,
+                        fontSize: mediumText() * 0.9,
+                        fontColor: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                      const SizedBox(height: 5),
+
+                      // Se souvenir / Mot de passe oublié
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Checkbox(
-                            value: seSouvenir,
-                            onChanged: (value) {
-                              setState(() {
-                                seSouvenir = value!;
-                              });
-                            },
-                            activeColor: primaryColor,
-                            checkColor: Colors.white,
-                            semanticLabel:
-                                'Se rappeler de cet appareil et vous éviter d\'entrer vos identifiants de connexion la prochaine fois',
+                          // se souvenir
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: seSouvenir,
+                                onChanged: (value) {
+                                  setState(() {
+                                    seSouvenir = value!;
+                                  });
+                                },
+                                activeColor: primaryColor,
+                                checkColor: Colors.white,
+                                semanticLabel:
+                                    'Se rappeler de cet appareil et vous éviter d\'entrer vos identifiants de connexion la prochaine fois',
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    seSouvenir = !seSouvenir;
+                                  });
+                                },
+                                child: AppText(
+                                  text: 'Se souvenir',
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary
+                                      .withOpacity(0.4),
+                                ),
+                              ),
+                            ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                seSouvenir = !seSouvenir;
-                              });
+
+                          // mot de passe oublié
+                          TextButton(
+                            onPressed: () {
+                              // Ajouter une action pour mot de passe oublié
                             },
                             child: AppText(
-                              text: 'Se souvenir',
-                              color: Theme.of(context).colorScheme.primary,
+                              text: 'Mot de passe oublié ?',
+                              color: primaryColor,
                             ),
                           ),
                         ],
                       ),
+                      SizedBox(height: appHeightSize(context) * 0.03),
 
-                      // mot de passe oublié
-                      TextButton(
-                        onPressed: () {
-                          // Ajouter une action pour mot de passe oublié
+                      // bouton de connexion
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isLoggedIn = !isLoggedIn;
+                            login();
+                          });
                         },
-                        child: AppText(
-                          text: 'Mot de passe oublié ?',
-                          color: primaryColor,
-                        ),
+                        child: Container(
+                            alignment: Alignment.center,
+                            height: appHeightSize(context) * 0.07,
+                            width: appWidthSize(context) * 0.9,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: primaryColor),
+                            child: isLoggedIn
+                                ? const CupertinoActivityIndicator(
+                                    radius: 20.0, // Taille du spinner
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    'Connexion',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: largeText()),
+                                  )),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: appHeightSize(context) * 0.03),
+                      const SizedBox(height: 50),
 
-                  // bouton de connexion
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isLoggedIn = !isLoggedIn;
-                        login();
-                      });
-                    },
-                    child: Container(
-                        alignment: Alignment.center,
-                        height: appHeightSize(context) * 0.07,
-                        width: appWidthSize(context) * 0.9,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: primaryColor),
-                        child: isLoggedIn
-                            ? const CupertinoActivityIndicator(
-                                radius: 20.0, // Taille du spinner
-                                color: Colors.white,
-                              )
-                            : Text(
-                                'Connexion',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: largeText()),
-                              )),
-                  ),
-                  const SizedBox(height: 20),
+                      /// Fin du formulaire de connexion
 
-                  /// Fin du formulaire de connexion
+                      /// Autres options de connexion
 
-                  /// Autres options de connexion
-
-                  // texte : 'ou continuer avec'
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      AppText(
-                        text: "ou continuer avec",
-                        color: Colors.grey.shade500,
-                        fontSize: smallText() * 1.2,
-                      ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.grey.shade400,
-                  ),
-
-                  // méthode de connexion Google, Apple et Email
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      //Google
-                      Hero(
-                        tag: 'appleTag',
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isLoggedIn = !isLoggedIn;
-                            });
-                          },
-                          child: Container(
-                              height: appHeightSize(context) * 0.06,
-                              width: appHeightSize(context) * 0.07,
-                              decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/logos/google.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
-                        ),
-                      ),
-                      /* SizedBox(
-                        width: appWidthSize(context) * 0.15,
-                      ),*/
-
-                      //Apple
-                      Hero(
-                        tag: 'googleTag',
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isLoggedIn = !isLoggedIn;
-                            });
-                          },
-                          child: Container(
-                              height: appHeightSize(context) * 0.06,
-                              width: appHeightSize(context) * 0.07,
-                              decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/logos/apple.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
-                        ),
-                      ),
-
-                      //Email
-                      Hero(
-                        tag: 'emailTag',
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isLoggedIn = !isLoggedIn;
-                            });
-                            Navigator.of(context)
-                                .pushNamed('/loginWithEmailPage');
-                          },
-                          child: Container(
-                              height: appHeightSize(context) * 0.06,
-                              width: appHeightSize(context) * 0.07,
-                              decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/logos/email2.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // texte : 'Vous n'avez pas encore de compte? S'inscrire'
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppText(
-                        text: 'Vous n\'avez pas de compte ?',
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: smallText() * 1.2,
-                      ),
-
-                      // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/presentationPage');
-                          },
-                          child: AppText(
-                            text: 'S\'inscrire',
-                            color: primaryColor,
+                      // texte : 'ou continuer avec'
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 1,
+                          ),
+                          AppText(
+                            text: "ou continuer avec",
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.4),
                             fontSize: smallText() * 1.2,
-                          )),
+                          ),
+                          const SizedBox(
+                            width: 1,
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.4),
+                      ),
+
+                      // méthode de connexion Google, Apple et Email
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          //Google
+                          Hero(
+                            tag: 'appleTag',
+                            child: ModelOptionDeConnexion(
+                              onTap: () {
+                                setState(() {
+                                  isLoggedIn = !isLoggedIn;
+                                });
+                              },
+                              child: Image.asset(
+                                'assets/logos/google.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+
+                          //Apple
+                          Hero(
+                            tag: 'googleTag',
+                            child: ModelOptionDeConnexion(
+                              onTap: () {
+                                setState(() {
+                                  isLoggedIn = !isLoggedIn;
+                                });
+                              },
+                              child: Image.asset(
+                                'assets/logos/apple.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+
+                          //Email
+                          Hero(
+                            tag: 'emailTag',
+                            child: ModelOptionDeConnexion(
+                              onTap: () {
+                                setState(() {
+                                  isLoggedIn = !isLoggedIn;
+                                });
+                                Navigator.pushNamed(
+                                    context, appRoutes.LOGINWITHEMAILPAGE);
+                              },
+                              child: Image.asset(
+                                'assets/logos/email2.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+
+                      // texte : 'Vous n'avez pas encore de compte? S'inscrire'
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AppText(
+                            text: 'Vous n\'avez pas de compte ?',
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.4),
+                            fontSize: smallText() * 1.2,
+                          ),
+
+                          // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, appRoutes.PRESENTATIONPAGE);
+                              },
+                              child: AppText(
+                                text: 'S\'inscrire',
+                                color: primaryColor,
+                                fontSize: smallText() * 1.2,
+                              )),
+                        ],
+                      ),
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+            //const SizedBox(height: 150),
+          ],
+        ),
       ),
     );
   }
