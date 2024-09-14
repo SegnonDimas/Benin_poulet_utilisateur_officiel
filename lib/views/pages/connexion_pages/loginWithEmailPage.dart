@@ -36,9 +36,13 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: appHeightSize(context) * 0.02,
+            ),
+
             /// Image d'arrière-plan et bouton de retour
             SizedBox(
-              height: appHeightSize(context) * 0.2,
+              height: appHeightSize(context) * 0.17,
               width: appWidthSize(context),
               child: Stack(
                 alignment: Alignment.center,

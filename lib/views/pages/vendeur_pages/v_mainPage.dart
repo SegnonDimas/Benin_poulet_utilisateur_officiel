@@ -195,7 +195,7 @@ class _VMainPageState extends State<VMainPage> {
 
             //_pageViewController.jumpToPage(currentPage);
             _pageViewController.animateToPage(currentPage,
-                duration: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds: 250),
                 curve: Curves.linear);
           });
         },

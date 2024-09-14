@@ -26,10 +26,26 @@ class _ModelPhotoSelecteurState extends State<ModelPhotoSelecteur> {
       //padding: const EdgeInsets.only(left: 16.0, right: 10, top: 5, bottom: 5),
       decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Theme.of(context).colorScheme.background),
-            bottom: BorderSide(color: Theme.of(context).colorScheme.background),
-            left: BorderSide(color: Theme.of(context).colorScheme.background),
-            right: BorderSide(color: Theme.of(context).colorScheme.background),
+            top: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3)),
+            bottom: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3)),
+            left: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3)),
+            right: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.3)),
           ),
           borderRadius: BorderRadius.circular(15)),
       child: Padding(

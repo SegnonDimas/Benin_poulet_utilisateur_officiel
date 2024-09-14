@@ -37,13 +37,16 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: appHeightSize(context) * 0.03,
+            ),
             // Image d'arrière-plan
             Hero(
               tag: 'logoTag',
               child: Image.asset(
                 'assets/images/login2.png',
                 fit: BoxFit.fitHeight,
-                height: appHeightSize(context) * 0.2,
+                height: appHeightSize(context) * 0.17,
               ),
             ),
 

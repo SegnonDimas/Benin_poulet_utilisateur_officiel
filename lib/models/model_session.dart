@@ -15,6 +15,7 @@ class ModelSession extends StatefulWidget {
   final double? padding;
   final int? maxLine;
   final Color? titleColor;
+  final Function()? onTap;
 
   const ModelSession({
     super.key,
@@ -27,6 +28,7 @@ class ModelSession extends StatefulWidget {
     this.padding,
     this.maxLine,
     this.titleColor,
+    this.onTap,
   });
 
   @override
@@ -36,10 +38,12 @@ class ModelSession extends StatefulWidget {
 class _ModelSessionState extends State<ModelSession> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, widget.routeName ?? '/defaultRoutePage');
-      },
+    return GestureDetector(
+      onTap: widget.onTap ??
+          () {
+            Navigator.pushNamed(
+                context, widget.routeName ?? '/defaultRoutePage');
+          },
       child: SizedBox(
         width: widget.width ?? appWidthSize(context) / 4,
         height: widget.height ?? appHeightSize(context) * 0.16,

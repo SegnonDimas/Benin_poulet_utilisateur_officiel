@@ -53,12 +53,16 @@ class _InscriptionPageState extends State<InscriptionPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: appHeightSize(context) * 0.03,
+            ),
+
             /// Image d'arrière-plan
             Image.asset(
               //'assets/icons/signup.png',
               "assets/icons/login14.png",
               fit: BoxFit.fitHeight,
-              height: appHeightSize(context) * 0.2,
+              height: appHeightSize(context) * 0.17,
               width: appWidthSize(context) * 0.5,
               //color: primaryColor,
             ),
@@ -113,6 +117,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           child: Form(
                             key: _formKey,
                             child: ListView(
+                              shrinkWrap: true,
                               children: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,

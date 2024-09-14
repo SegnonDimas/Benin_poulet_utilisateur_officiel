@@ -40,9 +40,13 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: appHeightSize(context) * 0.02,
+            ),
+
             /// Image d'arrière-plan et bouton de retour
             SizedBox(
-              height: appHeightSize(context) * 0.2,
+              height: appHeightSize(context) * 0.17,
               width: appWidthSize(context),
               child: Stack(
                 alignment: Alignment.center,
@@ -354,7 +358,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppText(
-                    text: 'Vous n\'avez pas de compte ?',
+                    text: 'Avez-vous déjà de compte ?',
                     color: Theme.of(context)
                         .colorScheme
                         .inversePrimary
@@ -365,11 +369,10 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                   // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                            context, appRoutes.PRESENTATIONPAGE);
+                        Navigator.pushNamed(context, appRoutes.LOGINPAGE);
                       },
                       child: AppText(
-                        text: 'S\'inscrire',
+                        text: 'Se connecter',
                         color: primaryColor,
                         fontSize: smallText() * 1.2,
                       )),

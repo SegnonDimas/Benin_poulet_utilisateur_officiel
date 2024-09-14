@@ -1,4 +1,5 @@
 import 'package:benin_poulet/routes.dart';
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
@@ -98,9 +99,16 @@ class _VHomePageState extends State<VHomePage> {
 
           /// présentation du portefeuille
           ModelPortefeuille(
+            backgroundColor: primaryColor.withGreen(150),
             solde: 400000,
             height: appHeightSize(context) * 0.15,
             radius: appHeightSize(context) * 0.15 * 0.22,
+            onSession3Tap: () {
+              Navigator.pushNamed(context, appRoutes.VENDEURHISTORIQUEPAGE);
+            },
+            onTap: () {
+              Navigator.pushNamed(context, appRoutes.VENDEURPORTEFEUILLEPAGE);
+            },
           ),
 
           /// liste des sessions
@@ -131,7 +139,7 @@ class _VHomePageState extends State<VHomePage> {
           width: appHeightSize(context) * 0.07,
           bordeurRadius: 17,
           //appHeightSize(context) * 0.2,
-          color: const Color.fromARGB(179, 0, 96, 216),
+          color: primaryColor,
           child: const Icon(
             Icons.add,
             color: Colors.white,

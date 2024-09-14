@@ -48,9 +48,9 @@ class _VPortefeuillePageState extends State<VPortefeuillePage> {
                 Positioned(
                   top: appHeightSize(context) * 0.22,
                   right: 5,
-                  child: Hero(
+                  child: const Hero(
                     tag: '2',
-                    child: const GradientBall(
+                    child: GradientBall(
                       size: Size.square(200),
                       colors: [Colors.blue, Colors.purple],
                     ),
@@ -234,7 +234,7 @@ class _VPortefeuillePageState extends State<VPortefeuillePage> {
             ),
           ),
 
-          /// liste des translations
+          /// historique des translations
           Expanded(
             child: ListView(
               children: const [

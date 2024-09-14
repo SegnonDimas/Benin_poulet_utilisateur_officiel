@@ -58,13 +58,25 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
               decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                        color: Theme.of(context).colorScheme.background),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.3)),
                     bottom: BorderSide(
-                        color: Theme.of(context).colorScheme.background),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.3)),
                     left: BorderSide(
-                        color: Theme.of(context).colorScheme.background),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.3)),
                     right: BorderSide(
-                        color: Theme.of(context).colorScheme.background),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.3)),
                   ),
                   borderRadius: BorderRadius.circular(15)),
               child: Row(

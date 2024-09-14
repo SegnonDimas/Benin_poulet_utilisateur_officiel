@@ -10,6 +10,7 @@ import 'package:benin_poulet/views/pages/vendeur_pages/authentification/validati
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajoutNouveauProduitPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/v_productsCategoriesListPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_commandeListPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/v_historiqueTranslations.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_mainPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_performancesPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_portefeuillePage.dart';
@@ -36,6 +37,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurPerformancesPage': (context) => const VPerformancesPage(),
   '/vendeurProfilPage': (context) => const VProfilPage(),
   '/vendeurPortefeuillePage': (context) => const VPortefeuillePage(),
+  'vendeurHistoriqueTranslations': (context) => const VHistoriqueTranslations(),
 };
 
 class AppRoutes {
@@ -56,6 +58,7 @@ class AppRoutes {
   String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
   String VENDEURPROFILPAGE = '/vendeurProfilPage';
   String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
+  String VENDEURHISTORIQUEPAGE = 'vendeurHistoriqueTranslations';
 }
 
 AppRoutes appRoutes = AppRoutes();
