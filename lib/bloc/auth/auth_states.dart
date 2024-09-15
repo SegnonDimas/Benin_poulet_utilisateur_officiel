@@ -6,48 +6,63 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class AuthFailure extends AuthState {
+  final String errorMessage;
+
+  AuthFailure({required this.errorMessage});
+}
+
 class AuthAuthenticated extends AuthState {
   final String userId;
 
-  AuthAuthenticated(this.userId);
+  AuthAuthenticated({required this.userId});
 }
 
 /// connexion avec numéro de téléphone
-class PhoneLoginRequestSuccess extends AuthState {
+class PhoneLoginRequestSuccess extends AuthAuthenticated {
   final String? successMessage;
-  final String uid;
 
-  PhoneLoginRequestSuccess({this.successMessage, required this.uid});
+  PhoneLoginRequestSuccess({
+    required super.userId,
+    this.successMessage,
+  });
 }
 
-class PhoneLoginRequestFailure extends AuthState {
-  final String erroMessage;
-
-  PhoneLoginRequestFailure({required this.erroMessage});
+class PhoneLoginRequestFailure extends AuthFailure {
+  PhoneLoginRequestFailure({required super.errorMessage});
 }
 
 /// connexion avec email
-class EmailLoginRequestSuccess extends AuthState {
+class EmailLoginRequestSuccess extends AuthAuthenticated {
   final String? successMessage;
-  final String uid;
 
-  EmailLoginRequestSuccess({this.successMessage, required this.uid});
+  EmailLoginRequestSuccess({this.successMessage, required super.userId});
 }
 
-class EmailLoginRequestFailure extends AuthState {
-  final String erroMessage;
+class EmailLoginRequestFailure extends AuthFailure {
+  EmailLoginRequestFailure({required super.errorMessage});
+}
 
-  EmailLoginRequestFailure({required this.erroMessage});
+/// connexion avec Google
+class GoogleLoginRequestSuccess extends AuthAuthenticated {
+  GoogleLoginRequestSuccess({required super.userId});
+}
+
+class GoogleLoginRequestFailure extends AuthFailure {
+  GoogleLoginRequestFailure({required super.errorMessage});
+}
+
+/// connexion avec iCloud
+class ICloudLoginRequestSuccess extends AuthAuthenticated {
+  ICloudLoginRequestSuccess({required super.userId});
+}
+
+class ICloudLoginRequestFailure extends AuthFailure {
+  ICloudLoginRequestFailure({required super.errorMessage});
 }
 
 class AuthSignedUp extends AuthState {
   final String userId;
 
   AuthSignedUp(this.userId);
-}
-
-class AuthError extends AuthState {
-  final String message;
-
-  AuthError(this.message);
 }

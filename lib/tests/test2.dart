@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/models/model_produit.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
@@ -53,15 +52,15 @@ class _Test2State extends State<Test2> {
           filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
           //blur(sigmaX: 100, sigmaY: 100),
           child: Center(
-            child: Container(
-              child: Skeletonizer(
-                  containersColor: Colors.red,
-                  child: Container(
-                    //color: Colors.red,
-                    height: appHeightSize(context) * 0.2,
-                    child: ModelProduit(
-                        productName: 'productName', productUnitPrice: 10),
-                  )),
+            child: GestureDetector(
+              child: Container(
+                  child: Skeletonizer(
+                containersColor: Colors.red,
+                child: Container(
+                  //color: Colors.red,
+                  height: appHeightSize(context) * 0.2,
+                ),
+              )),
             ),
           )),
     ]));

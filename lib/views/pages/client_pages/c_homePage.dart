@@ -14,11 +14,10 @@ class CHomePage extends StatefulWidget {
 class _CHomePageState extends State<CHomePage> {
   @override
   Widget build(BuildContext context) {
-    final authState =
-        context.watch<AuthBloc>().state as EmailLoginRequestSuccess;
+    final authState = context.watch<AuthBloc>().state as AuthAuthenticated;
     return Scaffold(
       appBar: AppBar(
-        title: AppText(text: authState.uid.replaceAll(' ', '')),
+        title: AppText(text: authState.userId.replaceAll(' ', '')),
         centerTitle: true,
         actions: const [Icon(Icons.account_circle)],
       ),

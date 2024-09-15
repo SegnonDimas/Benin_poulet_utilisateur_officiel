@@ -64,6 +64,8 @@ dependencies:
   skeletonizer: ^1.4.2
   iconsax: ^0.0.8
   icons_plus: ^5.0.0
+  flutter_card_swiper: ^7.0.1
+  timer_snackbar: ^0.0.3
 
 dev_dependencies:
   flutter_test:

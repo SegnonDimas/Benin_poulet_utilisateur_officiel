@@ -8,7 +8,7 @@ sealed class AuthEvent {}
 class GoogleLoginRequested extends AuthEvent {}
 
 // connexion avec compte iCloud
-class AppleLoginRequested extends AuthEvent {}
+class ICloudLoginRequested extends AuthEvent {}
 
 // connexion avec Adresse Email
 class EmailLoginRequested extends AuthEvent {
@@ -32,7 +32,7 @@ class PhoneLoginRequested extends AuthEvent {
 class GoogleSignUpRequested extends AuthEvent {}
 
 // inscription avec compte iCloud
-class AppleSignUpRequested extends AuthEvent {}
+class ICloudSignUpRequested extends AuthEvent {}
 
 // inscription avec compte Email
 class EmailSignUpRequested extends AuthEvent {

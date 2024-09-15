@@ -36,11 +36,13 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is EmailLoginRequestFailure) {
-            AppSnackBar.showSnackBar(context, state.erroMessage);
+          if (state is AuthFailure) {
+            AppSnackBar.showSnackBar(context, state.errorMessage);
           }
           if (state is AuthLoading) {
           } else if (state is EmailLoginRequestSuccess) {
+            _emailcontroller.clear();
+            _passWordController.clear();
             AppSnackBar.showAwesomeSnackBar(
                 context,
                 'Connexion Réussie',

@@ -38,11 +38,13 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is PhoneLoginRequestFailure) {
-              AppSnackBar.showSnackBar(context, state.erroMessage);
+            if (state is AuthFailure) {
+              AppSnackBar.showSnackBar(context, state.errorMessage);
             }
             if (state is AuthLoading) {
-            } else if (state is PhoneLoginRequestSuccess) {
+            } else if (state is AuthAuthenticated) {
+              _passWordController.clear();
+              _phoneNumbercontroller.clear();
               AppSnackBar.showAwesomeSnackBar(
                   context,
                   'Connexion Réussie',
@@ -251,9 +253,9 @@ class _LoginPageState extends State<LoginPage> {
                                   tag: 'appleTag',
                                   child: ModelOptionDeConnexion(
                                     onTap: () {
-                                      setState(() {
-                                        isLoggedIn = !isLoggedIn;
-                                      });
+                                      context
+                                          .read<AuthBloc>()
+                                          .add(GoogleLoginRequested());
                                     },
                                     child: Image.asset(
                                       'assets/logos/google.png',
@@ -267,9 +269,9 @@ class _LoginPageState extends State<LoginPage> {
                                   tag: 'googleTag',
                                   child: ModelOptionDeConnexion(
                                     onTap: () {
-                                      setState(() {
-                                        isLoggedIn = !isLoggedIn;
-                                      });
+                                      context
+                                          .read<AuthBloc>()
+                                          .add(ICloudLoginRequested());
                                     },
                                     child: Image.asset(
                                       'assets/logos/apple.png',

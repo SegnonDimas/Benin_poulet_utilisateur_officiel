@@ -12,24 +12,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final password = event.password;
         if (phoneNumber.isEmpty) {
           return emit(PhoneLoginRequestFailure(
-              erroMessage: 'Veuillez renseigner votre numéro de téléphone'));
+              errorMessage: 'Veuillez renseigner votre numéro de téléphone'));
         }
         if (password.isEmpty) {
           return emit(PhoneLoginRequestFailure(
-              erroMessage: 'Veuillez renseigner votre mot de passe'));
+              errorMessage: 'Veuillez renseigner votre mot de passe'));
         } else if (password.length < 4) {
           return emit(PhoneLoginRequestFailure(
-              erroMessage:
+              errorMessage:
                   'Le mot de passe doit être d\'au moins 4 caractères'));
+        } else {
+          await Future.delayed(const Duration(seconds: 2), () {
+            return emit(PhoneLoginRequestSuccess(
+                userId: '$phoneNumber$password',
+                successMessage: 'Utilisateur connecté avec succès'));
+          });
         }
-
-        await Future.delayed(const Duration(seconds: 2), () {
-          return emit(PhoneLoginRequestSuccess(
-              uid: '$phoneNumber$password',
-              successMessage: 'Utilisateur connecté avec succès'));
-        });
       } catch (e) {
-        return emit(PhoneLoginRequestFailure(erroMessage: e.toString()));
+        return emit(PhoneLoginRequestFailure(errorMessage: e.toString()));
       }
     });
 
@@ -40,29 +40,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final password = event.password;
         if (email.isEmpty) {
           return emit(EmailLoginRequestFailure(
-              erroMessage: 'Veuillez renseigner votre adresse email'));
+              errorMessage: 'Veuillez renseigner votre adresse email'));
         }
         if (password.isEmpty) {
           return emit(EmailLoginRequestFailure(
-              erroMessage: 'Veuillez renseigner votre mot de passe'));
+              errorMessage: 'Veuillez renseigner votre mot de passe'));
         } else if (password.length < 4) {
           return emit(EmailLoginRequestFailure(
-              erroMessage:
+              errorMessage:
                   'Le mot de passe doit être d\'au moins 4 caractères'));
         }
 
         await Future.delayed(const Duration(seconds: 2), () {
           return emit(EmailLoginRequestSuccess(
-              uid: email, successMessage: 'Utilisateur connecté avec succès'));
+              userId: email,
+              successMessage: 'Utilisateur connecté avec succès'));
         });
       } catch (e) {
-        return emit(EmailLoginRequestFailure(erroMessage: e.toString()));
+        return emit(EmailLoginRequestFailure(errorMessage: e.toString()));
       }
     });
 
-    on<GoogleLoginRequested>(_onGoogleLoginRequested);
+    on<GoogleLoginRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await Future.delayed(const Duration(seconds: 2), () {
+          return emit(GoogleLoginRequestSuccess(userId: 'googleUser'));
+        });
+      } catch (e) {
+        return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));
+      }
+    });
 
-    on<PhoneSignUpRequested>(_onPhoneSignUpRequested);
+    on<ICloudLoginRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await Future.delayed(const Duration(seconds: 2), () {
+          return emit(ICloudLoginRequestSuccess(userId: 'icloudUser'));
+        });
+      } catch (e) {
+        return emit(ICloudLoginRequestFailure(errorMessage: e.toString()));
+      }
+    });
   }
 
   Future<void> _onGoogleLoginRequested(
@@ -73,8 +92,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       //final userId = await googleAuthRepository?.signInWithGoogle();
       //emit(AuthAuthenticated(userId));
-    } catch (error) {
-      emit(AuthError(error.toString()));
+    } catch (e) {
+      emit(AuthFailure(errorMessage: e.toString()));
     }
   }
 
@@ -90,7 +109,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       //);
       // emit(AuthAuthenticated(userId));
     } catch (error) {
-      emit(AuthError(error.toString()));
+      emit(AuthFailure(errorMessage: error.toString()));
     }
   }
 
@@ -108,7 +127,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(AuthSignedUp(userId));*/
     } catch (error) {
-      emit(AuthError(error.toString()));
+      emit(AuthFailure(errorMessage: error.toString()));
     }
   }
 }

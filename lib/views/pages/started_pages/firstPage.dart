@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
@@ -47,8 +49,63 @@ class _FirstPageState extends State<FirstPage> {
       builder: (context, orientation) {
         return Scaffold(
             //backgroundColor: Theme.of(context).colorScheme.surface,
-            backgroundColor: primaryColor,
-            body: SizedBox(
+            //backgroundColor: primaryColor,
+            body: Stack(alignment: Alignment.center, children: [
+          Positioned(
+            child: Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(300)),
+            ),
+          ),
+          Positioned(
+            left: -50,
+            top: -50,
+            child: Container(
+              height: 250,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: blueColor, borderRadius: BorderRadius.circular(300)),
+            ),
+          ),
+          Positioned(
+            right: -50,
+            top: -50,
+            child: Container(
+              height: 250,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(300)),
+            ),
+          ),
+          Positioned(
+            left: -50,
+            bottom: -50,
+            child: Container(
+              height: 250,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: blueColor, borderRadius: BorderRadius.circular(300)),
+            ),
+          ),
+          Positioned(
+            right: -50,
+            bottom: -50,
+            child: Container(
+              height: 250,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(300)),
+            ),
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+            //blur(sigmaX: 100, sigmaY: 100),
+            child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Center(
                     child: Column(
@@ -114,7 +171,9 @@ class _FirstPageState extends State<FirstPage> {
                       ],
                     )
                   ],
-                ))));
+                ))),
+          )
+        ]));
       },
     );
   }

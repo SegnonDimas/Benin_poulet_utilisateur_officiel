@@ -38,7 +38,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                     showBarrier: true,
                     controller: _controllerOui,
                     popupDirection: TooltipDirection.up,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.inverseSurface,
                     left: appWidthSize(context) * 0.05,
                     right: appWidthSize(context) * 0.05,
                     arrowTipDistance: 15.0,
@@ -59,6 +60,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                       text:
                           'Nous engagerons nos partenaires professionnels pour assurer vos livraisons pour des raisons de sécurité',
                       overflow: TextOverflow.visible,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                     child: SizedBox(
                       height: appHeightSize(context) * 0.05,
@@ -97,7 +99,8 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                     showBarrier: true,
                     controller: _controllerNon,
                     popupDirection: TooltipDirection.up,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.inverseSurface,
                     left: appWidthSize(context) * 0.05,
                     right: appWidthSize(context) * 0.05,
                     arrowTipDistance: 15.0,
@@ -118,6 +121,7 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                       text:
                           'Pour l\'instant vous ne pouvez pas livrer vos produits vous-même',
                       overflow: TextOverflow.visible,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                     child: SizedBox(
                       height: appHeightSize(context) * 0.05,
