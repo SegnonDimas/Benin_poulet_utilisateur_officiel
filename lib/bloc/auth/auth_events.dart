@@ -1,4 +1,6 @@
-abstract class AuthEvent {}
+part of 'auth_bloc.dart';
+
+sealed class AuthEvent {}
 
 /// Événements de connexion
 
@@ -13,7 +15,7 @@ class EmailLoginRequested extends AuthEvent {
   final String email;
   final String password;
 
-  EmailLoginRequested(this.email, this.password);
+  EmailLoginRequested({required this.email, required this.password});
 }
 
 // connexion avec numéro de téléphone
@@ -21,7 +23,7 @@ class PhoneLoginRequested extends AuthEvent {
   final String phoneNumber;
   final String password;
 
-  PhoneLoginRequested(this.phoneNumber, this.password);
+  PhoneLoginRequested({required this.phoneNumber, required this.password});
 }
 
 /// Événements d'inscription

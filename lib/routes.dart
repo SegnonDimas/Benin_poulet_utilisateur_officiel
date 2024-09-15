@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/pages/client_pages/c_homePage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/defaultRoutePage.dart';
@@ -38,9 +39,11 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurProfilPage': (context) => const VProfilPage(),
   '/vendeurPortefeuillePage': (context) => const VPortefeuillePage(),
   'vendeurHistoriqueTranslations': (context) => const VHistoriqueTranslations(),
+  'clientHomePage': (context) => const CHomePage(),
 };
 
 class AppRoutes {
+  // routes vendeurs
   String FIRSTPAGE = '/firstPage';
   String LOGINPAGE = '/loginPage';
   String PRESENTATIONPAGE = '/presentationPage';
@@ -59,6 +62,9 @@ class AppRoutes {
   String VENDEURPROFILPAGE = '/vendeurProfilPage';
   String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
   String VENDEURHISTORIQUEPAGE = 'vendeurHistoriqueTranslations';
+
+  //routes clients
+  String CLIENTHOMEPAGE = 'clientHomePage';
 }
 
 AppRoutes appRoutes = AppRoutes();

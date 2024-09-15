@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 
 import '../views/sizes/app_sizes.dart';
@@ -10,13 +11,13 @@ class AppSnackBar {
         SnackBar(
           content: AppText(
             text: message,
-            color: Theme.of(context).colorScheme.inversePrimary,
+            color: Theme.of(context).colorScheme.surface,
             overflow: TextOverflow.visible,
           ),
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.inverseSurface,
           elevation: 3,
           duration: const Duration(seconds: 6),
-          closeIconColor: Theme.of(context).colorScheme.inversePrimary,
+          closeIconColor: Theme.of(context).colorScheme.surface,
           showCloseIcon: true,
           // permettre de
           behavior: SnackBarBehavior.floating,
@@ -44,6 +45,7 @@ class AppSnackBar {
       content: AwesomeSnackbarContent(
         title: title,
         message: message,
+        titleTextStyle: TextStyle(fontSize: mediumText(), color: Colors.white),
 
         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
         contentType: contentType,

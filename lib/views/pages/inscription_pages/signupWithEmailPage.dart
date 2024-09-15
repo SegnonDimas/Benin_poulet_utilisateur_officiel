@@ -60,7 +60,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                       child: Image.asset(
                         'assets/logos/email2.png',
                         fit: BoxFit.fitHeight,
-                        height: appHeightSize(context) * 0.15,
+                        height: appHeightSize(context) * 0.12,
                         //width: appWidthSize(context) * 0.5,
                       ),
                     ),

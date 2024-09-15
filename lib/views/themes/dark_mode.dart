@@ -13,7 +13,7 @@ ThemeData darkMode = ThemeData(
     //inversePrimary: Color.fromARGB(255, 37, 37, 37),
     inversePrimary: Colors.grey.shade200,
     //inverseSurface: Colors.grey.shade400),
-    inverseSurface: const Color.fromRGBO(220, 221, 225, 150),
+    inverseSurface: const Color.fromRGBO(220, 220, 220, 1),
   ),
 
   /// textTheme

@@ -1,6 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
-import 'package:benin_poulet/bloc/auth/auth_events.dart';
 import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
 import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/services/authentification_services.dart';
