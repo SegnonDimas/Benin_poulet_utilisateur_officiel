@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
+import '../../../tests/blurryContainer.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
 
@@ -40,7 +41,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            /* SizedBox(
               height: appHeightSize(context) * 0.02,
             ),
 
@@ -82,6 +83,89 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           width: appHeightSize(context) * 0.06,
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              appHeightSize(context),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            size: mediumText(),
+                            weight: 50,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),*/
+
+            /// Image d'arrière-plan et bouton de retour
+            SizedBox(
+              height: appHeightSize(context) * 0.2,
+              width: appWidthSize(context),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    top: 20,
+                    left: 5,
+                    child: Hero(
+                      tag: '2',
+                      child: GradientBall(
+                          size: Size.square(appHeightSize(context) * 0.09),
+                          colors: const [
+                            //blueColor,
+                            Colors.deepPurple,
+                            Colors.purpleAccent
+                          ]),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0, //appHeightSize(context) * 0.8,
+                    right: 10,
+                    child: Hero(
+                      tag: '1',
+                      child: GradientBall(
+                          size: Size.square(appHeightSize(context) * 0.06),
+                          colors: const [Colors.orange, Colors.yellow]),
+                    ),
+                  ),
+                  // image d'arrière-plan
+                  Positioned(
+                    top: appHeightSize(context) * 0.08,
+                    child: Hero(
+                      tag: 'emailTag',
+                      transitionOnUserGestures: true,
+                      child: Image.asset(
+                        'assets/logos/email2.png',
+                        fit: BoxFit.fitHeight,
+                        height: appHeightSize(context) * 0.12,
+                        //width: appWidthSize(context) * 0.4,
+                      ),
+                    ),
+                  ),
+
+                  // bouton de retour
+                  Positioned(
+                    top: appHeightSize(context) * 0.05,
+                    left: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: appHeightSize(context) * 0.055,
+                          width: appHeightSize(context) * 0.055,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.3),
                             borderRadius: BorderRadius.circular(
                               appHeightSize(context),
                             ),

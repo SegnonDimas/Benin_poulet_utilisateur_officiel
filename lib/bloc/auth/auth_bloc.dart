@@ -49,13 +49,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           return emit(EmailLoginRequestFailure(
               errorMessage:
                   'Le mot de passe doit être d\'au moins 4 caractères'));
+        } else {
+          await Future.delayed(const Duration(seconds: 2), () {
+            return emit(EmailLoginRequestSuccess(
+                userId: email,
+                successMessage: 'Utilisateur connecté avec succès'));
+          });
         }
-
-        await Future.delayed(const Duration(seconds: 2), () {
-          return emit(EmailLoginRequestSuccess(
-              userId: email,
-              successMessage: 'Utilisateur connecté avec succès'));
-        });
       } catch (e) {
         return emit(EmailLoginRequestFailure(errorMessage: e.toString()));
       }

@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:benin_poulet/routes.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
+import 'package:benin_poulet/tests/blurryContainer.dart';
+import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/transitions.dart';
+import '../../../widgets/app_text.dart';
+import '../../colors/app_colors.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -48,132 +49,111 @@ class _FirstPageState extends State<FirstPage> {
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
-            //backgroundColor: Theme.of(context).colorScheme.surface,
-            //backgroundColor: primaryColor,
-            body: Stack(alignment: Alignment.center, children: [
-          Positioned(
-            child: Container(
-              height: 150,
-              width: 150,
-              decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(300)),
+          //backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: primaryColor,
+          body: Stack(alignment: Alignment.center, children: [
+            /*Container(
+            height: appHeightSize(context),
+            width: appWidthSize(context),
+            color: primaryColor,
+          ),*/
+            Positioned(
+              top: 0,
+              left: 10,
+              child: Hero(
+                tag: '2',
+                child: GradientBall(
+                    size: Size.square(appHeightSize(context) * 0.25),
+                    colors: const [Colors.orange, Colors.yellow]),
+              ),
             ),
-          ),
-          Positioned(
-            left: -50,
-            top: -50,
-            child: Container(
-              height: 250,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: blueColor, borderRadius: BorderRadius.circular(300)),
+            Positioned(
+              bottom: 20,
+              right: 10,
+              child: Hero(
+                tag: '1',
+                child: GradientBall(
+                    size: Size.square(appHeightSize(context) * 0.17),
+                    colors: const [
+                      //blueColor,
+                      Colors.deepPurple,
+                      Colors.purpleAccent
+                    ]),
+              ),
             ),
-          ),
-          Positioned(
-            right: -50,
-            top: -50,
-            child: Container(
-              height: 250,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(300)),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              //blur(sigmaX: 100, sigmaY: 100),
+              child: Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.05,
+                              bottom:
+                                  MediaQuery.of(context).size.height * 0.05),
+                          child: AnimatedContainer(
+                              alignment: Alignment.center,
+                              duration: const Duration(seconds: 2),
+                              width: _isLoading
+                                  ? MediaQuery.of(context).size.height * 0.05
+                                  : MediaQuery.of(context).size.height * 0.25,
+                              height: _isLoading
+                                  ? MediaQuery.of(context).size.height * 0.05
+                                  : MediaQuery.of(context).size.height * 0.25,
+                              onEnd: () {
+                                setState(() {
+                                  _isLoading = !_isLoading;
+
+                                  _isLoading
+                                      ? logo = 'assets/logos/logoNoir.png'
+                                      : logo = 'assets/logos/logoBlanc.png';
+                                  duration = duration + 2;
+                                });
+                                if (duration == 2) {
+                                  Navigator.pushNamedAndRemoveUntil(context,
+                                      appRoutes.LOGINPAGE, (route) => false);
+                                  //Navigator.of(context).push(Transitions.rotation(const LoginPage()));
+                                }
+                              },
+                              child: Image.asset(
+                                logo,
+                                fit: BoxFit.cover,
+                              ))))),
             ),
-          ),
-          Positioned(
-            left: -50,
-            bottom: -50,
-            child: Container(
-              height: 250,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: blueColor, borderRadius: BorderRadius.circular(300)),
-            ),
-          ),
-          Positioned(
-            right: -50,
-            bottom: -50,
-            child: Container(
-              height: 250,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(300)),
-            ),
-          ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-            //blur(sigmaX: 100, sigmaY: 100),
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Positioned(
+              bottom: 0,
+              child:
+
+                  /// le texte : Powered by Smart Solutions Innova
+                  SizedBox(
+                height: appHeightSize(context) * 0.08,
+                width: appWidthSize(context),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 10,
+                    const Text(
+                      'Powered by',
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
 
-                    /// logo de l'App
-                    Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.05,
-                            bottom: MediaQuery.of(context).size.height * 0.05),
-                        child: AnimatedContainer(
-                            alignment: Alignment.center,
-                            duration: const Duration(seconds: 2),
-                            width: _isLoading
-                                ? MediaQuery.of(context).size.height * 0.05
-                                : MediaQuery.of(context).size.height * 0.25,
-                            height: _isLoading
-                                ? MediaQuery.of(context).size.height * 0.05
-                                : MediaQuery.of(context).size.height * 0.25,
-                            onEnd: () {
-                              setState(() {
-                                _isLoading = !_isLoading;
-                                Navigator.of(context).push(
-                                    Transitions.glissement(const LoginPage()));
-                                _isLoading
-                                    ? logo = 'assets/logos/logoNoir.png'
-                                    : logo = 'assets/logos/logoBlanc.png';
-                                duration = duration + 2;
-                              });
-                              if (duration == 6) {
-                                Navigator.pushReplacementNamed(
-                                    context, AppRoutes().LOGINPAGE);
-                                //Navigator.of(context).push(Transitions.rotation(const LoginPage()));
-                              }
-                            },
-                            child: Image.asset(
-                              logo,
-                              fit: BoxFit.cover,
-                            ))),
-
-                    /// le texte : Powered by Smart Solutions Innova
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Powered by',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
-                        ),
-
-                        // le clic devrait conduire sur le site officiel de Smart Solution Innova
-                        TextButton(
-                            onPressed: null,
-                            child: Text(
-                              'Smart Solutions Innova',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 255, 112, 48),
-                                  fontSize: 10),
-                            )),
-                      ],
-                    )
+                    // le clic devrait conduire sur le site officiel de Smart Solution Innova
+                    TextButton(
+                      onPressed: null,
+                      child: AppText(
+                          text: 'Smart Solutions Innova',
+                          color: Colors.white,
+                          //color: Color.fromARGB(255, 255, 112, 48),
+                          //fontSize: 10,
+                          fontWeight: FontWeight.w900),
+                    ),
                   ],
-                ))),
-          )
-        ]));
+                ),
+              ),
+            )
+          ]),
+        );
       },
     );
   }

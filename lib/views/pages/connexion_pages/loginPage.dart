@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
+import '../../../tests/blurryContainer.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
 import '../../../widgets/app_phone_textField.dart';
@@ -59,15 +60,51 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: appHeightSize(context) * 0.03,
-                  ),
-                  // Image d'arrière-plan
-                  Hero(
-                    tag: 'logoTag',
-                    child: Image.asset(
-                      'assets/images/login2.png',
-                      fit: BoxFit.fitHeight,
-                      height: appHeightSize(context) * 0.17,
+                    height: appHeightSize(context) * 0.2,
+                    width: appWidthSize(context),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          top: 20,
+                          left: 5,
+                          child: Hero(
+                            tag: '1',
+                            child: GradientBall(
+                                size:
+                                    Size.square(appHeightSize(context) * 0.09),
+                                colors: const [
+                                  //blueColor,
+                                  Colors.deepPurple,
+                                  Colors.purpleAccent
+                                ]),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0, //appHeightSize(context) * 0.8,
+                          right: 10,
+                          child: Hero(
+                            tag: '2',
+                            child: GradientBall(
+                                size:
+                                    Size.square(appHeightSize(context) * 0.06),
+                                colors: const [Colors.orange, Colors.yellow]),
+                          ),
+                        ),
+
+                        // Image d'arrière-plan
+                        Positioned(
+                          top: appHeightSize(context) * 0.045,
+                          child: Hero(
+                            tag: 'logoTag',
+                            child: Image.asset(
+                              'assets/images/login2.png',
+                              fit: BoxFit.fitHeight,
+                              height: appHeightSize(context) * 0.16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 

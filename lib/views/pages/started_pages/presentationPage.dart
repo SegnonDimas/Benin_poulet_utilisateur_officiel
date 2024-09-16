@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../../../models/model_presentationPage.dart';
+import '../../../tests/blurryContainer.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({super.key});
@@ -97,6 +100,34 @@ class _PresentationPageState extends State<PresentationPage> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
+                    Positioned(
+                      top: 20,
+                      left: 5,
+                      child: Hero(
+                        tag: '1',
+                        child: GradientBall(
+                            size: Size.square(appHeightSize(context) * 0.25),
+                            colors: const [
+                              //blueColor,
+                              Colors.deepPurple,
+                              Colors.purpleAccent
+                            ]),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0, //appHeightSize(context) * 0.8,
+                      right: 10,
+                      child: Hero(
+                        tag: '2',
+                        child: GradientBall(
+                            size: Size.square(appHeightSize(context) * 0.17),
+                            colors: const [Colors.orange, Colors.yellow]),
+                      ),
+                    ),
+                    BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                        //blur(sigmaX: 100, sigmaY: 100),
+                        child: Container()),
                     // les éléments de la page
                     PageView(
                       controller: _pageViewController,
