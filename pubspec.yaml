@@ -66,6 +66,7 @@ dependencies:
   icons_plus: ^5.0.0
   flutter_card_swiper: ^7.0.1
   timer_snackbar: ^0.0.3
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

@@ -81,7 +81,7 @@ class _MyAppState extends State<MyApp> {
         //themeMode: ThemeMode.light,
         title: 'Bénin Poulet',
 
-        //home: const Test2(),
+        //home: const CHomePage(),
         routes: routes,
         initialRoute: '/firstPage',
       ),
