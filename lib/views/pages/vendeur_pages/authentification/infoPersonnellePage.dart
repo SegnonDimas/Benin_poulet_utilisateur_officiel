@@ -1,27 +1,30 @@
+import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../widgets/app_textField.dart';
 
-class InfoPersonnellePage extends StatefulWidget {
-  @override
-  _InfoPersonnellePageState createState() => _InfoPersonnellePageState();
-}
-
-class _InfoPersonnellePageState extends State<InfoPersonnellePage> {
-  final _formKey = GlobalKey<FormState>();
+class InfoPersonnellePage extends StatelessWidget {
+  //final _formKey = GlobalKey<FormState>();
 
   final _nomController = TextEditingController();
-  final _prenomController = TextEditingController();
-  final _adresseController = TextEditingController();
-  final _dateNaissanceController = TextEditingController();
-  final _lieuNaissanceController = TextEditingController();
-  String initialCountry = 'BJ';
-  PhoneNumber number = PhoneNumber(isoCode: 'BJ');
 
-  DateTime _selectedDate = DateTime.now();
+  final _prenomController = TextEditingController();
+
+  final _adresseController = TextEditingController();
+
+  final _dateNaissanceController = TextEditingController();
+
+  final _lieuNaissanceController = TextEditingController();
+
+  final String initialCountry = 'BJ';
+
+  final PhoneNumber number = PhoneNumber(isoCode: 'BJ');
+
+  late DateTime _selectedDate = DateTime.now();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -37,11 +40,9 @@ class _InfoPersonnellePageState extends State<InfoPersonnellePage> {
       locale: const Locale('fr', 'FR'),
     );
     if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-        _dateNaissanceController.text =
-            "${_selectedDate.toLocal()}".split(' ')[0];
-      });
+      _selectedDate = picked;
+      _dateNaissanceController.text =
+          "${_selectedDate.toLocal()}".split(' ')[0];
     }
   }
 
@@ -51,100 +52,157 @@ class _InfoPersonnellePageState extends State<InfoPersonnellePage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              // nom
-              AppTextField(
-                label: 'Nom',
-                height: appHeightSize(context) * 0.08,
-                width: appWidthSize(context) * 0.8,
-                controller: _nomController,
-                color: Theme.of(context).colorScheme.background,
-                prefixIcon: Icons.account_circle,
-                fontColor: Theme.of(context).colorScheme.inversePrimary,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
+        child: BlocConsumer<StoreCreationBloc, StoreCreationState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return Form(
+              //key: _formKey,
+              child: ListView(
+                children: <Widget>[
+                  // nom
+                  AppTextField(
+                    label: 'Nom',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.8,
+                    controller: _nomController,
+                    color: Theme.of(context).colorScheme.background,
+                    prefixIcon: Icons.account_circle,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    onChanged: (string) {
+                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
+                          lastName: _nomController.value.text,
+                          firstName: _prenomController.value.text,
+                          birthday: _dateNaissanceController.value.text,
+                          birthLocation: _lieuNaissanceController.value.text,
+                          currentLocation: _adresseController.value.text));
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
-              // prenom
-              AppTextField(
-                label: 'Prénom',
-                height: appHeightSize(context) * 0.08,
-                width: appWidthSize(context) * 0.8,
-                controller: _prenomController,
-                color: Theme.of(context).colorScheme.background,
-                prefixIcon: Icons.account_circle,
-                fontColor: Theme.of(context).colorScheme.inversePrimary,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
+                  // prenom
+                  AppTextField(
+                    label: 'Prénom',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.8,
+                    controller: _prenomController,
+                    color: Theme.of(context).colorScheme.background,
+                    prefixIcon: Icons.account_circle,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    onChanged: (string) {
+                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
+                          lastName: _nomController.value.text,
+                          firstName: _prenomController.value.text,
+                          birthday: _dateNaissanceController.value.text,
+                          birthLocation: _lieuNaissanceController.value.text,
+                          currentLocation: _adresseController.value.text));
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
-              // date et lieu de naissance
-              SizedBox(
-                height: appHeightSize(context) * 0.09,
-                width: appWidthSize(context),
-                child: ListView(
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    //date de naissance
-                    AppTextField(
-                      label: 'Date',
-                      height: appHeightSize(context) * 0.08,
-                      width: appWidthSize(context) * 0.4,
-                      controller: _dateNaissanceController,
-                      color: Theme.of(context).colorScheme.background,
-                      prefixIcon: Icons.calendar_month_outlined,
-                      keyboardType: TextInputType.datetime,
-                      fontColor: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: mediumText() * 0.8,
-                      readOnly: true,
-                      onTap: () async {
-                        await _selectDate(context);
-                      },
+                  // date et lieu de naissance
+                  SizedBox(
+                    height: appHeightSize(context) * 0.09,
+                    width: appWidthSize(context),
+                    child: ListView(
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        //date de naissance
+                        AppTextField(
+                          label: 'Date',
+                          height: appHeightSize(context) * 0.08,
+                          width: appWidthSize(context) * 0.4,
+                          controller: _dateNaissanceController,
+                          color: Theme.of(context).colorScheme.background,
+                          prefixIcon: Icons.calendar_month_outlined,
+                          keyboardType: TextInputType.none,
+                          fontColor:
+                              Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: mediumText() * 0.8,
+                          //readOnly: true,
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          onEditingComplete: () {
+                            context.read<StoreCreationBloc>().add(
+                                SubmitSellerInfo(
+                                    lastName: _nomController.value.text,
+                                    firstName: _prenomController.value.text,
+                                    birthday:
+                                        _dateNaissanceController.value.text,
+                                    birthLocation:
+                                        _lieuNaissanceController.value.text,
+                                    currentLocation:
+                                        _adresseController.value.text));
+                          },
+                        ),
+
+                        const SizedBox(
+                          width: 15,
+                        ),
+
+                        // lieu de naissance
+                        AppTextField(
+                          label: 'Lieu',
+                          height: appHeightSize(context) * 0.08,
+                          width: appWidthSize(context) * 0.5,
+                          controller: _lieuNaissanceController,
+                          color: Theme.of(context).colorScheme.background,
+                          prefixIcon: Icons.location_city_outlined,
+                          fontColor:
+                              Theme.of(context).colorScheme.inversePrimary,
+                          fontSize: mediumText() * 0.8,
+                          onChanged: (string) {
+                            context.read<StoreCreationBloc>().add(
+                                SubmitSellerInfo(
+                                    lastName: _nomController.value.text,
+                                    firstName: _prenomController.value.text,
+                                    birthday:
+                                        _dateNaissanceController.value.text,
+                                    birthLocation:
+                                        _lieuNaissanceController.value.text,
+                                    currentLocation:
+                                        _adresseController.value.text));
+                          },
+                        ),
+                      ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
-                    const SizedBox(
-                      width: 15,
-                    ),
-
-                    // lieu de naissance
-                    AppTextField(
-                      label: 'Lieu',
-                      height: appHeightSize(context) * 0.08,
-                      width: appWidthSize(context) * 0.5,
-                      controller: _lieuNaissanceController,
-                      color: Theme.of(context).colorScheme.background,
-                      prefixIcon: Icons.location_city_outlined,
-                      fontColor: Theme.of(context).colorScheme.inversePrimary,
-                      fontSize: mediumText() * 0.8,
-                    ),
-                  ],
-                ),
+                  // adresse
+                  AppTextField(
+                    label: 'Adresse actuelle',
+                    height: appHeightSize(context) * 0.08,
+                    width: appWidthSize(context) * 0.8,
+                    controller: _adresseController,
+                    color: Theme.of(context).colorScheme.background,
+                    prefixIcon: Icons.location_on_outlined,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    onChanged: (string) {
+                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
+                          lastName: _nomController.value.text,
+                          firstName: _prenomController.value.text,
+                          birthday: _dateNaissanceController.value.text,
+                          birthLocation: _lieuNaissanceController.value.text,
+                          currentLocation: _adresseController.value.text));
+                    },
+                  ),
+                  SizedBox(
+                    height: appHeightSize(context) * 0.08,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 15,
-              ),
-
-              // adresse
-              AppTextField(
-                label: 'Adresse actuelle',
-                height: appHeightSize(context) * 0.08,
-                width: appWidthSize(context) * 0.8,
-                controller: _adresseController,
-                color: Theme.of(context).colorScheme.background,
-                prefixIcon: Icons.location_on_outlined,
-                fontColor: Theme.of(context).colorScheme.inversePrimary,
-              ),
-              SizedBox(
-                height: appHeightSize(context) * 0.08,
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

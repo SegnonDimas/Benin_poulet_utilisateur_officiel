@@ -5,7 +5,9 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../bloc/storeCreation/store_creation_bloc.dart';
 import '../../../models/model_portefeuille.dart';
 import '../../../models/model_session.dart';
 
@@ -73,6 +75,8 @@ class _VHomePageState extends State<VHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final storeInfoState =
+        context.watch<StoreCreationBloc>().state as StoreCreationGlobalState;
     const SizedBox espace = SizedBox(
       height: 20,
     );
@@ -87,7 +91,7 @@ class _VHomePageState extends State<VHomePage> {
               width: appWidthSize(context),
               child: ListTile(
                 title: AppText(
-                  text: 'Salut, Le Poulailler!',
+                  text: 'Salut, ${storeInfoState.storeName}!',
                   fontWeight: FontWeight.bold,
                 ),
                 subtitle: AppText(

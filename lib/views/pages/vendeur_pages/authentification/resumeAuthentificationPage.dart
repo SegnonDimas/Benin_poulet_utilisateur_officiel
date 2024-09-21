@@ -1,19 +1,26 @@
+import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../models/model_resumeTextFormFiel.dart';
 
-class ResumePage extends StatefulWidget {
+class ResumeAuthentificationPage extends StatefulWidget {
   @override
-  State<ResumePage> createState() => _ResumePageState();
+  State<ResumeAuthentificationPage> createState() =>
+      _ResumeAuthentificationPageState();
 }
 
-class _ResumePageState extends State<ResumePage> {
+class _ResumeAuthentificationPageState
+    extends State<ResumeAuthentificationPage> {
   @override
   Widget build(BuildContext context) {
+    final storeInfoState =
+        context.watch<StoreCreationBloc>().state as StoreCreationGlobalState;
+    ;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -33,33 +40,34 @@ class _ResumePageState extends State<ResumePage> {
               )
             ],
           ),
-          const ModelResumeTextField(
+          ModelResumeTextField(
             attribut: 'Nom',
-            valeur: 'Nom',
+            valeur: storeInfoState.sellerLastName,
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ModelResumeTextField(
+          ModelResumeTextField(
             attribut: 'Prenom',
-            valeur: 'Prenom',
+            valeur: storeInfoState.sellerFirstName,
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ModelResumeTextField(
+          ModelResumeTextField(
             attribut: 'Date et lieu de naissance',
-            valeur: 'DD/MM/YYYY-Lieu',
+            valeur:
+                '${storeInfoState.sellerBirthDate} à ${storeInfoState.sellerBirthPlace}',
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ModelResumeTextField(
+          ModelResumeTextField(
             attribut: 'Adresse',
-            valeur: 'Adresse',
+            valeur: storeInfoState.storeEmail,
           ),
           DottedLine(
             dashColor:

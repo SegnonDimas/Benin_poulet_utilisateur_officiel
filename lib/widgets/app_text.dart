@@ -10,6 +10,8 @@ class AppText extends StatefulWidget {
   final Color? color;
   final int? maxLine;
   final String text;
+  final TextDecoration? decoration;
+  final TextDecorationStyle? decorationStyle;
   BuildContext? context;
 
   AppText({
@@ -23,7 +25,9 @@ class AppText extends StatefulWidget {
     this.color,
     this.maxLine,
     this.context,
+    this.decoration,
     required this.text,
+    this.decorationStyle,
   });
 
   @override
@@ -40,17 +44,19 @@ class _AppTextState extends State<AppText> {
       widget.text,
       maxLines: widget.maxLine,
       style: TextStyle(
-        fontSize: widget.fontSize,
-        fontWeight: widget.fontWeight,
-        fontFamily: widget.fontFamily,
-        color: widget.color,
-        overflow: widget.overflow,
-        fontStyle: widget.fontStyle,
+          fontSize: widget.fontSize,
+          fontWeight: widget.fontWeight,
+          fontFamily: widget.fontFamily,
+          color: widget.color,
+          overflow: widget.overflow,
+          fontStyle: widget.fontStyle,
+          decoration: widget.decoration,
+          decorationStyle: widget.decorationStyle
 
-        //color: (widget.context != null && widget.color == null) || (widget.color != null && widget.context == null)
-        //? widget.color,
-        //: Colors.black,
-      ),
+          //color: (widget.context != null && widget.color == null) || (widget.color != null && widget.context == null)
+          //? widget.color,
+          //: Colors.black,
+          ),
     );
   }
 }

@@ -1,9 +1,12 @@
+import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/resumeCreationBoutiquePage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../widgets/app_timeline_tile.dart';
@@ -32,6 +35,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     'Où devrions-nous verser vos fonds ?',
     'Pouvons-nous assurer vos livraisons ?',
     'Vérifions votre identité',
+    'Résumé Général'
   ];
 
   final List<String> _description = [
@@ -40,6 +44,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     'Vos informations sont chiffrées de bout en bout',
     'Confiez vos livraisons à notre flotte de livreur expérimentée',
     'Tous nos vendeurs sont vérifiés pour rassurer nos clients',
+    'Vérifiez que toutes les informations sont correctes'
   ];
 
   final List<Widget> _pages = [
@@ -55,7 +60,11 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     // page 4 : choix livreur
     const ChoixLivreurPage(),
 
+    // page 5 : authetification vendeur
     const AuthentificationVendeurPage(),
+
+    // page 6 : résumé de creation de boutique
+    ResumeCreationBoutiquePage()
   ];
 
   int indexed = 0;
@@ -201,101 +210,132 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
               ),
 
               /// le corps de la page
-              Positioned(
-                bottom: appHeightSize(context) * 0.01,
-                top: appHeightSize(context) * 0.23,
-                child: SizedBox(
-                    height: appHeightSize(context) * 0.75,
-                    width: appWidthSize(context),
-                    child: Stack(
-                      children: [
-                        /// les sous-pages
-                        SizedBox(
-                          height: position != _pages.length - 1
-                              ? appHeightSize(context) * 0.67
-                              : appHeightSize(context) * 0.75,
-                          width: appWidthSize(context),
-                          child: PageView.builder(
-                              itemCount: _pages.length,
-                              controller: _pageViewController,
-                              allowImplicitScrolling: true,
-                              onPageChanged: (index) {
-                                position = index;
-                                setState(() {
-                                  _pageIndexNotifier.value = index;
-                                });
-                              },
-                              itemBuilder: (BuildContext context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SizedBox(
-                                      height: 400,
-                                      //width: 100,
-                                      child: _pages[_pageIndexNotifier.value]),
-                                );
-                              }),
-                        ),
+              BlocConsumer<StoreCreationBloc, StoreCreationState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                },
+                builder: (context, state) {
+                  return Positioned(
+                    bottom: appHeightSize(context) * 0.01,
+                    top: appHeightSize(context) * 0.23,
+                    child: SizedBox(
+                        height: appHeightSize(context) * 0.75,
+                        width: appWidthSize(context),
+                        child: Stack(
+                          children: [
+                            /// les sous-pages
+                            SizedBox(
+                              height: position != _pages.length - 2
+                                  ? appHeightSize(context) * 0.67
+                                  : appHeightSize(context) * 0.75,
+                              width: appWidthSize(context),
+                              child: PageView.builder(
+                                  itemCount: _pages.length,
+                                  controller: _pageViewController,
+                                  allowImplicitScrolling: true,
+                                  onPageChanged: (index) {
+                                    position = index;
+                                    setState(() {
+                                      _pageIndexNotifier.value = index;
+                                    });
+                                  },
+                                  itemBuilder: (BuildContext context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                          height: 400,
+                                          //width: 100,
+                                          child:
+                                              _pages[_pageIndexNotifier.value]),
+                                    );
+                                  }),
+                            ),
 
-                        /// bouton Suivant/précédent
-                        position != _pages.length - 1
-                            ? Positioned(
-                                bottom: appHeightSize(context) * 0.01,
-                                child: SizedBox(
-                                  height: appHeightSize(context) * 0.07,
-                                  width: appWidthSize(context),
-                                  child: Row(
-                                    mainAxisAlignment: position == 0
-                                        ? MainAxisAlignment.center
-                                        : MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      //bouton suivant
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (position == _pages.length - 1) {
-                                            //_pageViewController.initialPage;
-                                          } else {
-                                            //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-                                            _pageViewController.nextPage(
-                                                duration: const Duration(
-                                                    milliseconds: 1000),
-                                                curve: Curves.linear);
-                                            position = _pageViewController.page!
-                                                .toInt();
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            left:
-                                                0, //appWidthSize(context) * 0.03,
-                                            right: 0,
-                                          ), //appWidthSize(context) * 0.03),
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              height:
-                                                  appHeightSize(context) * 0.07,
-                                              width: position == 0
-                                                  ? appWidthSize(context) * 0.9
-                                                  : appWidthSize(context) * 0.9,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: primaryColor),
-                                              child: Text(
-                                                'Suivant',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        mediumText() * 1.2),
-                                              )),
-                                        ),
+                            /// bouton Suivant/précédent
+                            position != _pages.length - 2
+                                ? Positioned(
+                                    bottom: appHeightSize(context) * 0.01,
+                                    child: SizedBox(
+                                      height: appHeightSize(context) * 0.07,
+                                      width: appWidthSize(context),
+                                      child: Row(
+                                        mainAxisAlignment: position == 0
+                                            ? MainAxisAlignment.center
+                                            : MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          //bouton suivant
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (position ==
+                                                  _pages.length - 1) {
+                                                Navigator.pushReplacementNamed(
+                                                    context, '/validationPage');
+                                              } else {
+                                                //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+
+                                                _pageViewController.nextPage(
+                                                    duration: const Duration(
+                                                        milliseconds: 1000),
+                                                    curve: Curves.linear);
+                                                position = _pageViewController
+                                                    .page!
+                                                    .toInt();
+                                              }
+                                            },
+                                            child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left:
+                                                      0, //appWidthSize(context) * 0.03,
+                                                  right: 0,
+                                                ), //appWidthSize(context) * 0.03),
+                                                child: Container(
+                                                    alignment: Alignment.center,
+                                                    height:
+                                                        appHeightSize(context) *
+                                                            0.07,
+                                                    width: position ==
+                                                            0
+                                                        ? appWidthSize(
+                                                                context) *
+                                                            0.9
+                                                        : appWidthSize(
+                                                                context) *
+                                                            0.9,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        color: Colors.red),
+                                                    child: position !=
+                                                            _pages.length - 1
+                                                        ? Text(
+                                                            'Suivant',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize:
+                                                                    mediumText() *
+                                                                        1.2),
+                                                          )
+                                                        : Text(
+                                                            'Soumettre',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize:
+                                                                    mediumText() *
+                                                                        1.2),
+                                                          ))),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    )),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        )),
+                  );
+                },
               ),
             ],
           ),
@@ -318,6 +358,8 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
         return Icons.motorcycle;
       case 4:
         return Icons.fingerprint_sharp;
+      case 5:
+        return Icons.all_inclusive;
       default:
         return Icons.circle;
     }

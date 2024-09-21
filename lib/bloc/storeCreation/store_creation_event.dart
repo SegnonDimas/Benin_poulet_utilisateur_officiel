@@ -4,22 +4,19 @@ sealed class StoreCreationEvent {}
 
 // info boutique
 class SubmitStoreInfo extends StoreCreationEvent {
-  final String storeName;
-  final String storePhoneNumber;
-  final String storeEmail;
+  final String? storeName;
+  final String? storePhoneNumber;
+  final String? storeEmail;
 
-  SubmitStoreInfo(
-      {required this.storeName,
-      required this.storePhoneNumber,
-      required this.storeEmail});
+  SubmitStoreInfo({this.storeName, this.storePhoneNumber, this.storeEmail});
 }
 
 // secteurs et sous-secteurs boutique
-class SubmitSectorInfo extends StoreCreationEvent {
+class SubmitSectoreInfo extends StoreCreationEvent {
   final List<String> storeSectors;
   final List<String> storeSubSectors;
 
-  SubmitSectorInfo({
+  SubmitSectoreInfo({
     required this.storeSectors,
     required this.storeSubSectors,
   });
@@ -27,28 +24,26 @@ class SubmitSectorInfo extends StoreCreationEvent {
 
 // payment info
 class SubmitPaymentInfo extends StoreCreationEvent {
-  final String storeFiscalType;
-  final String paymentMethod;
-  final String paymentPhoneNumber;
-  final String name;
+  final String? storeFiscalType;
+  final String? paymentMethod;
+  final String? paymentPhoneNumber;
+  final String? name;
 
   SubmitPaymentInfo(
-      {required this.storeFiscalType,
-      required this.paymentMethod,
-      required this.paymentPhoneNumber,
-      required this.name});
+      {this.storeFiscalType,
+      this.paymentMethod,
+      this.paymentPhoneNumber,
+      this.name});
 }
 
 // info livraison
 class SubmitDeliveryInfo extends StoreCreationEvent {
-  final bool sellerOwnDeliver;
-  final String location;
-  final String locationDescription;
+  final bool? sellerOwnDeliver;
+  final String? location;
+  final String? locationDescription;
 
   SubmitDeliveryInfo(
-      {required this.sellerOwnDeliver,
-      required this.location,
-      required this.locationDescription});
+      {this.sellerOwnDeliver, this.location, this.locationDescription});
 }
 
 // info vendeur

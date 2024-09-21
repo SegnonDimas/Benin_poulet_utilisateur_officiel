@@ -23,6 +23,9 @@ class AppTextField extends StatefulWidget {
   final Widget? suffix;
   final Widget? suffixIcon;
   final Function(String?)? onSaved;
+  final Function(String?)? onFieldSubmitted;
+  final Function()? onEditingComplete;
+  final Function(PointerDownEvent?)? onTapOutside;
   bool? isPassword;
   bool? readOnly;
   Function()? onTap;
@@ -52,6 +55,9 @@ class AppTextField extends StatefulWidget {
     this.suffixIcon,
     this.onSaved,
     this.fileBorderColor,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
+    this.onTapOutside,
   });
 
   @override
@@ -83,11 +89,15 @@ class _AppTextFieldState extends State<AppTextField> {
                 controller: widget.controller,
                 obscureText: !click,
                 keyboardType: widget.keyboardType,
-                onChanged: widget.onChanged,
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 expands: widget.expands!,
+                onEditingComplete: widget.onEditingComplete,
+                onFieldSubmitted: widget.onFieldSubmitted,
+                onTapOutside: widget.onTapOutside,
+                onChanged: widget.onChanged,
                 onSaved: widget.onSaved,
+                onTap: widget.onTap,
                 style: TextStyle(
                     color: widget.fontColor,
                     //Theme.of(context).colorScheme.inverseSurface,
@@ -145,8 +155,12 @@ class _AppTextFieldState extends State<AppTextField> {
                 keyboardType: widget.keyboardType,
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
+                onFieldSubmitted: widget.onFieldSubmitted,
+                onEditingComplete: widget.onEditingComplete,
+                onTapOutside: widget.onTapOutside,
                 onChanged: widget.onChanged,
                 onTap: widget.onTap,
+                onSaved: widget.onSaved,
                 readOnly: widget.readOnly!,
                 style: TextStyle(
                     color: widget.fontColor,

@@ -2,8 +2,9 @@ part of 'store_creation_bloc.dart';
 
 sealed class StoreCreationState {}
 
-final class StoreCreationInitial extends StoreCreationState {}
+final class StoreCreationInitial extends StoreCreationGlobalState {}
 
+// infos boutique
 class StoreInfoSubmitted extends StoreCreationState {
   final String storeName;
   final String storeEmail;
@@ -12,11 +13,11 @@ class StoreInfoSubmitted extends StoreCreationState {
 }
 
 // secteurs et sous-secteurs boutique
-class SectorInfoSubmitted extends StoreCreationState {
+class SectoreInfoSubmitted extends StoreCreationState {
   final List<String> storeSectors;
   final List<String> storeSubSectors;
 
-  SectorInfoSubmitted({
+  SectoreInfoSubmitted({
     required this.storeSectors,
     required this.storeSubSectors,
   });
@@ -24,16 +25,16 @@ class SectorInfoSubmitted extends StoreCreationState {
 
 // payment info
 class PaymentInfoSubmitted extends StoreCreationState {
-  final String storeFiscalType;
-  final String paymentMethod;
-  final String paymentPhoneNumber;
-  final String name;
+  final String? storeFiscalType;
+  final String? paymentMethod;
+  final String? paymentPhoneNumber;
+  final String? name;
 
   PaymentInfoSubmitted(
-      {required this.storeFiscalType,
-      required this.paymentMethod,
-      required this.paymentPhoneNumber,
-      required this.name});
+      {this.storeFiscalType,
+      this.paymentMethod,
+      this.paymentPhoneNumber,
+      this.name});
 }
 
 // info livraison
@@ -87,27 +88,29 @@ class PhotoDocumentsSubmitted extends StoreCreationState {
 
 // pour le suivi de l'état global
 class StoreCreationGlobalState extends StoreCreationState {
-  final String storeName;
-  final String storePhoneNumber;
-  final String storeEmail;
-  final List<String> storeSectors;
-  final List<String> storeSubSectors;
-  final String storeFiscalType;
-  final String paymentMethod;
-  final String paymentPhoneNumber;
-  final String name;
-  final bool sellerOwnDeliver;
-  final String location;
-  final String locationDescription;
-  final String sellerName;
-  final String sellerBirthDate;
-  final String sellerBirthPlace;
-  final String storeLocation;
-  final String country;
-  final String idendityDocument;
-  final String photoRectoIdendityDocument;
-  final String photoVersoIdendityDocument;
-  final String fullPhoto;
+  final String? storeName;
+  final String? storePhoneNumber;
+  final String? storeEmail;
+  final List<String>? storeSectors;
+  final List<String>? storeSubSectors;
+  final String? storeFiscalType;
+  final String? paymentMethod;
+  final String? paymentPhoneNumber;
+  final String? name;
+  final bool? sellerOwnDeliver;
+  final String? location;
+  final String? locationDescription;
+  final String? sellerFirstName;
+  final String? sellerLastName;
+  final String? sellerBirthDate;
+  final String? sellerBirthPlace;
+  final String? sellerCurrentLocation;
+  final String? storeLocation;
+  final String? country;
+  final String? idendityDocument;
+  final String? photoRectoIdendityDocument;
+  final String? photoVersoIdendityDocument;
+  final String? fullPhoto;
 
   // Constructeur avec des valeurs par défaut.
   StoreCreationGlobalState({
@@ -127,9 +130,11 @@ class StoreCreationGlobalState extends StoreCreationState {
     this.photoRectoIdendityDocument = '',
     this.photoVersoIdendityDocument = '',
     this.fullPhoto = '',
-    this.sellerName = '',
+    this.sellerFirstName = '',
+    this.sellerLastName = '',
     this.sellerBirthDate = '',
     this.sellerBirthPlace = '',
+    this.sellerCurrentLocation = '',
     this.paymentMethod = '',
     this.storeLocation = '',
   });
@@ -148,9 +153,11 @@ class StoreCreationGlobalState extends StoreCreationState {
     bool? sellerOwnDeliver,
     String? location,
     String? locationDescription,
-    String? sellerName,
+    String? sellerFirstName,
+    String? sellerLastName,
     String? sellerBirthDate,
     String? sellerBirthPlace,
+    String? sellerCurrentLocation,
     String? storeLocation,
     String? country,
     String? idendityDocument,
@@ -177,8 +184,11 @@ class StoreCreationGlobalState extends StoreCreationState {
             photoRectoIdendityDocument ?? this.photoRectoIdendityDocument,
         photoVersoIdendityDocument:
             photoVersoIdendityDocument ?? this.photoVersoIdendityDocument,
-        sellerName: sellerName ?? this.sellerName,
+        sellerFirstName: sellerFirstName ?? this.sellerFirstName,
+        sellerLastName: sellerLastName ?? this.sellerLastName,
         sellerBirthDate: sellerBirthDate ?? this.sellerBirthDate,
+        sellerCurrentLocation:
+            sellerCurrentLocation ?? this.sellerCurrentLocation,
         sellerBirthPlace: sellerBirthPlace ?? this.sellerBirthPlace,
         storeLocation: storeLocation ?? this.storeLocation,
         fullPhoto: fullPhoto ?? this.fullPhoto);

@@ -2,7 +2,7 @@ import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/infoPersonnellePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/photoPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/pieceIdentitePage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/authentification/resumePage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/authentification/resumeAuthentificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -52,7 +52,7 @@ class _AuthentificationVendeurPageState
     PhotoPage(),
 
     // page 4 : page Resumé
-    ResumePage(),
+    ResumeAuthentificationPage(),
   ];
 
   int indexed = 0;
@@ -270,8 +270,6 @@ class _AuthentificationVendeurPageState
                                 GestureDetector(
                                   onTap: () {
                                     if (position == _pages.length - 1) {
-                                      Navigator.pushReplacementNamed(
-                                          context, '/validationPage');
                                     } else {
                                       //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
                                       _pageViewController.nextPage(
@@ -283,36 +281,30 @@ class _AuthentificationVendeurPageState
                                     }
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 0, //appWidthSize(context) * 0.03,
-                                      right: 0,
-                                    ), //appWidthSize(context) * 0.03),
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        height: appHeightSize(context) * 0.07,
-                                        width: position == 0
-                                            ? appWidthSize(context) * 0.9
-                                            : appWidthSize(context) * 0.9,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            color: primaryColor),
-                                        child: position != _pages.length - 1
-                                            ? Text(
+                                      padding: const EdgeInsets.only(
+                                        left: 0, //appWidthSize(context) * 0.03,
+                                        right: 0,
+                                      ), //appWidthSize(context) * 0.03),
+                                      child: position != _pages.length - 1
+                                          ? Container(
+                                              alignment: Alignment.center,
+                                              height:
+                                                  appHeightSize(context) * 0.07,
+                                              width: position == 0
+                                                  ? appWidthSize(context) * 0.9
+                                                  : appWidthSize(context) * 0.9,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: primaryColor),
+                                              child: Text(
                                                 'Suivant',
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize:
                                                         mediumText() * 1.2),
-                                              )
-                                            : Text(
-                                                'Soumettre',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        mediumText() * 1.2),
-                                              )),
-                                  ),
+                                              ))
+                                          : Container()),
                                 ),
                               ],
                             ),

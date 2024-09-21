@@ -12,7 +12,7 @@ class AppButton extends StatefulWidget {
   const AppButton({
     super.key,
     required this.child,
-    this.color = Colors.white,
+    this.color,
     this.bordeurRadius = 15,
     this.height = 70,
     required this.onTap,
@@ -34,7 +34,7 @@ class _AppButtonState extends State<AppButton> {
         height: widget.height,
         width: widget.width,
         decoration: BoxDecoration(
-          color: widget.color!,
+          color: widget.color ?? Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(widget.bordeurRadius!),
           border: Border(
             top: BorderSide(color: widget.borderColor!),

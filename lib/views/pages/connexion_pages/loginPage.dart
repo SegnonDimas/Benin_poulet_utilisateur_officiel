@@ -215,38 +215,33 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(height: appHeightSize(context) * 0.03),
 
                             // bouton de connexion
-                            BlocBuilder<AuthBloc, AuthState>(
-                              builder: (context, state) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    context.read<AuthBloc>().add(
-                                        PhoneLoginRequested(
-                                            phoneNumber: _phoneNumbercontroller
-                                                .value.text,
-                                            password: _passWordController
-                                                .value.text));
-                                  },
-                                  child: Container(
-                                      alignment: Alignment.center,
-                                      height: appHeightSize(context) * 0.07,
-                                      width: appWidthSize(context) * 0.9,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: primaryColor),
-                                      child: state is AuthLoading
-                                          ? const CupertinoActivityIndicator(
-                                              radius: 20.0, // Taille du spinner
-                                              color: Colors.white,
-                                            )
-                                          : Text(
-                                              'Connexion',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: largeText()),
-                                            )),
-                                );
+                            GestureDetector(
+                              onTap: () {
+                                context.read<AuthBloc>().add(
+                                    PhoneLoginRequested(
+                                        phoneNumber:
+                                            _phoneNumbercontroller.value.text,
+                                        password:
+                                            _passWordController.value.text));
                               },
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: appHeightSize(context) * 0.07,
+                                  width: appWidthSize(context) * 0.9,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: primaryColor),
+                                  child: state is AuthLoading
+                                      ? const CupertinoActivityIndicator(
+                                          radius: 20.0, // Taille du spinner
+                                          color: Colors.white,
+                                        )
+                                      : Text(
+                                          'Connexion',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: largeText()),
+                                        )),
                             ),
                             const SizedBox(height: 50),
 
