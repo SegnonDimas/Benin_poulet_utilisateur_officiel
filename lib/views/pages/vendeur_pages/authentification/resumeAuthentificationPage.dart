@@ -1,4 +1,4 @@
-import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -18,9 +18,8 @@ class _ResumeAuthentificationPageState
     extends State<ResumeAuthentificationPage> {
   @override
   Widget build(BuildContext context) {
-    final storeInfoState =
-        context.watch<StoreCreationBloc>().state as StoreCreationGlobalState;
-    ;
+    final sellerinfos = context.watch<AuthentificationBloc>().state
+        as AuthentificationGlobalState;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -40,39 +39,39 @@ class _ResumeAuthentificationPageState
               )
             ],
           ),
+
+          // nom du vendeur
           ModelResumeTextField(
             attribut: 'Nom',
-            valeur: storeInfoState.sellerLastName,
+            valeur: sellerinfos.sellerLastName,
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
+
+          // prénom du vendeur
           ModelResumeTextField(
             attribut: 'Prenom',
-            valeur: storeInfoState.sellerFirstName,
+            valeur: sellerinfos.sellerFirstName,
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
+
+          // date de naissance du vendeur
           ModelResumeTextField(
             attribut: 'Date et lieu de naissance',
             valeur:
-                '${storeInfoState.sellerBirthDate} à ${storeInfoState.sellerBirthPlace}',
+                '${sellerinfos.sellerBirthDate} à ${sellerinfos.sellerBirthPlace}',
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          ModelResumeTextField(
-            attribut: 'Adresse',
-            valeur: storeInfoState.storeEmail,
-          ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
+          // type de pièce d'identité du vendeur
           const ModelResumeTextField(
             attribut: 'Type de pièce',
             valeur: 'Type de pièce',

@@ -69,6 +69,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
 
   int indexed = 0;
   int fixedIndex = 0;
+
   int position = 0;
   int ontapIndex = 0;
 
@@ -252,8 +253,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                             ),
 
                             /// bouton Suivant/précédent
-                            position != _pages.length - 2
-                                ? Positioned(
+                            position == _pages.length - 2
+                                ? Container()
+                                : Positioned(
                                     bottom: appHeightSize(context) * 0.01,
                                     child: SizedBox(
                                       height: appHeightSize(context) * 0.07,
@@ -266,46 +268,34 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                           //bouton suivant
                                           GestureDetector(
                                             onTap: () {
-                                              if (position ==
-                                                  _pages.length - 1) {
-                                                Navigator.pushReplacementNamed(
-                                                    context, '/validationPage');
-                                              } else {
-                                                //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-
-                                                _pageViewController.nextPage(
-                                                    duration: const Duration(
-                                                        milliseconds: 1000),
-                                                    curve: Curves.linear);
-                                                position = _pageViewController
-                                                    .page!
-                                                    .toInt();
-                                              }
+                                              _pageViewController.nextPage(
+                                                  duration: const Duration(
+                                                      milliseconds: 1000),
+                                                  curve: Curves.linear);
+                                              position = _pageViewController
+                                                  .page!
+                                                  .toInt();
                                             },
                                             child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                  left:
-                                                      0, //appWidthSize(context) * 0.03,
+                                                  left: 0,
+                                                  //appWidthSize(context) * 0.03,
                                                   right: 0,
-                                                ), //appWidthSize(context) * 0.03),
+                                                ),
+                                                //appWidthSize(context) * 0.03),
                                                 child: Container(
                                                     alignment: Alignment.center,
                                                     height:
                                                         appHeightSize(context) *
                                                             0.07,
-                                                    width: position ==
-                                                            0
-                                                        ? appWidthSize(
-                                                                context) *
-                                                            0.9
-                                                        : appWidthSize(
-                                                                context) *
+                                                    width:
+                                                        appWidthSize(context) *
                                                             0.9,
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(15),
-                                                        color: Colors.red),
+                                                        color: Colors.yellow),
                                                     child: position !=
                                                             _pages.length - 1
                                                         ? Text(
@@ -331,7 +321,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                       ),
                                     ),
                                   )
-                                : Container(),
+                            // : Container(),
                           ],
                         )),
                   );

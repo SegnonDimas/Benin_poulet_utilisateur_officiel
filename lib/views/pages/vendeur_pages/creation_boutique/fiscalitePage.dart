@@ -30,8 +30,8 @@ class FiscalitePageState extends State<FiscalitePage> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController =
-        TextEditingController(text: StoreCreationGlobalState().name);
+    TextEditingController _nameController = TextEditingController(
+        text: StoreCreationGlobalState().payementOwnerName);
     final TextEditingController _phoneNumbercontroller =
         TextEditingController(text: SubmitPaymentInfo().paymentPhoneNumber);
     return Scaffold(
@@ -339,7 +339,8 @@ class FiscalitePageState extends State<FiscalitePage> {
                         onChanged: (string) {
                           context.read<StoreCreationBloc>().add(
                               SubmitPaymentInfo(
-                                  name: _nameController.value.text));
+                                  payementOwnerName:
+                                      _nameController.value.text));
                         },
                       ),
                     ],

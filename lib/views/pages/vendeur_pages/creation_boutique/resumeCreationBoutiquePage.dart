@@ -60,7 +60,7 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Nom de boutique',
-            valeur: storeInfoState.sellerLastName,
+            valeur: storeInfoState.storeName,
           ),
           DottedLine(
             dashColor:
@@ -68,7 +68,7 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Tel associé à votre boutique',
-            valeur: storeInfoState.sellerFirstName,
+            valeur: storeInfoState.storePhoneNumber,
           ),
           DottedLine(
             dashColor:
@@ -76,15 +76,15 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Email boutique',
-            valeur: storeInfoState.sellerBirthPlace,
+            valeur: storeInfoState.storeEmail,
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          ModelResumeTextField(
+          const ModelResumeTextField(
             attribut: 'Secteurs d\'activité',
-            valeur: storeInfoState.storeEmail,
+            valeur: '',
           ),
           DottedLine(
             dashColor:
@@ -92,7 +92,7 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Num translation',
-            valeur: storeInfoState.storeEmail,
+            valeur: storeInfoState.paymentPhoneNumber,
           ),
           DottedLine(
             dashColor:
@@ -108,7 +108,7 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Emplacement',
-            valeur: storeInfoState.storeEmail,
+            valeur: storeInfoState.storeLocation,
           ),
           DottedLine(
             dashColor:

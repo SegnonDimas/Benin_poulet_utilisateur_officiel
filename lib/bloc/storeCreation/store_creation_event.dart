@@ -27,13 +27,13 @@ class SubmitPaymentInfo extends StoreCreationEvent {
   final String? storeFiscalType;
   final String? paymentMethod;
   final String? paymentPhoneNumber;
-  final String? name;
+  final String? payementOwnerName;
 
   SubmitPaymentInfo(
       {this.storeFiscalType,
       this.paymentMethod,
       this.paymentPhoneNumber,
-      this.name});
+      this.payementOwnerName});
 }
 
 // info livraison
@@ -46,6 +46,7 @@ class SubmitDeliveryInfo extends StoreCreationEvent {
       {this.sellerOwnDeliver, this.location, this.locationDescription});
 }
 
+/*
 // info vendeur
 class SubmitSellerInfo extends StoreCreationEvent {
   final String lastName;
@@ -82,3 +83,4 @@ class SubmitPhotoDocuments extends StoreCreationEvent {
       required this.photoVersoIdendityDocument,
       required this.fullPhoto});
 }
+*/

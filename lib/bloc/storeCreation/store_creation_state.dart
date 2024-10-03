@@ -28,13 +28,13 @@ class PaymentInfoSubmitted extends StoreCreationState {
   final String? storeFiscalType;
   final String? paymentMethod;
   final String? paymentPhoneNumber;
-  final String? name;
+  final String? payementOwnerName;
 
   PaymentInfoSubmitted(
       {this.storeFiscalType,
       this.paymentMethod,
       this.paymentPhoneNumber,
-      this.name});
+      this.payementOwnerName});
 }
 
 // info livraison
@@ -49,6 +49,7 @@ class DeliveryInfoSubmitted extends StoreCreationState {
       required this.locationDescription});
 }
 
+/*
 // info vendeur
 class SellerInfoSubmitted extends StoreCreationState {
   final String lastName;
@@ -85,6 +86,7 @@ class PhotoDocumentsSubmitted extends StoreCreationState {
       required this.photoVersoIdendityDocument,
       required this.fullPhoto});
 }
+*/
 
 // pour le suivi de l'état global
 class StoreCreationGlobalState extends StoreCreationState {
@@ -96,7 +98,7 @@ class StoreCreationGlobalState extends StoreCreationState {
   final String? storeFiscalType;
   final String? paymentMethod;
   final String? paymentPhoneNumber;
-  final String? name;
+  final String? payementOwnerName;
   final bool? sellerOwnDeliver;
   final String? location;
   final String? locationDescription;
@@ -111,32 +113,34 @@ class StoreCreationGlobalState extends StoreCreationState {
   final String? photoRectoIdendityDocument;
   final String? photoVersoIdendityDocument;
   final String? fullPhoto;
+  final AuthentificationGlobalState? sellerGlobalState;
 
   // Constructeur avec des valeurs par défaut.
   StoreCreationGlobalState({
-    this.storeName = '',
-    this.storeEmail = '',
-    this.storePhoneNumber = '',
-    this.storeSectors = const [],
-    this.storeSubSectors = const [],
-    this.storeFiscalType = '',
-    this.paymentPhoneNumber = '',
-    this.name = '',
-    this.sellerOwnDeliver = false,
-    this.location = '',
-    this.locationDescription = '',
-    this.country = '',
-    this.idendityDocument = '',
-    this.photoRectoIdendityDocument = '',
-    this.photoVersoIdendityDocument = '',
-    this.fullPhoto = '',
-    this.sellerFirstName = '',
-    this.sellerLastName = '',
-    this.sellerBirthDate = '',
-    this.sellerBirthPlace = '',
-    this.sellerCurrentLocation = '',
-    this.paymentMethod = '',
-    this.storeLocation = '',
+    this.storeName,
+    this.storeEmail,
+    this.storePhoneNumber,
+    this.storeSectors,
+    this.storeSubSectors,
+    this.storeFiscalType,
+    this.paymentPhoneNumber,
+    this.payementOwnerName,
+    this.sellerOwnDeliver,
+    this.location,
+    this.locationDescription,
+    this.country,
+    this.idendityDocument,
+    this.photoRectoIdendityDocument,
+    this.photoVersoIdendityDocument,
+    this.fullPhoto,
+    this.sellerFirstName,
+    this.sellerLastName,
+    this.sellerBirthDate,
+    this.sellerBirthPlace,
+    this.sellerCurrentLocation,
+    this.paymentMethod,
+    this.storeLocation,
+    this.sellerGlobalState,
   });
 
   // Copie de l'état avec des mises à jour.
@@ -149,7 +153,7 @@ class StoreCreationGlobalState extends StoreCreationState {
     String? storeFiscalType,
     String? paymentMethod,
     String? paymentPhoneNumber,
-    String? name,
+    String? payementOwnerName,
     bool? sellerOwnDeliver,
     String? location,
     String? locationDescription,
@@ -174,23 +178,25 @@ class StoreCreationGlobalState extends StoreCreationState {
         storeFiscalType: storeFiscalType ?? this.storeFiscalType,
         paymentMethod: paymentMethod ?? this.paymentMethod,
         paymentPhoneNumber: paymentPhoneNumber ?? this.paymentPhoneNumber,
-        name: name ?? this.name,
+        payementOwnerName: payementOwnerName ?? this.payementOwnerName,
         sellerOwnDeliver: sellerOwnDeliver ?? this.sellerOwnDeliver,
         location: location ?? this.location,
         locationDescription: locationDescription ?? this.locationDescription,
-        country: country ?? this.country,
-        idendityDocument: idendityDocument ?? this.idendityDocument,
-        photoRectoIdendityDocument:
-            photoRectoIdendityDocument ?? this.photoRectoIdendityDocument,
-        photoVersoIdendityDocument:
-            photoVersoIdendityDocument ?? this.photoVersoIdendityDocument,
-        sellerFirstName: sellerFirstName ?? this.sellerFirstName,
-        sellerLastName: sellerLastName ?? this.sellerLastName,
-        sellerBirthDate: sellerBirthDate ?? this.sellerBirthDate,
+        country: country ?? sellerGlobalState?.country,
+        idendityDocument:
+            idendityDocument ?? sellerGlobalState?.idendityDocument,
+        photoRectoIdendityDocument: photoRectoIdendityDocument ??
+            sellerGlobalState?.photoRectoIdendityDocument,
+        photoVersoIdendityDocument: photoVersoIdendityDocument ??
+            sellerGlobalState?.photoVersoIdendityDocument,
+        sellerFirstName: sellerFirstName ?? sellerGlobalState?.sellerFirstName,
+        sellerLastName: sellerLastName ?? sellerGlobalState?.sellerLastName,
+        sellerBirthDate: sellerBirthDate ?? sellerGlobalState?.sellerBirthDate,
         sellerCurrentLocation:
-            sellerCurrentLocation ?? this.sellerCurrentLocation,
-        sellerBirthPlace: sellerBirthPlace ?? this.sellerBirthPlace,
+            sellerCurrentLocation ?? sellerGlobalState?.sellerCurrentLocation,
+        sellerBirthPlace:
+            sellerBirthPlace ?? sellerGlobalState?.sellerBirthPlace,
         storeLocation: storeLocation ?? this.storeLocation,
-        fullPhoto: fullPhoto ?? this.fullPhoto);
+        fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto);
   }
 }

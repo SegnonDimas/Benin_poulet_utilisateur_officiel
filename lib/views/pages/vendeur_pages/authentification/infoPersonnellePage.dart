@@ -1,10 +1,10 @@
-import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../../bloc/authentification/authentification_bloc.dart';
 import '../../../../widgets/app_textField.dart';
 
 class InfoPersonnellePage extends StatelessWidget {
@@ -52,11 +52,17 @@ class InfoPersonnellePage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<StoreCreationBloc, StoreCreationState>(
+        child: BlocConsumer<AuthentificationBloc, AuthentificationState>(
           listener: (context, state) {
             // TODO: implement listener
           },
           builder: (context, state) {
+            final sellerInfo = SubmitSellerInfo(
+                lastName: _nomController.value.text,
+                firstName: _prenomController.value.text,
+                birthday: _dateNaissanceController.value.text,
+                birthLocation: _lieuNaissanceController.value.text,
+                currentLocation: _adresseController.value.text);
             return Form(
               //key: _formKey,
               child: ListView(
@@ -71,12 +77,7 @@ class InfoPersonnellePage extends StatelessWidget {
                     prefixIcon: Icons.account_circle,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (string) {
-                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
-                          lastName: _nomController.value.text,
-                          firstName: _prenomController.value.text,
-                          birthday: _dateNaissanceController.value.text,
-                          birthLocation: _lieuNaissanceController.value.text,
-                          currentLocation: _adresseController.value.text));
+                      context.read<AuthentificationBloc>().add(sellerInfo);
                     },
                   ),
                   const SizedBox(
@@ -93,12 +94,7 @@ class InfoPersonnellePage extends StatelessWidget {
                     prefixIcon: Icons.account_circle,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (string) {
-                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
-                          lastName: _nomController.value.text,
-                          firstName: _prenomController.value.text,
-                          birthday: _dateNaissanceController.value.text,
-                          birthLocation: _lieuNaissanceController.value.text,
-                          currentLocation: _adresseController.value.text));
+                      context.read<AuthentificationBloc>().add(sellerInfo);
                     },
                   ),
                   const SizedBox(
@@ -130,16 +126,9 @@ class InfoPersonnellePage extends StatelessWidget {
                             _selectDate(context);
                           },
                           onEditingComplete: () {
-                            context.read<StoreCreationBloc>().add(
-                                SubmitSellerInfo(
-                                    lastName: _nomController.value.text,
-                                    firstName: _prenomController.value.text,
-                                    birthday:
-                                        _dateNaissanceController.value.text,
-                                    birthLocation:
-                                        _lieuNaissanceController.value.text,
-                                    currentLocation:
-                                        _adresseController.value.text));
+                            context
+                                .read<AuthentificationBloc>()
+                                .add(sellerInfo);
                           },
                         ),
 
@@ -159,16 +148,9 @@ class InfoPersonnellePage extends StatelessWidget {
                               Theme.of(context).colorScheme.inversePrimary,
                           fontSize: mediumText() * 0.8,
                           onChanged: (string) {
-                            context.read<StoreCreationBloc>().add(
-                                SubmitSellerInfo(
-                                    lastName: _nomController.value.text,
-                                    firstName: _prenomController.value.text,
-                                    birthday:
-                                        _dateNaissanceController.value.text,
-                                    birthLocation:
-                                        _lieuNaissanceController.value.text,
-                                    currentLocation:
-                                        _adresseController.value.text));
+                            context
+                                .read<AuthentificationBloc>()
+                                .add(sellerInfo);
                           },
                         ),
                       ],
@@ -188,12 +170,7 @@ class InfoPersonnellePage extends StatelessWidget {
                     prefixIcon: Icons.location_on_outlined,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (string) {
-                      context.read<StoreCreationBloc>().add(SubmitSellerInfo(
-                          lastName: _nomController.value.text,
-                          firstName: _prenomController.value.text,
-                          birthday: _dateNaissanceController.value.text,
-                          birthLocation: _lieuNaissanceController.value.text,
-                          currentLocation: _adresseController.value.text));
+                      context.read<AuthentificationBloc>().add(sellerInfo);
                     },
                   ),
                   SizedBox(

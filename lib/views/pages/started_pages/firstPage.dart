@@ -36,12 +36,12 @@ class _FirstPageState extends State<FirstPage> {
     super.initState();
   }
 
-  @override
+/*  @override
   void dispose() {
     // TODO: implement dispose
     loading();
     super.dispose();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../authentification/authentification_bloc.dart';
+
 part 'store_creation_event.dart';
 part 'store_creation_state.dart';
 
@@ -39,12 +41,12 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         final String? storeFiscalType = event.storeFiscalType;
         final String? paymentMethod = event.paymentMethod;
         final String? paymentPhoneNumber = event.paymentPhoneNumber;
-        final String? name = event.name;
+        final String? payementOwnerName = event.payementOwnerName;
         return emit(StoreCreationGlobalState(
             storeFiscalType: storeFiscalType,
             paymentMethod: paymentMethod,
             paymentPhoneNumber: paymentPhoneNumber,
-            name: name));
+            payementOwnerName: payementOwnerName));
       } catch (e) {
         // Todo: implement
       }
@@ -65,7 +67,7 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
       }
     });
 
-    // infos vendeur
+    /* // infos vendeur
     on<SubmitSellerInfo>((event, emit) {
       try {
         final String lastName = event.lastName;
@@ -111,6 +113,6 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
       } catch (e) {
         // Todo: implement
       }
-    });
+    });*/
   }
 }

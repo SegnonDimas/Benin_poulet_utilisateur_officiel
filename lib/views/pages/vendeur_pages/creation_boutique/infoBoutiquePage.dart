@@ -30,6 +30,15 @@ class InfoBoutiquePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<StoreCreationBloc, StoreCreationState>(
           builder: (context, state) {
+            final state = context.watch<StoreCreationBloc>().state
+                as StoreCreationGlobalState;
+
+            final storeInfo = SubmitStoreInfo(
+              storeName: nomBoutiqueController.value.text,
+              storeEmail: adresseEmailController.value.text,
+              storePhoneNumber: numeroBoutiqueController.value.text,
+            );
+
             return Form(
               //key: infoBoutiqueFormKey,
               child: ListView(
@@ -53,9 +62,15 @@ class InfoBoutiquePage extends StatelessWidget {
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (String string) {
-                      context.read<StoreCreationBloc>().add(SubmitStoreInfo(
-                            storeName: nomBoutiqueController.value.text,
-                          ));
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      print(""""
+                      =====================================================
+                      nomB => ${state.storeName}
+                      TelB => ${state.storePhoneNumber}
+                      EmailB => ${state.storeEmail}
+                      =====================================================
+                      """);
                     },
                   ),
 
@@ -91,11 +106,16 @@ class InfoBoutiquePage extends StatelessWidget {
                     controller: numeroBoutiqueController,
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
-                    onInputChanged: (string) {
-                      context.read<StoreCreationBloc>().add(SubmitStoreInfo(
-                            storePhoneNumber:
-                                numeroBoutiqueController.value.text,
-                          ));
+                    onInputChanged: (phoneNumber) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      print(""""
+                      =====================================================
+                      nomB => ${state.storeName}
+                      TelB => ${state.storePhoneNumber}
+                      EmailB => ${state.storeEmail}
+                      =====================================================
+                      """);
                     },
                   ),
                   const SizedBox(
@@ -132,8 +152,15 @@ class InfoBoutiquePage extends StatelessWidget {
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (string) {
-                      context.read<StoreCreationBloc>().add(SubmitStoreInfo(
-                          storeEmail: adresseEmailController.value.text));
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      print(""""
+                      =====================================================
+                      nomB => ${state.storeName}
+                      TelB => ${state.storePhoneNumber}
+                      EmailB => ${state.storeEmail}
+                      =====================================================
+                      """);
                     },
                   ),
                   const SizedBox(
