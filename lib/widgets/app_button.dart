@@ -7,7 +7,7 @@ class AppButton extends StatefulWidget {
   final double? bordeurRadius;
   final double? height;
   final double? width;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const AppButton({
     super.key,
@@ -15,7 +15,7 @@ class AppButton extends StatefulWidget {
     this.color,
     this.bordeurRadius = 15,
     this.height = 70,
-    required this.onTap,
+    this.onTap,
     this.width = 140,
     this.borderColor = Colors.transparent,
   });

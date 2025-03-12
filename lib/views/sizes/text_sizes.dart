@@ -1,17 +1,15 @@
 class TextSize {
-  double smallText = 10;
-  double mediumText = 16;
-  double largeText = 22;
+  static double smallText = 10;
+  static double mediumText = 16;
+  static double largeText = 22;
 
   double adjustSize(double textSize, double percentage) {
     return textSize * (1 + percentage / 100);
   }
 }
 
-TextSize textSize = TextSize();
-
 // TODO : À supprimer
-@Deprecated("Utiliser à la place la classe TextSize : textSize.smallText")
+@Deprecated("Utiliser à la place la classe TextSize : TextSize.smallText")
 double smallText() {
   return 10;
 }

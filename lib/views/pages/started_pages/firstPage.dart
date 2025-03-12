@@ -1,12 +1,13 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/routes.dart';
+import 'package:benin_poulet/constants/imagesPaths.dart';
 import 'package:benin_poulet/tests/blurryContainer.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart';
 
-import '../../../widgets/app_text.dart';
-import '../../colors/app_colors.dart';
+import '../../../constants/routes.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -32,16 +33,9 @@ class _FirstPageState extends State<FirstPage> {
   @override
   void initState() {
     // TODO: implement initState
-    loading();
     super.initState();
-  }
-
-/*  @override
-  void dispose() {
-    // TODO: implement dispose
     loading();
-    super.dispose();
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,30 +44,33 @@ class _FirstPageState extends State<FirstPage> {
       builder: (context, orientation) {
         return Scaffold(
           //backgroundColor: Theme.of(context).colorScheme.surface,
-          backgroundColor: primaryColor,
+          //backgroundColor: primaryColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Stack(alignment: Alignment.center, children: [
             /*Container(
-            height: appHeightSize(context),
+            height: context.height,
             width: appWidthSize(context),
-            color: primaryColor,
+            color: <primaryColor>,
           ),*/
             Positioned(
-              top: 0,
-              left: 10,
+              top: context.screenHeight / 3,
+              bottom: context.screenHeight / 3,
+              left: context.screenWidth * 0.2,
+              right: context.screenWidth * 0.2,
               child: Hero(
                 tag: '2',
                 child: GradientBall(
-                    size: Size.square(appHeightSize(context) * 0.25),
-                    colors: const [Colors.orange, Colors.yellow]),
+                    size: Size.square(context.height * 0.25),
+                    colors: const [Colors.deepOrange, Colors.orange]),
               ),
-            ),
+            ).animate(delay: 1000.ms).fadeIn(duration: 2000.ms),
             Positioned(
               bottom: 20,
               right: 10,
               child: Hero(
                 tag: '1',
                 child: GradientBall(
-                    size: Size.square(appHeightSize(context) * 0.17),
+                    size: Size.square(context.height * 0.17),
                     colors: const [
                       //blueColor,
                       Colors.deepPurple,
@@ -86,71 +83,80 @@ class _FirstPageState extends State<FirstPage> {
               //blur(sigmaX: 100, sigmaY: 100),
               child: Container(
                   alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height,
+                  //height: MediaQuery.of(context).size.height,
                   child: Center(
                       child: Padding(
                           padding: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height * 0.05,
                               bottom:
                                   MediaQuery.of(context).size.height * 0.05),
-                          child: AnimatedContainer(
+                          child: Image.asset(
+                            height: context.screenHeight * 0.1,
+                            width: context.screenHeight * 0.15,
+                            ImagesPaths.LOGOBLANC,
+                            fit: BoxFit.contain,
+                          )
+                              .animate(
+                                  delay: 5000.ms,
+                                  onComplete: (animatedCopntroller) {
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        AppRoutes.LOGINPAGE, (route) => false);
+                                  })
+                              .fade()
+                          /*AnimatedContainer(
                               alignment: Alignment.center,
-                              duration: const Duration(seconds: 2),
+                              duration: const Duration(milliseconds: 4000),
+                              curve: Curves.bounceOut,
                               width: _isLoading
                                   ? MediaQuery.of(context).size.height * 0.05
-                                  : MediaQuery.of(context).size.height * 0.25,
+                                  : MediaQuery.of(context).size.height * 0.1,
                               height: _isLoading
                                   ? MediaQuery.of(context).size.height * 0.05
-                                  : MediaQuery.of(context).size.height * 0.25,
+                                  : MediaQuery.of(context).size.height * 0.1,
                               onEnd: () {
                                 setState(() {
-                                  _isLoading = !_isLoading;
+                                  //_isLoading = !_isLoading;
 
-                                  _isLoading
-                                      ? logo = 'assets/logos/logoNoir.png'
-                                      : logo = 'assets/logos/logoBlanc.png';
                                   duration = duration + 2;
+                                  print(":::::::::::::::::::$duration");
+                                  _isLoading = !_isLoading;
                                 });
-                                if (duration == 2) {
+                                if (duration == 4) {
                                   Navigator.pushNamedAndRemoveUntil(context,
-                                      appRoutes.LOGINPAGE, (route) => false);
+                                      AppRoutes.LOGINPAGE, (route) => false);
                                   //Navigator.of(context).push(Transitions.rotation(const LoginPage()));
                                 }
                               },
                               child: Image.asset(
-                                logo,
+                                ImagesPaths.LOGOBLANC,
                                 fit: BoxFit.cover,
-                              ))))),
+                              ))*/
+                          ))),
             ),
             Positioned(
-              bottom: 0,
-              child:
-
-                  /// le texte : Powered by Smart Solutions Innova
-                  SizedBox(
-                height: appHeightSize(context) * 0.08,
-                width: appWidthSize(context),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Powered by',
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-
-                    // le clic devrait conduire sur le site officiel de Smart Solution Innova
-                    TextButton(
-                      onPressed: null,
-                      child: AppText(
-                          text: 'Smart Solutions Innova',
-                          color: Colors.white,
-                          //color: Color.fromARGB(255, 255, 112, 48),
-                          //fontSize: 10,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  ],
-                ),
-              ),
+              bottom: 10,
+              right: 5,
+              left: 5,
+              child: Container(
+                width: context.screenWidth,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                  Colors.transparent,
+                  Colors.grey.withOpacity(0.3),
+                  Colors.transparent,
+                ])),
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: Image.asset(ImagesPaths.POWEREDBYSSI,
+                    fit: BoxFit.fitHeight),
+              )
+                  .animate()
+                  .slide(
+                      begin: const Offset(0, -0.03),
+                      end: const Offset(0, -0.25),
+                      //curve: Curves.linear,
+                      delay: 500.ms,
+                      duration: 2000.ms)
+                  .fadeIn(duration: 500.ms),
             )
           ]),
         );

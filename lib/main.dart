@@ -1,5 +1,6 @@
 import 'package:benin_poulet/blocProviders.dart';
-import 'package:benin_poulet/routes.dart';
+import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -81,9 +82,11 @@ class _MyAppState extends State<MyApp> {
         //themeMode: ThemeMode.light,
         title: 'Bénin Poulet',
 
-        //home: const CHomePage(),
+        //home: ChoixCategoriePage(),
+        home: const FirstPage(),
+
         routes: routes,
-        initialRoute: '/firstPage',
+        // initialRoute: '/firstPage',
       ),
     );
   }

@@ -122,7 +122,8 @@ class _AppTextFieldState extends State<AppTextField> {
                 ),*/
                   prefixIcon: Icon(
                     Icons.lock,
-                    color: widget.prefixIconColor,
+                    color: widget.prefixIconColor ??
+                        Theme.of(context).colorScheme.inverseSurface,
                   ),
                   suffix: widget.suffix,
                   suffixIcon: GestureDetector(

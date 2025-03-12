@@ -1,10 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
-import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +36,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget divider = Divider(
+      color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
+    );
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<AuthBloc, AuthState>(
@@ -52,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Utilisateur connecté avec succès',
                   ContentType.success,
                   primaryColor);
-              Navigator.pushNamed(context, appRoutes.CLIENTHOMEPAGE);
+              Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
             }
           },
           builder: (context, state) {
@@ -60,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: appHeightSize(context) * 0.2,
-                    width: appWidthSize(context),
+                    height: context.screenHeight * 0.2,
+                    width: context.screenWidth,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -71,8 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Hero(
                             tag: '1',
                             child: GradientBall(
-                                size:
-                                    Size.square(appHeightSize(context) * 0.09),
+                                size: Size.square(context.screenHeight * 0.09),
                                 colors: const [
                                   //blueColor,
                                   Colors.deepPurple,
@@ -81,26 +84,25 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Positioned(
-                          bottom: 0, //appHeightSize(context) * 0.8,
+                          bottom: 0, //context.screenHeight * 0.8,
                           right: 10,
                           child: Hero(
                             tag: '2',
                             child: GradientBall(
-                                size:
-                                    Size.square(appHeightSize(context) * 0.06),
+                                size: Size.square(context.screenHeight * 0.06),
                                 colors: const [Colors.orange, Colors.yellow]),
                           ),
                         ),
 
                         // Image d'arrière-plan
                         Positioned(
-                          top: appHeightSize(context) * 0.045,
+                          top: context.screenHeight * 0.045,
                           child: Hero(
                             tag: 'logoTag',
                             child: Image.asset(
                               'assets/images/login2.png',
                               fit: BoxFit.fitHeight,
-                              height: appHeightSize(context) * 0.16,
+                              height: context.screenHeight * 0.16,
                             ),
                           ),
                         ),
@@ -114,30 +116,30 @@ class _LoginPageState extends State<LoginPage> {
                       color: Theme.of(context).colorScheme.surface,
                     ),
                     child: Container(
-                      height: appHeightSize(context) * 0.8,
+                      height: context.screenHeight * 0.8,
                       padding: const EdgeInsets.all(20),
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: appHeightSize(context) * 0.08),
+                            SizedBox(height: context.screenHeight * 0.08),
 
                             /// texte : Bienvenue
                             Text(
                               'Bienvenue !',
                               style: TextStyle(
-                                  fontSize: largeText() * 1.5,
+                                  fontSize: TextSize.largeText * 1.5,
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 15),
 
                             /// Formulaire de connexion
 
                             // numéro de téléphone
                             AppPhoneTextField(
                               controller: _phoneNumbercontroller,
-                              fontSize: mediumText() * 0.9,
+                              fontSize: TextSize.mediumText * 0.9,
                               fontColor:
                                   Theme.of(context).colorScheme.inversePrimary,
                               fileColor: Theme.of(context)
@@ -150,15 +152,15 @@ class _LoginPageState extends State<LoginPage> {
                             // mot de passe
                             AppTextField(
                               label: 'Mot de passe',
-                              height: appHeightSize(context) * 0.08,
-                              width: appWidthSize(context) * 0.9,
+                              height: context.screenHeight * 0.08,
+                              width: context.screenWidth * 0.9,
                               color: Theme.of(context)
                                   .colorScheme
                                   .background
                                   .withOpacity(0.8),
                               isPassword: true,
                               controller: _passWordController,
-                              fontSize: mediumText() * 0.9,
+                              fontSize: TextSize.mediumText * 0.9,
                               fontColor:
                                   Theme.of(context).colorScheme.inversePrimary,
                             ),
@@ -212,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: appHeightSize(context) * 0.03),
+                            SizedBox(height: context.screenHeight * 0.025),
 
                             // bouton de connexion
                             GestureDetector(
@@ -226,8 +228,8 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: Container(
                                   alignment: Alignment.center,
-                                  height: appHeightSize(context) * 0.07,
-                                  width: appWidthSize(context) * 0.9,
+                                  height: context.screenHeight * 0.07,
+                                  width: context.screenWidth * 0.9,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       color: primaryColor),
@@ -240,10 +242,10 @@ class _LoginPageState extends State<LoginPage> {
                                           'Connexion',
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: largeText()),
+                                              fontSize: TextSize.largeText),
                                         )),
                             ),
-                            const SizedBox(height: 50),
+                            const SizedBox(height: 20),
 
                             /// Fin du formulaire de connexion
 
@@ -253,27 +255,44 @@ class _LoginPageState extends State<LoginPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const SizedBox(
-                                  width: 1,
+                                Flexible(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    //width: context.screenWidth * 0.15,
+                                    child: divider,
+                                  ),
                                 ),
-                                AppText(
-                                  text: "ou continuer avec",
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inversePrimary
-                                      .withOpacity(0.4),
-                                  fontSize: smallText() * 1.2,
+                                Expanded(
+                                  flex: 2,
+                                  child: AppButton(
+                                    borderColor: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary
+                                        .withOpacity(0.1),
+                                    bordeurRadius: 7,
+                                    height: context.screenHeight * 0.035,
+                                    child: AppText(
+                                      text: "ou continuer avec",
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                          .withOpacity(0.4),
+                                      fontSize: TextSize.smallText * 1.2,
+                                    ),
+                                  ),
                                 ),
-                                const SizedBox(
-                                  width: 1,
+                                Flexible(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    //width: context.screenWidth * 0.15,
+                                    child: divider,
+                                  ),
                                 ),
                               ],
                             ),
-                            Divider(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .inversePrimary
-                                  .withOpacity(0.4),
+
+                            const SizedBox(
+                              height: 20,
                             ),
 
                             // méthode de connexion Google, Apple et Email
@@ -321,7 +340,7 @@ class _LoginPageState extends State<LoginPage> {
                                         isLoggedIn = !isLoggedIn;
                                       });
                                       Navigator.pushNamed(context,
-                                          appRoutes.LOGINWITHEMAILPAGE);
+                                          AppRoutes.LOGINWITHEMAILPAGE);
                                     },
                                     child: Image.asset(
                                       'assets/logos/email2.png',
@@ -342,19 +361,19 @@ class _LoginPageState extends State<LoginPage> {
                                       .colorScheme
                                       .inversePrimary
                                       .withOpacity(0.4),
-                                  fontSize: smallText() * 1.2,
+                                  fontSize: TextSize.smallText * 1.2,
                                 ),
 
                                 // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                                 TextButton(
                                     onPressed: () {
                                       Navigator.pushNamed(
-                                          context, appRoutes.PRESENTATIONPAGE);
+                                          context, AppRoutes.PRESENTATIONPAGE);
                                     },
                                     child: AppText(
                                       text: 'S\'inscrire',
                                       color: primaryColor,
-                                      fontSize: smallText() * 1.2,
+                                      fontSize: TextSize.smallText * 1.2,
                                     )),
                               ],
                             ),

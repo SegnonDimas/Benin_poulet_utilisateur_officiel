@@ -1,5 +1,5 @@
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/models/model_ProfilListTile.dart';
-import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -179,7 +179,7 @@ class _VProfilPageState extends State<VProfilPage> {
               title: 'Portefeuille',
               leadingIcon: Icons.payment_rounded,
               onTap: () {
-                Navigator.pushNamed(context, appRoutes.VENDEURPORTEFEUILLEPAGE);
+                Navigator.pushNamed(context, AppRoutes.VENDEURPORTEFEUILLEPAGE);
               },
             ),
             const ProfilListTile(

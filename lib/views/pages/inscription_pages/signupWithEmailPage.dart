@@ -1,6 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
-import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -453,7 +453,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                   // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, appRoutes.LOGINPAGE);
+                        Navigator.pushNamed(context, AppRoutes.LOGINPAGE);
                       },
                       child: AppText(
                         text: 'Se connecter',

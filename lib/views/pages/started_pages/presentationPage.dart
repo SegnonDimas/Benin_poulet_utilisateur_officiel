@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/routes.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -94,6 +94,8 @@ class _PresentationPageState extends State<PresentationPage> {
 
         /// corps de la page
         body: SafeArea(
+          bottom: false,
+          top: false,
           child: Column(
             children: [
               Expanded(
@@ -164,7 +166,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                 Text(
                                   views[selectedPage].title,
                                   style: TextStyle(
-                                      fontSize: largeText() * 1.3,
+                                      fontSize: TextSize.largeText * 1.3,
                                       color: primaryColor,
                                       fontWeight: FontWeight.w900),
                                 ),
@@ -267,8 +269,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                                 Icon(
                                                                   Icons
                                                                       .arrow_forward_ios,
-                                                                  size:
-                                                                      largeText(),
+                                                                  size: TextSize
+                                                                      .largeText,
                                                                   color: Colors
                                                                       .white,
                                                                 ),
@@ -287,7 +289,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                           onTap: () {
                                                             Navigator.of(
                                                                     context)
-                                                                .pushNamed(appRoutes
+                                                                .pushNamed(AppRoutes
                                                                     .INSCRIPTIONPAGE);
                                                           },
                                                           child: Container(
@@ -333,8 +335,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                                 Icon(
                                                                   Icons
                                                                       .arrow_forward_ios,
-                                                                  size:
-                                                                      largeText(),
+                                                                  size: TextSize
+                                                                      .largeText,
                                                                   color: Colors
                                                                       .white,
                                                                 ),
@@ -356,7 +358,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                             .background,
                                                     child: Icon(
                                                       Icons.question_mark,
-                                                      size: largeText() * 2,
+                                                      size: TextSize.largeText *
+                                                          2,
                                                       color: primaryColor,
                                                     )),
                                                 iconColor: Colors.white,
@@ -457,7 +460,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   views[selectedPage]
                                                       .descriptionTitle,
                                                   style: TextStyle(
-                                                      fontSize: largeText(),
+                                                      fontSize:
+                                                          TextSize.largeText,
                                                       fontWeight:
                                                           FontWeight.w900,
                                                       color: primaryColor),
@@ -548,7 +552,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       Navigator.of(context)
-                                                          .pushNamed(appRoutes
+                                                          .pushNamed(AppRoutes
                                                               .INSCRIPTIONVENDEURPAGE);
                                                     },
                                                     child: Container(
@@ -590,7 +594,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            size: largeText(),
+                                                            size: TextSize
+                                                                .largeText,
                                                             color: Colors.white,
                                                           ),
                                                         ],
@@ -646,7 +651,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            size: largeText(),
+                                                            size: TextSize
+                                                                .largeText,
                                                             color: Colors.white,
                                                           ),
                                                         ],
@@ -665,7 +671,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   .background,
                                               child: Icon(
                                                 Icons.question_mark,
-                                                size: largeText() * 2,
+                                                size: TextSize.largeText * 2,
                                                 color: primaryColor,
                                               )),
                                           iconColor: Colors.white,
@@ -718,7 +724,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                         child: AppText(
                                           text: 'S\'inscrire',
                                           color: Colors.white,
-                                          fontSize: largeText(),
+                                          fontSize: TextSize.largeText,
                                         )),
                                   ),
                                 )
@@ -766,7 +772,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                         child: AppText(
                                           text: 'Suivant',
                                           color: Colors.white,
-                                          fontSize: largeText(),
+                                          fontSize: TextSize.largeText,
                                         )),
                                   ),
                                 ),

@@ -44,27 +44,29 @@ Map<String, Widget Function(BuildContext)> routes = {
 
 class AppRoutes {
   // routes vendeurs
-  String FIRSTPAGE = '/firstPage';
-  String LOGINPAGE = '/loginPage';
-  String PRESENTATIONPAGE = '/presentationPage';
-  String INSCRIPTIONPAGE = '/inscriptionPage';
-  String LOGINWITHEMAILPAGE = '/loginWithEmailPage';
-  String SIGNUPWITHEMAILPAGE = '/signupWithEmailPage';
-  String INSCRIPTIONVENDEURPAGE = '/inscriptionVendeurPage';
-  String VALIDATIONPAGE = '/validationPage';
-  String VENDEURMAINPAGE = '/vendeurMainPage';
-  String VENDEURPRESENTATIONBOUTIQUEPAGE = '/vendeurPresentationBoutiquePage';
-  String VENDEURCOMMANDELISTPAGE = '/vendeurCommandeListPage';
-  String DEFAULTROUTEPAGE = '/defaultRoutePage';
-  String VENDEURPRODUITSLISTPAGE = '/vendeurProduitsListPage';
-  String AJOUTNOUVEAUPRODUITPAGE = '/ajoutNouveauProduitPage';
-  String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
-  String VENDEURPROFILPAGE = '/vendeurProfilPage';
-  String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
-  String VENDEURHISTORIQUEPAGE = 'vendeurHistoriqueTranslations';
+  static String FIRSTPAGE = '/firstPage';
+  static String LOGINPAGE = '/loginPage';
+  static String PRESENTATIONPAGE = '/presentationPage';
+  static String INSCRIPTIONPAGE = '/inscriptionPage';
+  static String LOGINWITHEMAILPAGE = '/loginWithEmailPage';
+  static String SIGNUPWITHEMAILPAGE = '/signupWithEmailPage';
+  static String INSCRIPTIONVENDEURPAGE = '/inscriptionVendeurPage';
+  static String VALIDATIONPAGE = '/validationPage';
+  static String VENDEURMAINPAGE = '/vendeurMainPage';
+  static String VENDEURPRESENTATIONBOUTIQUEPAGE =
+      '/vendeurPresentationBoutiquePage';
+  static String VENDEURCOMMANDELISTPAGE = '/vendeurCommandeListPage';
+  static String DEFAULTROUTEPAGE = '/defaultRoutePage';
+  static String VENDEURPRODUITSLISTPAGE = '/vendeurProduitsListPage';
+  static String AJOUTNOUVEAUPRODUITPAGE = '/ajoutNouveauProduitPage';
+  static String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
+  static String VENDEURPROFILPAGE = '/vendeurProfilPage';
+  static String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
+  static String VENDEURHISTORIQUEPAGE = 'vendeurHistoriqueTranslations';
 
   //routes clients
-  String CLIENTHOMEPAGE = 'clientHomePage';
+  static String CLIENTHOMEPAGE = 'clientHomePage';
 }
 
+@Deprecated("Utiliser AppRoutes.[ROUTENAME] à la place")
 AppRoutes appRoutes = AppRoutes();

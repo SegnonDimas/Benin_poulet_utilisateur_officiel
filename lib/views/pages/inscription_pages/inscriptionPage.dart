@@ -1,7 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
-import 'package:benin_poulet/routes.dart';
 import 'package:benin_poulet/services/authentification_services.dart';
 import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
@@ -447,7 +447,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           isSignUp = !isSignUp;
                         });
                         Navigator.pushNamed(
-                            context, appRoutes.SIGNUPWITHEMAILPAGE);
+                            context, AppRoutes.SIGNUPWITHEMAILPAGE);
                       },
                       child: Image.asset(
                         'assets/logos/email2.png',
@@ -474,7 +474,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes().LOGINPAGE);
+                        Navigator.pushNamed(context, AppRoutes.LOGINPAGE);
                       },
                       child: AppText(
                         text: 'Se connecter',

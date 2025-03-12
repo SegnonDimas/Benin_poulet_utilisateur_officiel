@@ -3,7 +3,12 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+
+import '../../../../bloc/choixCategorie/choix_categorie_bloc.dart';
+import '../../../../bloc/choixCategorie/choix_categorie_event.dart';
+import '../../../../bloc/choixCategorie/choix_categorie_state.dart';
 
 class ChoixCategoriePage extends StatefulWidget {
   @override
@@ -99,7 +104,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
               children: _buildSecteursWidgets(context),
             ),*/
 
-            Wrap(
+            /*Wrap(
               children: [
                 ModelSecteur(
                   activeColor: primaryColor,
@@ -114,6 +119,7 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
                     });
                   },
                   text: 'Volaille',
+                  isSelected: null,
                 ),
                 ModelSecteur(
                   activeColor: primaryColor,
@@ -131,41 +137,28 @@ class _ChoixCategoriePageState extends State<ChoixCategoriePage> {
                   text: 'Pisciculture',
                 ),
                 SizedBox(height: appHeightSize(context) * 0.025),
-                /*GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      volaille = !volaille;
-                      if (volaille) {
-                        ajouterSecteurVolaille(); //_categries.addAll(_categorieVolaille);
-                      } else {
-                        supprimerSecteurVolaille(); //_categries.removeWhere((element) => _categorieVolaille.contains(element));
-                      }
-                    });
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Volaille'),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      betaille = !betaille;
-                      if (betaille) {
-                        _categries.addAll(_categoriePisciculture);
-                      } else {
-                        _categries.removeWhere((element) =>
-                            _categoriePisciculture.contains(element));
-                      }
-                    });
-                  },
-                  onLongPress: () {},
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Poisson'),
-                  ),
-                ),*/
               ], //_categorie,
+            ),*/
+            BlocBuilder<ChoixCategorieBloc, ChoixCategorieState>(
+              builder: (context, state) {
+                return Wrap(
+                  children: state.secteursSelectionnes.keys.map((secteur) {
+                    final isSelected =
+                        state.secteursSelectionnes[secteur] ?? false;
+                    return ModelSecteur(
+                      text: secteur,
+                      isSelected: isSelected,
+                      activeColor: Colors.green,
+                      disabledColor: Colors.grey,
+                      onTap: () {
+                        context
+                            .read<ChoixCategorieBloc>()
+                            .add(SecteurToggled(secteur));
+                      },
+                    );
+                  }).toList(),
+                );
+              },
             ),
             Divider(
               color: Theme.of(context).colorScheme.background,
@@ -192,6 +185,7 @@ class ModelCategorie extends StatefulWidget {
   final String? description;
   final String? text;
   late bool? isSelected;
+  final Function()? onTap;
 
   ModelCategorie({
     super.key,
@@ -201,6 +195,7 @@ class ModelCategorie extends StatefulWidget {
     this.disabledColor = Colors.grey,
     this.text,
     this.isSelected = false,
+    this.onTap,
   });
 
   @override
@@ -224,7 +219,9 @@ class _ModelCategorieState extends State<ModelCategorie> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: widget.onTap
+
+      /*() {
         setState(() {
           isSelected = !isSelected;
           widget.isSelected = isSelected;
@@ -235,7 +232,8 @@ class _ModelCategorieState extends State<ModelCategorie> {
                 Theme.of(context).colorScheme.background;
           }
         });
-      },
+      }*/
+      ,
       child: Tooltip(
         message: 'Vous commercialisez ${widget.text}',
         decoration: Decoration.lerp(
@@ -257,17 +255,6 @@ class _ModelCategorieState extends State<ModelCategorie> {
               color: widget.backgroundColor ??
                   Theme.of(context).colorScheme.background.withOpacity(0.6),
               borderRadius: BorderRadius.circular(15),
-              /* boxShadow: [
-                  BoxShadow(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.2),
-                      spreadRadius: 0.2,
-                      blurRadius: 2,
-                      blurStyle: BlurStyle.normal,
-                      offset: const Offset(0.5, 0.5)),
-                ]*/
             ),
             child: AppText(
               text: widget.text ?? '',
@@ -281,6 +268,8 @@ class _ModelCategorieState extends State<ModelCategorie> {
     );
   }
 }
+
+/*
 
 class ModelSecteur extends StatefulWidget {
   late Color? backgroundColor;
@@ -310,43 +299,88 @@ class _ModelSecteurState extends State<ModelSecteur> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ChoixCategorieBloc, ChoixCategorieState>(
+        builder: (context, state) {
+      final state = context.watch<ChoixCategorieBloc>().state;
+      return GestureDetector(
+        onTap: widget.onTap,
+        child: Tooltip(
+          message: 'L\'un de vos secteurs d\'intervention est : ${widget.text}',
+          decoration: Decoration.lerp(
+              BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius: BorderRadius.circular(5)),
+              BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(5)),
+              0.2),
+          textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.inversePrimary,
+              fontSize: smallText()),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: state.color
+                */
+/*widget.backgroundColor ??
+                  Theme.of(context).colorScheme.background.withOpacity(0.6)*/ /*
+
+                ,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: AppText(
+                text: widget.text ?? '',
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.inversePrimary,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+*/
+class ModelSecteur extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+  final Color activeColor;
+  final Color disabledColor;
+  final Function() onTap;
+
+  const ModelSecteur({
+    required this.text,
+    required this.isSelected,
+    required this.activeColor,
+    required this.disabledColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Tooltip(
-        message: 'L\'un de vos secteurs d\'intervention est : ${widget.text}',
-        decoration: Decoration.lerp(
-            BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.circular(5)),
-            BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(5)),
-            0.2),
-        textStyle: TextStyle(
-            color: Theme.of(context).colorScheme.inversePrimary,
-            fontSize: smallText()),
+        message: 'L\'un de vos secteurs d\'intervention est : $text',
+        decoration: BoxDecoration(
+          color: isSelected ? activeColor : disabledColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: widget.backgroundColor ??
-                  Theme.of(context).colorScheme.background.withOpacity(0.6),
+              color: isSelected
+                  ? activeColor
+                  : Theme.of(context).colorScheme.background.withOpacity(0.6),
               borderRadius: BorderRadius.circular(15),
-              /* boxShadow: [
-                  BoxShadow(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.2),
-                      spreadRadius: 0.2,
-                      blurRadius: 2,
-                      blurStyle: BlurStyle.normal,
-                      offset: const Offset(0.5, 0.5)),
-                ]*/
             ),
             child: AppText(
-              text: widget.text ?? '',
+              text: text,
               color: isSelected
                   ? Colors.white
                   : Theme.of(context).colorScheme.inversePrimary,

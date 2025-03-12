@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
-import '../../../routes.dart';
+import '../../../constants/routes.dart';
 import '../../../services/authentification_services.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/snack_bar.dart';
@@ -53,7 +53,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                 ContentType.success,
                 primaryColor);
 
-            Navigator.pushNamedAndRemoveUntil(context, appRoutes.CLIENTHOMEPAGE,
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.CLIENTHOMEPAGE,
                 (Route<dynamic> route) => false);
           }
         },
