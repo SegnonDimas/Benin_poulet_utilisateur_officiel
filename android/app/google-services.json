@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095274966890",
+    "project_id": "beninpoulet-8f04a",
+    "storage_bucket": "beninpoulet-8f04a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095274966890:android:bf9ef0ca7954fd97feff13",
+        "android_client_info": {
+          "package_name": "com.codeurplus.benin_poulet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ52clxdKdy8wtn-jzPQVsUNZ1ejllKZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
