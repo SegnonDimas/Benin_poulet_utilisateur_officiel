@@ -214,8 +214,6 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: context.screenHeight * 0.025),
-
                             // bouton de connexion
                             GestureDetector(
                               onTap: () {
