@@ -13,9 +13,15 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  // WidgetsFlutterBinding init
+  WidgetsFlutterBinding.ensureInitialized();
+  // firebase init
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // flutter_localization init
+  await FlutterLocalization.instance.ensureInitialized();
+  // runApp
   runApp(ChangeNotifierProvider(
     create: (context) => ThemeProvider(),
     child: const MyApp(),
