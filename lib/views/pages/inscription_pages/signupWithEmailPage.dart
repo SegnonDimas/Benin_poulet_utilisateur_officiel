@@ -1,6 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -15,6 +14,7 @@ import '../../../services/authentification_services.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
+import '../../models_ui/model_optionsDeConnexion.dart';
 
 class SignupWithEmailPage extends StatefulWidget {
   const SignupWithEmailPage({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../views/sizes/app_sizes.dart';
-import '../views/sizes/text_sizes.dart';
-import '../widgets/app_text.dart';
+import '../../widgets/app_text.dart';
+import '../sizes/app_sizes.dart';
+import '../sizes/text_sizes.dart';
 
 /// session modèle
 class ModelSession extends StatefulWidget {

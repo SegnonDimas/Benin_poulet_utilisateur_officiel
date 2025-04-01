@@ -1,7 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -18,6 +17,7 @@ import '../../../tests/blurryContainer.dart';
 import '../../../utils/snack_bar.dart';
 import '../../../utils/wave_painter.dart';
 import '../../../widgets/app_phone_textField.dart';
+import '../../models_ui/model_optionsDeConnexion.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

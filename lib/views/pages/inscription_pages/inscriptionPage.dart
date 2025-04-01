@@ -1,7 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/models/model_optionsDeConnexion.dart';
 import 'package:benin_poulet/services/authentification_services.dart';
 import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
@@ -19,6 +18,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/wave_painter.dart';
+import '../../models_ui/model_optionsDeConnexion.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});

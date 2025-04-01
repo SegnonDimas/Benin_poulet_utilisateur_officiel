@@ -1,7 +1,7 @@
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/model_releveTranslation.dart';
+import '../../models_ui/model_releveTranslation.dart';
 
 class VHistoriqueTranslations extends StatefulWidget {
   const VHistoriqueTranslations({super.key});

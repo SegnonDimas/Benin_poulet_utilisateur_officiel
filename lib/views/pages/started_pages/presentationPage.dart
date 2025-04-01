@@ -8,8 +8,8 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
-import '../../../models/model_presentationPage.dart';
 import '../../../tests/blurryContainer.dart';
+import '../../models_ui/model_presentationPage.dart';
 
 class PresentationPage extends StatefulWidget {
   const PresentationPage({super.key});

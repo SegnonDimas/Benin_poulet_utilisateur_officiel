@@ -1,10 +1,10 @@
-import 'package:benin_poulet/models/model_session.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../views/sizes/app_sizes.dart';
-import '../views/sizes/text_sizes.dart';
-import '../widgets/app_text.dart';
+import '../../widgets/app_text.dart';
+import '../sizes/app_sizes.dart';
+import '../sizes/text_sizes.dart';
+import 'model_session.dart';
 
 /// portefeuille modèle
 class ModelPortefeuille extends StatefulWidget {

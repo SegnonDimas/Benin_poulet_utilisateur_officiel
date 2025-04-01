@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../views/colors/app_colors.dart';
-import '../views/sizes/app_sizes.dart';
-import '../views/sizes/text_sizes.dart';
-import '../widgets/app_text.dart';
+import '../../widgets/app_text.dart';
+import '../colors/app_colors.dart';
+import '../sizes/app_sizes.dart';
+import '../sizes/text_sizes.dart';
 
 class ModelPieceIdentite extends StatefulWidget {
   late bool? isSelected;

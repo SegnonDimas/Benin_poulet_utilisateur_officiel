@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/storeCreation/store_creation_bloc.dart';
-import '../../../models/model_portefeuille.dart';
-import '../../../models/model_session.dart';
+import '../../models_ui/model_portefeuille.dart';
+import '../../models_ui/model_session.dart';
 
 class VHomePage extends StatefulWidget {
   const VHomePage({super.key});

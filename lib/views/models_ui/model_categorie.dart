@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-import '../views/sizes/app_sizes.dart';
-import '../widgets/app_text.dart';
+import '../../widgets/app_text.dart';
+import '../sizes/app_sizes.dart';
 
 class ModelCategorie extends StatefulWidget {
   final String? imgUrl;

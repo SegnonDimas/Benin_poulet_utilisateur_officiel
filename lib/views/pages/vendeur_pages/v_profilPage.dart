@@ -1,6 +1,6 @@
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/models/model_ProfilListTile.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/models_ui/model_ProfilListTile.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';

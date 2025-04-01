@@ -1,6 +1,5 @@
 import 'package:benin_poulet/blocProviders.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -95,10 +94,10 @@ class _MyAppState extends State<MyApp> {
         title: 'Bénin Poulet',
 
         //home: ChoixCategoriePage(),
-        home: const FirstPage(),
+        //home: const FirstPage(),
 
         routes: routes,
-        // initialRoute: '/firstPage',
+        initialRoute: '/firstPage',
       ),
     );
   }

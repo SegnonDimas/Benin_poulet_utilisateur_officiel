@@ -6,7 +6,7 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../models/model_pieceIdentite.dart';
+import '../../../models_ui/model_pieceIdentite.dart';
 
 class PieceIdentitePage extends StatefulWidget {
   @override

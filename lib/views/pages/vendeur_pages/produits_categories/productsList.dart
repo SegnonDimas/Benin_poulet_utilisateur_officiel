@@ -1,9 +1,10 @@
-import 'package:benin_poulet/models/model_produit.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../../models_ui/model_produit.dart';
 
 class ProductsList extends StatefulWidget {
   const ProductsList({super.key});

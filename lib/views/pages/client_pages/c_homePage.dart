@@ -1,15 +1,17 @@
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../../../bloc/auth/auth_bloc.dart';
+import '../../../widgets/app_text.dart';
+import '../../../widgets/app_textField.dart';
 import '../../colors/app_colors.dart';
+import '../../models_ui/model_carouselItem.dart';
+import '../../models_ui/model_recommandation.dart';
+import '../../sizes/app_sizes.dart';
 
 class CHomePage extends StatefulWidget {
   const CHomePage({super.key});
@@ -51,24 +53,36 @@ class _CHomePageState extends State<CHomePage>
     ModelCarouselItem(),
     ModelCarouselItem(),
   ];
-  final List<RecomandationModel> _listRecommandations = const [
-    RecomandationModel(
+
+  final List<ModelRecomandation> _listRecommandations = const [
+    ModelRecomandation(
       shopName: 'Le Poulailler',
       backgroundImage: 'assets/images/pouletCouveuse.png',
     ),
-    RecomandationModel(
+    ModelRecomandation(
       shopName: 'Mike Store',
     ),
-    RecomandationModel(
+    ModelRecomandation(
       shopName: 'Le gros',
       backgroundImage: 'assets/images/pouletCouveuse.png',
     ),
-    RecomandationModel(shopName: 'AcolPro'),
-    RecomandationModel(shopName: 'Linge d\'or'),
-    RecomandationModel(shopName: 'Smart Solutions Innova'),
-    RecomandationModel(shopName: ''),
-    RecomandationModel(),
-    RecomandationModel(),
+    ModelRecomandation(
+      shopName: 'AcolPro',
+      price: 5000,
+      unit: 'poulet',
+    ),
+    ModelRecomandation(
+      shopName: 'Linge d\'or',
+      price: 2500,
+      unit: 'plateau',
+    ),
+    ModelRecomandation(
+      shopName: 'Smart Solutions Innova',
+      price: 50,
+    ),
+    ModelRecomandation(shopName: ''),
+    ModelRecomandation(),
+    ModelRecomandation(),
   ];
 
   // index
@@ -92,11 +106,6 @@ class _CHomePageState extends State<CHomePage>
       Icons.home_filled,
       //size: largeText() * 1.2,
     ),
-    /*Icon(Icons.edit_calendar_rounded, size: largeText() * 1.2),
-    Icon(
-      Icons.payment,
-      size: largeText() * 1.2,
-    ),*/
     const Icon(
       //Icons.wechat_rounded,
       Icons.shopping_cart,
@@ -132,6 +141,7 @@ class _CHomePageState extends State<CHomePage>
 
         body: PageView(
           controller: _pageViewController,
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             setState(() {
               currentPage = index;
@@ -145,9 +155,11 @@ class _CHomePageState extends State<CHomePage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //caroussel
                     Stack(
                       alignment: Alignment.center,
                       children: [
+                        //products images
                         CarouselSlider(
                             items: _carouselList,
                             carouselController: controller,
@@ -164,6 +176,8 @@ class _CHomePageState extends State<CHomePage>
                                     carouselCurrentIndex = index;
                                   });
                                 })),
+
+                        //dots indicator
                         Positioned(
                           bottom: 10,
                           left: appWidthSize(context) * 0.35,
@@ -196,6 +210,24 @@ class _CHomePageState extends State<CHomePage>
                         )
                       ],
                     ),
+
+                    // barre de recherche
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppTextField(
+                        height: context.height * 0.065,
+                        color: Theme.of(context).colorScheme.background,
+                        prefixIcon: Icons.search,
+                        suffixIcon: Icon(
+                          Icons.send,
+                          color: Colors.black26,
+                        ),
+                        showFloatingLabel: false,
+                        label: "Rechercher",
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    //text : Recommandation
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                       child: SizedBox(
@@ -203,22 +235,19 @@ class _CHomePageState extends State<CHomePage>
                         child: AppText(text: 'Recommandations'),
                       ),
                     ),
-                    Expanded(
+
+                    // list recommandation
+
+                    SizedBox(
+                      height: context.height * 0.25,
                       child: ListView(
                         padding: const EdgeInsets.all(5),
-                        physics: NeverScrollableScrollPhysics(
-                            parent: BouncingScrollPhysics()),
-                        children: [
-                          Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            runAlignment: WrapAlignment.spaceBetween,
-                            runSpacing: 10,
-                            //spacing: 60,
-                            children: _listRecommandations,
-                          ),
-                        ],
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        children: _listRecommandations,
                       ),
                     ),
+
                     /*SizedBox(
                       height: 160,
                       child: ListView.builder(
@@ -266,19 +295,14 @@ class _CHomePageState extends State<CHomePage>
 
                 /// TabBarView
                 Expanded(
-                  child: TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: _tabcontroller,
-                      children: [
-                        Center(
-                          child:
-                              AppText(text: 'Votre liste de produits est vide'),
-                        ),
-                        Center(
-                          child: AppText(
-                              text: 'Votre liste de boutiques est vide'),
-                        )
-                      ]),
+                  child: TabBarView(controller: _tabcontroller, children: [
+                    Center(
+                      child: AppText(text: 'Votre liste de produits est vide'),
+                    ),
+                    Center(
+                      child: AppText(text: 'Votre liste de boutiques est vide'),
+                    )
+                  ]),
                 ),
               ],
             ),
@@ -311,245 +335,4 @@ class _CHomePageState extends State<CHomePage>
   }
 }
 
-class ModelCarouselItem extends StatelessWidget {
-  final String? imgPath;
-  final double? padding;
-  final double? borderRadius;
-  final double? height;
-  final double? width;
-  final BoxFit? fit;
-  final Gradient? gradient;
-  final Function()? onTap;
-
-  const ModelCarouselItem({
-    super.key,
-    this.imgPath,
-    this.padding,
-    this.borderRadius,
-    this.height,
-    this.width,
-    this.fit,
-    this.gradient,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(padding ?? 8.0),
-      child: GestureDetector(
-        onTap: onTap,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 20)),
-          child: Stack(
-            children: [
-              Image.asset(imgPath ?? 'assets/images/oeuf2.png',
-                  width: width ?? appWidthSize(context) * 0.9,
-                  height: height ?? appHeightSize(context) * 0.25,
-                  fit: fit ?? BoxFit.cover),
-              Container(
-                padding: const EdgeInsets.all(4.0),
-                decoration: BoxDecoration(
-                    //                    color: Theme.of(context).colorScheme.surface,
-                    //borderRadius: BorderRadius.circular(20),
-                    gradient: gradient ??
-                        LinearGradient(colors: [
-                          Colors.grey.shade900.withOpacity(0.9),
-                          Colors.grey.shade800.withOpacity(0.5),
-                          Colors.grey.shade700.withOpacity(0.2),
-                        ])),
-                child: Stack(
-                  children: [
-                    Positioned(
-                        top: 10,
-                        left: 10,
-                        child: Container(
-                          padding: const EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface
-                                      .withOpacity(0.4))),
-                          child: AppText(
-                            text: 'Offre limitéé',
-                            fontSize: smallText(),
-                          ),
-                        )),
-                    Positioned(
-                        top: appHeightSize(context) * 0.05,
-                        left: 10,
-                        child: AppText(
-                          text: 'Ne ratez pas l\'offre',
-                          fontSize: largeText() * 0.8,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        )),
-                    Positioned(
-                        top: appHeightSize(context) * 0.085,
-                        left: 10,
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                AppText(
-                                  text: '1.500F',
-                                  decoration: TextDecoration.lineThrough,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.red,
-                                  fontSize: mediumText(),
-                                  decorationStyle: TextDecorationStyle.solid,
-                                ),
-                                AppText(
-                                  text: '750F',
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: mediumText() * 1.2,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            AppText(
-                              text: '-50%',
-                              fontSize: largeText() * 1.1,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.blue.shade300,
-                            )
-                          ],
-                        )),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: AppButton(
-                          height: 40,
-                          width: 40,
-                          bordeurRadius: 10,
-                          onTap: () {},
-                          child: const Icon(Icons.add)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// Recommandations
-
-class RecomandationModel extends StatelessWidget {
-  final String? backgroundImage;
-  final String? shopName;
-
-  const RecomandationModel({
-    super.key,
-    this.backgroundImage,
-    this.shopName,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    return SizedBox(
-      child: AppButton(
-        height: height * 0.2,
-        width: width * 0.47,
-        color: Colors.black38,
-        onTap: () {},
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 0.0),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15)),
-                child: SizedBox(
-                    height: height * 0.12,
-                    width: width * 0.47,
-                    child: Image.asset(
-                        fit: BoxFit.cover,
-                        backgroundImage ?? 'assets/images/oeuf2.png')),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    //width: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(
-                          text: '4.0',
-                          fontSize: smallText(),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          Icons.star,
-                          color: Colors.deepOrange,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                  Icon(
-                    Icons.verified_sharp,
-                    color: Colors.blue.shade900,
-                    size: 15,
-                  )
-                ],
-              ),
-            ),
-            /*Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: CircleAvatar(
-                radius: 45,
-                backgroundImage:
-                    AssetImage(backgroundImage ?? 'assets/images/oeuf2.png'),
-              ),
-            ),*/
-            Padding(
-              padding:
-                  const EdgeInsets.only(right: 4.0, left: 4.0, bottom: 6.0),
-              child: AppButton(
-                bordeurRadius: 10,
-                color:
-                    Theme.of(context).colorScheme.background.withOpacity(0.7),
-                height: height * 0.043,
-                width: width * 0.45,
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                  child: AppText(
-                    text: shopName?.trim() != ''
-                        ? shopName ?? 'Recommandé'
-                        : '...',
-                    //color: Colors.deepOrange.withOpacity(0.8),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

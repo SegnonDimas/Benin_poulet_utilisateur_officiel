@@ -26,39 +26,42 @@ class AppTextField extends StatefulWidget {
   final Function(String?)? onFieldSubmitted;
   final Function()? onEditingComplete;
   final Function(PointerDownEvent?)? onTapOutside;
+  final BorderRadius? borderRadius;
   bool? isPassword;
   bool? readOnly;
+  bool? showFloatingLabel;
   Function()? onTap;
 
-  AppTextField({
-    super.key,
-    this.label,
-    this.prefixIcon,
-    this.suffix,
-    this.isPassword = false,
-    this.height,
-    this.width,
-    this.color,
-    this.controller,
-    this.onChanged,
-    this.keyboardType,
-    this.prefixIconColor,
-    this.maxLines = 1,
-    this.expands = false,
-    this.minLines = 1,
-    this.fontSize = 16,
-    this.fontColor,
-    this.readOnly = false,
-    this.onTap,
-    this.border,
-    this.hintText,
-    this.suffixIcon,
-    this.onSaved,
-    this.fileBorderColor,
-    this.onFieldSubmitted,
-    this.onEditingComplete,
-    this.onTapOutside,
-  });
+  AppTextField(
+      {super.key,
+      this.label,
+      this.prefixIcon,
+      this.suffix,
+      this.isPassword = false,
+      this.height,
+      this.width,
+      this.color,
+      this.controller,
+      this.onChanged,
+      this.keyboardType,
+      this.prefixIconColor,
+      this.maxLines = 1,
+      this.expands = false,
+      this.minLines = 1,
+      this.fontSize = 16,
+      this.fontColor,
+      this.readOnly = false,
+      this.onTap,
+      this.border,
+      this.hintText,
+      this.suffixIcon,
+      this.onSaved,
+      this.fileBorderColor,
+      this.onFieldSubmitted,
+      this.onEditingComplete,
+      this.onTapOutside,
+      this.borderRadius,
+      this.showFloatingLabel = true});
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -76,7 +79,7 @@ class _AppTextFieldState extends State<AppTextField> {
       width: widget.width,
       //MediaQuery.of(context).size.width*0.95,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(15),
           color: widget.color,
           border:
               Border.all(color: widget.fileBorderColor ?? Colors.transparent)),
@@ -108,7 +111,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   hintText: widget.hintText,
                   //isDense: true,
                   label: Text(
-                    widget.label ?? '',
+                    widget.label!,
                     style:
                         TextStyle(color: Colors.grey, fontSize: mediumText()),
                   ),
@@ -127,22 +130,25 @@ class _AppTextFieldState extends State<AppTextField> {
                   ),
                   suffix: widget.suffix,
                   suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          click = !click;
-                        });
-                      },
-                      child: !click
-                          ? const Icon(
-                              Icons.visibility_off,
-                              color: Colors
-                                  .grey /*Theme.of(context).colorScheme.inversePrimary*/,
-                            )
-                          : const Icon(
-                              Icons.visibility,
-                              color: Colors
-                                  .grey /*Theme.of(context).colorScheme.inversePrimary*/,
-                            )),
+                    onTap: () {
+                      setState(() {
+                        click = !click;
+                      });
+                    },
+                    child: !click
+                        ? const Icon(
+                            Icons.visibility_off,
+                            color: Colors
+                                .grey /*Theme.of(context).colorScheme.inversePrimary*/,
+                          )
+                        : const Icon(
+                            Icons.visibility,
+                            color: Colors
+                                .grey /*Theme.of(context).colorScheme.inversePrimary*/,
+                          ),
+                  ),
+                  floatingLabelStyle: TextStyle(
+                      fontSize: widget.showFloatingLabel! ? mediumText() : 0),
                 ),
               ),
             )
@@ -172,11 +178,13 @@ class _AppTextFieldState extends State<AppTextField> {
                   border: widget.border ?? InputBorder.none,
                   hintText: widget.hintText,
                   //isDense: true,
+
                   label: Text(
-                    widget.label ?? '',
+                    widget.label ?? widget.hintText ?? '',
                     style: const TextStyle(color: Colors.grey),
                   ),
-                  floatingLabelStyle: TextStyle(fontSize: mediumText()),
+                  floatingLabelStyle: TextStyle(
+                      fontSize: widget.showFloatingLabel! ? mediumText() : 0),
                   //labelStyle: TextStyle(color: Colors.white),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
                   /*border: const OutlineInputBorder(

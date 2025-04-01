@@ -6,7 +6,7 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/model_attributBoutique.dart';
+import '../../models_ui/model_attributBoutique.dart';
 
 class VPresentationBoutiquePage extends StatefulWidget {
   const VPresentationBoutiquePage({super.key});

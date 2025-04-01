@@ -1,4 +1,4 @@
-import 'package:benin_poulet/models/model_releveTranslation.dart';
+import 'package:benin_poulet/views/models_ui/model_releveTranslation.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';

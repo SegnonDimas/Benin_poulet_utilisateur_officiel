@@ -3,8 +3,8 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 
-import '../views/sizes/app_sizes.dart';
-import '../widgets/app_text.dart';
+import '../../widgets/app_text.dart';
+import '../sizes/app_sizes.dart';
 
 class ModelCommande extends StatelessWidget {
   final String nomClient;

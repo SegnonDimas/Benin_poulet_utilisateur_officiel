@@ -4,7 +4,7 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-import '../../../../models/model_photoSelecteur.dart';
+import '../../../models_ui/model_photoSelecteur.dart';
 
 class PhotoPage extends StatefulWidget {
   @override
