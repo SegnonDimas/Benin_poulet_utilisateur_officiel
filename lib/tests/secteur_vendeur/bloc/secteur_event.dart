@@ -1,3 +1,4 @@
+/*
 // =========================
 // bloc/secteur_event.dart
 // =========================
@@ -14,3 +15,4 @@ class ToggleCategorySelection extends SecteurEvent {
   final String categoryName;
   ToggleCategorySelection(this.sectorId, this.categoryName);
 }
+*/

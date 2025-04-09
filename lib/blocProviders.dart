@@ -1,10 +1,10 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/tests/secteur_vendeur/bloc/secteur_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/authentification/authentification_bloc.dart';
+import 'bloc/choixCategorie/secteur_bloc.dart';
 
 List<SingleChildWidget> providers = [
   // authentification
@@ -19,9 +19,6 @@ List<SingleChildWidget> providers = [
   // authentification de compte vendeur
   BlocProvider(create: (context) => AuthentificationBloc()),
 
-  // choix de catégorie
-  BlocProvider(create: (context) => SecteurBloc()),
-
-  // secteur
+  // choix de secteurs et catégories
   BlocProvider(create: (context) => SecteurBloc()),
 ];

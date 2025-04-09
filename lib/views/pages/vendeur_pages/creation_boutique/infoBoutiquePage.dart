@@ -34,10 +34,16 @@ class InfoBoutiquePage extends StatelessWidget {
             final state = context.watch<StoreCreationBloc>().state
                 as StoreCreationGlobalState;
 
-            final storeInfo = SubmitStoreInfo(
-              storeName: nomBoutiqueController.value.text,
-              storeEmail: adresseEmailController.value.text,
-              storePhoneNumber: numeroBoutiqueController.value.text,
+            /*final storeInfo = SubmitStoreInfo(
+              storeName: state.storeName,
+              storeEmail: state.storeEmail,
+              storePhoneNumber: state.storePhoneNumber,
+            );*/
+
+            final storeInfo = StoreCreationGlobalEvent(
+              storeName: nomBoutiqueController.text,
+              storeEmail: adresseEmailController.text,
+              storePhoneNumber: numeroBoutiqueController.text,
             );
 
             return Form(
@@ -62,16 +68,34 @@ class InfoBoutiquePage extends StatelessWidget {
                     color: Theme.of(context).colorScheme.background,
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
+
+                    // à chaque saisie
                     onChanged: (String string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
+                    },
 
-                      print(""""
-                      =====================================================
-                      nomB => ${state.storeName}
-                      TelB => ${state.storePhoneNumber}
-                      EmailB => ${state.storeEmail}
-                      =====================================================
-                      """);
+                    // à la soumission
+                    onFieldSubmitted: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // à la fin de la saisie
+                    onEditingComplete: () {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // à la sauvegarde
+                    onSaved: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
                     },
                   ),
 
@@ -107,16 +131,40 @@ class InfoBoutiquePage extends StatelessWidget {
                     controller: numeroBoutiqueController,
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
+
+                    // à chaque saisie
                     onInputChanged: (phoneNumber) {
                       context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+                    //  à la soumission
+                    onSubmit: () {
+                      context.read<StoreCreationBloc>().add(storeInfo);
 
-                      print(""""
-                      =====================================================
-                      nomB => ${state.storeName}
-                      TelB => ${state.storePhoneNumber}
-                      EmailB => ${state.storeEmail}
-                      =====================================================
-                      """);
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // à la soumission
+                    onFieldSubmitted: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // lorsque le numéro saisi est valide
+                    onInputValidated: (bool isValid) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+
+                    // à la sauvegarde
+                    onSeved: (PhoneNumber? phoneNumber) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+
+                    // à la validation
+                    validator: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
                     },
                   ),
                   const SizedBox(
@@ -152,16 +200,34 @@ class InfoBoutiquePage extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     fontSize: mediumText() * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
-                    onChanged: (string) {
+
+                    // à chaque saisie
+                    onChanged: (String string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+
+                    // à la soumission
+                    onFieldSubmitted: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
-                      print(""""
-                      =====================================================
-                      nomB => ${state.storeName}
-                      TelB => ${state.storePhoneNumber}
-                      EmailB => ${state.storeEmail}
-                      =====================================================
-                      """);
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // à la fin de la saisie
+                    onEditingComplete: () {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
+                    },
+
+                    // à la sauvegarde
+                    onSaved: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+
+                      FocusScope.of(context)
+                          .unfocus(); // 👈 force le clavier à valider
                     },
                   ),
                   const SizedBox(

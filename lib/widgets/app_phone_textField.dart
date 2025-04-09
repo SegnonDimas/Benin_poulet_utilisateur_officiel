@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -17,6 +18,8 @@ class AppPhoneTextField extends StatefulWidget {
   late Function(PhoneNumber)? onInputChanged;
   late Function(bool)? onInputValidated;
   final Function(String)? onFieldSubmitted;
+  final void Function()? onSubmit;
+  final String? Function(String?)? validator;
 
   AppPhoneTextField({
     super.key,
@@ -34,6 +37,8 @@ class AppPhoneTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.fileColor,
     this.fileBorderColor,
+    this.onSubmit,
+    this.validator,
   });
 
   @override
@@ -79,6 +84,9 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
             // true, si le numéro saisi est correct; false sinon.
             print('Valeur : $value');
           },*/
+
+          onSubmit: widget.onSubmit,
+          validator: widget.validator,
           hintText: widget.hintText!,
           errorMessage: widget.errorMessage!,
           selectorConfig: const SelectorConfig(
@@ -111,6 +119,7 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
             ),
           ),
           onSaved: widget.onSeved,
+          cursorColor: AppColors.primaryColor,
         ),
       ),
     );

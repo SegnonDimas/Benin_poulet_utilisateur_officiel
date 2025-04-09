@@ -7,8 +7,15 @@ import '../sizes/text_sizes.dart';
 class ModelResumeTextField extends StatelessWidget {
   final String? attribut;
   final String? valeur;
+  final bool? listeValeur;
+  final Widget? listeValeurWidget;
 
-  const ModelResumeTextField({super.key, this.attribut, this.valeur});
+  const ModelResumeTextField(
+      {super.key,
+      this.attribut = '',
+      this.valeur = '',
+      this.listeValeur = false,
+      this.listeValeurWidget = const SizedBox()});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,7 @@ class ModelResumeTextField extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          //libelé de l'attibut
           Flexible(
             flex: 1,
             child: AppText(
@@ -26,12 +34,14 @@ class ModelResumeTextField extends StatelessWidget {
               fontSize: smallText() * 1.1,
             ),
           ),
-          Flexible(
-            flex: 2,
-            child: AppText(
-                text: valeur ?? '',
-                color: Theme.of(context).colorScheme.inversePrimary),
-          ),
+          listeValeur! == false
+              ? Flexible(
+                  flex: 2,
+                  child: AppText(
+                      text: valeur ?? '',
+                      color: Theme.of(context).colorScheme.inversePrimary),
+                )
+              : Flexible(flex: 2, child: listeValeurWidget ?? SizedBox()),
         ],
       ),
     );

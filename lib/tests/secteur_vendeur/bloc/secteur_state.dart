@@ -1,3 +1,4 @@
+/*
 // =========================
 // bloc/secteur_state.dart
 // =========================
@@ -8,7 +9,6 @@ class SecteurState {
   final List<SellerSector> sectors;
 
   const SecteurState({required this.sectors});
-
   SecteurState copyWith({
     List<SellerSector>? sectors,
   }) {
@@ -17,3 +17,4 @@ class SecteurState {
     );
   }
 }
+*/

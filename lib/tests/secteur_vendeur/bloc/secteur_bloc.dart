@@ -1,3 +1,4 @@
+/*
 // =========================
 // bloc/secteur_bloc.dart
 // =========================
@@ -83,3 +84,4 @@ final initialSectors = <SellerSector>[
     ],
   ),
 ];
+*/

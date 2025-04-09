@@ -332,7 +332,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
               position == _pages.length - 1
                   ? Container()
                   : Positioned(
-                      top: appHeightSize(context) * 0.035,
+                      top: appHeightSize(context) * 0.03,
                       right: 10,
                       child: Row(
                         mainAxisAlignment: position == 0

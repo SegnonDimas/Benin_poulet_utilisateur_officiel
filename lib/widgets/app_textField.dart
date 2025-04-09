@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../views/sizes/text_sizes.dart';
@@ -101,6 +102,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 onChanged: widget.onChanged,
                 onSaved: widget.onSaved,
                 onTap: widget.onTap,
+                cursorColor: AppColors.primaryColor,
                 style: TextStyle(
                     color: widget.fontColor,
                     //Theme.of(context).colorScheme.inverseSurface,
@@ -109,6 +111,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   floatingLabelAlignment: FloatingLabelAlignment.start,
                   border: widget.border ?? InputBorder.none,
                   hintText: widget.hintText,
+
                   //isDense: true,
                   label: Text(
                     widget.label!,
@@ -150,6 +153,8 @@ class _AppTextFieldState extends State<AppTextField> {
                   floatingLabelStyle: TextStyle(
                       fontSize: widget.showFloatingLabel! ? mediumText() : 0),
                 ),
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.done,
               ),
             )
 
@@ -169,6 +174,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 onTap: widget.onTap,
                 onSaved: widget.onSaved,
                 readOnly: widget.readOnly!,
+                cursorColor: AppColors.primaryColor,
                 style: TextStyle(
                     color: widget.fontColor,
                     fontSize: widget
@@ -198,6 +204,8 @@ class _AppTextFieldState extends State<AppTextField> {
                     color: widget.prefixIconColor,
                   ),
                 ),
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.done,
               ),
             ),
     );

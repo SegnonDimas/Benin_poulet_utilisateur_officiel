@@ -5,7 +5,7 @@ sealed class StoreCreationState {}
 final class StoreCreationInitial extends StoreCreationGlobalState {}
 
 // infos boutique
-class StoreInfoSubmitted extends StoreCreationState {
+class StoreInfoSubmitted extends StoreCreationGlobalState {
   final String storeName;
   final String storeEmail;
 
