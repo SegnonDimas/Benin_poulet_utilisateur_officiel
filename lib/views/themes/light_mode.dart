@@ -1,3 +1,4 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
 ThemeData lightMode = ThemeData(
@@ -36,6 +37,12 @@ ThemeData lightMode = ThemeData(
     labelLarge: TextStyle(fontFamily: 'PoppinsMedium'),
     labelMedium: TextStyle(fontFamily: 'PoppinsMedium'),
     labelSmall: TextStyle(fontFamily: 'PoppinsMedium'),
+  ),
+
+  textSelectionTheme: TextSelectionThemeData(
+    selectionHandleColor: AppColors.primaryColor,
+    selectionColor: AppColors.primaryColor.withOpacity(0.3),
+    cursorColor: AppColors.primaryColor,
   ),
 
   /// primaryTextTheme
