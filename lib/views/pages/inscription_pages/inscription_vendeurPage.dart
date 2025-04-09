@@ -327,6 +327,51 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                   );
                 },
               ),
+
+              /// bouton Passer
+              position == _pages.length - 1
+                  ? Container()
+                  : Positioned(
+                      top: appHeightSize(context) * 0.035,
+                      right: 10,
+                      child: Row(
+                        mainAxisAlignment: position == 0
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //bouton Passer
+                          GestureDetector(
+                            onTap: () {
+                              _pageViewController.nextPage(
+                                  duration: const Duration(milliseconds: 1000),
+                                  curve: Curves.linear);
+                              position = _pageViewController.page!.toInt();
+                            },
+                            child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.deepOrange),
+                                child: position != _pages.length - 1
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Passer',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: mediumText()),
+                                        ),
+                                      )
+                                    : Text(
+                                        'Aller',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: mediumText()),
+                                      )),
+                          ),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),

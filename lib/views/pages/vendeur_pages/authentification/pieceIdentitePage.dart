@@ -5,6 +5,7 @@ import 'package:benin_poulet/widgets/app_shaderMask.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../models_ui/model_pieceIdentite.dart';
 
@@ -145,8 +146,9 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                 }),
               ),
             ),
+            // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
             SizedBox(
-              height: appHeightSize(context) * 0.08,
+              height: context.height * 0.07,
             ),
           ],
         ),

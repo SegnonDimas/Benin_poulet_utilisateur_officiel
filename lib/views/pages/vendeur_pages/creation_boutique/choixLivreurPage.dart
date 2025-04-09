@@ -2,6 +2,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 import '../../../../bloc/storeCreation/store_creation_bloc.dart';
@@ -262,6 +263,11 @@ class _ChoixLivreurPageState extends State<ChoixLivreurPage> {
                 const SizedBox(
                   height: 10,
                 ),
+
+                // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+                SizedBox(
+                  height: context.height * 0.07,
+                )
               ],
             );
           },

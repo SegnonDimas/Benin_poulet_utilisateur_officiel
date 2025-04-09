@@ -6,18 +6,26 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
-import '../../../models_ui/model_secteur.dart';
+import '../../views/models_ui/model_secteur.dart';
 
-class ChoixCategoriePage extends StatelessWidget {
-  const ChoixCategoriePage({super.key});
+class SecteurPage extends StatelessWidget {
+  const SecteurPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
+        //=========================
+        // AppBar
+        //=========================
+        appBar: AppBar(
+            title: AppText(
+          text: "Choix des secteurs",
+          fontSize: context.mediumText,
+        )),
+
         //=========================
         // Body
         //=========================
@@ -26,10 +34,6 @@ class ChoixCategoriePage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(8.0),
               children: [
-                AppText(
-                  text: "Choix des secteurs",
-                  fontSize: context.mediumText,
-                ),
                 //Liste des secteurs (avec leur catégories (sous-secteurs))
                 ...state.sectors.map((sector) {
                   return ExpansionTile(
@@ -47,7 +51,6 @@ class ChoixCategoriePage extends StatelessWidget {
                           isSelected: sector.isSelected,
                           activeColor: AppColors.primaryColor,
                           disabledColor: Colors.grey,
-                          borderRadius: BorderRadius.circular(10),
                           onTap: () {
                             context
                                 .read<SecteurBloc>()
@@ -151,37 +154,29 @@ class ChoixCategoriePage extends StatelessWidget {
                           Column(
                               children: [
                                 SizedBox(
-                                  height: 20,
+                                  height: 50,
                                 ),
                                 Center(
                                   child: Icon(
                                     Icons.grid_view_rounded,
-                                    size: 60,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
+                                    size: 140,
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.2),
                                   ),
                                 ),
                                 AppText(
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.visible,
-                                    fontWeight: FontWeight.bold,
                                     text:
-                                        "Aucune Catégorie sélectionnée\nVeuillez cliquer sur une catégorie dans la liste ci-dessus",
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    fontSize: context.mediumText / 1.3),
+                                        "Aucune Catégorie sélectionnée\n\nVeuillez cliquer sur une catégorie dans la liste ci-dessus",
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.3),
+                                    fontSize: 15),
                               ],
                             ),
                       //const SizedBox(height: 10),
                     ],
                   ),
-                ),
-
-                // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
-                SizedBox(
-                  height: context.height * 0.07,
                 )
               ],
             );

@@ -2,6 +2,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../bloc/authentification/authentification_bloc.dart';
@@ -173,8 +174,9 @@ class InfoPersonnellePage extends StatelessWidget {
                       context.read<AuthentificationBloc>().add(sellerInfo);
                     },
                   ),
+                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
                   SizedBox(
-                    height: appHeightSize(context) * 0.08,
+                    height: context.height * 0.07,
                   ),
                 ],
               ),

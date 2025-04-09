@@ -2,6 +2,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../models_ui/model_photoSelecteur.dart';
@@ -108,7 +109,12 @@ class PhotoPageState extends State<PhotoPage> {
                   );
                 }),
               ),
-            )
+            ),
+
+            // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+            SizedBox(
+              height: context.height * 0.07,
+            ),
           ],
         ),
       ),

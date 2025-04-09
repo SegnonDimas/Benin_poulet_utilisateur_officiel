@@ -3,6 +3,7 @@ import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../bloc/storeCreation/store_creation_bloc.dart';
@@ -367,6 +368,11 @@ class FiscalitePageState extends State<FiscalitePage> {
                 SizedBox(
                   height: appHeightSize(context) * 0.02,
                 ),
+
+                // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+                SizedBox(
+                  height: context.height * 0.07,
+                )
               ],
             );
           },

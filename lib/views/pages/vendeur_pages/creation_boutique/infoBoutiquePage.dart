@@ -4,6 +4,7 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../widgets/app_phone_textField.dart';
@@ -176,6 +177,11 @@ class InfoBoutiquePage extends StatelessWidget {
                         .withOpacity(0.3),
                     overflow: TextOverflow.visible,
                   ),
+
+                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+                  SizedBox(
+                    height: context.height * 0.07,
+                  )
                 ],
               ),
             );
