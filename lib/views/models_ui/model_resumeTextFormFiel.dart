@@ -9,13 +9,18 @@ class ModelResumeTextField extends StatelessWidget {
   final String? valeur;
   final bool? listeValeur;
   final Widget? listeValeurWidget;
+  final TextOverflow? valueOverflow;
+  final TextOverflow? labelOverflow;
 
-  const ModelResumeTextField(
-      {super.key,
-      this.attribut = '',
-      this.valeur = '',
-      this.listeValeur = false,
-      this.listeValeurWidget = const SizedBox()});
+  const ModelResumeTextField({
+    super.key,
+    this.attribut = '',
+    this.valeur = '',
+    this.listeValeur = false,
+    this.listeValeurWidget = const SizedBox(),
+    this.valueOverflow,
+    this.labelOverflow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +28,7 @@ class ModelResumeTextField extends StatelessWidget {
       padding: EdgeInsets.only(top: appHeightSize(context) * 0.04, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //libelé de l'attibut
           Flexible(
@@ -32,14 +38,17 @@ class ModelResumeTextField extends StatelessWidget {
               color:
                   Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
               fontSize: smallText() * 1.1,
+              overflow: labelOverflow,
             ),
           ),
           listeValeur! == false
               ? Flexible(
                   flex: 2,
                   child: AppText(
-                      text: valeur ?? '',
-                      color: Theme.of(context).colorScheme.inversePrimary),
+                    text: valeur ?? '',
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    overflow: valueOverflow,
+                  ),
                 )
               : Flexible(flex: 2, child: listeValeurWidget ?? SizedBox()),
         ],

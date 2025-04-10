@@ -58,7 +58,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     FiscalitePage(),
 
     // page 4 : choix livreur
-    const ChoixLivreurPage(),
+    ChoixLivreurPage(),
 
     // page 5 : authetification vendeur
     const AuthentificationVendeurPage(),

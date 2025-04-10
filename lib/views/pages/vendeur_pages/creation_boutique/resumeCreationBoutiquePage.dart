@@ -196,7 +196,13 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Emplacement',
-            valeur: storeInfoState.storeLocation,
+            valeur: storeInfoState.location,
+            valueOverflow: TextOverflow.visible,
+          ),
+          ModelResumeTextField(
+            attribut: 'Description de l\'emplacement',
+            valeur: storeInfoState.locationDescription,
+            valueOverflow: TextOverflow.visible,
           ),
           DottedLine(
             dashColor:

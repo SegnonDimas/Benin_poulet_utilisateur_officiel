@@ -131,8 +131,8 @@ class FiscalitePage extends StatelessWidget {
         },
         builder: (context, fiscalState) {
           return BlocBuilder<StoreCreationBloc, StoreCreationState>(
-            builder: (context, storeState) {
-              if (storeState is! StoreCreationGlobalState) {
+            builder: (context, storeCreationState) {
+              if (storeCreationState is! StoreCreationGlobalState) {
                 return const Center(child: CircularProgressIndicator());
               }
 
@@ -149,32 +149,36 @@ class FiscalitePage extends StatelessWidget {
                   _buildRadioTile(
                     context: context,
                     value: 'Particulier',
-                    groupValue: storeState.storeFiscalType ?? '',
+                    groupValue: storeCreationState.storeFiscalType ?? '',
                     title: 'Particulier',
                     onChanged: (val) {
                       context
                           .read<StoreCreationBloc>()
                           .add(StoreCreationGlobalEvent(
                             storeFiscalType: val!,
-                            paymentMethod: storeState.paymentMethod,
-                            paymentPhoneNumber: storeState.paymentPhoneNumber,
-                            payementOwnerName: storeState.payementOwnerName,
+                            paymentMethod: storeCreationState.paymentMethod,
+                            paymentPhoneNumber:
+                                storeCreationState.paymentPhoneNumber,
+                            payementOwnerName:
+                                storeCreationState.payementOwnerName,
                           ));
                     },
                   ),
                   _buildRadioTile(
                     context: context,
                     value: 'Entreprise ou Société individuelle',
-                    groupValue: storeState.storeFiscalType ?? '',
+                    groupValue: storeCreationState.storeFiscalType ?? '',
                     title: 'Entreprise ou Société individuelle',
                     onChanged: (val) {
                       context
                           .read<StoreCreationBloc>()
                           .add(StoreCreationGlobalEvent(
                             storeFiscalType: val!,
-                            paymentMethod: storeState.paymentMethod,
-                            paymentPhoneNumber: storeState.paymentPhoneNumber,
-                            payementOwnerName: storeState.payementOwnerName,
+                            paymentMethod: storeCreationState.paymentMethod,
+                            paymentPhoneNumber:
+                                storeCreationState.paymentPhoneNumber,
+                            payementOwnerName:
+                                storeCreationState.payementOwnerName,
                           ));
                     },
                   ),
@@ -202,17 +206,18 @@ class FiscalitePage extends StatelessWidget {
                         return _buildChoiceChip(
                           context: context,
                           label: method,
-                          selectedValue: storeState.paymentMethod ?? '',
+                          selectedValue: storeCreationState.paymentMethod ?? '',
                           onSelected: (val) {
                             context
                                 .read<StoreCreationBloc>()
                                 .add(StoreCreationGlobalEvent(
-                                  storeFiscalType: storeState.storeFiscalType,
+                                  storeFiscalType:
+                                      storeCreationState.storeFiscalType,
                                   paymentMethod: val,
                                   paymentPhoneNumber:
-                                      storeState.paymentPhoneNumber,
+                                      storeCreationState.paymentPhoneNumber,
                                   payementOwnerName:
-                                      storeState.payementOwnerName,
+                                      storeCreationState.payementOwnerName,
                                 ));
                           },
                         );
@@ -228,28 +233,28 @@ class FiscalitePage extends StatelessWidget {
                     fontSize: context.mediumText * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onInputChanged: (string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                     onSeved: (string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                       FocusScope.of(context)
                           .unfocus(); //force le clavier à valider
                     },
                     onInputValidated: (isValid) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                     onFieldSubmitted: (string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                       FocusScope.of(context)
                           .unfocus(); //force le clavier à valider
                     },
                     onSubmit: () {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                       FocusScope.of(context)
                           .unfocus(); //force le clavier à valider
                     },
                     validator: (string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                   ),
                   const SizedBox(height: 20),
@@ -265,20 +270,18 @@ class FiscalitePage extends StatelessWidget {
                     fontSize: context.mediumText * 0.9,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
                     onChanged: (String string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                     onFieldSubmitted: (String? string) {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                       FocusScope.of(context)
                           .unfocus(); //force le clavier à valider
                     },
                     onSaved: (string) {
-                      _updateFiscalInfo(context, storeState);
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                     onEditingComplete: () {
-                      _updateFiscalInfo(context, storeState);
+                      _updateFiscalInfo(context, storeCreationState);
                     },
                   ),
 

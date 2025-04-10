@@ -6,6 +6,7 @@ import 'package:provider/single_child_widget.dart';
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/authentification/authentification_bloc.dart';
 import 'bloc/choixCategorie/secteur_bloc.dart';
+import 'bloc/delivery/delivery_bloc.dart';
 
 List<SingleChildWidget> providers = [
   // authentification
@@ -25,4 +26,7 @@ List<SingleChildWidget> providers = [
 
   // information fiscaux
   BlocProvider(create: (context) => FiscalBloc()),
+
+  // information de livraison
+  BlocProvider(create: (context) => DeliveryBloc()),
 ];
