@@ -79,7 +79,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // à la fin de la saisie
@@ -87,7 +87,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // à la sauvegarde
@@ -95,7 +95,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
                   ),
 
@@ -141,7 +141,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // à la soumission
@@ -149,7 +149,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // lorsque le numéro saisi est valide
@@ -211,7 +211,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // à la fin de la saisie
@@ -219,7 +219,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
 
                     // à la sauvegarde
@@ -227,7 +227,7 @@ class InfoBoutiquePage extends StatelessWidget {
                       context.read<StoreCreationBloc>().add(storeInfo);
 
                       FocusScope.of(context)
-                          .unfocus(); // 👈 force le clavier à valider
+                          .unfocus(); //force le clavier à valider
                     },
                   ),
                   const SizedBox(

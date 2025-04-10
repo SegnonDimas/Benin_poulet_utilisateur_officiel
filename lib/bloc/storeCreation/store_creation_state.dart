@@ -122,13 +122,13 @@ class StoreCreationGlobalState extends StoreCreationState {
     this.storePhoneNumber,
     this.storeSectors,
     this.storeSubSectors,
-    this.storeFiscalType,
+    this.storeFiscalType = 'Particulier',
     this.paymentPhoneNumber,
     this.payementOwnerName,
     this.sellerOwnDeliver,
     this.location,
     this.locationDescription,
-    this.country,
+    this.country = "Benin",
     this.idendityDocument,
     this.photoRectoIdendityDocument,
     this.photoVersoIdendityDocument,
@@ -138,7 +138,7 @@ class StoreCreationGlobalState extends StoreCreationState {
     this.sellerBirthDate,
     this.sellerBirthPlace,
     this.sellerCurrentLocation,
-    this.paymentMethod,
+    this.paymentMethod = 'MTN',
     this.storeLocation,
     this.sellerGlobalState,
   });
@@ -168,35 +168,36 @@ class StoreCreationGlobalState extends StoreCreationState {
     String? photoRectoIdendityDocument,
     String? photoVersoIdendityDocument,
     String? fullPhoto,
+    AuthentificationGlobalState? sellerGlobalState,
   }) {
     return StoreCreationGlobalState(
-        storeName: storeName ?? this.storeName,
-        storePhoneNumber: storePhoneNumber ?? this.storePhoneNumber,
-        storeEmail: storeEmail ?? this.storeEmail,
-        storeSectors: storeSectors ?? this.storeSectors,
-        storeSubSectors: storeSubSectors ?? this.storeSubSectors,
-        storeFiscalType: storeFiscalType ?? this.storeFiscalType,
-        paymentMethod: paymentMethod ?? this.paymentMethod,
-        paymentPhoneNumber: paymentPhoneNumber ?? this.paymentPhoneNumber,
-        payementOwnerName: payementOwnerName ?? this.payementOwnerName,
-        sellerOwnDeliver: sellerOwnDeliver ?? this.sellerOwnDeliver,
-        location: location ?? this.location,
-        locationDescription: locationDescription ?? this.locationDescription,
-        country: country ?? sellerGlobalState?.country,
-        idendityDocument:
-            idendityDocument ?? sellerGlobalState?.idendityDocument,
-        photoRectoIdendityDocument: photoRectoIdendityDocument ??
-            sellerGlobalState?.photoRectoIdendityDocument,
-        photoVersoIdendityDocument: photoVersoIdendityDocument ??
-            sellerGlobalState?.photoVersoIdendityDocument,
-        sellerFirstName: sellerFirstName ?? sellerGlobalState?.sellerFirstName,
-        sellerLastName: sellerLastName ?? sellerGlobalState?.sellerLastName,
-        sellerBirthDate: sellerBirthDate ?? sellerGlobalState?.sellerBirthDate,
-        sellerCurrentLocation:
-            sellerCurrentLocation ?? sellerGlobalState?.sellerCurrentLocation,
-        sellerBirthPlace:
-            sellerBirthPlace ?? sellerGlobalState?.sellerBirthPlace,
-        storeLocation: storeLocation ?? this.storeLocation,
-        fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto);
+      storeName: storeName ?? this.storeName,
+      storePhoneNumber: storePhoneNumber ?? this.storePhoneNumber,
+      storeEmail: storeEmail ?? this.storeEmail,
+      storeSectors: storeSectors ?? this.storeSectors,
+      storeSubSectors: storeSubSectors ?? this.storeSubSectors,
+      storeFiscalType: storeFiscalType ?? this.storeFiscalType,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentPhoneNumber: paymentPhoneNumber ?? this.paymentPhoneNumber,
+      payementOwnerName: payementOwnerName ?? this.payementOwnerName,
+      sellerOwnDeliver: sellerOwnDeliver ?? this.sellerOwnDeliver,
+      location: location ?? this.location,
+      locationDescription: locationDescription ?? this.locationDescription,
+      country: country ?? sellerGlobalState?.country,
+      idendityDocument: idendityDocument ?? sellerGlobalState?.idendityDocument,
+      photoRectoIdendityDocument: photoRectoIdendityDocument ??
+          sellerGlobalState?.photoRectoIdendityDocument,
+      photoVersoIdendityDocument: photoVersoIdendityDocument ??
+          sellerGlobalState?.photoVersoIdendityDocument,
+      sellerFirstName: sellerFirstName ?? sellerGlobalState?.sellerFirstName,
+      sellerLastName: sellerLastName ?? sellerGlobalState?.sellerLastName,
+      sellerBirthDate: sellerBirthDate ?? sellerGlobalState?.sellerBirthDate,
+      sellerCurrentLocation:
+          sellerCurrentLocation ?? sellerGlobalState?.sellerCurrentLocation,
+      sellerBirthPlace: sellerBirthPlace ?? sellerGlobalState?.sellerBirthPlace,
+      storeLocation: storeLocation ?? this.storeLocation,
+      fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto,
+      sellerGlobalState: sellerGlobalState ?? this.sellerGlobalState,
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:benin_poulet/bloc/fiscalty/fiscal_bloc.dart';
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
@@ -21,4 +22,7 @@ List<SingleChildWidget> providers = [
 
   // choix de secteurs et catégories
   BlocProvider(create: (context) => SecteurBloc()),
+
+  // information fiscaux
+  BlocProvider(create: (context) => FiscalBloc()),
 ];

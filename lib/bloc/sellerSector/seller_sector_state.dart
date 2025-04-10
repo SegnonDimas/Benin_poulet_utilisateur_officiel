@@ -1,3 +1,4 @@
+/*
 part of 'seller_sector_bloc.dart';
 
 sealed class SellerSectorState extends Equatable {
@@ -35,3 +36,4 @@ class SellerSectorRemovedSuccessfully extends SellerSectorState {
   @override
   List<Object> get props => [message!, sellerSectors];
 }
+*/

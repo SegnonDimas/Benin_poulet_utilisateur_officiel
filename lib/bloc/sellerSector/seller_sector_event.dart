@@ -1,3 +1,4 @@
+/*
 part of 'seller_sector_bloc.dart';
 
 sealed class SellerSectorEvent extends Equatable {
@@ -33,3 +34,4 @@ class FetchSellerSector extends SellerSectorEvent {
   @override
   List<Object?> get props => [];
 }
+*/

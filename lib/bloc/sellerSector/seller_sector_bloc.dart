@@ -1,3 +1,4 @@
+/*
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -42,3 +43,4 @@ class SellerSectorBloc extends Bloc<SellerSectorEvent, SellerSectorState> {
     });
   }
 }
+*/

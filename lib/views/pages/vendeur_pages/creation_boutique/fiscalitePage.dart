@@ -1,382 +1,317 @@
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_phone_textField.dart';
+import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../../bloc/fiscalty/fiscal_bloc.dart';
 import '../../../../bloc/storeCreation/store_creation_bloc.dart';
+import '../../../../models/fiscal_info.dart';
+import '../../../../widgets/app_phone_textField.dart';
 import '../../../../widgets/app_text.dart';
-import '../../../../widgets/app_textField.dart';
-import '../../../colors/app_colors.dart';
-import '../../../sizes/app_sizes.dart';
 
-class FiscalitePage extends StatefulWidget {
-  @override
-  FiscalitePageState createState() {
-    return FiscalitePageState();
+class FiscalitePage extends StatelessWidget {
+  const FiscalitePage({super.key});
+
+  void _updateFiscalInfo(BuildContext context, StoreCreationGlobalState state) {
+    final bloc = context.read<FiscalBloc>();
+    final info = FiscalInfo(
+      storeFiscalType: state.storeFiscalType,
+      paymentMethod: state.paymentMethod,
+      paymentPhoneNumberController: bloc.paymentPhoneNumberController.text,
+      payementOwnerNameController: bloc.payementOwnerNameController.text,
+    );
+
+    context.read<FiscalBloc>().add(SubmitFiscalInfo(info));
+
+    context.read<StoreCreationBloc>().add(SubmitPaymentInfo(
+          storeFiscalType: state.storeFiscalType,
+          paymentMethod: state.paymentMethod,
+        ));
+
+    context.read<StoreCreationBloc>().add(StoreCreationGlobalEvent(
+          storeFiscalType: info.storeFiscalType,
+          paymentMethod: info.paymentMethod,
+          paymentPhoneNumber: info.paymentPhoneNumberController,
+          payementOwnerName: info.payementOwnerNameController,
+        ));
   }
-}
 
-class FiscalitePageState extends State<FiscalitePage> {
-  String _sellerType = 'Particulier';
-  String _mobileMoney = '';
-  bool isMtn = false;
-  bool isMoov = false;
-  bool isCeltiis = false;
+  Widget _buildRadioTile({
+    required BuildContext context,
+    required String value,
+    required String groupValue,
+    required String title,
+    required Function(String?) onChanged,
+  }) {
+    return RadioListTile<String>(
+      value: value,
+      groupValue: groupValue,
+      title: Text(title),
+      onChanged: onChanged,
+      activeColor: AppColors.primaryColor,
+    );
+  }
 
-  String initialCountry = 'BJ';
-  PhoneNumber number = PhoneNumber(isoCode: 'BJ');
+  // pour l'interface des choix d'options de paiement
+  Widget _buildChoiceChip({
+    required BuildContext context,
+    required String label,
+    required String selectedValue,
+    required void Function(String) onSelected,
+  }) {
+    final bool isSelected = selectedValue == label;
+
+    return Padding(
+      padding: EdgeInsets.only(
+          left: context.height * 0.015, right: context.width * 0.015),
+      child: Stack(
+        children: [
+          ChoiceChip(
+            label: AppText(
+              text: label,
+              color: isSelected
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.inverseSurface.withAlpha(50),
+            ),
+            pressElevation: 20,
+            side: BorderSide.none,
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 7),
+            selected: isSelected,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            shadowColor: Theme.of(context).colorScheme.inversePrimary,
+            selectedColor: _getChipColor(label),
+            checkmarkColor: Colors.white,
+            tooltip: 'Recevoir de l\'argent par $label',
+            onSelected: (bool selected) {
+              onSelected(label);
+            },
+          ),
+          Container(
+            width: 12,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _getChipColor(label),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+// Fonction pour retourner la couleur spécifique de chaque option
+  Color _getChipColor(String label) {
+    switch (label) {
+      case 'Celtiis':
+        return Colors.deepPurpleAccent;
+      case 'MTN':
+        return Colors.orange;
+      case 'Moov Africa':
+        return Colors.lightGreen.shade700;
+      default:
+        return Colors.grey.withOpacity(0.3); //.colorScheme.background;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController(
-        text: StoreCreationGlobalState().payementOwnerName);
-    final TextEditingController _phoneNumbercontroller =
-        TextEditingController(text: SubmitPaymentInfo().paymentPhoneNumber);
+    final fiscalBloc = context.read<FiscalBloc>();
+
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<StoreCreationBloc, StoreCreationState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
-          builder: (context, state) {
-            return ListView(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AppText(
-                  text: 'Sur le plan fiscal, quel type de vendeur êtes-vous ?',
-                  fontSize: mediumText(),
-                  fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.visible,
-                ),
+      body: BlocConsumer<FiscalBloc, FiscalState>(
+        listener: (context, fiscalState) {
+          //TODO: implement listener
+        },
+        builder: (context, fiscalState) {
+          return BlocBuilder<StoreCreationBloc, StoreCreationState>(
+            builder: (context, storeState) {
+              if (storeState is! StoreCreationGlobalState) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                //Particulier
-                ListTile(
-                  title: AppText(
-                    text: 'Particulier',
-                    fontSize: smallText() * 1.3,
-                    fontWeight: _sellerType == 'Particulier'
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: _sellerType == 'Particulier'
-                        ? Theme.of(context).colorScheme.inversePrimary
-                        : Theme.of(context)
-                            .colorScheme
-                            .inverseSurface
-                            .withOpacity(0.3),
-                  ),
-                  leading: Radio<String>(
-                    value: 'Particulier',
-                    groupValue: _sellerType,
-                    activeColor: primaryColor,
-                    focusColor: Colors.grey,
-                    hoverColor: Colors.grey,
-                    onChanged: (String? value) {
-                      setState(() {
-                        _sellerType = value!;
-                        context.read<StoreCreationBloc>().add(SubmitPaymentInfo(
-                              storeFiscalType: _sellerType,
-                            ));
-                      });
-                    },
-                  ),
-                  horizontalTitleGap: 0,
-                ),
-
-                // Entreprise ou Société individuelle
-                ListTile(
-                  title: AppText(
-                    text: 'Entreprise ou Société individuelle',
-                    fontSize: smallText() * 1.3,
-                    overflow: TextOverflow.visible,
-                    fontWeight:
-                        _sellerType == 'Entreprise ou Société individuelle'
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                    color: _sellerType == 'Entreprise ou Société individuelle'
-                        ? Theme.of(context).colorScheme.inversePrimary
-                        : Theme.of(context)
-                            .colorScheme
-                            .inverseSurface
-                            .withOpacity(0.3),
-                  ),
-                  leading: Radio<String>(
-                    value: 'Entreprise ou Société individuelle',
-                    groupValue: _sellerType,
-                    activeColor: primaryColor,
-                    focusColor: Colors.grey,
-                    hoverColor: Colors.grey,
-                    onChanged: (String? value) {
-                      setState(() {
-                        _sellerType = value!;
-                        context.read<StoreCreationBloc>().add(SubmitPaymentInfo(
-                              storeFiscalType: _sellerType,
-                            ));
-                      });
-                    },
-                  ),
-                  horizontalTitleGap: 0,
-                ),
-                //SizedBox(height: 20),
-                Divider(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-
-                // Mobile money
-                AppText(
-                  text: 'Mobile Money',
-                  fontSize: mediumText(),
-                  fontWeight: FontWeight.bold,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                SizedBox(
-                  height: appHeightSize(context) * 0.08,
-                  width: appWidthSize(context),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: appWidthSize(context) * 0.025,
-                    ),
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        // Celtiis
-                        Stack(
-                          children: [
-                            ChoiceChip(
-                              label: AppText(
-                                text: 'Celtiis',
-                                color: isCeltiis
-                                    ? Colors.white
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface
-                                        .withAlpha(50),
-                              ),
-                              pressElevation: 20,
-                              side: BorderSide.none,
-                              padding: const EdgeInsets.only(
-                                  top: 15, bottom: 15, left: 10, right: 7),
-                              selected: _mobileMoney == 'Celtiis',
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.background,
-                              shadowColor:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                              //selectedColor: primaryColor,
-                              selectedColor: Colors.deepPurpleAccent,
-                              checkmarkColor: Colors.white,
-                              tooltip:
-                                  'Recevoir de l\'argent par Celtiis Money',
-                              onSelected: (bool selected) {
-                                setState(() {
-                                  isCeltiis = selected;
-                                  isMoov = false;
-                                  isMtn = false;
-                                  _mobileMoney = selected ? 'Celtiis' : '';
-                                });
-                              },
-                            ),
-                            Container(
-                                width: 12,
-                                height: 50,
-                                decoration: const BoxDecoration(
-                                    color: Colors.deepPurpleAccent,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10))))
-                          ],
-                        ),
-
-                        // MTN
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: appWidthSize(context) * 0.05,
-                              right: appWidthSize(context) * 0.05),
-                          child: Stack(
-                            children: [
-                              ChoiceChip(
-                                label: AppText(
-                                  text: 'MTN',
-                                  color: isMtn
-                                      ? Colors.white
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface
-                                          .withAlpha(50),
-                                ),
-                                pressElevation: 20,
-                                side: BorderSide.none,
-                                padding: const EdgeInsets.only(
-                                    top: 15, bottom: 15, left: 10, right: 7),
-                                selected: _mobileMoney == 'MTN',
-                                tooltip: 'Recevoir de l\'argent par MTN Money',
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.background,
-                                shadowColor: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
-                                //selectedColor: primaryColor,
-                                selectedColor: Colors.orange,
-                                checkmarkColor: Colors.white,
-                                onSelected: (bool selected) {
-                                  setState(() {
-                                    isMtn = selected;
-                                    isMoov = false;
-                                    isCeltiis = false;
-                                    print('Celtiis ==>' + '$isCeltiis');
-                                    print('Mtn ==>' + '$isMtn');
-                                    print('Moov ==>' + '$isMoov');
-                                    _mobileMoney = selected ? 'MTN' : '';
-                                  });
-                                },
-                              ),
-                              Container(
-                                  width: 12,
-                                  height: 50,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10))))
-                            ],
-                          ),
-                        ),
-
-                        // Moov Africa
-                        Stack(
-                          children: [
-                            ChoiceChip(
-                              label: AppText(
-                                text: 'Moov Africa',
-                                color: isMoov
-                                    ? Colors.white
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface
-                                        .withAlpha(50),
-                              ),
-                              pressElevation: 20,
-                              side: BorderSide.none,
-                              padding: const EdgeInsets.only(
-                                  top: 15, bottom: 15, left: 10, right: 7),
-                              selected: _mobileMoney == 'Moov Africa',
-                              tooltip: 'Recevoir de l\'argent par Moov Money',
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.background,
-                              shadowColor:
-                                  Theme.of(context).colorScheme.inversePrimary,
-                              selectedColor: primaryColor,
-                              checkmarkColor: Colors.white,
-                              onSelected: (bool selected) {
-                                setState(() {
-                                  isMoov = selected;
-                                  isCeltiis = false;
-                                  isMtn = false;
-                                  print('Celtiis ==>' + '$isCeltiis');
-                                  print('Mtn ==>' + '$isMtn');
-                                  print('Moov ==>' + '$isMoov');
-                                  _mobileMoney = selected ? 'Moov Africa' : '';
-                                });
-                              },
-                            ),
-                            Container(
-                                width: 12,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: primaryColor, //Colors.lightGreen,
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        bottomLeft: Radius.circular(10))))
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: appHeightSize(context) * 0.02),
-                Form(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        text: 'Numéro de paiement',
-                        fontSize: mediumText(),
-                        fontWeight: FontWeight.bold,
-                      ),
-
-                      // Numéro de téléphone
-                      const SizedBox(height: 20),
-                      AppPhoneTextField(
-                        controller: _phoneNumbercontroller,
-                        fontSize: mediumText() * 0.9,
-                        fontColor: Theme.of(context).colorScheme.inversePrimary,
-                        onInputChanged: (string) {
-                          context
-                              .read<StoreCreationBloc>()
-                              .add(SubmitPaymentInfo(
-                                paymentPhoneNumber:
-                                    _phoneNumbercontroller.value.text,
-                              ));
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Nom prénom
-                      AppTextField(
-                        label: 'Nom Prénom',
-                        height: appHeightSize(context) * 0.08,
-                        width: appWidthSize(context) * 0.9,
-                        color: Theme.of(context).colorScheme.background,
-                        controller: _nameController,
-                        prefixIcon: CupertinoIcons.person_alt_circle,
-                        fontSize: mediumText() * 0.9,
-                        fontColor: Theme.of(context).colorScheme.inversePrimary,
-                        onChanged: (string) {
-                          context.read<StoreCreationBloc>().add(
-                              SubmitPaymentInfo(
-                                  payementOwnerName:
-                                      _nameController.value.text));
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // texte
-                SizedBox(
-                  width: appWidthSize(context) * 0.8,
-                  child: AppText(
+              return ListView(
+                padding: const EdgeInsets.all(16.0),
+                children: [
+                  AppText(
                     text:
-                        "Vous pouvez faire des modifications après dans les paramètres",
-                    color: Theme.of(context)
-                        .colorScheme
-                        .inversePrimary
-                        .withOpacity(0.3),
+                        'Sur le plan fiscal, quel type de vendeur êtes-vous ?',
+                    fontSize: context.mediumText,
+                    fontWeight: FontWeight.bold,
                     overflow: TextOverflow.visible,
-                    fontSize: smallText() * 1.1,
                   ),
-                ),
+                  _buildRadioTile(
+                    context: context,
+                    value: 'Particulier',
+                    groupValue: storeState.storeFiscalType ?? '',
+                    title: 'Particulier',
+                    onChanged: (val) {
+                      context
+                          .read<StoreCreationBloc>()
+                          .add(StoreCreationGlobalEvent(
+                            storeFiscalType: val!,
+                            paymentMethod: storeState.paymentMethod,
+                            paymentPhoneNumber: storeState.paymentPhoneNumber,
+                            payementOwnerName: storeState.payementOwnerName,
+                          ));
+                    },
+                  ),
+                  _buildRadioTile(
+                    context: context,
+                    value: 'Entreprise ou Société individuelle',
+                    groupValue: storeState.storeFiscalType ?? '',
+                    title: 'Entreprise ou Société individuelle',
+                    onChanged: (val) {
+                      context
+                          .read<StoreCreationBloc>()
+                          .add(StoreCreationGlobalEvent(
+                            storeFiscalType: val!,
+                            paymentMethod: storeState.paymentMethod,
+                            paymentPhoneNumber: storeState.paymentPhoneNumber,
+                            payementOwnerName: storeState.payementOwnerName,
+                          ));
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Divider(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
 
-                SizedBox(
-                  height: appHeightSize(context) * 0.02,
-                ),
+                  // Mobile money
+                  AppText(
+                    text: 'Mobile Money',
+                    fontSize: mediumText(),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  // Liste des options de paiement
+                  SizedBox(
+                    height: context.height * 0.1,
+                    child: ListView(
+                      //spacing: 8.0,
+                      scrollDirection: Axis.horizontal,
+                      children: ['Celtiis', 'MTN', 'Moov Africa'].map((method) {
+                        return _buildChoiceChip(
+                          context: context,
+                          label: method,
+                          selectedValue: storeState.paymentMethod ?? '',
+                          onSelected: (val) {
+                            context
+                                .read<StoreCreationBloc>()
+                                .add(StoreCreationGlobalEvent(
+                                  storeFiscalType: storeState.storeFiscalType,
+                                  paymentMethod: val,
+                                  paymentPhoneNumber:
+                                      storeState.paymentPhoneNumber,
+                                  payementOwnerName:
+                                      storeState.payementOwnerName,
+                                ));
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
-                // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
-                SizedBox(
-                  height: context.height * 0.07,
-                )
-              ],
-            );
-          },
-        ),
+                  // Champ de saisie pour le numéro de téléphone
+                  AppPhoneTextField(
+                    controller: fiscalBloc.paymentPhoneNumberController,
+                    hintText: 'Numéro de paiement',
+                    fontSize: context.mediumText * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    onInputChanged: (string) {
+                      _updateFiscalInfo(context, storeState);
+                    },
+                    onSeved: (string) {
+                      _updateFiscalInfo(context, storeState);
+                      FocusScope.of(context)
+                          .unfocus(); //force le clavier à valider
+                    },
+                    onInputValidated: (isValid) {
+                      _updateFiscalInfo(context, storeState);
+                    },
+                    onFieldSubmitted: (string) {
+                      _updateFiscalInfo(context, storeState);
+                      FocusScope.of(context)
+                          .unfocus(); //force le clavier à valider
+                    },
+                    onSubmit: () {
+                      _updateFiscalInfo(context, storeState);
+                      FocusScope.of(context)
+                          .unfocus(); //force le clavier à valider
+                    },
+                    validator: (string) {
+                      _updateFiscalInfo(context, storeState);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  // Champ de saisie pour le nom du titulaire du compte
+                  // Nom prénom lié au numéro de paiement
+                  AppTextField(
+                    label: 'Nom du titulaire du compte',
+                    height: context.height * 0.08,
+                    width: context.width * 0.9,
+                    color: Theme.of(context).colorScheme.background,
+                    controller: fiscalBloc.payementOwnerNameController,
+                    prefixIcon: CupertinoIcons.person_alt_circle,
+                    fontSize: context.mediumText * 0.9,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    onChanged: (String string) {
+                      _updateFiscalInfo(context, storeState);
+                    },
+                    onFieldSubmitted: (String? string) {
+                      _updateFiscalInfo(context, storeState);
+                      FocusScope.of(context)
+                          .unfocus(); //force le clavier à valider
+                    },
+                    onSaved: (string) {
+                      _updateFiscalInfo(context, storeState);
+                      FocusScope.of(context)
+                          .unfocus(); //force le clavier à valider
+                    },
+                    onEditingComplete: () {
+                      _updateFiscalInfo(context, storeState);
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // texte
+                  SizedBox(
+                    width: context.width * 0.8,
+                    child: AppText(
+                      text:
+                          "Vous pouvez faire des modifications après dans les paramètres",
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.3),
+                      overflow: TextOverflow.visible,
+                      fontSize: smallText() * 1.1,
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: context.height * 0.02,
+                  ),
+
+                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+                  SizedBox(
+                    height: context.height * 0.07,
+                  )
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -9,7 +9,16 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
   StoreCreationBloc() : super(StoreCreationInitial()) {
     // infos boutique
     on<SubmitStoreInfo>((event, emit) {
-      try {
+      final currentState = state is StoreCreationGlobalState
+          ? state as StoreCreationGlobalState
+          : StoreCreationGlobalState();
+      emit(currentState.copyWith(
+        storeName: event.storeName,
+        storePhoneNumber: event.storePhoneNumber,
+        storeEmail: event.storeEmail,
+      ));
+
+      /*try {
         final String? storeName = event.storeName;
         final String? storePhoneNumber = event.storePhoneNumber;
         final String? storeEmail = event.storeEmail;
@@ -20,7 +29,7 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         ));
       } catch (e) {
         //Todo: implement
-      }
+      }*/
     });
 
     // secteurs et sous-secteurs boutique
@@ -28,7 +37,10 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
       try {
         final List<String> storeSectors = event.storeSectors;
         final List<String> storeSubSectors = event.storeSubSectors;
-        return emit(StoreCreationGlobalState(
+        final currentState = state is StoreCreationGlobalState
+            ? state as StoreCreationGlobalState
+            : StoreCreationGlobalState();
+        return emit(currentState.copyWith(
             storeSectors: storeSectors, storeSubSectors: storeSubSectors));
       } catch (e) {
         // Todo: implement
@@ -42,7 +54,10 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         final String? paymentMethod = event.paymentMethod;
         final String? paymentPhoneNumber = event.paymentPhoneNumber;
         final String? payementOwnerName = event.payementOwnerName;
-        return emit(StoreCreationGlobalState(
+        final currentState = state is StoreCreationGlobalState
+            ? state as StoreCreationGlobalState
+            : StoreCreationGlobalState();
+        return emit(currentState.copyWith(
             storeFiscalType: storeFiscalType,
             paymentMethod: paymentMethod,
             paymentPhoneNumber: paymentPhoneNumber,
@@ -58,7 +73,10 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         final bool? sellerOwnDeliver = event.sellerOwnDeliver;
         final String? location = event.location;
         final String? locationDescription = event.locationDescription;
-        return emit(StoreCreationGlobalState(
+        final currentState = state is StoreCreationGlobalState
+            ? state as StoreCreationGlobalState
+            : StoreCreationGlobalState();
+        return emit(currentState.copyWith(
             sellerOwnDeliver: sellerOwnDeliver,
             location: location,
             locationDescription: locationDescription));
@@ -98,7 +116,11 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         final AuthentificationGlobalState? sellerGlobalState =
             event.sellerGlobalState;
 
-        return emit(StoreCreationGlobalState(
+        final currentState = state is StoreCreationGlobalState
+            ? state as StoreCreationGlobalState
+            : StoreCreationGlobalState();
+
+        return emit(currentState.copyWith(
           storeName: storeName,
           storePhoneNumber: storePhoneNumber,
           storeEmail: storeEmail,
@@ -128,8 +150,10 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         //Todo: implement
       }
     });
+  }
+}
 
-    /* // infos vendeur
+/* // infos vendeur
     on<SubmitSellerInfo>((event, emit) {
       try {
         final String lastName = event.lastName;
@@ -176,5 +200,3 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         // Todo: implement
       }
     });*/
-  }
-}

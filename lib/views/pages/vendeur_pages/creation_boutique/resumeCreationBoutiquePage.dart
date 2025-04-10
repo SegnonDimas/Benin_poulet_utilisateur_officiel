@@ -179,15 +179,16 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Num translation',
-            valeur: storeInfoState.paymentPhoneNumber,
+            valeur:
+                "${storeInfoState.paymentMethod ?? ""} : ${storeInfoState.paymentPhoneNumber ?? ""} (${storeInfoState.payementOwnerName ?? ""})",
           ),
           DottedLine(
             dashColor:
                 Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
-          const ModelResumeTextField(
+          ModelResumeTextField(
             attribut: 'Statut ficale',
-            valeur: 'Particulier',
+            valeur: storeInfoState.storeFiscalType,
           ),
           DottedLine(
             dashColor:

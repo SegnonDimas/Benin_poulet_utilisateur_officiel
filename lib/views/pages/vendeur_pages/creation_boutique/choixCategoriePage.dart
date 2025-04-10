@@ -12,10 +12,10 @@ import '../../../../bloc/storeCreation/store_creation_bloc.dart';
 import '../../../models_ui/model_secteur.dart';
 
 class ChoixCategoriePage extends StatelessWidget {
-  ChoixCategoriePage({super.key});
+  const ChoixCategoriePage({super.key});
 
-  final List<String>? storeSectors = [];
-  final List<String>? storeSubSectors = [];
+  //final List<String>? storeSectors = [];
+  //final List<String>? storeSubSectors = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ChoixCategoriePage extends StatelessWidget {
           builder: (context, sectorState) {
             return BlocBuilder<StoreCreationBloc, StoreCreationState>(
                 builder: (context, storeCreationState) {
-              final storeInfo = StoreCreationGlobalEvent(
+              final storeSectors = StoreCreationGlobalEvent(
                   storeSectors: sectorState.selectedSectorNames,
                   storeSubSectors: sectorState.selectedCategoryNames);
               return ListView(
@@ -54,6 +54,9 @@ class ChoixCategoriePage extends StatelessWidget {
                           context
                               .read<SecteurBloc>()
                               .add(ToggleSectorSelection(sector.id));
+
+                          //enregistrement global
+                          context.read<StoreCreationBloc>().add(storeSectors);
                         },
                         child: ModelSecteur(
                             text: sector.name,
@@ -65,6 +68,10 @@ class ChoixCategoriePage extends StatelessWidget {
                               context
                                   .read<SecteurBloc>()
                                   .add(ToggleSectorSelection(sector.id));
+                              //enregistrement global
+                              context
+                                  .read<StoreCreationBloc>()
+                                  .add(storeSectors);
                             }),
                       ),
                       children: [
@@ -79,6 +86,11 @@ class ChoixCategoriePage extends StatelessWidget {
                                 context.read<SecteurBloc>().add(
                                     ToggleCategorySelection(
                                         sector.id, cat.name));
+
+                                //enregistrement global
+                                context
+                                    .read<StoreCreationBloc>()
+                                    .add(storeSectors);
                               },
                             );
                           }).toList(),
@@ -157,6 +169,11 @@ class ChoixCategoriePage extends StatelessWidget {
                                                         sectorState
                                                             .sectors[i].id,
                                                         c.name));
+
+                                                //enregistrement global
+                                                context
+                                                    .read<StoreCreationBloc>()
+                                                    .add(storeSectors);
                                               }
                                             }
                                           },
