@@ -96,751 +96,697 @@ class _PresentationPageState extends State<PresentationPage> {
           backgroundColor: Theme.of(context).colorScheme.surface,
 
           /// corps de la page
-          body: Column(
+          body: Stack(
+            alignment: Alignment.center,
             children: [
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    //GradientBall du haut
-                    Positioned(
-                      top: 20,
-                      left: 5,
-                      child: Hero(
-                        tag: '1',
-                        child: GradientBall(
-                            size: Size.square(context.height * 0.25),
-                            colors: const [
-                              //blueColor,
-                              Colors.deepPurple,
-                              Colors.purpleAccent
-                            ]),
-                      ),
-                    ),
-                    //GradientBall du bas
-                    Positioned(
-                      bottom: 0, //context.height * 0.8,
-                      right: 10,
-                      child: Hero(
-                        tag: '2',
-                        child: GradientBall(
-                            size: Size.square(context.height * 0.17),
-                            colors: const [Colors.orange, Colors.yellow]),
-                      ),
-                    ),
-                    BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                        //blur(sigmaX: 100, sigmaY: 100),
-                        child: Container()),
-                    // les éléments de la page
-                    PageView(
-                      controller: _pageViewController,
-                      // bloquer le scroll depuis cette pageView
-                      physics: const NeverScrollableScrollPhysics(),
+              //GradientBall du haut
+              Positioned(
+                top: 20,
+                left: 5,
+                child: Hero(
+                  tag: '1',
+                  child: GradientBall(
+                      size: Size.square(context.height * 0.25),
+                      colors: const [
+                        //blueColor,
+                        Colors.deepPurple,
+                        Colors.purpleAccent
+                      ]),
+                ),
+              ),
+              //GradientBall du bas
+              Positioned(
+                bottom: 0, //context.height * 0.8,
+                right: 10,
+                child: Hero(
+                  tag: '2',
+                  child: GradientBall(
+                      size: Size.square(context.height * 0.17),
+                      colors: const [Colors.orange, Colors.yellow]),
+                ),
+              ),
+              BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  //blur(sigmaX: 100, sigmaY: 100),
+                  child: Container()),
+              // les éléments de la page
+              PageView(
+                controller: _pageViewController,
+                // bloquer le scroll depuis cette pageView
+                physics: const NeverScrollableScrollPhysics(),
 
-                      // liste des pages de la pageView
-                      children: List.generate(views.length, (index) {
-                        // listView, structure de chaque page de la pageView
-                        return ListView(children: [
-                          /// logo + titre
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: context.height * 0.01,
-                                right: context.width * 0.1,
-                                left: context.width * 0.04,
-                                bottom: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // logo de Bénin poulet
-                                Hero(
-                                  tag: 'logoTag',
-                                  child: CircleAvatar(
-                                    radius: context.height * 0.03,
-                                    child: Image.asset(
-                                      'assets/logos/logoBlanc.png',
-                                      fit: BoxFit.fill,
-                                      height: context.height * 0.03,
-                                    ),
-                                  ),
-                                ),
-
-                                // le titre : Bénin Poulet (de la pageView)
-                                Text(
-                                  views[selectedPage].title,
-                                  style: TextStyle(
-                                      fontSize: TextSize.largeText * 1.3,
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.w900),
-                                ),
-                                const SizedBox(
-                                  width: 1,
-                                )
-                              ],
+                // liste des pages de la pageView
+                children: List.generate(views.length, (index) {
+                  // listView, structure de chaque page de la pageView
+                  return ListView(children: [
+                    /// logo + titre
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: context.height * 0.01,
+                          right: context.width * 0.1,
+                          left: context.width * 0.04,
+                          bottom: 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // logo de Bénin poulet
+                          Hero(
+                            tag: 'logoTag',
+                            child: CircleAvatar(
+                              radius: context.height * 0.03,
+                              child: Image.asset(
+                                'assets/logos/logoBlanc.png',
+                                fit: BoxFit.fill,
+                                height: context.height * 0.03,
+                              ),
                             ),
                           ),
 
-                          /// texte (Bouton): Passer
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: context.height * 0.04,
-                                bottom: context.height * 0.02,
-                                right: context.width * 0.05),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const SizedBox(
-                                  width: 1,
-                                ),
-                                selectedPage == views.length - 1
-                                    ? SizedBox(
-                                        height: context.height * 0.04,
-                                      )
-                                    : GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: AppText(
-                                                  text:
-                                                      'Que comptez-vous faire sur l\'application ?',
-                                                  fontSize: mediumText(),
-                                                  maxLine: 2,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                content: SizedBox(
-                                                  height: context.height * 0.17,
-                                                  child: Column(
-                                                    children: [
-                                                      ///VENDRE
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pushNamed(
-                                                                    '/inscriptionVendeurPage');
-                                                          },
-                                                          child: Container(
-                                                            height: appHeightSize(
-                                                                    context) *
-                                                                0.06,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  primaryColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                const Icon(
-                                                                  Icons
-                                                                      .monetization_on_outlined,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: appWidthSize(
-                                                                          context) *
-                                                                      0.05,
-                                                                ),
-                                                                AppText(
-                                                                  text:
-                                                                      'Vendre',
-                                                                  fontSize:
-                                                                      mediumText(),
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: appWidthSize(
-                                                                          context) *
-                                                                      0.05,
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_forward_ios,
-                                                                  size: TextSize
-                                                                      .largeText,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
+                          // le titre : Bénin Poulet (de la pageView)
+                          Text(
+                            views[selectedPage].title,
+                            style: TextStyle(
+                                fontSize: context.largeText * 1.3,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w900),
+                          ),
+                          const SizedBox(
+                            width: 1,
+                          )
+                        ],
+                      ),
+                    ),
 
-                                                      ///ACHETER
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pushNamed(AppRoutes
-                                                                    .INSCRIPTIONPAGE);
-                                                          },
-                                                          child: Container(
-                                                            height: appHeightSize(
-                                                                    context) *
-                                                                0.06,
-                                                            decoration: BoxDecoration(
-                                                                color:
-                                                                    primaryColor,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15)),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                const Icon(
-                                                                  Icons
-                                                                      .shopping_cart_outlined,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: appWidthSize(
-                                                                          context) *
-                                                                      0.05,
-                                                                ),
-                                                                AppText(
-                                                                  text:
-                                                                      'Acheter',
-                                                                  fontSize:
-                                                                      mediumText(),
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: appWidthSize(
-                                                                          context) *
-                                                                      0.05,
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_forward_ios,
-                                                                  size: TextSize
-                                                                      .largeText,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ],
-                                                            ),
+                    /// texte (Bouton): Passer
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: context.height * 0.04,
+                          bottom: context.height * 0.02,
+                          right: context.width * 0.05),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 1,
+                          ),
+                          selectedPage == views.length - 1
+                              ? SizedBox(
+                                  height: context.height * 0.04,
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: AppText(
+                                            text:
+                                                'Que comptez-vous faire sur l\'application ?',
+                                            fontSize: mediumText(),
+                                            maxLine: 2,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          content: SizedBox(
+                                            height: context.height * 0.17,
+                                            child: Column(
+                                              children: [
+                                                ///VENDRE
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pushNamed(
+                                                              '/inscriptionVendeurPage');
+                                                    },
+                                                    child: Container(
+                                                      height: appHeightSize(
+                                                              context) *
+                                                          0.06,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .monetization_on_outlined,
+                                                            color: Colors.white,
                                                           ),
-                                                        ),
-                                                      )
-                                                    ],
+                                                          SizedBox(
+                                                            width: appWidthSize(
+                                                                    context) *
+                                                                0.05,
+                                                          ),
+                                                          AppText(
+                                                            text: 'Vendre',
+                                                            fontSize:
+                                                                mediumText(),
+                                                            color: Colors.white,
+                                                          ),
+                                                          SizedBox(
+                                                            width: appWidthSize(
+                                                                    context) *
+                                                                0.05,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            size: context
+                                                                .largeText,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                                icon: CircleAvatar(
-                                                    radius:
-                                                        context.height * 0.05,
-                                                    backgroundColor:
-                                                        Theme.of(context)
-                                                            .colorScheme
-                                                            .background,
-                                                    child: Icon(
-                                                      Icons.question_mark,
-                                                      size: TextSize.largeText *
-                                                          2,
-                                                      color: primaryColor,
-                                                    )),
-                                                iconColor: Colors.white,
-                                                elevation: 25,
-                                                shadowColor: Theme.of(context)
+
+                                                ///ACHETER
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pushNamed(AppRoutes
+                                                              .INSCRIPTIONPAGE);
+                                                    },
+                                                    child: Container(
+                                                      height: appHeightSize(
+                                                              context) *
+                                                          0.06,
+                                                      decoration: BoxDecoration(
+                                                          color: AppColors
+                                                              .primaryColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15)),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .shopping_cart_outlined,
+                                                            color: Colors.white,
+                                                          ),
+                                                          SizedBox(
+                                                            width: appWidthSize(
+                                                                    context) *
+                                                                0.05,
+                                                          ),
+                                                          AppText(
+                                                            text: 'Acheter',
+                                                            fontSize:
+                                                                mediumText(),
+                                                            color: Colors.white,
+                                                          ),
+                                                          SizedBox(
+                                                            width: appWidthSize(
+                                                                    context) *
+                                                                0.05,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            size: context
+                                                                .largeText,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          icon: CircleAvatar(
+                                              radius: context.height * 0.05,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              child: Icon(
+                                                Icons.question_mark,
+                                                size: context.largeText * 2,
+                                                color: AppColors.primaryColor,
+                                              )),
+                                          iconColor: Colors.white,
+                                          elevation: 25,
+                                          shadowColor: Theme.of(context)
+                                              .colorScheme
+                                              .inversePrimary,
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: AppText(
+                                                text: 'Annuler',
+                                                color: Theme.of(context)
                                                     .colorScheme
                                                     .inversePrimary,
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: AppText(
-                                                      text: 'Annuler',
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .inversePrimary,
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            height: context.height * 0.04,
-                                            width: context.height * 0.1,
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withOpacity(0.05),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
                                             ),
-                                            child: AppText(
-                                              text: 'Passer',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inversePrimary,
-                                            )),
-                                      )
-                              ],
-                            ),
-                          ),
-
-                          /// corps mutable (scrollable) de la pageView
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.57,
-                              child: PageView.builder(
-                                  //physics: const NeverScrollableScrollPhysics(),
-                                  physics: const ScrollPhysics(),
-                                  controller: _pageController,
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      selectedPage = index;
-                                    });
-                                    //_pageController.jumpToPage(selectedPage);
-                                    _pageController.animateToPage(
-                                      selectedPage,
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      curve: Curves.linear,
+                                          ],
+                                        );
+                                      },
                                     );
                                   },
-                                  itemCount: views.length,
-                                  itemBuilder: (context, index) {
-                                    return SizedBox(
-                                      // image + description
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      height: context.height * 0.04,
+                                      width: context.height * 0.1,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .inverseSurface
+                                            .withOpacity(0.05),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: AppText(
+                                        text: 'Passer',
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .inversePrimary,
+                                      )),
+                                )
+                        ],
+                      ),
+                    ),
+
+                    /// corps mutable (scrollable) de la pageView
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.57,
+                        child: PageView.builder(
+                            //physics: const NeverScrollableScrollPhysics(),
+                            physics: const ScrollPhysics(),
+                            controller: _pageController,
+                            onPageChanged: (index) {
+                              setState(() {
+                                selectedPage = index;
+                              });
+                              //_pageController.jumpToPage(selectedPage);
+                              _pageController.animateToPage(
+                                selectedPage,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.linear,
+                              );
+                            },
+                            itemCount: views.length,
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                // image + description
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    // image caractéristique de chaque page
+                                    Image.asset(
+                                      views[selectedPage].image,
+                                      height: context.height * 0.28,
+                                    ),
+                                    //espace
+                                    SizedBox(
+                                      height: context.height * 0.05,
+                                    ),
+                                    //description
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          // image caractéristique de chaque page
-                                          Image.asset(
-                                            views[selectedPage].image,
-                                            height: context.height * 0.28,
+                                          // titre description
+                                          Text(
+                                            views[selectedPage]
+                                                .descriptionTitle,
+                                            style: TextStyle(
+                                                fontSize: context.largeText,
+                                                fontWeight: FontWeight.w900,
+                                                color: AppColors.primaryColor),
                                           ),
                                           //espace
                                           SizedBox(
-                                            height: context.height * 0.05,
+                                            height: context.height * 0.01,
                                           ),
                                           //description
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                                child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                // titre description
-                                                Text(
-                                                  views[selectedPage]
-                                                      .descriptionTitle,
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          TextSize.largeText,
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      color: primaryColor),
-                                                ),
-                                                //espace
-                                                SizedBox(
-                                                  height: context.height * 0.01,
-                                                ),
-                                                //description
-                                                Text(
-                                                  views[selectedPage]
-                                                      .description,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: mediumText(),
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .inversePrimary),
-                                                ),
-                                              ],
-                                            )),
+                                          Text(
+                                            views[selectedPage].description,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: mediumText(),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .inversePrimary),
                                           ),
                                         ],
-                                      ),
-                                    );
-                                  })),
-
-                          /// dots indicators
-                          // PageViewDotIndicator (ne l'afficher à cette possition que l'orsqu'on n'est pas sur la dernière page de la pageView)
-                          PageViewDotIndicator(
-                            /*  onItemClicked: (index) {
-                          setState(() {
-                            selectedPage = index;
-                          });
-                          _pageController.animateToPage(
-                            selectedPage,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.linear,
-                          );
-                        },*/
-                            currentItem: selectedPage,
-                            count: views.length,
-                            unselectedColor:
-                                Theme.of(context).colorScheme.background,
-                            selectedColor: primaryColor,
-                            borderRadius: BorderRadius.circular(300),
-                            duration: const Duration(milliseconds: 200),
-                            size: Size(
-                                context.width * 0.1, context.height * 0.012),
-                            unselectedSize: Size(
-                                context.width * 0.03, context.height * 0.012),
-                            boxShape: BoxShape.rectangle,
-                          ),
-
-                          //espace
-                          SizedBox(
-                            height: context.height * 0.06,
-                          ),
-
-                          /// le bouton d'INSCRIPTION ou SUIVANT (ne l'afficher que l'orsqu'on est sur la dernière page de la pageView)
-                          selectedPage == views.length - 1
-
-                              /// bouton S'INSCRIRE
-                              ? Positioned(
-                                  bottom: 50,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      /// dialog de choix du profil vendeur/client
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: AppText(
-                                              text:
-                                                  'Que comptez-vous faire sur l\'application ?',
-                                              fontSize: mediumText(),
-                                              maxLine: 2,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            content: SizedBox(
-                                              height: context.height * 0.17,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pushNamed(AppRoutes
-                                                                .INSCRIPTIONVENDEURPAGE);
-                                                      },
-                                                      child: Container(
-                                                        height: appHeightSize(
-                                                                context) *
-                                                            0.06,
-                                                        decoration: BoxDecoration(
-                                                            color: primaryColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15)),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            const Icon(
-                                                              Icons
-                                                                  .monetization_on_outlined,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: appWidthSize(
-                                                                      context) *
-                                                                  0.05,
-                                                            ),
-                                                            AppText(
-                                                              text: 'Vendre',
-                                                              fontSize:
-                                                                  mediumText(),
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: appWidthSize(
-                                                                      context) *
-                                                                  0.05,
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios,
-                                                              size: TextSize
-                                                                  .largeText,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pushNamed(
-                                                                '/inscriptionPage');
-                                                      },
-                                                      child: Container(
-                                                        height: appHeightSize(
-                                                                context) *
-                                                            0.06,
-                                                        decoration: BoxDecoration(
-                                                            color: primaryColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15)),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            const Icon(
-                                                              Icons
-                                                                  .shopping_cart_outlined,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: appWidthSize(
-                                                                      context) *
-                                                                  0.05,
-                                                            ),
-                                                            AppText(
-                                                              text: 'Acheter',
-                                                              fontSize:
-                                                                  mediumText(),
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: appWidthSize(
-                                                                      context) *
-                                                                  0.05,
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios,
-                                                              size: TextSize
-                                                                  .largeText,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            icon: CircleAvatar(
-                                                radius: context.height * 0.05,
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .background,
-                                                child: Icon(
-                                                  Icons.question_mark,
-                                                  size: TextSize.largeText * 2,
-                                                  color: primaryColor,
-                                                )),
-                                            iconColor: Colors.white,
-                                            elevation: 25,
-                                            shadowColor: Theme.of(context)
-                                                .colorScheme
-                                                .inversePrimary,
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: AppText(
-                                                  text: 'Annuler',
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .inversePrimary,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: context.width * 0.05,
-                                          right: context.width * 0.05),
-                                      child: Container(
-                                          height: context.height * 0.06,
-                                          width: context.height * 0.3,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            /*shape: BoxShape.circle,*/
-                                            border: const Border(),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .inversePrimary),
-                                              BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .inverseSurface)
-                                            ],
-                                          ),
-                                          child: AppText(
-                                            text: 'S\'inscrire',
-                                            color: Colors.white,
-                                            fontSize: TextSize.largeText,
-                                          )),
+                                      )),
                                     ),
-                                  ),
-                                )
-
-                              /// bouton SUIVANT
-                              : Positioned(
-                                  bottom: 100,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = selectedPage + 1;
-                                      });
-                                      ////_pageController.jumpToPage(selectedPage);
-
-                                      _pageController.animateToPage(
-                                        selectedPage,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.linear,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: context.width * 0.05,
-                                          right: context.width * 0.05),
-                                      child: Container(
-                                          height: context.height * 0.06,
-                                          width: context.height * 0.3,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: primaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            /*shape: BoxShape.circle,*/
-                                            border: const Border(),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .inversePrimary),
-                                              BoxShadow(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .inverseSurface)
-                                            ],
-                                          ),
-                                          child: AppText(
-                                            text: 'Suivant',
-                                            color: Colors.white,
-                                            fontSize: TextSize.largeText,
-                                          )),
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                        ]);
-                      }),
+                              );
+                            })),
+
+                    /// dots indicators
+                    // PageViewDotIndicator (ne l'afficher à cette possition que l'orsqu'on n'est pas sur la dernière page de la pageView)
+                    PageViewDotIndicator(
+                      /*  onItemClicked: (index) {
+                    setState(() {
+                      selectedPage = index;
+                    });
+                    _pageController.animateToPage(
+                      selectedPage,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.linear,
+                    );
+                  },*/
+                      currentItem: selectedPage,
+                      count: views.length,
+                      unselectedColor: Theme.of(context).colorScheme.background,
+                      selectedColor: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(300),
+                      duration: const Duration(milliseconds: 200),
+                      size: Size(context.width * 0.1, context.height * 0.012),
+                      unselectedSize:
+                          Size(context.width * 0.03, context.height * 0.012),
+                      boxShape: BoxShape.rectangle,
                     ),
 
-                    // les flèches Avant-Arrière (Suivant-Précédent)
-                    Positioned(
-                        child: SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // fléche Arrière (Précédent)
-                            selectedPage != 0
-                                ? GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = selectedPage - 1;
-                                      });
-                                      //_pageController.jumpToPage(selectedPage);
-                                      _pageController.animateToPage(
-                                        selectedPage,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.linear,
-                                      );
-                                    },
-                                    child: const Icon(Icons.arrow_back_ios))
-                                : Container(),
+                    //espace
+                    SizedBox(
+                      height: context.height * 0.06,
+                    ),
 
-                            // flèche Avant (Suivant)
-                            selectedPage != views.length - 1
-                                ? GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPage = selectedPage + 1;
-                                      });
-                                      //_pageController.jumpToPage(selectedPage);
-                                      _pageController.animateToPage(
-                                        selectedPage,
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.linear,
-                                      );
-                                    },
-                                    child: const Icon(Icons.arrow_forward_ios))
-                                : Container()
-                          ],
-                        ),
-                      ),
-                    )),
-                  ],
+                    /// le bouton d'INSCRIPTION ou SUIVANT (ne l'afficher que l'orsqu'on est sur la dernière page de la pageView)
+                    selectedPage == views.length - 1
+
+                        /// bouton S'INSCRIRE
+                        ? Padding(
+                            padding: EdgeInsets.only(bottom: 50),
+                            child: GestureDetector(
+                              onTap: () {
+                                /// dialog de choix du profil vendeur/client
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: AppText(
+                                        text:
+                                            'Que comptez-vous faire sur l\'application ?',
+                                        fontSize: mediumText(),
+                                        maxLine: 2,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      content: SizedBox(
+                                        height: context.height * 0.17,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed(AppRoutes
+                                                          .INSCRIPTIONVENDEURPAGE);
+                                                },
+                                                child: Container(
+                                                  height:
+                                                      appHeightSize(context) *
+                                                          0.06,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Icon(
+                                                        Icons
+                                                            .monetization_on_outlined,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        width: appWidthSize(
+                                                                context) *
+                                                            0.05,
+                                                      ),
+                                                      AppText(
+                                                        text: 'Vendre',
+                                                        fontSize: mediumText(),
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        width: appWidthSize(
+                                                                context) *
+                                                            0.05,
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward_ios,
+                                                        size: context.largeText,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed(
+                                                          '/inscriptionPage');
+                                                },
+                                                child: Container(
+                                                  height:
+                                                      appHeightSize(context) *
+                                                          0.06,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Icon(
+                                                        Icons
+                                                            .shopping_cart_outlined,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        width: appWidthSize(
+                                                                context) *
+                                                            0.05,
+                                                      ),
+                                                      AppText(
+                                                        text: 'Acheter',
+                                                        fontSize: mediumText(),
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        width: appWidthSize(
+                                                                context) *
+                                                            0.05,
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward_ios,
+                                                        size: context.largeText,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      icon: CircleAvatar(
+                                          radius: context.height * 0.05,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          child: Icon(
+                                            Icons.question_mark,
+                                            size: context.largeText * 2,
+                                            color: AppColors.primaryColor,
+                                          )),
+                                      iconColor: Colors.white,
+                                      elevation: 25,
+                                      shadowColor: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary,
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: AppText(
+                                            text: 'Annuler',
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: context.width * 0.05,
+                                    right: context.width * 0.05),
+                                child: Container(
+                                    height: context.height * 0.06,
+                                    width: context.height * 0.3,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      /*shape: BoxShape.circle,*/
+                                      border: const Border(),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary),
+                                        BoxShadow(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface)
+                                      ],
+                                    ),
+                                    child: AppText(
+                                      text: 'S\'inscrire',
+                                      color: Colors.white,
+                                      fontSize: context.largeText,
+                                    )),
+                              ),
+                            ),
+                          )
+
+                        /// bouton SUIVANT
+                        : Padding(
+                            padding: EdgeInsets.only(bottom: 50),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedPage = selectedPage + 1;
+                                });
+
+                                ////_pageController.jumpToPage(selectedPage);
+
+                                _pageController.animateToPage(
+                                  selectedPage,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.linear,
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: context.width * 0.05,
+                                    right: context.width * 0.05),
+                                child: Container(
+                                    height: context.height * 0.06,
+                                    width: context.height * 0.3,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      /*shape: BoxShape.circle,*/
+                                      border: const Border(),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary),
+                                        BoxShadow(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface)
+                                      ],
+                                    ),
+                                    child: AppText(
+                                      text: 'Suivant',
+                                      color: Colors.white,
+                                      fontSize: context.largeText,
+                                    )),
+                              ),
+                            ),
+                          ),
+                  ]);
+                }),
+              ),
+
+              // les flèches Avant-Arrière (Suivant-Précédent)
+              Positioned(
+                  child: SizedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // fléche Arrière (Précédent)
+                      selectedPage != 0
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedPage = selectedPage - 1;
+                                });
+                                //_pageController.jumpToPage(selectedPage);
+                                _pageController.animateToPage(
+                                  selectedPage,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.linear,
+                                );
+                              },
+                              child: const Icon(Icons.arrow_back_ios))
+                          : Container(),
+
+                      // flèche Avant (Suivant)
+                      selectedPage != views.length - 1
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedPage = selectedPage + 1;
+                                });
+                                //_pageController.jumpToPage(selectedPage);
+                                _pageController.animateToPage(
+                                  selectedPage,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.linear,
+                                );
+                              },
+                              child: const Icon(Icons.arrow_forward_ios))
+                          : Container()
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
+              )),
             ],
           )),
     );

@@ -22,12 +22,12 @@ class ModelProduit extends StatelessWidget {
       onTap: onTap,
       child: SizedBox(
         height: context.height * 0.11,
-        width: context.width * 0.9,
+        width: context.width * 0.95,
         child: Row(
           children: [
             /// image du produit
             Expanded(
-              //flex: 1,
+              flex: 3,
               child: SizedBox(
                 height: context.height * 0.08,
                 child: CarouselSlider(
@@ -60,7 +60,7 @@ class ModelProduit extends StatelessWidget {
 
             /// informations sur le produit
             Flexible(
-                flex: 3,
+                flex: 12,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
@@ -69,11 +69,30 @@ class ModelProduit extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// nom du produit
-                        AppText(
-                          text: produit.productName ?? 'Produit...',
-                          fontWeight: FontWeight.w900,
-                          fontSize: context.largeText * 0.9,
+                        /// nom et prix du produit
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // nom du produit
+                            Flexible(
+                              flex: 7,
+                              child: AppText(
+                                text: produit.productName ?? 'Produit...',
+                                fontWeight: FontWeight.w900,
+                                fontSize: context.mediumText * 1.0,
+                              ),
+                            ),
+
+                            // prix du produit
+                            Flexible(
+                                flex: 3,
+                                child: AppText(
+                                  text:
+                                      '${produit.productUnitPrice!.toInt()} F',
+                                  fontSize: context.mediumText * 0.8,
+                                  fontWeight: FontWeight.w900,
+                                )),
+                          ],
                         ),
 
                         /// liste des variétés du produit
@@ -83,14 +102,16 @@ class ModelProduit extends StatelessWidget {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: List.generate(
-                                produit.varieteProduitList?.length ?? 1,
-                                (index) {
+                                produit.varieteProduitList!.isNotEmpty
+                                    ? produit.varieteProduitList!.length
+                                    : 1, (index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
                                     bottom: 2.0, top: 2, right: 10),
                                 child: AppText(
-                                  text: produit.varieteProduitList?[index] ??
-                                      'standard',
+                                  text: produit.varieteProduitList!.isNotEmpty
+                                      ? produit.varieteProduitList![index]
+                                      : 'Standard',
                                   fontSize: context.smallText * 0.9,
                                   color: Theme.of(context)
                                       .colorScheme
@@ -118,7 +139,7 @@ class ModelProduit extends StatelessWidget {
                                         .colorScheme
                                         .inversePrimary,
                                     attributIconColor: Colors.deepPurpleAccent,
-                                    attributValueColor: primaryColor,
+                                    attributValueColor: AppColors.primaryColor,
                                   )),
                             ),
 
@@ -152,38 +173,22 @@ class ModelProduit extends StatelessWidget {
                   ),
                 )),
 
+            /// status du produit
             Flexible(
                 flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    /// prix unitair du produit
-                    Flexible(
-                        flex: 4,
-                        child: AppText(
-                          text: '${produit.productUnitPrice!.toInt()} F',
-                          fontSize: context.smallText,
-                          fontWeight: FontWeight.w900,
-                        )),
-
-                    /// bouton de redirection
-                    Flexible(
-                        flex: 1,
-                        child: Icon(
-                          Icons.circle,
-                          color: produit.productStatus == 'actif'
-                              ? Colors.green.shade600
-                              : produit.productStatus == 'inactif'
-                                  ? Colors
-                                      .grey //Theme.of(context).colorScheme.background
-                                  : produit.productStatus == 'en attente'
-                                      ? Colors.yellow.shade600
-                                      : produit.productStatus == 'suspendu'
-                                          ? Colors.red.shade600
-                                          : Colors.transparent,
-                          size: context.mediumText,
-                        ))
-                  ],
+                child: Icon(
+                  Icons.circle,
+                  color: produit.productStatus == 'actif'
+                      ? Colors.lightGreen.shade600
+                      : produit.productStatus == 'inactif'
+                          ? Colors
+                              .grey //Theme.of(context).colorScheme.background
+                          : produit.productStatus == 'en attente'
+                              ? Colors.yellow.shade600
+                              : produit.productStatus == 'suspendu'
+                                  ? Colors.red.shade600
+                                  : Colors.transparent,
+                  size: context.mediumText,
                 ))
           ],
         ),
