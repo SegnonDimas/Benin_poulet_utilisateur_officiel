@@ -125,7 +125,7 @@ class StoreCreationGlobalState extends StoreCreationState {
     this.storeFiscalType = 'Particulier',
     this.paymentPhoneNumber,
     this.payementOwnerName,
-    this.sellerOwnDeliver,
+    this.sellerOwnDeliver = false,
     this.location,
     this.locationDescription,
     this.country = "Benin",

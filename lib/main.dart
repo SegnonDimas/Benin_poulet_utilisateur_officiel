@@ -1,4 +1,5 @@
 import 'package:benin_poulet/blocProviders.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,10 +22,22 @@ void main() async {
   // flutter_localization init
   await FlutterLocalization.instance.ensureInitialized();
   // runApp
-  runApp(ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ProductImagesPathIndexProvider(),
+      ),
+    ],
     child: const MyApp(),
-  ));
+  )
+
+      /*ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),*/
+      );
 }
 
 // pour la reconnaissance de la langue de l'App en fonction de l'amplacement de l'utilisateur

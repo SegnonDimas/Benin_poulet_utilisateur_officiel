@@ -1,19 +1,19 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/resumeCreationBoutiquePage.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../widgets/app_timeline_tile.dart';
+import '../../colors/app_colors.dart';
 import '../vendeur_pages/creation_boutique/choixCategoriePage.dart';
 import '../vendeur_pages/creation_boutique/choixLivreurPage.dart';
 import '../vendeur_pages/creation_boutique/fiscalitePage.dart';
 import '../vendeur_pages/creation_boutique/infoBoutiquePage.dart';
+import '../vendeur_pages/creation_boutique/resumeCreationBoutiquePage.dart';
 
 class InscriptionVendeurPage extends StatefulWidget {
   const InscriptionVendeurPage({super.key});
@@ -34,7 +34,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     'Que vendez-vous ?',
     'Où devrions-nous verser vos fonds ?',
     'Pouvons-nous assurer vos livraisons ?',
-    'Vérifions votre identité',
+    //'Vérifions votre identité',
     'Résumé Général'
   ];
 
@@ -43,7 +43,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     'Aidez les clients à comprendre ce que votre boutique offre',
     'Vos informations sont chiffrées de bout en bout',
     'Confiez vos livraisons à notre flotte de livreur expérimentée',
-    'Tous nos vendeurs sont vérifiés pour rassurer nos clients',
+    //'Tous nos vendeurs sont vérifiés pour rassurer nos clients',
     'Vérifiez que toutes les informations sont correctes'
   ];
 
@@ -61,7 +61,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
     ChoixLivreurPage(),
 
     // page 5 : authetification vendeur
-    const AuthentificationVendeurPage(),
+    //const AuthentificationVendeurPage(),
 
     // page 6 : résumé de creation de boutique
     ResumeCreationBoutiquePage()
@@ -95,14 +95,14 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
             children: [
               /// l'en-tête de la page
               Positioned(
-                top: appHeightSize(context) * 0.03,
+                top: context.height * 0.03,
                 child: SizedBox(
-                  height: appHeightSize(context) * 0.2,
+                  height: context.height * 0.2,
                   child: Column(
                     children: [
                       SizedBox(
-                        height: appHeightSize(context) * 0.04,
-                        width: appWidthSize(context),
+                        height: context.height * 0.04,
+                        width: context.width,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: AppText(
@@ -114,8 +114,8 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         ),
                       ),
                       SizedBox(
-                        height: appHeightSize(context) * 0.1,
-                        width: appWidthSize(context),
+                        height: context.height * 0.1,
+                        width: context.width,
                         child: Wrap(
                             //mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(1, (index) {
@@ -126,13 +126,13 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               String description = _description[value];
 
                               return SizedBox(
-                                  height: appHeightSize(context) * 0.1,
-                                  width: appWidthSize(context),
+                                  height: context.height * 0.1,
+                                  width: context.width,
                                   child: ListTile(
                                     //titre
                                     title: AppText(
                                       text: title,
-                                      fontSize: mediumText(),
+                                      fontSize: context.mediumText,
                                       fontWeight: FontWeight.bold,
                                     ),
 
@@ -153,8 +153,8 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         })),
                       ),
                       SizedBox(
-                        height: appHeightSize(context) * 0.06,
-                        width: appWidthSize(context),
+                        height: context.height * 0.06,
+                        width: context.width,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(_pages.length, (index) {
@@ -163,7 +163,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                               valueListenable: _pageIndexNotifier,
                               builder: (context, value, child) {
                                 Color tileColor = (value >= index)
-                                    ? primaryColor
+                                    ? AppColors.primaryColor
                                     : Theme.of(context).colorScheme.background;
                                 Color iconColor = (value >= index)
                                     ? Colors.grey.shade200
@@ -172,7 +172,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                         .inverseSurface
                                         .withAlpha(60); //Colors.grey.shade600;
                                 Color lineColor = (value > index - 1)
-                                    ? primaryColor
+                                    ? AppColors.primaryColor
                                     : Theme.of(context).colorScheme.background;
 
                                 return AppTimelineTile(
@@ -181,7 +181,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                   isLast: index == _pages.length - 1,
                                   index: index + 1,
                                   icon: _getIconForIndex(index),
-                                  iconSize: mediumText() * 1.5,
+                                  iconSize: context.mediumText * 1.5,
                                   iconColor: iconColor,
                                   color: tileColor,
                                   afterLineColor: lineColor,
@@ -217,19 +217,17 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                 },
                 builder: (context, state) {
                   return Positioned(
-                    bottom: appHeightSize(context) * 0.01,
-                    top: appHeightSize(context) * 0.23,
+                    bottom: context.height * 0.01,
+                    top: context.height * 0.23,
                     child: SizedBox(
-                        height: appHeightSize(context) * 0.75,
-                        width: appWidthSize(context),
+                        height: context.height * 0.75,
+                        width: context.width,
                         child: Stack(
                           children: [
                             /// les sous-pages
                             SizedBox(
-                              height: position != _pages.length - 2
-                                  ? appHeightSize(context) * 0.67
-                                  : appHeightSize(context) * 0.75,
-                              width: appWidthSize(context),
+                              height: context.height * 0.75,
+                              width: context.width,
                               child: PageView.builder(
                                   itemCount: _pages.length,
                                   controller: _pageViewController,
@@ -252,75 +250,6 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                   }),
                             ),
 
-                            /// bouton Suivant/précédent
-                            position == _pages.length - 2
-                                ? Container()
-                                : Positioned(
-                                    bottom: appHeightSize(context) * 0.01,
-                                    child: SizedBox(
-                                      height: appHeightSize(context) * 0.07,
-                                      width: appWidthSize(context),
-                                      child: Row(
-                                        mainAxisAlignment: position == 0
-                                            ? MainAxisAlignment.center
-                                            : MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          //bouton suivant
-                                          GestureDetector(
-                                            onTap: () {
-                                              _pageViewController.nextPage(
-                                                  duration: const Duration(
-                                                      milliseconds: 1000),
-                                                  curve: Curves.linear);
-                                              position = _pageViewController
-                                                  .page!
-                                                  .toInt();
-                                            },
-                                            child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 0,
-                                                  //appWidthSize(context) * 0.03,
-                                                  right: 0,
-                                                ),
-                                                //appWidthSize(context) * 0.03),
-                                                child: Container(
-                                                    alignment: Alignment.center,
-                                                    height:
-                                                        appHeightSize(context) *
-                                                            0.07,
-                                                    width:
-                                                        appWidthSize(context) *
-                                                            0.9,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color: Colors.yellow),
-                                                    child: position !=
-                                                            _pages.length - 1
-                                                        ? Text(
-                                                            'Suivant',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize:
-                                                                    mediumText() *
-                                                                        1.2),
-                                                          )
-                                                        : Text(
-                                                            'Soumettre',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize:
-                                                                    mediumText() *
-                                                                        1.2),
-                                                          ))),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
                             // : Container(),
                           ],
                         )),
@@ -328,11 +257,71 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                 },
               ),
 
+              /// bouton Suivant/précédent
+              /*position == _pages.length - 2
+                  ? Container()
+                  : */
+              Positioned(
+                bottom: context.height * 0.01,
+                child: SizedBox(
+                  height: context.height * 0.07,
+                  width: context.width,
+                  child: Row(
+                    mainAxisAlignment: position == 0
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.spaceEvenly,
+                    children: [
+                      //bouton suivant
+                      GestureDetector(
+                        onTap: () {
+                          _pageViewController.nextPage(
+                            duration: const Duration(milliseconds: 10),
+                            curve: Curves.linear,
+                          );
+                          position = _pageViewController.page!.toInt();
+                          if (position == _pages.length - 1) {
+                            Navigator.pushNamed(
+                                context, AppRoutes.VALIDATIONPAGE);
+                          }
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 0,
+                              //context.width * 0.03,
+                              right: 0,
+                            ),
+                            //context.width * 0.03),
+                            child: Container(
+                                alignment: Alignment.center,
+                                height: context.height * 0.07,
+                                width: context.width * 0.9,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: AppColors.primaryColor),
+                                child: position != _pages.length - 1
+                                    ? Text(
+                                        'Suivant',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: context.mediumText * 1.2),
+                                      )
+                                    : Text(
+                                        'Soumettre',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: context.mediumText * 1.2),
+                                      ))),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
               /// bouton Passer
               position == _pages.length - 1
                   ? Container()
                   : Positioned(
-                      top: appHeightSize(context) * 0.03,
+                      top: context.height * 0.03,
                       right: 10,
                       child: Row(
                         mainAxisAlignment: position == 0
@@ -343,7 +332,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                           GestureDetector(
                             onTap: () {
                               _pageViewController.nextPage(
-                                  duration: const Duration(milliseconds: 1000),
+                                  duration: const Duration(milliseconds: 10),
                                   curve: Curves.linear);
                               position = _pageViewController.page!.toInt();
                             },
@@ -359,14 +348,14 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                           'Passer',
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: mediumText()),
+                                              fontSize: context.mediumText),
                                         ),
                                       )
                                     : Text(
                                         'Aller',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: mediumText()),
+                                            fontSize: context.mediumText),
                                       )),
                           ),
                         ],
@@ -391,9 +380,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
         return Icons.credit_card;
       case 3:
         return Icons.motorcycle;
+      /*case 4:
+        return Icons.fingerprint_sharp;*/
       case 4:
-        return Icons.fingerprint_sharp;
-      case 5:
         return Icons.all_inclusive;
       default:
         return Icons.circle;

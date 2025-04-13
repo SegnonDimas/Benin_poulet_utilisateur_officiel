@@ -1,10 +1,8 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/models_ui/model_secteur.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -33,7 +31,7 @@ class _ResumeCreationBoutiquePageState
         child: ListView(children: [
           /// résumé infos boutique
           Container(
-            height: appHeightSize(context) * 0.05,
+            height: context.height * 0.05,
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
@@ -68,132 +66,108 @@ class _ResumeCreationBoutiquePageState
             attribut: 'Nom de boutique',
             valeur: storeInfoState.storeName,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
           ModelResumeTextField(
             attribut: 'Tel associé à votre boutique',
             valeur: storeInfoState.storePhoneNumber,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
           ModelResumeTextField(
             attribut: 'Email boutique',
             valeur: storeInfoState.storeEmail,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
 
           //Les secteurs d'activités
-          SizedBox(
-            width: context.width * 0.92,
-            height: appHeightSize(context) * 0.13,
-            child: ModelResumeTextField(
-              attribut: 'Secteurs d\'activité',
-              listeValeur: true,
-              valeur: '',
-              listeValeurWidget: SizedBox(
-                width: context.width * 0.6,
-                child: BlocBuilder<SecteurBloc, SecteurState>(
-                  builder: (context, sectorState) {
-                    return Scrollbar(
+          ModelResumeTextField(
+            attribut: 'Secteurs d\'activité',
+            height: context.height * 0.075,
+            listeValeur: true,
+            valeur: '',
+            listeValeurWidget: SizedBox(
+              width: context.width * 0.6,
+              child: BlocBuilder<SecteurBloc, SecteurState>(
+                builder: (context, sectorState) {
+                  return Scrollbar(
+                    controller: sectorScrollController,
+                    trackVisibility: true,
+                    thumbVisibility: true,
+                    thickness: 3,
+                    radius: Radius.circular(20),
+                    child: ListView(
                       controller: sectorScrollController,
-                      trackVisibility: true,
-                      thumbVisibility: true,
-                      thickness: 3,
-                      radius: Radius.circular(20),
-                      child: ListView(
-                        controller: sectorScrollController,
-                        padding: const EdgeInsets.all(8),
-                        scrollDirection: Axis.horizontal,
-                        children: List.generate(
-                            sectorState.selectedSectorNames.length, (index) {
-                          return ModelSecteur(
-                              text: sectorState.selectedSectorNames[index],
-                              isSelected: true,
-                              activeColor:
-                                  AppColors.primaryColor.withOpacity(0.2),
-                              disabledColor: Colors.grey,
-                              onTap: () {});
-                        }),
-                      ),
-                    );
-                  },
-                ),
+                      padding: const EdgeInsets.all(8),
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(
+                          sectorState.selectedSectorNames.length, (index) {
+                        return ModelSecteur(
+                            text: sectorState.selectedSectorNames[index],
+                            isSelected: true,
+                            contentAligment: Alignment.center,
+                            textColor: AppColors.primaryColor,
+                            fontWeigth: FontWeight.bold,
+                            activeColor:
+                                AppColors.primaryColor.withOpacity(0.2),
+                            disabledColor: Colors.grey,
+                            onTap: () {});
+                      }),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
 
           //Les sous-secteurs d'activités
-          SizedBox(
-            width: context.width * 0.92,
-            height: appHeightSize(context) * 0.13,
-            child: ModelResumeTextField(
-              attribut: 'Sous Secteurs d\'activité',
-              listeValeur: true,
-              valeur: '',
-              listeValeurWidget: SizedBox(
-                width: context.width * 0.6,
-                child: BlocBuilder<SecteurBloc, SecteurState>(
-                  builder: (context, sectorState) {
-                    return Scrollbar(
+          ModelResumeTextField(
+            attribut: 'Sous Secteurs d\'activité',
+            height: context.height * 0.075,
+            listeValeur: true,
+            valeur: '',
+            listeValeurWidget: SizedBox(
+              width: context.width * 0.6,
+              child: BlocBuilder<SecteurBloc, SecteurState>(
+                builder: (context, sectorState) {
+                  return Scrollbar(
+                    controller: subSectorScrollController,
+                    trackVisibility: true,
+                    thumbVisibility: true,
+                    thickness: 3,
+                    radius: Radius.circular(20),
+                    child: ListView(
                       controller: subSectorScrollController,
-                      trackVisibility: true,
-                      thumbVisibility: true,
-                      thickness: 3,
-                      radius: Radius.circular(20),
-                      child: ListView(
-                        controller: subSectorScrollController,
-                        padding: const EdgeInsets.all(8),
-                        scrollDirection: Axis.horizontal,
-                        children: List.generate(
-                            sectorState.selectedCategoryNames.length, (index) {
-                          return ModelSecteur(
-                              text: sectorState.selectedCategoryNames[index],
-                              isSelected: true,
-                              activeColor:
-                                  AppColors.primaryColor.withOpacity(0.2),
-                              disabledColor: Colors.grey,
-                              onTap: () {});
-                        }),
-                      ),
-                    );
-                  },
-                ),
+                      padding: const EdgeInsets.all(8),
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(
+                          sectorState.selectedCategoryNames.length, (index) {
+                        return ModelSecteur(
+                            text: sectorState.selectedCategoryNames[index],
+                            isSelected: true,
+                            contentAligment: Alignment.center,
+                            textColor: AppColors.primaryColor,
+                            fontWeigth: FontWeight.bold,
+                            activeColor:
+                                AppColors.primaryColor.withOpacity(0.2),
+                            disabledColor: Colors.grey,
+                            onTap: () {});
+                      }),
+                    ),
+                  );
+                },
               ),
             ),
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
           ModelResumeTextField(
             attribut: 'Num translation',
             valeur:
                 "${storeInfoState.paymentMethod ?? ""} : ${storeInfoState.paymentPhoneNumber ?? ""} (${storeInfoState.payementOwnerName ?? ""})",
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
           ModelResumeTextField(
             attribut: 'Statut ficale',
             valeur: storeInfoState.storeFiscalType,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+
           ModelResumeTextField(
             attribut: 'Emplacement',
             valeur: storeInfoState.location,
@@ -201,12 +175,8 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Description de l\'emplacement',
-            valeur: storeInfoState.locationDescription,
+            valeur: storeInfoState.sellerOwnDeliver.toString(),
             valueOverflow: TextOverflow.visible,
-          ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
           ),
 
           //espace
@@ -214,9 +184,11 @@ class _ResumeCreationBoutiquePageState
             height: 50,
           ),
 
-          /// résumé infos personnelles
+          //============================
+          // RESUME INFOS PERSONNELLES
+          //============================
           Container(
-            height: appHeightSize(context) * 0.05,
+            height: context.height * 0.05,
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.background,
@@ -247,49 +219,36 @@ class _ResumeCreationBoutiquePageState
               ],
             ),
           ),
+
+          //nom
           ModelResumeTextField(
             attribut: 'Nom',
             valeur: storeInfoState.sellerLastName,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+          //prenom
           ModelResumeTextField(
             attribut: 'Prenom',
             valeur: storeInfoState.sellerFirstName,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+          //date et lieu de naissance
           ModelResumeTextField(
             attribut: 'Date et lieu de naissance',
             valeur:
                 '${storeInfoState.sellerBirthDate} à ${storeInfoState.sellerBirthPlace}',
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+          //adresse
           ModelResumeTextField(
             attribut: 'Adresse',
             valeur: storeInfoState.storeEmail,
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+          //type de piece
           const ModelResumeTextField(
             attribut: 'Type de pièce',
             valeur: 'Type de pièce',
           ),
-          DottedLine(
-            dashColor:
-                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-          ),
+          //espace
           SizedBox(
-            height: appHeightSize(context) * 0.05,
+            height: context.height * 0.05,
           ),
           // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
           SizedBox(
@@ -307,3 +266,9 @@ class _ResumeCreationBoutiquePageState
     super.dispose();
   }
 }
+
+/*
+DottedLine(
+dashColor:
+Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
+),*/

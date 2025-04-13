@@ -33,7 +33,7 @@ class ChoixCategoriePage extends StatelessWidget {
                   storeSectors: sectorState.selectedSectorNames,
                   storeSubSectors: sectorState.selectedCategoryNames);
               return ListView(
-                //padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
@@ -80,7 +80,7 @@ class ChoixCategoriePage extends StatelessWidget {
                             return ModelSecteur(
                               text: cat.name,
                               isSelected: cat.isSelected,
-                              activeColor: Colors.deepPurple.shade900,
+                              activeColor: AppColors.blueColor,
                               disabledColor: Colors.grey,
                               onTap: () {
                                 context.read<SecteurBloc>().add(
@@ -148,6 +148,8 @@ class ChoixCategoriePage extends StatelessWidget {
                             Wrap(
                                 spacing: 8.0,
                                 runSpacing: 4.0,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                //direction: Axis.vertical,
                                 children: sectorState.sectors
                                     .expand((s) => s.categories)
                                     .where((c) => c.isSelected)

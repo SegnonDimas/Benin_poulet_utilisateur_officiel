@@ -3,6 +3,7 @@ import 'package:benin_poulet/views/pages/vendeur_pages/v_homePage.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../widgets/app_text.dart';
 import '../../sizes/text_sizes.dart';
@@ -58,147 +59,151 @@ class _VMainPageState extends State<VMainPage> {
     var space = SizedBox(
       height: appHeightSize(context) * 0.05,
     );
-    return Scaffold(
-      ///Drawer
-      drawer: Drawer(
-        child: Column(
-          children: [
-            space,
-            // logo de benin poulet
-            Image.asset(
-              'assets/logos/logoNoir.png',
-              width: appWidthSize(context) * 0.2,
-            ),
-
-            // espace
-            space,
-            space,
-            space,
-
-            // option : partager
-            SizedBox(
-              width: appWidthSize(context) * 0.7,
-              child: ListTile(
-                leading: Icon(
-                  Icons.share,
-                  color: primaryColor,
-                ),
-                title: AppText(
-                  text: 'Partager',
-                ),
-                trailing: Icon(Icons.touch_app),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        ///Drawer
+        drawer: Drawer(
+          child: Column(
+            children: [
+              space,
+              // logo de benin poulet
+              Image.asset(
+                'assets/logos/logoNoir.png',
+                width: appWidthSize(context) * 0.2,
               ),
-            ),
 
-            // option : infos sur nous
-            SizedBox(
-              width: appWidthSize(context) * 0.7,
-              child: ListTile(
-                leading: Icon(
-                  Icons.info,
-                  color: primaryColor,
-                ),
-                title: AppText(
-                  text: 'Infos sur nous',
-                ),
-                trailing: Icon(Icons.touch_app),
-              ),
-            ),
+              // espace
+              space,
+              space,
+              space,
 
-            // option : guide d'utilisation
-            SizedBox(
-              width: appWidthSize(context) * 0.7,
-              child: ListTile(
-                leading: Icon(
-                  Icons.document_scanner,
-                  color: primaryColor,
+              // option : partager
+              SizedBox(
+                width: appWidthSize(context) * 0.7,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.share,
+                    color: primaryColor,
+                  ),
+                  title: AppText(
+                    text: 'Partager',
+                  ),
+                  trailing: Icon(Icons.touch_app),
                 ),
-                title: AppText(
-                  text: 'Guide d\'utilisation',
-                ),
-                trailing: Icon(Icons.touch_app),
               ),
-            ),
 
-            // option : paramètres
-            SizedBox(
-              width: appWidthSize(context) * 0.7,
-              child: ListTile(
-                leading: Icon(
-                  Icons.settings,
-                  color: primaryColor,
+              // option : infos sur nous
+              SizedBox(
+                width: appWidthSize(context) * 0.7,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.info,
+                    color: primaryColor,
+                  ),
+                  title: AppText(
+                    text: 'Infos sur nous',
+                  ),
+                  trailing: Icon(Icons.touch_app),
                 ),
-                title: AppText(
-                  text: 'Paramètres',
-                ),
-                trailing: Icon(Icons.touch_app),
               ),
+
+              // option : guide d'utilisation
+              SizedBox(
+                width: appWidthSize(context) * 0.7,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.document_scanner,
+                    color: primaryColor,
+                  ),
+                  title: AppText(
+                    text: 'Guide d\'utilisation',
+                  ),
+                  trailing: Icon(Icons.touch_app),
+                ),
+              ),
+
+              // option : paramètres
+              SizedBox(
+                width: appWidthSize(context) * 0.7,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    color: primaryColor,
+                  ),
+                  title: AppText(
+                    text: 'Paramètres',
+                  ),
+                  trailing: Icon(Icons.touch_app),
+                ),
+              )
+            ],
+          ),
+        ),
+
+        ///AppBar
+        appBar: AppBar(
+          //leading: IconButton(onPressed: null, icon: Icon(Icons.account_circle)),
+          title: _pagesTitle[currentPage],
+          centerTitle: true,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(Icons.notifications_sharp),
             )
           ],
         ),
-      ),
 
-      ///AppBar
-      appBar: AppBar(
-        //leading: IconButton(onPressed: null, icon: Icon(Icons.account_circle)),
-        title: _pagesTitle[currentPage],
-        centerTitle: true,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.notifications_sharp),
-          )
-        ],
-      ),
+        /// corps de l'app
+        body: Center(
+          child: PageView.builder(
+            itemCount: _pages.length,
+            controller: _pageViewController,
+            onPageChanged: (index) {
+              setState(() {
+                if (index == _pages.length) {
+                  currentPage = _pages.length - 1;
+                } else {
+                  currentPage = index;
+                }
+              });
+            },
+            itemBuilder: (BuildContext context, int index) {
+              return _pages[currentPage];
+            },
 
-      /// corps de l'app
-      body: Center(
-        child: PageView.builder(
-          itemCount: _pages.length,
-          controller: _pageViewController,
-          onPageChanged: (index) {
-            setState(() {
-              if (index == _pages.length) {
-                currentPage = _pages.length - 1;
-              } else {
+            /*controller: _pageViewController,
+            onPageChanged: (index) {
+              setState(() {
                 currentPage = index;
-              }
-            });
-          },
-          itemBuilder: (BuildContext context, int index) {
-            return _pages[currentPage];
-          },
+              });
+            },
+            children: _pages,*/
+          ),
+        ),
 
-          /*controller: _pageViewController,
-          onPageChanged: (index) {
+        /// bottomNavigationBar
+        bottomNavigationBar: CurvedNavigationBar(
+          height: context.height * 0.07,
+          backgroundColor: Colors.transparent,
+          color: Theme.of(context).colorScheme.background,
+          //buttonBackgroundColor: primaryColor,
+          //selectedColor: Colors.white,
+          //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
+          items: _bottomNavigationBarItems,
+          index: currentPage,
+          onTap: (index) {
+            //Handle button tap
             setState(() {
               currentPage = index;
+
+              //_pageViewController.jumpToPage(currentPage);
+              _pageViewController.animateToPage(currentPage,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.linear);
             });
           },
-          children: _pages,*/
         ),
-      ),
-
-      /// bottomNavigationBar
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.background,
-        //buttonBackgroundColor: primaryColor,
-        //selectedColor: Colors.white,
-        //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
-        items: _bottomNavigationBarItems,
-        index: currentPage,
-        onTap: (index) {
-          //Handle button tap
-          setState(() {
-            currentPage = index;
-
-            //_pageViewController.jumpToPage(currentPage);
-            _pageViewController.animateToPage(currentPage,
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.linear);
-          });
-        },
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../../../tests/blurryContainer.dart';
@@ -89,26 +90,26 @@ class _PresentationPageState extends State<PresentationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surface,
 
-        /// corps de la page
-        body: SafeArea(
-          bottom: false,
-          top: false,
-          child: Column(
+          /// corps de la page
+          body: Column(
             children: [
               Expanded(
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
+                    //GradientBall du haut
                     Positioned(
                       top: 20,
                       left: 5,
                       child: Hero(
                         tag: '1',
                         child: GradientBall(
-                            size: Size.square(appHeightSize(context) * 0.25),
+                            size: Size.square(context.height * 0.25),
                             colors: const [
                               //blueColor,
                               Colors.deepPurple,
@@ -116,13 +117,14 @@ class _PresentationPageState extends State<PresentationPage> {
                             ]),
                       ),
                     ),
+                    //GradientBall du bas
                     Positioned(
-                      bottom: 0, //appHeightSize(context) * 0.8,
+                      bottom: 0, //context.height * 0.8,
                       right: 10,
                       child: Hero(
                         tag: '2',
                         child: GradientBall(
-                            size: Size.square(appHeightSize(context) * 0.17),
+                            size: Size.square(context.height * 0.17),
                             colors: const [Colors.orange, Colors.yellow]),
                       ),
                     ),
@@ -143,9 +145,10 @@ class _PresentationPageState extends State<PresentationPage> {
                           /// logo + titre
                           Padding(
                             padding: EdgeInsets.only(
-                                top: appHeightSize(context) * 0.02,
-                                right: appWidthSize(context) * 0.1,
-                                left: appWidthSize(context) * 0.04),
+                                top: context.height * 0.01,
+                                right: context.width * 0.1,
+                                left: context.width * 0.04,
+                                bottom: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -153,11 +156,11 @@ class _PresentationPageState extends State<PresentationPage> {
                                 Hero(
                                   tag: 'logoTag',
                                   child: CircleAvatar(
-                                    radius: appHeightSize(context) * 0.03,
+                                    radius: context.height * 0.03,
                                     child: Image.asset(
                                       'assets/logos/logoBlanc.png',
                                       fit: BoxFit.fill,
-                                      height: appHeightSize(context) * 0.03,
+                                      height: context.height * 0.03,
                                     ),
                                   ),
                                 ),
@@ -180,9 +183,9 @@ class _PresentationPageState extends State<PresentationPage> {
                           /// texte (Bouton): Passer
                           Padding(
                             padding: EdgeInsets.only(
-                                top: appHeightSize(context) * 0.04,
-                                bottom: appHeightSize(context) * 0.02,
-                                right: appWidthSize(context) * 0.05),
+                                top: context.height * 0.04,
+                                bottom: context.height * 0.02,
+                                right: context.width * 0.05),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -191,7 +194,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                 ),
                                 selectedPage == views.length - 1
                                     ? SizedBox(
-                                        height: appHeightSize(context) * 0.04,
+                                        height: context.height * 0.04,
                                       )
                                     : GestureDetector(
                                         onTap: () {
@@ -207,9 +210,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                   textAlign: TextAlign.center,
                                                 ),
                                                 content: SizedBox(
-                                                  height:
-                                                      appHeightSize(context) *
-                                                          0.17,
+                                                  height: context.height * 0.17,
                                                   child: Column(
                                                     children: [
                                                       ///VENDRE
@@ -350,8 +351,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                 ),
                                                 icon: CircleAvatar(
                                                     radius:
-                                                        appHeightSize(context) *
-                                                            0.05,
+                                                        context.height * 0.05,
                                                     backgroundColor:
                                                         Theme.of(context)
                                                             .colorScheme
@@ -387,9 +387,8 @@ class _PresentationPageState extends State<PresentationPage> {
                                         },
                                         child: Container(
                                             alignment: Alignment.center,
-                                            height:
-                                                appHeightSize(context) * 0.04,
-                                            width: appHeightSize(context) * 0.1,
+                                            height: context.height * 0.04,
+                                            width: context.height * 0.1,
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -411,7 +410,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
                           /// corps mutable (scrollable) de la pageView
                           SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.6,
+                              height: MediaQuery.of(context).size.height * 0.57,
                               child: PageView.builder(
                                   //physics: const NeverScrollableScrollPhysics(),
                                   physics: const ScrollPhysics(),
@@ -424,7 +423,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                     _pageController.animateToPage(
                                       selectedPage,
                                       duration:
-                                          const Duration(milliseconds: 500),
+                                          const Duration(milliseconds: 200),
                                       curve: Curves.linear,
                                     );
                                   },
@@ -439,13 +438,11 @@ class _PresentationPageState extends State<PresentationPage> {
                                           // image caractéristique de chaque page
                                           Image.asset(
                                             views[selectedPage].image,
-                                            height:
-                                                appHeightSize(context) * 0.3,
+                                            height: context.height * 0.28,
                                           ),
                                           //espace
                                           SizedBox(
-                                            height:
-                                                appHeightSize(context) * 0.05,
+                                            height: context.height * 0.05,
                                           ),
                                           //description
                                           Padding(
@@ -468,9 +465,7 @@ class _PresentationPageState extends State<PresentationPage> {
                                                 ),
                                                 //espace
                                                 SizedBox(
-                                                  height:
-                                                      appHeightSize(context) *
-                                                          0.01,
+                                                  height: context.height * 0.01,
                                                 ),
                                                 //description
                                                 Text(
@@ -511,269 +506,282 @@ class _PresentationPageState extends State<PresentationPage> {
                             selectedColor: primaryColor,
                             borderRadius: BorderRadius.circular(300),
                             duration: const Duration(milliseconds: 200),
-                            size: Size(appWidthSize(context) * 0.1,
-                                appHeightSize(context) * 0.012),
-                            unselectedSize: Size(appWidthSize(context) * 0.03,
-                                appHeightSize(context) * 0.012),
+                            size: Size(
+                                context.width * 0.1, context.height * 0.012),
+                            unselectedSize: Size(
+                                context.width * 0.03, context.height * 0.012),
                             boxShape: BoxShape.rectangle,
                           ),
 
                           //espace
                           SizedBox(
-                            height: appHeightSize(context) * 0.06,
+                            height: context.height * 0.06,
                           ),
 
                           /// le bouton d'INSCRIPTION ou SUIVANT (ne l'afficher que l'orsqu'on est sur la dernière page de la pageView)
                           selectedPage == views.length - 1
 
                               /// bouton S'INSCRIRE
-                              ? GestureDetector(
-                                  onTap: () {
-                                    /// dialog de choix du profil vendeur/client
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: AppText(
-                                            text:
-                                                'Que comptez-vous faire sur l\'application ?',
-                                            fontSize: mediumText(),
-                                            maxLine: 2,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          content: SizedBox(
-                                            height:
-                                                appHeightSize(context) * 0.17,
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .pushNamed(AppRoutes
-                                                              .INSCRIPTIONVENDEURPAGE);
-                                                    },
-                                                    child: Container(
-                                                      height: appHeightSize(
-                                                              context) *
-                                                          0.06,
-                                                      decoration: BoxDecoration(
-                                                          color: primaryColor,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      15)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const Icon(
-                                                            Icons
-                                                                .monetization_on_outlined,
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(
-                                                            width: appWidthSize(
-                                                                    context) *
-                                                                0.05,
-                                                          ),
-                                                          AppText(
-                                                            text: 'Vendre',
-                                                            fontSize:
-                                                                mediumText(),
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(
-                                                            width: appWidthSize(
-                                                                    context) *
-                                                                0.05,
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            size: TextSize
-                                                                .largeText,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .pushNamed(
-                                                              '/inscriptionPage');
-                                                    },
-                                                    child: Container(
-                                                      height: appHeightSize(
-                                                              context) *
-                                                          0.06,
-                                                      decoration: BoxDecoration(
-                                                          color: primaryColor,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      15)),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const Icon(
-                                                            Icons
-                                                                .shopping_cart_outlined,
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(
-                                                            width: appWidthSize(
-                                                                    context) *
-                                                                0.05,
-                                                          ),
-                                                          AppText(
-                                                            text: 'Acheter',
-                                                            fontSize:
-                                                                mediumText(),
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(
-                                                            width: appWidthSize(
-                                                                    context) *
-                                                                0.05,
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            size: TextSize
-                                                                .largeText,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
+                              ? Positioned(
+                                  bottom: 50,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      /// dialog de choix du profil vendeur/client
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: AppText(
+                                              text:
+                                                  'Que comptez-vous faire sur l\'application ?',
+                                              fontSize: mediumText(),
+                                              maxLine: 2,
+                                              textAlign: TextAlign.center,
                                             ),
-                                          ),
-                                          icon: CircleAvatar(
-                                              radius:
-                                                  appHeightSize(context) * 0.05,
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .background,
-                                              child: Icon(
-                                                Icons.question_mark,
-                                                size: TextSize.largeText * 2,
-                                                color: primaryColor,
-                                              )),
-                                          iconColor: Colors.white,
-                                          elevation: 25,
-                                          shadowColor: Theme.of(context)
-                                              .colorScheme
-                                              .inversePrimary,
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: AppText(
-                                                text: 'Annuler',
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inversePrimary,
+                                            content: SizedBox(
+                                              height: context.height * 0.17,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.of(context)
+                                                            .pushNamed(AppRoutes
+                                                                .INSCRIPTIONVENDEURPAGE);
+                                                      },
+                                                      child: Container(
+                                                        height: appHeightSize(
+                                                                context) *
+                                                            0.06,
+                                                        decoration: BoxDecoration(
+                                                            color: primaryColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            const Icon(
+                                                              Icons
+                                                                  .monetization_on_outlined,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: appWidthSize(
+                                                                      context) *
+                                                                  0.05,
+                                                            ),
+                                                            AppText(
+                                                              text: 'Vendre',
+                                                              fontSize:
+                                                                  mediumText(),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: appWidthSize(
+                                                                      context) *
+                                                                  0.05,
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .arrow_forward_ios,
+                                                              size: TextSize
+                                                                  .largeText,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.of(context)
+                                                            .pushNamed(
+                                                                '/inscriptionPage');
+                                                      },
+                                                      child: Container(
+                                                        height: appHeightSize(
+                                                                context) *
+                                                            0.06,
+                                                        decoration: BoxDecoration(
+                                                            color: primaryColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15)),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            const Icon(
+                                                              Icons
+                                                                  .shopping_cart_outlined,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: appWidthSize(
+                                                                      context) *
+                                                                  0.05,
+                                                            ),
+                                                            AppText(
+                                                              text: 'Acheter',
+                                                              fontSize:
+                                                                  mediumText(),
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: appWidthSize(
+                                                                      context) *
+                                                                  0.05,
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .arrow_forward_ios,
+                                                              size: TextSize
+                                                                  .largeText,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
                                             ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: appWidthSize(context) * 0.05,
-                                        right: appWidthSize(context) * 0.05),
-                                    child: Container(
-                                        height: appHeightSize(context) * 0.06,
-                                        width: appHeightSize(context) * 0.3,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          /*shape: BoxShape.circle,*/
-                                          border: const Border(),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inversePrimary),
-                                            BoxShadow(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inverseSurface)
-                                          ],
-                                        ),
-                                        child: AppText(
-                                          text: 'S\'inscrire',
-                                          color: Colors.white,
-                                          fontSize: TextSize.largeText,
-                                        )),
+                                            icon: CircleAvatar(
+                                                radius: context.height * 0.05,
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                                child: Icon(
+                                                  Icons.question_mark,
+                                                  size: TextSize.largeText * 2,
+                                                  color: primaryColor,
+                                                )),
+                                            iconColor: Colors.white,
+                                            elevation: 25,
+                                            shadowColor: Theme.of(context)
+                                                .colorScheme
+                                                .inversePrimary,
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: AppText(
+                                                  text: 'Annuler',
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inversePrimary,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: context.width * 0.05,
+                                          right: context.width * 0.05),
+                                      child: Container(
+                                          height: context.height * 0.06,
+                                          width: context.height * 0.3,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            /*shape: BoxShape.circle,*/
+                                            border: const Border(),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inversePrimary),
+                                              BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inverseSurface)
+                                            ],
+                                          ),
+                                          child: AppText(
+                                            text: 'S\'inscrire',
+                                            color: Colors.white,
+                                            fontSize: TextSize.largeText,
+                                          )),
+                                    ),
                                   ),
                                 )
 
                               /// bouton SUIVANT
-                              : GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedPage = selectedPage + 1;
-                                    });
-                                    ////_pageController.jumpToPage(selectedPage);
+                              : Positioned(
+                                  bottom: 100,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedPage = selectedPage + 1;
+                                      });
+                                      ////_pageController.jumpToPage(selectedPage);
 
-                                    _pageController.animateToPage(
-                                      selectedPage,
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.linear,
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: appWidthSize(context) * 0.05,
-                                        right: appWidthSize(context) * 0.05),
-                                    child: Container(
-                                        height: appHeightSize(context) * 0.06,
-                                        width: appHeightSize(context) * 0.3,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          /*shape: BoxShape.circle,*/
-                                          border: const Border(),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inversePrimary),
-                                            BoxShadow(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inverseSurface)
-                                          ],
-                                        ),
-                                        child: AppText(
-                                          text: 'Suivant',
-                                          color: Colors.white,
-                                          fontSize: TextSize.largeText,
-                                        )),
+                                      _pageController.animateToPage(
+                                        selectedPage,
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        curve: Curves.linear,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: context.width * 0.05,
+                                          right: context.width * 0.05),
+                                      child: Container(
+                                          height: context.height * 0.06,
+                                          width: context.height * 0.3,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            /*shape: BoxShape.circle,*/
+                                            border: const Border(),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inversePrimary),
+                                              BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inverseSurface)
+                                            ],
+                                          ),
+                                          child: AppText(
+                                            text: 'Suivant',
+                                            color: Colors.white,
+                                            fontSize: TextSize.largeText,
+                                          )),
+                                    ),
                                   ),
                                 ),
                         ]);
@@ -834,7 +842,7 @@ class _PresentationPageState extends State<PresentationPage> {
                 height: 16,
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 }

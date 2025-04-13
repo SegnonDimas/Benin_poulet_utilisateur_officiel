@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                   'Connexion Réussie',
                   'Utilisateur connecté avec succès',
                   ContentType.success,
-                  primaryColor);
+                  AppColors.primaryColor);
               Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
             }
           },
@@ -128,9 +128,9 @@ class _LoginPageState extends State<LoginPage> {
                             Text(
                               'Bienvenue !',
                               style: TextStyle(
-                                  fontSize: TextSize.largeText * 1.5,
+                                  fontSize: context.largeText * 1.5,
                                   fontWeight: FontWeight.bold,
-                                  color: primaryColor),
+                                  color: AppColors.primaryColor),
                             ),
                             const SizedBox(height: 15),
 
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                             // numéro de téléphone
                             AppPhoneTextField(
                               controller: _phoneNumbercontroller,
-                              fontSize: TextSize.mediumText * 0.9,
+                              fontSize: context.mediumText * 0.9,
                               fontColor:
                                   Theme.of(context).colorScheme.inversePrimary,
                               fileColor: Theme.of(context)
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                                   .withOpacity(0.8),
                               isPassword: true,
                               controller: _passWordController,
-                              fontSize: TextSize.mediumText * 0.9,
+                              fontSize: context.mediumText * 0.9,
                               fontColor:
                                   Theme.of(context).colorScheme.inversePrimary,
                             ),
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                                           seSouvenir = value!;
                                         });
                                       },
-                                      activeColor: primaryColor,
+                                      activeColor: AppColors.primaryColor,
                                       checkColor: Colors.white,
                                       semanticLabel:
                                           'Se rappeler de cet appareil et vous éviter d\'entrer vos identifiants de connexion la prochaine fois',
@@ -209,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                   child: AppText(
                                     text: 'Mot de passe oublié ?',
-                                    color: primaryColor,
+                                    color: AppColors.primaryColor,
                                   ),
                                 ),
                               ],
@@ -230,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                                   width: context.screenWidth * 0.9,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: primaryColor),
+                                      color: AppColors.primaryColor),
                                   child: state is AuthLoading
                                       ? const CupertinoActivityIndicator(
                                           radius: 20.0, // Taille du spinner
@@ -240,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                                           'Connexion',
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: TextSize.largeText),
+                                              fontSize: context.largeText),
                                         )),
                             ),
                             const SizedBox(height: 20),
@@ -275,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
                                           .colorScheme
                                           .inversePrimary
                                           .withOpacity(0.4),
-                                      fontSize: TextSize.smallText * 1.2,
+                                      fontSize: context.smallText * 1.2,
                                     ),
                                   ),
                                 ),
@@ -359,7 +359,7 @@ class _LoginPageState extends State<LoginPage> {
                                       .colorScheme
                                       .inversePrimary
                                       .withOpacity(0.4),
-                                  fontSize: TextSize.smallText * 1.2,
+                                  fontSize: context.smallText * 1.2,
                                 ),
 
                                 // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
@@ -370,8 +370,8 @@ class _LoginPageState extends State<LoginPage> {
                                     },
                                     child: AppText(
                                       text: 'S\'inscrire',
-                                      color: primaryColor,
-                                      fontSize: TextSize.smallText * 1.2,
+                                      color: AppColors.primaryColor,
+                                      fontSize: context.smallText * 1.2,
                                     )),
                               ],
                             ),

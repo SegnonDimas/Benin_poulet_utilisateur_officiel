@@ -62,7 +62,7 @@ class ChoixLivreurPage extends StatelessWidget {
                         children: [
                           _buildRadioOption(
                             context: context,
-                            value: true,
+                            value: false,
                             groupValue: info.sellerOwnDeliver ?? true,
                             controller: _controllerOui,
                             label: 'OUI',
@@ -71,7 +71,7 @@ class ChoixLivreurPage extends StatelessWidget {
                           ),
                           _buildRadioOption(
                             context: context,
-                            value: false,
+                            value: true,
                             groupValue: info.sellerOwnDeliver ?? true,
                             controller: _controllerNon,
                             label: 'NON',
@@ -197,38 +197,48 @@ class ChoixLivreurPage extends StatelessWidget {
         overflow: TextOverflow.visible,
         color: Theme.of(context).colorScheme.surface,
       ),
-      child: SizedBox(
-        height: appHeightSize(context) * 0.05,
-        width: appWidthSize(context) * 0.4,
-        child: ListTile(
-          title: AppText(
-            text: label,
-            fontSize: smallText() * 1.3,
-            fontWeight:
-                (groupValue == value) ? FontWeight.bold : FontWeight.normal,
-            color: (groupValue == value)
-                ? Theme.of(context).colorScheme.inversePrimary
-                : Theme.of(context).colorScheme.inverseSurface.withAlpha(50),
-          ),
-          leading: Radio<bool>(
-            value: value,
-            groupValue: groupValue,
-            activeColor: primaryColor,
-            onChanged: (bool? val) {
-              if (val != null) {
-                context.read<DeliveryBloc>().add(
-                      DeliveryInfoEvent(
-                        context
-                            .read<DeliveryBloc>()
-                            .currentInfo
-                            .copyWith(sellerOwnDeliver: val),
-                      ),
-                    );
-              }
-            },
-          ),
-          horizontalTitleGap: 0,
-        ),
+      child: BlocBuilder<StoreCreationBloc, StoreCreationState>(
+        builder: (context, storeCreationState) {
+          return SizedBox(
+            height: appHeightSize(context) * 0.05,
+            width: appWidthSize(context) * 0.4,
+            child: ListTile(
+              title: AppText(
+                text: label,
+                fontSize: smallText() * 1.3,
+                fontWeight: (groupValue == !value)
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: (groupValue == !value)
+                    ? Theme.of(context).colorScheme.inversePrimary
+                    : Theme.of(context)
+                        .colorScheme
+                        .inverseSurface
+                        .withAlpha(50),
+              ),
+              leading: Radio<bool>(
+                value: !value,
+                groupValue: groupValue,
+                activeColor: primaryColor,
+                onChanged: (bool? val) {
+                  /*if (val != null) {
+                    context.read<DeliveryBloc>().add(
+                          DeliveryInfoEvent(
+                            context
+                                .read<DeliveryBloc>()
+                                .currentInfo
+                                .copyWith(sellerOwnDeliver: !val),
+                          ),
+                        );
+                    _updateDeliveryInfo(context,
+                        storeCreationState as StoreCreationGlobalState);
+                  }*/
+                },
+              ),
+              horizontalTitleGap: 0,
+            ),
+          );
+        },
       ),
     );
   }
