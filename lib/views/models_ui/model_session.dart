@@ -16,11 +16,12 @@ class ModelSession extends StatefulWidget {
   final int? maxLine;
   final Color? titleColor;
   final Function()? onTap;
+  final Color? backgroundColor;
 
   const ModelSession({
     super.key,
     this.title = 'Titre',
-    this.imgUrl = 'assets/images/img.png',
+    this.imgUrl = 'assets/logos/img.png',
     this.radius = 35,
     this.routeName,
     this.height,
@@ -29,6 +30,7 @@ class ModelSession extends StatefulWidget {
     this.maxLine,
     this.titleColor,
     this.onTap,
+    this.backgroundColor,
   });
 
   @override
@@ -60,9 +62,21 @@ class _ModelSessionState extends State<ModelSession> {
                 height: widget.radius! * 2,
                 width: widget.radius! * 2,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: widget.backgroundColor ??
+                        Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(10000)),
-                child: Container(),
+                child: CircleAvatar(
+                  //radius: widget.radius! / 1.5,
+                  maxRadius: widget.radius! / 2,
+                  minRadius: widget.radius! / 3,
+                  backgroundColor: Colors.transparent,
+                  child: Image.asset(
+                    widget.imgUrl!,
+                    height: widget.radius! * 1.1,
+                    width: widget.radius! * 1.1,
+                    //fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             Expanded(

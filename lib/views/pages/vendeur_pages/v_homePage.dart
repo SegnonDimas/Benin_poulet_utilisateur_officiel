@@ -22,32 +22,57 @@ class VHomePage extends StatefulWidget {
 class _VHomePageState extends State<VHomePage> {
   // liste des sessions
   final List<ModelSession> _sessions = [
-    const ModelSession(
+    ModelSession(
       title: 'Ma boutique',
-      routeName: '/vendeurPresentationBoutiquePage',
+      routeName: AppRoutes
+          .VENDEURPRESENTATIONBOUTIQUEPAGE /*'/vendeurPresentationBoutiquePage'*/,
+      imgUrl: 'assets/icons/shop.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(
+    ModelSession(
       title: 'Mes produits',
-      routeName: '/vendeurProduitsListPage',
+      routeName:
+          AppRoutes.VENDEURPRODUITSLISTPAGE /*'/vendeurProduitsListPage'*/,
+      imgUrl: 'assets/icons/produit.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(
+    ModelSession(
       title: 'Mes Commandes',
-      routeName: '/vendeurCommandeListPage',
+      routeName:
+          AppRoutes.VENDEURCOMMANDELISTPAGE /*'/vendeurCommandeListPage'*/,
+      imgUrl: 'assets/icons/command.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(
+    ModelSession(
       title: 'Campagnes',
       //routeName: '/vendeurPresentationBoutiquePage',
+      imgUrl: 'assets/icons/add.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(
+    ModelSession(
       title: 'Performances',
-      routeName: '/vendeurPerformancesPage',
+      routeName:
+          AppRoutes.VENDEURPERFORMANCESPAGE /*'/vendeurPerformancesPage'*/,
+      imgUrl: 'assets/icons/performance.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(
+    ModelSession(
       title: 'Calculatrice',
       //routeName: '/vendeurPresentationBoutiquePage',
+      imgUrl: 'assets/icons/calculator.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
-    const ModelSession(title: 'Coursiers'),
-    const ModelSession(title: 'Mon profil', routeName: '/vendeurProfilPage'),
+    ModelSession(
+      title: 'Coursiers',
+      imgUrl: 'assets/icons/delivery.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
+    ),
+    ModelSession(
+      title: 'Mon profil',
+      routeName: AppRoutes.VENDEURPROFILPAGE /*'/vendeurProfilPage'*/,
+      imgUrl: 'assets/icons/sellerProfil.png',
+      backgroundColor: AppColors.primaryColor.withOpacity(0.15),
+    ),
   ];
 
   @override

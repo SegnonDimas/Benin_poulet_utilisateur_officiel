@@ -101,6 +101,11 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                         onTap: widget.onSession1Tap,
                         maxLine: 1,
                         padding: 2,
+                        imgUrl: 'assets/icons/recharge.png',
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(0.5),
                       ),
                       ModelSession(
                         radius: widget.radius ?? 30,
@@ -111,6 +116,11 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                         onTap: widget.onSession2Tap,
                         maxLine: 1,
                         padding: 2,
+                        imgUrl: 'assets/icons/retrait.png',
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(0.5),
                       ),
                       ModelSession(
                         radius: widget.radius ?? 30,
@@ -121,60 +131,12 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                         titleColor: Colors.white,
                         maxLine: 1,
                         padding: 2,
+                        imgUrl: 'assets/icons/historique2.png',
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(0.5),
                       ),
-
-                      /*SizedBox(
-                        width: widget.width! / 5,
-                        child: ListView(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor:
-                                  widget.backgroundColor!.withGreen(1),
-                              radius: widget.height! / 3.5,
-                            ),
-                            AppText(
-                              text: 'Recharger',
-                              fontSize: smallText(),
-                              color: widget.foregroundColor,
-                            )
-                          ],
-                        ),
-                      ),*/
-                      /*SizedBox(
-                        width: widget.width! / 5,
-                        child: ListView(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor:
-                                  widget.backgroundColor!.withGreen(1),
-                              radius: widget.height! / 3.5,
-                            ),
-                            AppText(
-                              text: 'Retrait',
-                              fontSize: smallText(),
-                              color: widget.foregroundColor,
-                            )
-                          ],
-                        ),
-                      ),*/
-
-                      /*SizedBox(
-                        width: widget.width! / 5,
-                        child: ListView(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor:
-                                  widget.backgroundColor!.withGreen(1),
-                              radius: widget.height! / 3.5,
-                            ),
-                            AppText(
-                              text: 'Historique',
-                              fontSize: smallText(),
-                              color: widget.foregroundColor,
-                            )
-                          ],
-                        ),
-                      )*/
                     ],
                   ),
                 )
