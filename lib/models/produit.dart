@@ -12,6 +12,7 @@ class Produit {
   final double? promotionalPrice;
   final List<String>? varieteProduitList;
   final List<String>? productVariations; // poids, race, etc.
+  final String? productStatus; // ex : actif, inactif, en attente, suspendu
 
   const Produit({
     this.productImagesPath,
@@ -27,6 +28,7 @@ class Produit {
     this.isInPromotion,
     this.promotionalPrice,
     this.productVariations,
+    this.productStatus,
   });
 
   Produit copyWith({
@@ -43,6 +45,7 @@ class Produit {
     final double? promotionalPrice,
     final List<String>? varieteProduitList,
     final List<String>? productVariations, // ex : poids, race, etc.
+    final String? productStatus, // ex : actif, inactif, en attente, suspendu
   }) {
     return Produit(
       productImagesPath: productImagesPath ?? this.productImagesPath,
@@ -58,6 +61,479 @@ class Produit {
       promotionalPrice: promotionalPrice ?? promotionalPrice,
       varieteProduitList: varieteProduitList ?? this.varieteProduitList,
       productVariations: productVariations ?? this.productVariations,
+      productStatus: productStatus ?? this.productStatus,
     );
   }
 }
+
+//================================
+// Liste fictive de produits
+//================================
+
+List<Produit> list_produits = [
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Boeuf ayoussa',
+    productUnitPrice: 250000,
+    productImagesPath: ['assets/images/boeuf.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 100,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/pouletCouveuse.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/oeuf2.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Boeuf ayoussa',
+    productUnitPrice: 250000,
+    productImagesPath: ['assets/images/boeuf.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 100,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/pouletCouveuse.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/oeuf2.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Boeuf ayoussa',
+    productUnitPrice: 250000,
+    productImagesPath: ['assets/images/boeuf.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 100,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/pouletCouveuse.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/oeuf2.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Boeuf ayoussa',
+    productUnitPrice: 250000,
+    productImagesPath: ['assets/images/boeuf.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 100,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/pouletCouveuse.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/oeuf2.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'inactif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Boeuf ayoussa',
+    productUnitPrice: 250000,
+    productImagesPath: ['assets/images/boeuf.png', 'assets/images/oeuf2.png'],
+    varieteProduitList: [],
+    promotionValue: 'NON',
+    productStatus: 'suspendu',
+    stockValue: 100,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/pouletCouveuse.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'en attente',
+    stockValue: 150,
+  ),
+  const Produit(
+    productName: 'Œufs Poulet',
+    productUnitPrice: 1500,
+    productImagesPath: [
+      'assets/images/oeuf2.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: [
+      'Variation1',
+      'Variation2',
+      'Variation3',
+      'Variation4'
+    ],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 15,
+  ),
+  const Produit(
+    productName: 'Poulet Goliath',
+    productUnitPrice: 7500,
+    productImagesPath: [
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+      'assets/images/pouletCouveuse.png',
+      'assets/images/oeuf2.png',
+    ],
+    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    promotionValue: 'NON',
+    productStatus: 'actif',
+    stockValue: 150,
+  ),
+];

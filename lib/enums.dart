@@ -1,6 +1,7 @@
-enum AppColors {
+/*enum AppColors {
   red,
   green,
   blue,
   black,
-}
+  redColor,
+}*/

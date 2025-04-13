@@ -6,6 +6,7 @@ import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../../../bloc/storeCreation/store_creation_bloc.dart';
 import '../../models_ui/model_portefeuille.dart';
@@ -49,30 +50,6 @@ class _VHomePageState extends State<VHomePage> {
     const ModelSession(title: 'Mon profil', routeName: '/vendeurProfilPage'),
   ];
 
-  // liste des icônes du bottomNavigationBar
-  final List<Icon> _bottomNavigationBarItems = [
-    Icon(
-      Icons.home_filled,
-      size: largeText() * 1.2,
-    ),
-    /*Icon(Icons.edit_calendar_rounded, size: largeText() * 1.2),
-    Icon(
-      Icons.payment,
-      size: largeText() * 1.2,
-    ),*/
-    Icon(
-      Icons.wechat_rounded,
-      size: largeText() * 1.2,
-    ),
-  ];
-
-  // page view controller
-  final PageController _pageViewController = PageController(
-    initialPage: 0,
-  );
-
-  int currentPage = 0;
-
   @override
   Widget build(BuildContext context) {
     final storeInfoState =
@@ -87,7 +64,7 @@ class _VHomePageState extends State<VHomePage> {
         children: [
           /// texte de bienvenue
           SizedBox(
-              height: appHeightSize(context) * 0.1,
+              height: context.height * 0.1,
               width: appWidthSize(context),
               child: ListTile(
                 title: AppText(
@@ -103,10 +80,10 @@ class _VHomePageState extends State<VHomePage> {
 
           /// présentation du portefeuille
           ModelPortefeuille(
-            backgroundColor: primaryColor.withGreen(150),
+            backgroundColor: AppColors.primaryColor.withGreen(150),
             solde: 400000,
-            height: appHeightSize(context) * 0.15,
-            radius: appHeightSize(context) * 0.15 * 0.22,
+            height: context.height * 0.15,
+            radius: context.height * 0.15 * 0.22,
             onSession3Tap: () {
               Navigator.pushNamed(context, AppRoutes.VENDEURHISTORIQUEPAGE);
             },
@@ -118,13 +95,13 @@ class _VHomePageState extends State<VHomePage> {
           /// liste des sessions
           SizedBox(
             width: appWidthSize(context),
-            //height: appHeightSize(context) * 0.15,
+            //height: context.height * 0.15,
             child: Column(
               children: [
                 Wrap(
                   alignment: WrapAlignment.spaceAround,
                   //spacing: appWidthSize(context) * 0.001,
-                  runSpacing: appHeightSize(context) * 0.0,
+                  runSpacing: context.height * 0.0,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: _sessions,
                 ),
@@ -139,11 +116,11 @@ class _VHomePageState extends State<VHomePage> {
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.AJOUTNOUVEAUPRODUITPAGE);
           },
-          height: appHeightSize(context) * 0.07,
-          width: appHeightSize(context) * 0.07,
+          height: context.height * 0.07,
+          width: context.height * 0.07,
           bordeurRadius: 17,
-          //appHeightSize(context) * 0.2,
-          color: primaryColor,
+          //context.height * 0.2,
+          color: AppColors.primaryColor,
           child: const Icon(
             Icons.add,
             color: Colors.white,
@@ -151,27 +128,6 @@ class _VHomePageState extends State<VHomePage> {
           ),
         ),
       ),
-
-      /// bottomNavigationBar
-      /*bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.transparent,
-        color: Theme.of(context).colorScheme.background,
-        //buttonBackgroundColor: primaryColor,
-        //selectedColor: Colors.white,
-        //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
-        items: _bottomNavigationBarItems,
-        index: currentPage,
-        onTap: (index) {
-          //Handle button tap
-          setState(() {
-            currentPage = index;
-            //_pageViewController.jumpToPage(currentPage);
-            _pageViewController.animateToPage(currentPage,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOut);
-          });
-        },
-      ),*/
     );
   }
 }

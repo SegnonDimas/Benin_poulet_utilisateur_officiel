@@ -170,7 +170,17 @@ class ModelProduit extends StatelessWidget {
                     Flexible(
                         flex: 1,
                         child: Icon(
-                          Icons.arrow_forward_ios,
+                          Icons.circle,
+                          color: produit.productStatus == 'actif'
+                              ? Colors.green.shade600
+                              : produit.productStatus == 'inactif'
+                                  ? Colors
+                                      .grey //Theme.of(context).colorScheme.background
+                                  : produit.productStatus == 'en attente'
+                                      ? Colors.yellow.shade600
+                                      : produit.productStatus == 'suspendu'
+                                          ? Colors.red.shade600
+                                          : Colors.transparent,
                           size: context.mediumText,
                         ))
                   ],
