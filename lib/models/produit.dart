@@ -73,6 +73,7 @@ class Produit {
 List<Produit> list_produits = [
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -89,6 +90,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Poulet Fermier EntierPoulet Fermier EntierPoulet Fermier Entier",
     productUnitPrice: 7500,
@@ -110,6 +112,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Boeuf ayoussa',
+    category: 'Bétail',
     productDescription:
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
@@ -121,6 +124,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -134,6 +138,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -149,6 +154,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -168,6 +174,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Poulet Fermier EntierPoulet Fermier EntierCe poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -184,6 +191,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -200,6 +208,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poisson Rouge',
+    category: 'Pisciculture',
     productDescription:
         "Nos filets de tilapia sont soigneusement nettoyés et prêts à cuire. Leur chair blanche et ferme se prête à toutes les recettes : grillée, panée ou en sauce. Un poisson doux, riche en protéines et pauvre en matières grasses. Pêché de manière responsable.",
     productUnitPrice: 1500,
@@ -219,6 +228,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poisson Rouge',
+    category: 'Pisciculture',
     productDescription:
         "Nos filets de tilapia sont soigneusement nettoyés et prêts à cuire. Leur chair blanche et ferme se prête à toutes les recettes : grillée, panée ou en sauce. Un poisson doux, riche en protéines et pauvre en matières grasses. Pêché de manière responsable.",
     productUnitPrice: 7500,
@@ -234,6 +244,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Chèvre',
+    category: "Bétail",
     productDescription:
         "Savoureuse et fondante, notre épaule de mouton est parfaite pour les plats mijotés ou au four. Issue d’animaux élevés dans des conditions respectueuses, elle garantit un goût authentique. Riche en protéines, elle convient à une alimentation équilibrée. Qualité boucherie à chaque bouchée.",
     productUnitPrice: 250000,
@@ -248,6 +259,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Chevre',
+    category: 'Bétail',
     productUnitPrice: 1500,
     productImagesPath: [
       'assets/images/chevre2.png',
@@ -259,6 +271,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poisson Rouge',
+    category: 'Pisciculture',
     productDescription:
         "Nos filets de tilapia sont soigneusement nettoyés et prêts à cuire. Leur chair blanche et ferme se prête à toutes les recettes : grillée, panée ou en sauce. Un poisson doux, riche en protéines et pauvre en matières grasses. Pêché de manière responsable.",
     productUnitPrice: 7500,
@@ -273,6 +286,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poisson Rouge',
+    category: 'Pisciculture',
     productDescription:
         "Nos filets de tilapia sont soigneusement nettoyés et prêts à cuire. Leur chair blanche et ferme se prête à toutes les recettes : grillée, panée ou en sauce. Un poisson doux, riche en protéines et pauvre en matières grasses. Pêché de manière responsable.",
     productUnitPrice: 1500,
@@ -292,6 +306,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Chèvre',
+    category: "Bétail",
     productDescription:
         "Savoureuse et fondante, notre épaule de mouton est parfaite pour les plats mijotés ou au four. Issue d’animaux élevés dans des conditions respectueuses, elle garantit un goût authentique. Riche en protéines, elle convient à une alimentation équilibrée. Qualité boucherie à chaque bouchée.",
     productUnitPrice: 7500,
@@ -306,6 +321,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Chèvre',
+    category: "Bétail",
     productDescription:
         "Savoureuse et fondante, notre épaule de mouton est parfaite pour les plats mijotés ou au four. Issue d’animaux élevés dans des conditions respectueuses, elle garantit un goût authentique. Riche en protéines, elle convient à une alimentation équilibrée. Qualité boucherie à chaque bouchée.",
     productUnitPrice: 1500,
@@ -325,6 +341,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -340,6 +357,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Boeuf ayoussa',
+    category: 'Bétail',
     productDescription:
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
@@ -351,6 +369,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -365,6 +384,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -379,6 +399,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -398,6 +419,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -413,6 +435,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -429,6 +452,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -445,6 +469,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Boeuf ayoussa',
+    category: 'Bétail',
     productDescription:
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
@@ -456,6 +481,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -469,6 +495,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -483,6 +510,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -502,6 +530,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -516,6 +545,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -532,6 +562,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -546,6 +577,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Boeuf ayoussa',
+    category: 'Bétail',
     productDescription:
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
@@ -557,6 +589,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -570,6 +603,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -584,6 +618,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -603,6 +638,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -617,6 +653,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -633,6 +670,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -648,6 +686,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Boeuf ayoussa',
+    category: 'Bétail',
     productDescription:
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
@@ -659,6 +698,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -672,6 +712,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,
@@ -686,6 +727,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Œufs Poulet',
+    category: 'Volaille',
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
@@ -705,6 +747,7 @@ List<Produit> list_produits = [
   ),
   const Produit(
     productName: 'Poulet Goliath',
+    category: 'Volaille',
     productDescription:
         "Ce poulet fermier élevé en plein air offre une chair tendre et savoureuse. Nourri naturellement, il est idéal pour des repas sains et riches en goût. Parfait pour les grillades, les bouillons ou les plats mijotés. Un produit frais, sans hormones ni additifs.",
     productUnitPrice: 7500,

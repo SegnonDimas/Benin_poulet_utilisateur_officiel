@@ -82,4 +82,96 @@ final initialSectors = <SellerSector>[
       Category(name: 'Poisson Chat', isSelected: false),
     ],
   ),
+  SellerSector(
+    id: 3,
+    name: 'Bétail',
+    isSelected: false,
+    categories: [
+      Category(name: 'Bœuf', isSelected: false),
+      Category(name: 'Mouton', isSelected: false),
+      Category(name: 'Chèvre', isSelected: false),
+      Category(name: 'Veau', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+      Category(name: 'Provende', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 4,
+    name: 'Porciculture',
+    isSelected: false,
+    categories: [
+      Category(name: 'Porcelet', isSelected: false),
+      Category(name: 'Porc Adulte', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+      Category(name: 'Provende', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 5,
+    name: 'Cuniculture',
+    isSelected: false,
+    categories: [
+      Category(name: 'Lapin', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+      Category(name: 'Provende', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 6,
+    name: 'Apiculture',
+    isSelected: false,
+    categories: [
+      Category(name: 'Miel', isSelected: false),
+      Category(name: 'Essaims', isSelected: false),
+      Category(name: 'Ruches', isSelected: false),
+      Category(name: 'Matériel Apicole', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 7,
+    name: 'Élevage d’Escargots',
+    isSelected: false,
+    categories: [
+      Category(name: 'Escargots Vivants', isSelected: false),
+      Category(name: 'Œufs d’Escargots', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 8,
+    name: 'Élevage de Vers de Terre',
+    isSelected: false,
+    categories: [
+      Category(name: 'Vers pour compost', isSelected: false),
+      Category(name: 'Thé de compost', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+    ],
+  ),
 ];
+
+/*final initialSectors = <SellerSector>[
+  SellerSector(
+    id: 1,
+    name: 'Volaille',
+    isSelected: false,
+    categories: [
+      Category(name: 'Poulet', isSelected: false),
+      Category(name: 'Pigeon', isSelected: false),
+      Category(name: 'Pintade', isSelected: false),
+      Category(name: 'Dinde', isSelected: false),
+      Category(name: 'Accessoires', isSelected: false),
+      Category(name: 'Provende', isSelected: false),
+    ],
+  ),
+  SellerSector(
+    id: 2,
+    name: 'Pisciculture',
+    isSelected: false,
+    categories: [
+      Category(name: 'Tilapia', isSelected: false),
+      Category(name: 'Carpe', isSelected: false),
+      Category(name: 'Faux Bar', isSelected: false),
+      Category(name: 'Poisson Chat', isSelected: false),
+    ],
+  ),
+];*/

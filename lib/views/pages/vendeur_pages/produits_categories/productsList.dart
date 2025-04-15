@@ -1,7 +1,7 @@
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_pages/actifs_productsPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_pages/en_attente_productPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_pages/inactifs_productsPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_pages/suspendus_productsPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/actifs_productsPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/en_attente_productPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/inactifs_productsPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/suspendus_productsPage.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
