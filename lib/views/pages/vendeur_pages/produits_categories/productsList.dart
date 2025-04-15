@@ -54,6 +54,7 @@ class _ProductsListState extends State<ProductsList> {
             setState(() {
               currentIndex = index;
             });
+            FocusScope.of(context).unfocus(); //force le clavier à se fermer
           },
           items: [
             Column(

@@ -6,11 +6,11 @@ import 'package:benin_poulet/views/pages/vendeur_pages/authentification/pieceIde
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/resumeAuthentificationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../widgets/app_text.dart';
 import '../../../../widgets/app_timeline_tile.dart';
-import '../../../sizes/app_sizes.dart';
 import '../../../sizes/text_sizes.dart';
 
 class AuthentificationVendeurPage extends StatefulWidget {
@@ -90,15 +90,15 @@ class _AuthentificationVendeurPageState
                 children: [
                   /// l'en-tête de la page
                   Positioned(
-                    top: appHeightSize(context) * 0.0,
+                    top: context.height * 0.0,
                     child: SizedBox(
-                      height: appHeightSize(context) * 0.2,
+                      height: context.height * 0.2,
                       child: Column(
                         children: [
                           // timeline_tile
                           SizedBox(
-                            height: appHeightSize(context) * 0.06,
-                            width: appWidthSize(context) * 0.75,
+                            height: context.height * 0.06,
+                            width: context.width * 0.75,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(_pages.length, (index) {
@@ -158,8 +158,8 @@ class _AuthentificationVendeurPageState
 
                           // titre et description
                           SizedBox(
-                            height: appHeightSize(context) * 0.11,
-                            width: appWidthSize(context),
+                            height: context.height * 0.11,
+                            width: context.width,
                             child: Wrap(
                                 //mainAxisAlignment: MainAxisAlignment.center,
                                 children: List.generate(1, (index) {
@@ -170,19 +170,17 @@ class _AuthentificationVendeurPageState
                                   String description = _description[value];
 
                                   return SizedBox(
-                                      height: appHeightSize(context) * 0.12,
-                                      width: appWidthSize(context),
+                                      height: context.height * 0.12,
+                                      width: context.width,
                                       child: Column(
                                         children: [
                                           // Étape n/N
                                           Padding(
                                             padding: EdgeInsets.only(
-                                                left: appHeightSize(context) *
-                                                    0.02),
+                                                left: context.height * 0.02),
                                             child: SizedBox(
-                                              height:
-                                                  appHeightSize(context) * 0.02,
-                                              width: appWidthSize(context),
+                                              height: context.height * 0.02,
+                                              width: context.width,
                                               child: AppText(
                                                   text:
                                                       'Étape ${value + 1}/${_pages.length}'),
@@ -191,9 +189,8 @@ class _AuthentificationVendeurPageState
 
                                           // titre et description
                                           SizedBox(
-                                            height:
-                                                appHeightSize(context) * 0.09,
-                                            width: appWidthSize(context),
+                                            height: context.height * 0.09,
+                                            width: context.width,
                                             child: ListTile(
                                               //titre
                                               title: AppText(
@@ -218,8 +215,7 @@ class _AuthentificationVendeurPageState
 
                                           // divider
                                           SizedBox(
-                                            height:
-                                                appHeightSize(context) * 0.008,
+                                            height: context.height * 0.008,
                                             child: Divider(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -239,17 +235,17 @@ class _AuthentificationVendeurPageState
 
                   /// le corps de la page
                   Positioned(
-                    bottom: appHeightSize(context) * 0.0,
-                    top: appHeightSize(context) * 0.17,
+                    bottom: context.height * 0.0,
+                    top: context.height * 0.17,
                     child: SizedBox(
-                        height: appHeightSize(context) * 0.75,
-                        width: appWidthSize(context),
+                        height: context.height * 0.75,
+                        width: context.width,
                         child: Stack(
                           children: [
                             /// les sous-pages
                             SizedBox(
-                              height: appHeightSize(context) * 0.68,
-                              width: appWidthSize(context),
+                              height: context.height * 0.68,
+                              width: context.width,
                               child: PageView.builder(
                                   itemCount: _pages.length,
                                   controller: _pageViewController,
@@ -274,10 +270,10 @@ class _AuthentificationVendeurPageState
 
                             /// bouton Suivant/précédent
                             Positioned(
-                              bottom: appHeightSize(context) * 0.0,
+                              bottom: context.height * 0.0,
                               child: SizedBox(
-                                height: appHeightSize(context) * 0.07,
-                                width: appWidthSize(context),
+                                height: context.height * 0.07,
+                                width: context.width,
                                 child: Row(
                                   mainAxisAlignment: position == 0
                                       ? MainAxisAlignment.center
@@ -299,21 +295,17 @@ class _AuthentificationVendeurPageState
                                       child: Padding(
                                           padding: const EdgeInsets.only(
                                             left: 0,
-                                            //appWidthSize(context) * 0.03,
+                                            //context.width * 0.03,
                                             right: 0,
                                           ),
-                                          //appWidthSize(context) * 0.03),
+                                          //context.width * 0.03),
                                           child: position != _pages.length - 1
                                               ? Container(
                                                   alignment: Alignment.center,
-                                                  height:
-                                                      appHeightSize(context) *
-                                                          0.07,
+                                                  height: context.height * 0.07,
                                                   width: position == 0
-                                                      ? appWidthSize(context) *
-                                                          0.9
-                                                      : appWidthSize(context) *
-                                                          0.9,
+                                                      ? context.width * 0.9
+                                                      : context.width * 0.9,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(

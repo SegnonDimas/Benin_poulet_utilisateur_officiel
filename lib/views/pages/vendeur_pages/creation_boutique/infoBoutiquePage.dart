@@ -4,7 +4,6 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../widgets/app_phone_textField.dart';
@@ -28,7 +27,7 @@ class InfoBoutiquePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(bottom: 16.0, right: 16.0, left: 16.0),
         child: BlocBuilder<StoreCreationBloc, StoreCreationState>(
           builder: (context, state) {
             final state = context.watch<StoreCreationBloc>().state
@@ -49,6 +48,7 @@ class InfoBoutiquePage extends StatelessWidget {
             return Form(
               //key: infoBoutiqueFormKey,
               child: ListView(
+                padding: const EdgeInsets.only(top: 20),
                 children: <Widget>[
                   // nom de la boutique
                   AppText(
@@ -245,9 +245,9 @@ class InfoBoutiquePage extends StatelessWidget {
                   ),
 
                   // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
-                  SizedBox(
+                  /*SizedBox(
                     height: context.height * 0.07,
-                  )
+                  )*/
                 ],
               ),
             );

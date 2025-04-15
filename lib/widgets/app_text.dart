@@ -10,7 +10,7 @@ class AppText extends StatelessWidget {
   final TextAlign? textAlign;
   final Color? color;
   final int? maxLine;
-  final String text;
+  final String? text;
   final TextDecoration? decoration;
   final TextDecorationStyle? decorationStyle;
   final BuildContext? context;
@@ -27,7 +27,7 @@ class AppText extends StatelessWidget {
     this.maxLine,
     this.context,
     this.decoration,
-    required this.text,
+    this.text,
     this.decorationStyle,
   });
 
@@ -37,7 +37,7 @@ class AppText extends StatelessWidget {
 
     return Text(
       textAlign: textAlign,
-      text,
+      text ?? '',
       maxLines: maxLine,
       style: TextStyle(
           fontSize: fontSize ?? context.mediumText * 0.8,

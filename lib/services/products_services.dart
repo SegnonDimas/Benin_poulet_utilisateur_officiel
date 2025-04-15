@@ -40,6 +40,7 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                     showModalBottomSheet(
                                         context: context,
                                         isScrollControlled: true,
+                                        useSafeArea: true,
                                         //backgroundColor: Colors.transparent,
                                         showDragHandle: true,
                                         builder: (context) {
@@ -111,15 +112,11 @@ Widget showProducts(BuildContext context, List<Produit> list) {
 
                                                                                 // image affichée
                                                                                 Positioned(
-                                                                                  top: context.height * 0.25,
-                                                                                  bottom: context.height * 0.25,
+                                                                                  top: context.height * 0.15,
+                                                                                  bottom: context.height * 0.15,
                                                                                   child: ClipRRect(
                                                                                     borderRadius: BorderRadius.circular(20),
-                                                                                    child: Image.asset(
-                                                                                        height: context.height * 0.5,
-                                                                                        width: context.width * 0.9,
-                                                                                        //fit: BoxFit.cover,
-                                                                                        list[index].productImagesPath![context.watch<ProductImagesPathIndexProvider>().indexProductImage]),
+                                                                                    child: Image.asset(height: context.height * 0.7, width: context.width * 0.9, list[index].productImagesPath![context.watch<ProductImagesPathIndexProvider>().indexProductImage]),
                                                                                   ),
                                                                                 ),
 
@@ -283,6 +280,8 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                               .length,
                                                           size: const Size(
                                                               10, 10),
+                                                          unselectedSize:
+                                                              const Size(7, 7),
                                                           unselectedColor:
                                                               Colors.grey
                                                                   .shade600,
@@ -320,7 +319,7 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                   height: 10,
                                                 ),
 
-                                                //text Détail : titre du produit
+                                                //text Variantes
                                                 AppText(
                                                   text:
                                                       list[index].productName!,
@@ -328,23 +327,22 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                   fontWeight: FontWeight.w900,
                                                 ),
 
-                                                //Nom du produit et variétés
+                                                //Nom du produit et variantes
                                                 ListTile(
                                                   // nom du produit
                                                   title: AppText(
-                                                    text: list[index]
-                                                        .productName!,
+                                                    text: "Variantes",
                                                     fontSize: context.smallText,
                                                     fontWeight: FontWeight.w900,
                                                     color: Colors.grey.shade400
                                                         .withOpacity(0.3),
                                                   ),
 
-                                                  // variétés du produit
+                                                  // variantes du produit
                                                   subtitle: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 20.0,
+                                                            top: 8.0,
                                                             bottom: 8.0),
                                                     child: SizedBox(
                                                       height:
@@ -429,7 +427,6 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                 ),
 
                                                 // prix et stock
-
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -486,105 +483,166 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                   ),
                                                 ),
 
-                                                // Edit et supprimer
-                                                const SizedBox(
-                                                  height: 50,
+                                                //description produit
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 5,
+                                                          right: 5.0,
+                                                          left: 5.0,
+                                                          bottom: 15),
+                                                  child: SizedBox(
+                                                    height:
+                                                        context.height * 0.15,
+                                                    child: ListTile(
+                                                      title: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                bottom: 8.0),
+                                                        child: AppText(
+                                                          text: "Description",
+                                                          fontSize:
+                                                              context.smallText,
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          color: Colors
+                                                              .grey.shade400
+                                                              .withOpacity(0.3),
+                                                        ),
+                                                      ),
+                                                      subtitle: Scrollbar(
+                                                        thumbVisibility: true,
+                                                        trackVisibility: true,
+                                                        child:
+                                                            SingleChildScrollView(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    right: 8.0),
+                                                            child: AppText(
+                                                              text: list[index]
+                                                                  .productDescription,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .visible,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    // supprimer
-                                                    CircleAvatar(
-                                                      radius: 30,
-                                                      backgroundColor: AppColors
-                                                          .redColor
-                                                          .withOpacity(0.15),
-                                                      child: IconButton(
-                                                          onPressed: () {
-                                                            Get.defaultDialog(
-                                                              title:
-                                                                  'Suppression',
-                                                              content: AppText(
-                                                                text:
-                                                                    'Voulez-vous vraiment supprimer ce produit ?',
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .visible,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              ),
-                                                              confirm:
-                                                                  AppButton(
-                                                                      width: context
-                                                                              .width *
-                                                                          0.3,
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child:
-                                                                          AppText(
-                                                                        text:
-                                                                            'Non',
-                                                                        color: AppColors
-                                                                            .primaryColor,
-                                                                        fontWeight:
-                                                                            FontWeight.w900,
-                                                                      )),
-                                                              cancel: AppButton(
-                                                                  width: context
-                                                                          .width *
-                                                                      0.3,
-                                                                  onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  child: AppText(
-                                                                      text:
-                                                                          'Oui',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w900,
-                                                                      color: AppColors
-                                                                          .redColor)),
-                                                              contentPadding:
-                                                                  const EdgeInsets
-                                                                      .all(20),
-                                                            );
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.delete,
-                                                            color: AppColors
-                                                                .redColor,
-                                                            size: 30,
-                                                          )),
-                                                    ),
 
-                                                    // edit
-                                                    CircleAvatar(
-                                                      radius: 30,
-                                                      backgroundColor: AppColors
-                                                          .blueColor
-                                                          .withOpacity(0.15)
-                                                      /*Theme.of(context)
-                                                            .colorScheme
-                                                            .background*/
-                                                      ,
-                                                      child: IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            Icons.edit_calendar,
-                                                            color: AppColors
-                                                                .blueColor,
-                                                            size: 30,
-                                                          )),
-                                                    ),
-                                                  ],
-                                                )
+                                                // Edit et supprimer
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: context.height *
+                                                          0.03),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      // supprimer
+                                                      CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundColor:
+                                                            AppColors.redColor
+                                                                .withOpacity(
+                                                                    0.15),
+                                                        child: IconButton(
+                                                            onPressed: () {
+                                                              Get.defaultDialog(
+                                                                title:
+                                                                    'Suppression',
+                                                                content:
+                                                                    AppText(
+                                                                  text:
+                                                                      'Voulez-vous vraiment supprimer ce produit ?',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .visible,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                                confirm:
+                                                                    AppButton(
+                                                                        width: context.width *
+                                                                            0.3,
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child:
+                                                                            AppText(
+                                                                          text:
+                                                                              'Non',
+                                                                          color:
+                                                                              AppColors.primaryColor,
+                                                                          fontWeight:
+                                                                              FontWeight.w900,
+                                                                        )),
+                                                                cancel:
+                                                                    AppButton(
+                                                                        width: context.width *
+                                                                            0.3,
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        },
+                                                                        child: AppText(
+                                                                            text:
+                                                                                'Oui',
+                                                                            fontWeight:
+                                                                                FontWeight.w900,
+                                                                            color: AppColors.redColor)),
+                                                                contentPadding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        20),
+                                                              );
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: AppColors
+                                                                  .redColor,
+                                                              size: 25,
+                                                            )),
+                                                      ),
+
+                                                      // edit
+                                                      CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundColor:
+                                                            AppColors
+                                                                .blueColor
+                                                                .withOpacity(
+                                                                    0.15)
+                                                        /*Theme.of(context)
+                                                              .colorScheme
+                                                              .background*/
+                                                        ,
+                                                        child: IconButton(
+                                                            onPressed: () {},
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .edit_calendar,
+                                                              color: AppColors
+                                                                  .blueColor,
+                                                              size: 25,
+                                                            )),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           );

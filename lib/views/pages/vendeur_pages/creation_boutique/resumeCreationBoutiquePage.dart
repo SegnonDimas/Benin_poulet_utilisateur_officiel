@@ -251,9 +251,9 @@ class _ResumeCreationBoutiquePageState
             height: context.height * 0.05,
           ),
           // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
-          SizedBox(
+          /*SizedBox(
             height: context.height * 0.07,
-          )
+          )*/
         ]),
       ),
     );

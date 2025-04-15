@@ -45,11 +45,17 @@ class FiscalitePage extends StatelessWidget {
     required String groupValue,
     required String title,
     required Function(String?) onChanged,
+    Color? color,
   }) {
     return RadioListTile<String>(
       value: value,
       groupValue: groupValue,
-      title: Text(title),
+      title: AppText(
+        text: title,
+        overflow: TextOverflow.visible,
+        color: color,
+        fontWeight: FontWeight.bold,
+      ),
       onChanged: onChanged,
       activeColor: AppColors.primaryColor,
     );
@@ -92,7 +98,7 @@ class FiscalitePage extends StatelessWidget {
           ),
           Container(
             width: 12,
-            height: 50,
+            height: 49,
             decoration: BoxDecoration(
               color: _getChipColor(label),
               borderRadius: const BorderRadius.only(
@@ -151,6 +157,12 @@ class FiscalitePage extends StatelessWidget {
                     value: 'Particulier',
                     groupValue: storeCreationState.storeFiscalType ?? '',
                     title: 'Particulier',
+                    color: storeCreationState.storeFiscalType == 'Particulier'
+                        ? Theme.of(context).colorScheme.inverseSurface
+                        : Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.2),
                     onChanged: (val) {
                       context
                           .read<StoreCreationBloc>()
@@ -169,6 +181,13 @@ class FiscalitePage extends StatelessWidget {
                     value: 'Entreprise ou Société individuelle',
                     groupValue: storeCreationState.storeFiscalType ?? '',
                     title: 'Entreprise ou Société individuelle',
+                    color: storeCreationState.storeFiscalType ==
+                            'Entreprise ou Société individuelle'
+                        ? Theme.of(context).colorScheme.inversePrimary
+                        : Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.2),
                     onChanged: (val) {
                       context
                           .read<StoreCreationBloc>()
@@ -307,9 +326,9 @@ class FiscalitePage extends StatelessWidget {
                   ),
 
                   // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
-                  SizedBox(
+                  /*SizedBox(
                     height: context.height * 0.07,
-                  )
+                  )*/
                 ],
               );
             },

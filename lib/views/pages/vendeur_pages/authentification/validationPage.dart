@@ -1,9 +1,9 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ValidationPage extends StatelessWidget {
   const ValidationPage({super.key});
@@ -11,7 +11,7 @@ class ValidationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final espace = SizedBox(
-      height: appHeightSize(context) * 0.03,
+      height: context.height * 0.03,
     );
     return SafeArea(
         child: Scaffold(
@@ -20,29 +20,30 @@ class ValidationPage extends StatelessWidget {
           espace,
           AppText(
             text: 'Bénin Poulet',
-            color: primaryColor,
-            fontSize: largeText() * 1.5,
+            color: AppColors.primaryColor,
+            fontSize: context.largeText * 1.5,
+            fontWeight: FontWeight.w900,
           ),
           espace,
           espace,
           Center(
             child: Container(
-              height: appHeightSize(context) * 0.3,
-              width: appHeightSize(context) * 0.3,
+              height: context.height * 0.3,
+              width: context.height * 0.3,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(appHeightSize(context)),
+                  borderRadius: BorderRadius.circular(context.height),
                   color: Colors.orange),
               child: Icon(
-                Icons.hourglass_bottom_outlined,
+                Icons.hourglass_bottom_rounded,
                 color: Colors.white,
-                size: largeText() * 5,
+                size: context.largeText * 5,
               ),
             ),
           ),
           espace,
           AppText(
             text: 'Validation en cours...',
-            fontSize: largeText(),
+            fontSize: context.largeText,
             fontWeight: FontWeight.bold,
           ),
           //espace,
@@ -53,7 +54,7 @@ class ValidationPage extends StatelessWidget {
                   'Notre équipe analyse vos informations d\'inscription avec soin. Nous nous efforçons de traiter votre demande dans un délai raisonnable.\nVous recevrez une notification de l\'état de votre authentification',
               overflow: TextOverflow.visible,
               textAlign: TextAlign.center,
-              fontSize: smallText(),
+              fontSize: context.smallText,
             ),
           ),
           espace,
@@ -63,13 +64,13 @@ class ValidationPage extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacementNamed(context, '/vendeurMainPage');
             },
-            height: appHeightSize(context) * 0.065,
-            width: appWidthSize(context) * 0.9,
-            color: primaryColor,
-            //borderColor: primaryColor,
+            height: context.height * 0.065,
+            width: context.width * 0.9,
+            color: AppColors.primaryColor,
+            //borderColor: AppColors.primaryColor,
             child: AppText(
               text: 'Continuer',
-              fontSize: largeText() * 0.9,
+              fontSize: context.largeText * 0.9,
               color: Colors.white,
             ),
           ),
@@ -77,13 +78,13 @@ class ValidationPage extends StatelessWidget {
 
           AppButton(
             onTap: () {},
-            height: appHeightSize(context) * 0.065,
-            width: appWidthSize(context) * 0.9,
+            height: context.height * 0.065,
+            width: context.width * 0.9,
             color: Theme.of(context).colorScheme.background,
-            borderColor: primaryColor,
+            borderColor: AppColors.primaryColor,
             child: AppText(
               text: 'Nous contacter',
-              fontSize: largeText() * 0.9,
+              fontSize: context.largeText * 0.9,
               //color: Colors.white,
             ),
           ),
@@ -93,7 +94,7 @@ class ValidationPage extends StatelessWidget {
               text: 'Vous pouvez nous contacter en cas de besoin',
               overflow: TextOverflow.visible,
               textAlign: TextAlign.center,
-              fontSize: smallText(),
+              fontSize: context.smallText,
             ),
           ),
         ],
