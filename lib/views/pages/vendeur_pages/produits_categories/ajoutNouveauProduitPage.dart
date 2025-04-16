@@ -406,7 +406,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
             ),
 
             /// Prix et stock
-
             Padding(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 8.0, top: 16.0, bottom: 8.0),
@@ -547,7 +546,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
             ),
 
             /// Etat promotionnel du produit
-
             Padding(
               padding: const EdgeInsets.only(
                   left: 10.0, right: 8.0, top: 16.0, bottom: 8.0),

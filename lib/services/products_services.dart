@@ -1,3 +1,4 @@
+import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -13,7 +14,6 @@ import '../views/colors/app_colors.dart';
 import '../views/models_ui/model_produit.dart';
 import '../views/models_ui/model_secteur.dart';
 import '../views/pages/vendeur_pages/produits_categories/productsList.dart';
-import '../widgets/app_button.dart';
 import '../widgets/app_text.dart';
 
 Widget showProducts(BuildContext context, List<Produit> list) {
@@ -344,9 +344,7 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                           context.smallText,
                                                       fontWeight:
                                                           FontWeight.w900,
-                                                      color: Colors
-                                                          .grey.shade400
-                                                          .withOpacity(0.3),
+                                                      color: Colors.grey,
                                                     ),
 
                                                     // variantes du produit
@@ -506,10 +504,7 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                                 .smallText,
                                                             fontWeight:
                                                                 FontWeight.w900,
-                                                            color: Colors
-                                                                .grey.shade400
-                                                                .withOpacity(
-                                                                    0.3),
+                                                            color: Colors.grey,
                                                           ),
                                                         ),
                                                         subtitle: Scrollbar(
@@ -561,54 +556,24 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                                       0.15),
                                                           child: IconButton(
                                                               onPressed: () {
-                                                                Get.defaultDialog(
-                                                                  title:
-                                                                      'Suppression',
-                                                                  content:
-                                                                      AppText(
-                                                                    text:
-                                                                        'Voulez-vous vraiment supprimer ce produit ?',
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .visible,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                  ),
-                                                                  confirm:
-                                                                      AppButton(
-                                                                          width: context.width *
-                                                                              0.3,
-                                                                          onTap:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              AppText(
-                                                                            text:
-                                                                                'Non',
-                                                                            color:
-                                                                                AppColors.primaryColor,
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                          )),
-                                                                  cancel:
-                                                                      AppButton(
-                                                                          width: context.width *
-                                                                              0.3,
-                                                                          onTap:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child: AppText(
-                                                                              text: 'Oui',
-                                                                              fontWeight: FontWeight.w900,
-                                                                              color: AppColors.redColor)),
-                                                                  contentPadding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          20),
-                                                                );
+                                                                AppDialog
+                                                                    .showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        title:
+                                                                            'Suppression',
+                                                                        content:
+                                                                            'Voulez-vous vraiment supprimer ce produit ?',
+                                                                        confirmText:
+                                                                            'Oui',
+                                                                        cancelText:
+                                                                            'Non',
+                                                                        onConfirm:
+                                                                            () {
+                                                                          //TODO : supprimer le produit
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                        });
                                                               },
                                                               icon: Icon(
                                                                 Icons.delete,
