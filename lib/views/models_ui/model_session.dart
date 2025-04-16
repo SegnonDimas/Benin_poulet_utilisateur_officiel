@@ -93,4 +93,9 @@ class _ModelSessionState extends State<ModelSession> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

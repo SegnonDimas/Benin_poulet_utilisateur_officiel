@@ -373,4 +373,11 @@ class _AuthentificationVendeurPageState
   }
 
 // Widget page4 = FiscalitePage(indexSuivant: 3);
+
+  @override
+  void dispose() {
+    _pageViewController.dispose();
+    _pageIndexNotifier.dispose();
+    super.dispose();
+  }
 }

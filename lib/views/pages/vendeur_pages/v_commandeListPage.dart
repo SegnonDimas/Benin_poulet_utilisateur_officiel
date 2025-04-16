@@ -4,6 +4,7 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+
 import '../../models_ui/model_commande.dart';
 
 class VCommandeListPage extends StatefulWidget {
@@ -178,5 +179,10 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

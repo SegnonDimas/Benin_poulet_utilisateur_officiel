@@ -84,4 +84,9 @@ class _ResumeAuthentificationPageState
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

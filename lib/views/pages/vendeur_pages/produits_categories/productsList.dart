@@ -102,6 +102,11 @@ class _ProductsListState extends State<ProductsList> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
 
 class ProductImagesPathIndexProvider extends ChangeNotifier {

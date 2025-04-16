@@ -568,4 +568,11 @@ class _PresentationPageState extends State<PresentationPage> {
           )),
     );
   }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _pageViewController.dispose();
+    super.dispose();
+  }
 }

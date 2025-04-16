@@ -387,4 +387,11 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
   }
 
 // Widget page4 = FiscalitePage(indexSuivant: 3);
+
+  @override
+  void dispose() {
+    _pageIndexNotifier.dispose();
+    _pageViewController.dispose();
+    super.dispose();
+  }
 }

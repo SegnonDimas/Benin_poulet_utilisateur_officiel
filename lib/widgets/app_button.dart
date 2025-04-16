@@ -47,4 +47,9 @@ class _AppButtonState extends State<AppButton> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

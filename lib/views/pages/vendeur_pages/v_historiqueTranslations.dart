@@ -52,4 +52,9 @@ class _VHistoriqueTranslationsState extends State<VHistoriqueTranslations> {
           ],
         ));
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

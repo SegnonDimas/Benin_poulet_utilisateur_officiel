@@ -207,4 +207,10 @@ class _VMainPageState extends State<VMainPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _pageViewController.dispose();
+    super.dispose();
+  }
 }

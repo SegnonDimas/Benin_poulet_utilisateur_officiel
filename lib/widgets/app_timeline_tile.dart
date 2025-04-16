@@ -96,4 +96,9 @@ class _AppTimelineTileState extends State<AppTimelineTile> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

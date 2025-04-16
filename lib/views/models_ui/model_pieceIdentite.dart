@@ -130,4 +130,9 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

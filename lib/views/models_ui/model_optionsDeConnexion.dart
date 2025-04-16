@@ -47,4 +47,9 @@ class _ModelOptionDeConnexionState extends State<ModelOptionDeConnexion> {
           )),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

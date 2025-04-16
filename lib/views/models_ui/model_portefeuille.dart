@@ -147,4 +147,9 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

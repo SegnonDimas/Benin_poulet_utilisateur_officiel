@@ -36,10 +36,10 @@ class PhotoPageState extends State<PhotoPage> {
   final List<String> _trailing = ['prendre une photo', 'prendre une photo', ''];
 
   // La variable qui stocke le pays sélectionné
-  String? _selectedCountry = 'Bénin';
+  /*String? _selectedCountry = 'Bénin';
   final _paymentNumberController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  final TextEditingController _phoneNumbercontroller = TextEditingController();*/
   String initialCountry = 'BJ';
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
 
@@ -119,5 +119,10 @@ class PhotoPageState extends State<PhotoPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

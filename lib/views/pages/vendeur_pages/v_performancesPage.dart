@@ -347,6 +347,11 @@ class _VPerformancesPageState extends State<VPerformancesPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
 
 class IndividuelBar {

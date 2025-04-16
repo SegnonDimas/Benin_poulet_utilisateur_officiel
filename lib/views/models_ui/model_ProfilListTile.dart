@@ -63,4 +63,9 @@ class _ProfilListTileState extends State<ProfilListTile> {
           )),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

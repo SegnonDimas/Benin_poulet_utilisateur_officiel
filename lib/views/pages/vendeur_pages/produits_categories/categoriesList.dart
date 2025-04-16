@@ -83,4 +83,10 @@ class _CategoriesListState extends State<CategoriesList>
       )),
     );
   }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
 }

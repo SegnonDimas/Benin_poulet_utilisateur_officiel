@@ -22,14 +22,6 @@ class _VProduitsListPageState extends State<VProduitsListPage>
   late TabController controller;
   String search = '';
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller = TabController(length: 2, vsync: this, initialIndex: 0);
-    //context.read<ProduitBloc>().add(ReinitialiserRecherche());
-  }
-
   Future<bool> _showConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
@@ -49,6 +41,14 @@ class _VProduitsListPageState extends State<VProduitsListPage>
           ),
         ) ??
         false;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = TabController(length: 2, vsync: this, initialIndex: 0);
+    //context.read<ProduitBloc>().add(ReinitialiserRecherche());
   }
 
   @override
@@ -171,5 +171,11 @@ class _VProduitsListPageState extends State<VProduitsListPage>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

@@ -124,4 +124,9 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

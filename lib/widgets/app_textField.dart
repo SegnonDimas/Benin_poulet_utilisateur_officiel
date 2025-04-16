@@ -32,37 +32,51 @@ class AppTextField extends StatefulWidget {
   bool? readOnly;
   bool? showFloatingLabel;
   Function()? onTap;
+  AlignmentGeometry? alignment;
+  EdgeInsetsGeometry? contentPadding;
+  Color? hintTextColor;
+  bool? isPrefixIconWidget;
+  Widget? preficIconWidget;
+  TextInputAction? textInputAction;
+  //bool? isLabelDefined;
 
-  AppTextField(
-      {super.key,
-      this.label,
-      this.prefixIcon,
-      this.suffix,
-      this.isPassword = false,
-      this.height,
-      this.width,
-      this.color,
-      this.controller,
-      this.onChanged,
-      this.keyboardType,
-      this.prefixIconColor,
-      this.maxLines = 1,
-      this.expands = false,
-      this.minLines = 1,
-      this.fontSize = 16,
-      this.fontColor,
-      this.readOnly = false,
-      this.onTap,
-      this.border,
-      this.hintText,
-      this.suffixIcon,
-      this.onSaved,
-      this.fileBorderColor,
-      this.onFieldSubmitted,
-      this.onEditingComplete,
-      this.onTapOutside,
-      this.borderRadius,
-      this.showFloatingLabel = true});
+  AppTextField({
+    super.key,
+    this.label,
+    this.prefixIcon,
+    this.suffix,
+    this.isPassword = false,
+    this.height,
+    this.width,
+    this.color,
+    this.controller,
+    this.onChanged,
+    this.keyboardType,
+    this.prefixIconColor,
+    this.maxLines = 1,
+    this.expands = false,
+    this.minLines = 1,
+    this.fontSize = 16,
+    this.fontColor,
+    this.readOnly = false,
+    this.onTap,
+    this.border,
+    this.hintText,
+    this.suffixIcon,
+    this.onSaved,
+    this.fileBorderColor,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
+    this.onTapOutside,
+    this.borderRadius,
+    this.showFloatingLabel = true,
+    this.alignment,
+    this.contentPadding,
+    this.isPrefixIconWidget = false,
+    this.preficIconWidget,
+    this.textInputAction,
+    //this.isLabelDefined = true,
+  });
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -74,11 +88,9 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
+      alignment: widget.alignment ?? Alignment.center,
       height: widget.height,
-      //MediaQuery.of(context).size.height*0.095,
       width: widget.width,
-      //MediaQuery.of(context).size.width*0.95,
       decoration: BoxDecoration(
           borderRadius: widget.borderRadius ?? BorderRadius.circular(15),
           color: widget.color,
@@ -88,7 +100,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
           /// mot de passe
           ? Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: widget.contentPadding ?? const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: widget.controller,
                 obscureText: !click,
@@ -112,12 +124,13 @@ class _AppTextFieldState extends State<AppTextField> {
                   border: widget.border ?? InputBorder.none,
                   hintText: widget.hintText,
 
-                  //isDense: true,
                   label: Text(
-                    widget.label!,
-                    style:
-                        TextStyle(color: Colors.grey, fontSize: mediumText()),
+                    widget.label ?? widget.hintText ?? '',
+                    style: TextStyle(
+                        color: widget.hintTextColor ?? Colors.grey,
+                        fontSize: mediumText()),
                   ),
+
                   labelStyle: TextStyle(fontSize: mediumText()),
                   //labelText: widget.label,
                   //hintStyle: TextStyle(fontSize: mediumText()),
@@ -126,11 +139,13 @@ class _AppTextFieldState extends State<AppTextField> {
                   borderRadius: BorderRadius.all(Radius.circular(15.0),
                   ),
                 ),*/
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: widget.prefixIconColor ??
-                        Theme.of(context).colorScheme.inverseSurface,
-                  ),
+                  prefixIcon: widget.isPrefixIconWidget!
+                      ? widget.preficIconWidget
+                      : Icon(
+                          Icons.lock,
+                          color: widget.prefixIconColor ??
+                              Theme.of(context).colorScheme.inverseSurface,
+                        ),
                   suffix: widget.suffix,
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -154,13 +169,13 @@ class _AppTextFieldState extends State<AppTextField> {
                       fontSize: widget.showFloatingLabel! ? mediumText() : 0),
                 ),
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
+                textInputAction: widget.textInputAction ?? TextInputAction.done,
               ),
             )
 
           /// pas mot de passe
           : Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: widget.contentPadding ?? const EdgeInsets.all(8.0),
               child: TextFormField(
                 obscureText: false,
                 controller: widget.controller,
@@ -174,6 +189,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 onTap: widget.onTap,
                 onSaved: widget.onSaved,
                 readOnly: widget.readOnly!,
+                scrollPadding: EdgeInsets.zero,
                 cursorColor: AppColors.primaryColor,
                 style: TextStyle(
                     color: widget.fontColor,
@@ -185,10 +201,14 @@ class _AppTextFieldState extends State<AppTextField> {
                   hintText: widget.hintText,
                   //isDense: true,
 
-                  label: Text(
-                    widget.label ?? widget.hintText ?? '',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
+                  label: widget.label != null || widget.hintText != null
+                      ? Text(
+                          widget.label ?? widget.hintText ?? '',
+                          style: TextStyle(
+                              color: widget.hintTextColor ?? Colors.grey,
+                              fontSize: mediumText()),
+                        )
+                      : null,
                   floatingLabelStyle: TextStyle(
                       fontSize: widget.showFloatingLabel! ? mediumText() : 0),
                   //labelStyle: TextStyle(color: Colors.white),
@@ -197,17 +217,25 @@ class _AppTextFieldState extends State<AppTextField> {
                   */ /*borderRadius: BorderRadius.all(Radius.circular(15.0),
                   ),*/ /*
                 ),*/
+
                   suffix: widget.suffix,
                   suffixIcon: widget.suffixIcon,
-                  prefixIcon: Icon(
-                    widget.prefixIcon,
-                    color: widget.prefixIconColor,
-                  ),
+                  prefixIcon: widget.isPrefixIconWidget!
+                      ? widget.preficIconWidget
+                      : Icon(
+                          widget.prefixIcon,
+                          color: widget.prefixIconColor,
+                        ),
                 ),
                 textCapitalization: TextCapitalization.sentences,
-                textInputAction: TextInputAction.done,
+                textInputAction: widget.textInputAction ?? TextInputAction.done,
               ),
             ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

@@ -155,4 +155,9 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

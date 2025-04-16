@@ -102,4 +102,9 @@ class _ModelPhotoSelecteurState extends State<ModelPhotoSelecteur> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

@@ -128,4 +128,9 @@ class _CategorieState extends State<ModelCategorie> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
