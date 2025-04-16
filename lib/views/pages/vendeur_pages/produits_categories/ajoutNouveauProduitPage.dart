@@ -1,5 +1,4 @@
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -53,6 +52,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
     'Restaurant',
     'Pisciculture'
   ];
+
+  Map<String, String> _proprietes = {};
+
   String _categorySelected = 'Volaille';
 
   String _sousCategorySelected = 'Poulet';
@@ -103,6 +105,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   String sousCategory = '';
 
+  final TextEditingController proprieteController = TextEditingController();
+  final TextEditingController valeurProprieteController =
+      TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -140,13 +146,13 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               child: Hero(
                 tag: 'ajoutProduit',
                 child: AppButton(
-                    width: appWidthSize(context) * 0.22,
-                    height: appHeightSize(context) * 0.045,
+                    width: context.width * 0.22,
+                    height: context.height * 0.045,
                     bordeurRadius: 25,
-                    color: primaryColor,
+                    color: AppColors.primaryColor,
                     child: AppText(
                       text: 'Ajouter',
-                      fontSize: smallText() * 1.2,
+                      fontSize: context.smallText * 1.2,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                     ),
@@ -156,6 +162,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
           ],
         ),
         body: ListView(
+          //physics: BouncingScrollPhysics(),
           children: [
             /// images multiples
             SizedBox(
@@ -211,7 +218,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                //height: appHeightSize(context) * 0.3,
+                //height: context.height * 0.3,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -222,14 +229,14 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: appHeightSize(context) * 0.02,
+                      height: context.height * 0.02,
                     ),
 
                     /// nom
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: SizedBox(
-                        height: appHeightSize(context) * 0.05,
+                        //height: context.height * 0.05,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -240,9 +247,14 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                             ),
                             Expanded(
                               child: AppTextField(
-                                  width: appWidthSize(context) * 0.7,
-                                  maxLines: 1,
-                                  controller: productNameController),
+                                contentPadding: EdgeInsets.zero,
+                                //width: context.width * 0.7,
+                                maxLines: 1,
+                                controller: productNameController,
+                                isPrefixIconWidget: true,
+                                showFloatingLabel: false,
+                                alignment: Alignment.centerRight,
+                              ),
                             ),
                           ],
                         ),
@@ -263,8 +275,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
-                            height: appHeightSize(context) * 0.05,
-                            width: appWidthSize(context) * 0.4,
+                            height: context.height * 0.05,
+                            width: context.width * 0.4,
                             child: DropdownButton<String>(
                               icon: Row(
                                 children: [
@@ -273,13 +285,13 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                   ),
                                   Icon(
                                     Icons.arrow_forward_ios,
-                                    size: mediumText(),
+                                    size: context.mediumText,
                                   )
                                 ],
                               ),
                               underline: Container(),
                               value: _categorySelected,
-                              //focusColor: primaryColor,
+                              //focusColor: AppColors.primaryColor,
                               items: List.generate(_categories.length, (index) {
                                 return DropdownMenuItem<String>(
                                   value: _categories[index],
@@ -313,8 +325,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
-                            height: appHeightSize(context) * 0.05,
-                            width: appWidthSize(context) * 0.4,
+                            height: context.height * 0.05,
+                            width: context.width * 0.4,
                             child: DropdownButton<String>(
                               underline: Container(),
                               icon: Row(
@@ -324,7 +336,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                   ),
                                   Icon(
                                     Icons.arrow_forward_ios,
-                                    size: mediumText(),
+                                    size: context.mediumText,
                                   )
                                 ],
                               ),
@@ -359,8 +371,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: SizedBox(
-                        //height: appHeightSize(context) * 0.21,
-                        width: appWidthSize(context) * 0.9,
+                        //height: context.height * 0.21,
+                        width: context.width * 0.9,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,8 +387,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                             AppTextField(
                                 alignment: Alignment.topLeft,
                                 contentPadding: EdgeInsets.zero,
-                                //height: appHeightSize(context) * 0.18,
-                                width: appWidthSize(context) * 0.98,
+                                //height: context.height * 0.18,
+                                width: context.width * 0.98,
                                 isPrefixIconWidget: true,
                                 minLines: 3,
                                 maxLines: 10,
@@ -401,14 +413,14 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               child: AppText(
                 text: 'Prix et Stock',
                 fontWeight: FontWeight.w800,
-                fontSize: mediumText(),
+                fontSize: context.mediumText,
               ),
             ),
 
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                //height: appHeightSize(context) * 0.3,
+                //height: context.height * 0.3,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -419,7 +431,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: appHeightSize(context) * 0.02,
+                      height: context.height * 0.02,
                     ),
 
                     /// prix
@@ -466,7 +478,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       padding: const EdgeInsets.only(
                           left: 8.0, right: 8.0, bottom: 8.0),
                       child: SizedBox(
-                        height: appHeightSize(context) * 0.07,
+                        height: context.height * 0.07,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -478,7 +490,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               ),
                             ),
                             SizedBox(
-                              width: appWidthSize(context) * 0.45,
+                              width: context.width * 0.45,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -542,7 +554,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               child: AppText(
                 text: 'Promotion',
                 fontWeight: FontWeight.w800,
-                fontSize: mediumText(),
+                fontSize: context.mediumText,
               ),
             ),
 
@@ -550,7 +562,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               padding: const EdgeInsets.only(
                   top: 8.0, right: 8.0, left: 8.0, bottom: 16.0),
               child: Container(
-                //height: appHeightSize(context) * 0.3,
+                //height: context.height * 0.3,
                 padding: const EdgeInsets.only(bottom: 2.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -562,14 +574,14 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: appHeightSize(context) * 0.02,
+                      height: context.height * 0.02,
                     ),
 
                     /// case à cocher
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: SizedBox(
-                        height: appHeightSize(context) * 0.05,
+                        height: context.height * 0.05,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -664,7 +676,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               child: AppText(
                 text: 'Propriétés',
                 fontWeight: FontWeight.w800,
-                fontSize: mediumText(),
+                fontSize: context.mediumText,
               ),
             ),
             Padding(
@@ -673,7 +685,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               child: AppText(
                 text: 'Ajouter le poids, la race, etc. si nécessaire',
                 fontWeight: FontWeight.w800,
-                fontSize: smallText() * 0.9,
+                fontSize: context.smallText * 0.9,
                 color: Theme.of(context)
                     .colorScheme
                     .inversePrimary
@@ -681,21 +693,174 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               ),
             ),
 
+            _proprietes.length != 0
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, right: 8.0, left: 8.0, bottom: 16.0),
+                    child: Container(
+                      //height: context.height * 0.3,
+                      //width: context.width * 0.9,
+                      padding: const EdgeInsets.only(bottom: 2.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.5))),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: context.height * 0.02,
+                          ),
+                          ListView.separated(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.only(left: 20, right: 10),
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      flex: 10,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          AppText(
+                                            text:
+                                                '${_proprietes.keys.toList()[index]} : ',
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          AppText(
+                                            text:
+                                                '${_proprietes.values.toList()[index]}',
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Flexible(
+                                        flex: 2,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            proprieteController.text =
+                                                _proprietes.keys
+                                                    .toList()[index];
+                                            valeurProprieteController.text =
+                                                _proprietes.values
+                                                    .toList()[index];
+                                            showFormBottomSheet(
+                                              context,
+                                              proprieteController:
+                                                  proprieteController,
+                                              valeurProprieteController:
+                                                  valeurProprieteController,
+                                              onConfirmAdd: () {
+                                                var key = _proprietes.keys
+                                                    .toList()[index];
+                                                if (proprieteController
+                                                        .text.isNotEmpty &&
+                                                    valeurProprieteController
+                                                        .text.isNotEmpty) {
+                                                  setState(() {
+                                                    _proprietes[
+                                                            proprieteController
+                                                                .text] =
+                                                        valeurProprieteController
+                                                            .text;
+                                                    proprieteController.clear();
+                                                    valeurProprieteController
+                                                        .clear();
+                                                  });
+                                                } else if (proprieteController
+                                                        .text
+                                                        .trim()
+                                                        .isEmpty ||
+                                                    valeurProprieteController
+                                                        .text
+                                                        .trim()
+                                                        .isEmpty) {
+                                                  setState(() {
+                                                    _proprietes.remove(key);
+                                                    _proprietes.remove('');
+                                                    proprieteController.clear();
+                                                    valeurProprieteController
+                                                        .clear();
+                                                  });
+                                                }
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            color: AppColors.primaryColor,
+                                            size: 18,
+                                          ),
+                                        ))
+                                  ],
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return divider;
+                              },
+                              itemCount: _proprietes.length),
+                          SizedBox(
+                            height: context.height * 0.02,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+
             Padding(
               padding: const EdgeInsets.only(
                   left: 8.0, right: 8.0, bottom: 20, top: 8.0),
               child: AppButton(
-                  borderColor: primaryColor,
-                  height: appHeightSize(context) * 0.06,
-                  width: appWidthSize(context) * 0.8,
+                  borderColor: AppColors.primaryColor,
+                  height: context.height * 0.06,
+                  width: context.width * 0.8,
                   bordeurRadius: 10,
                   onTap: () {
-                    showFormBottomSheet(context);
+                    showFormBottomSheet(context,
+                        proprieteController: proprieteController,
+                        valeurProprieteController: valeurProprieteController,
+                        onConfirmAdd: () {
+                      setState(() {
+                        if (proprieteController.text.isNotEmpty &&
+                            valeurProprieteController.text.isNotEmpty) {
+                          _proprietes[proprieteController.text] =
+                              valeurProprieteController.text;
+                          proprieteController.clear();
+                          valeurProprieteController.clear();
+                          Navigator.pop(context);
+                        } else if (proprieteController.text.trim().isEmpty ||
+                            valeurProprieteController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: AppText(
+                                text:
+                                    'Veuillez remplir tous les champs : la propriété et sa valeur',
+                                color: Colors.white,
+                                overflow: TextOverflow.visible,
+                              ),
+                              duration: Duration(seconds: 6),
+                              showCloseIcon: true,
+                              backgroundColor: AppColors.redColor,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        }
+                      });
+                    });
                   },
                   color: Colors.transparent,
                   child: AppText(
                     text: 'Ajoutez des propriétés',
-                    color: primaryColor,
+                    color: AppColors.primaryColor,
                   ) //Theme.of(context).colorScheme.surface.w,
                   ),
             ),
@@ -718,10 +883,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   }
 }
 
-void showFormBottomSheet(BuildContext context) {
-  final TextEditingController varieteController = TextEditingController();
-  final TextEditingController valeurController = TextEditingController();
-
+void showFormBottomSheet(BuildContext context,
+    {required TextEditingController proprieteController,
+    required TextEditingController valeurProprieteController,
+    void Function()? onConfirmAdd}) {
   showModalBottomSheet(
     context: context,
     showDragHandle: true,
@@ -750,7 +915,7 @@ void showFormBottomSheet(BuildContext context) {
             ),
             AppText(
                 text: 'Ex : Poids, Race, Couleur...',
-                fontSize: context.smallText,
+                fontSize: context.smallText * 1.2,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context)
                     .colorScheme
@@ -758,20 +923,36 @@ void showFormBottomSheet(BuildContext context) {
                     .withOpacity(0.4)),
             SizedBox(height: 16),
             TextFormField(
-              controller: varieteController,
+              controller: proprieteController,
               decoration: InputDecoration(
-                labelText: 'propriété',
+                label: Text('Propriété'),
+                labelStyle: TextStyle(
+                    color: Colors.grey.withOpacity(0.6),
+                    fontSize: context.smallText * 1.2),
+                floatingLabelStyle: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: context.mediumText * 1.2),
                 hintText: 'ex : Poids',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                border: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(width: 2, color: AppColors.primaryColor),
+                    borderRadius: BorderRadius.circular(15)),
               ),
             ),
             SizedBox(height: 16),
             TextFormField(
-              controller: valeurController,
+              controller: valeurProprieteController,
               decoration: InputDecoration(
-                labelText: 'valeur',
+                labelText: 'Valeur',
+                labelStyle: TextStyle(
+                    color: Colors.grey.withOpacity(0.6),
+                    fontSize: context.smallText * 1.2),
+                floatingLabelStyle: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: context.mediumText * 1.2),
                 hintText: 'ex : 2 KG',
+                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
@@ -781,21 +962,17 @@ void showFormBottomSheet(BuildContext context) {
             AppButton(
               height: context.height * 0.07,
               width: context.width * 0.9,
-              onTap: () {
-                String variete = varieteController.text;
-                String valeur = valeurController.text;
-
-                // Logique pour traiter les données saisies
-                print(
-                    '::::::::::::::::::::::::::Variété: $variete, Valeur: $valeur');
-
-                Navigator.pop(context); // Fermer le BottomSheet
-              },
+              onTap: onConfirmAdd ??
+                  () {
+                    //TODO : Logique pour traiter les données saisies
+                    Navigator.pop(context); // Fermer le BottomSheet
+                  },
               color: AppColors.primaryColor,
               child: AppText(
                 text: 'Ajouter',
                 fontSize: context.mediumText * 1.2,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           ],

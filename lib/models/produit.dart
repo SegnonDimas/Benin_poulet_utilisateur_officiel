@@ -1,20 +1,28 @@
 class Produit {
+  final String? productId;
+  final String? sellerId;
   final List<String>? productImagesPath;
   final String? productName;
   final String? category; // ex : Volaille
   final String? subCategory; // ex : Poulet
   final String? productDescription;
-  final String? attributProductValue;
+  final String? attributProductValue; // ?
   final int? stockValue;
-  final String? promotionValue;
+  @Deprecated('Remplacé par isInPromotion (true/false)')
+  final String? promotionValue; //utiliser isInPromotion à la place
   final double? productUnitPrice;
   final bool? isInPromotion;
-  final double? promotionalPrice;
-  final List<String>? varieteProduitList;
-  final List<String>? productVariations; // poids, race, etc.
+  final double?
+      promotionalPrice; // si isInPromotion == true, donner un prix promotionnel relatif
+  final List<String>?
+      varieteProduitList; // ex : Goliath, Couveuse, Pondeuse etc.
+  final Map<String, String>?
+      productProperties; // poids : 25Kg, race : libanais, etc.
   final String? productStatus; // ex : actif, inactif, en attente, suspendu
 
   const Produit({
+    this.productId,
+    this.sellerId,
     this.productImagesPath,
     required this.productName,
     this.category,
@@ -27,11 +35,13 @@ class Produit {
     required this.productUnitPrice,
     this.isInPromotion,
     this.promotionalPrice,
-    this.productVariations,
+    this.productProperties,
     this.productStatus,
   });
 
   Produit copyWith({
+    final String? productId,
+    final String? sellerId,
     final List<String>? productImagesPath,
     final String? productName,
     final String? category, // ex : Volaille
@@ -44,10 +54,13 @@ class Produit {
     final bool? isInPromotion,
     final double? promotionalPrice,
     final List<String>? varieteProduitList,
-    final List<String>? productVariations, // ex : poids, race, etc.
+    final Map<String, String>?
+        productProperties, // ex : poids : 25Kg, race : libanais, etc.
     final String? productStatus, // ex : actif, inactif, en attente, suspendu
   }) {
     return Produit(
+      productId: productId ?? this.productId,
+      sellerId: sellerId ?? this.sellerId,
       productImagesPath: productImagesPath ?? this.productImagesPath,
       productName: productName ?? this.productName,
       category: category ?? this.category,
@@ -60,7 +73,7 @@ class Produit {
       isInPromotion: isInPromotion ?? this.isInPromotion,
       promotionalPrice: promotionalPrice ?? promotionalPrice,
       varieteProduitList: varieteProduitList ?? this.varieteProduitList,
-      productVariations: productVariations ?? this.productVariations,
+      productProperties: productProperties ?? this.productProperties,
       productStatus: productStatus ?? this.productStatus,
     );
   }
