@@ -1,0 +1,2 @@
+/home/dimas/StudioProjects/benin_poulet/android/app/.cxx/Debug/5p1y236n/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/dimas/StudioProjects/benin_poulet/android/app/.cxx/Debug/5p1y236n/armeabi-v7a/CMakeFiles/rebuild_cache.dir

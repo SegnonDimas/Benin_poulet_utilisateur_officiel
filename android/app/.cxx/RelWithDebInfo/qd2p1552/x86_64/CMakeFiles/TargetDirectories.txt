@@ -1,0 +1,2 @@
+/home/dimas/StudioProjects/benin_poulet/android/app/.cxx/RelWithDebInfo/qd2p1552/x86_64/CMakeFiles/edit_cache.dir
+/home/dimas/StudioProjects/benin_poulet/android/app/.cxx/RelWithDebInfo/qd2p1552/x86_64/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+/home/dimas/StudioProjects/benin_poulet/build/app/intermediates/cxx/RelWithDebInfo/37c6kz6w/obj/armeabi-v7a
