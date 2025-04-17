@@ -328,7 +328,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         position = _pageViewController.page!.toInt();
                         if (position == _pages.length - 1) {
                           Navigator.pushNamed(
-                              context, AppRoutes.VALIDATIONPAGE);
+                              context, AppRoutes.VENDEURMAINPAGE);
                         }
                       },
                       child: Padding(

@@ -1,4 +1,5 @@
 import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/infoPersonnellePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/photoPage.dart';
@@ -76,14 +77,21 @@ class _AuthentificationVendeurPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocConsumer<AuthentificationBloc, AuthentificationState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
-        builder: (context, state) {
-          return SafeArea(
-            child: SizedBox(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: AppText(
+            text: 'Vérification de votre identité',
+          ),
+          centerTitle: true,
+        ),
+        body: BlocConsumer<AuthentificationBloc, AuthentificationState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return SizedBox(
               child: Stack(
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 alignment: AlignmentDirectional.bottomCenter,
@@ -235,7 +243,7 @@ class _AuthentificationVendeurPageState
 
                   /// le corps de la page
                   Positioned(
-                    bottom: context.height * 0.0,
+                    bottom: context.height * 0.01,
                     top: context.height * 0.17,
                     child: SizedBox(
                         height: context.height * 0.75,
@@ -283,6 +291,11 @@ class _AuthentificationVendeurPageState
                                     GestureDetector(
                                       onTap: () {
                                         if (position == _pages.length - 1) {
+                                          //TODO : logique de soumission
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            AppRoutes.VALIDATIONPAGE,
+                                          );
                                         } else {
                                           //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
                                           _pageViewController.nextPage(
@@ -299,26 +312,25 @@ class _AuthentificationVendeurPageState
                                             right: 0,
                                           ),
                                           //context.width * 0.03),
-                                          child: position != _pages.length - 1
-                                              ? Container(
-                                                  alignment: Alignment.center,
-                                                  height: context.height * 0.07,
-                                                  width: position == 0
-                                                      ? context.width * 0.9
-                                                      : context.width * 0.9,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      color: primaryColor),
-                                                  child: Text(
-                                                    'Suivant',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize:
-                                                            mediumText() * 1.2),
-                                                  ))
-                                              : Container()),
+                                          child: Container(
+                                              alignment: Alignment.center,
+                                              height: context.height * 0.07,
+                                              width: position == 0
+                                                  ? context.width * 0.9
+                                                  : context.width * 0.9,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: primaryColor),
+                                              child: Text(
+                                                position != _pages.length - 1
+                                                    ? 'Suivant'
+                                                    : "Soumettre",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        mediumText() * 1.2),
+                                              ))),
                                     ),
                                   ],
                                 ),
@@ -329,9 +341,9 @@ class _AuthentificationVendeurPageState
                   ),
                 ],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

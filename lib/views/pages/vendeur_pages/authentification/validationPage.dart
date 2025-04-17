@@ -1,12 +1,56 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'dart:async';
+
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ValidationPage extends StatelessWidget {
+import '../../../../constants/routes.dart';
+import '../../../../widgets/app_button.dart';
+import '../../../../widgets/app_text.dart';
+import '../../../colors/app_colors.dart';
+
+class ValidationPage extends StatefulWidget {
   const ValidationPage({super.key});
+
+  @override
+  State<ValidationPage> createState() => _ValidationPageState();
+}
+
+class _ValidationPageState extends State<ValidationPage>
+    with SingleTickerProviderStateMixin {
+  int delai = 10;
+  late Timer _timer;
+  late AnimationController _rotationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _startDecompte();
+    _rotationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          ..repeat(); // fait tourner indéfiniment
+  }
+
+  void _startDecompte() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (delai > 0) {
+        setState(() {
+          delai--;
+        });
+      } else {
+        timer.cancel();
+        _rotationController.stop();
+        Navigator.pushReplacementNamed(context, AppRoutes.VENDEURPROFILPAGE);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _rotationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +62,46 @@ class ValidationPage extends StatelessWidget {
       body: Column(
         children: [
           espace,
-          AppText(
-            text: 'Bénin Poulet',
-            color: AppColors.primaryColor,
-            fontSize: context.largeText * 1.5,
-            fontWeight: FontWeight.w900,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 23,
+              ),
+              AppText(
+                text: 'Bénin Poulet',
+                color: AppColors.primaryColor,
+                fontSize: context.largeText * 1.5,
+                fontWeight: FontWeight.w900,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: AppText(
+                  text: '$delai',
+                  fontWeight: FontWeight.w900,
+                  fontSize: context.mediumText * 1.2,
+                ),
+              )
+            ],
           ),
           espace,
           espace,
-          Center(
-            child: Container(
-              height: context.height * 0.3,
-              width: context.height * 0.3,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(context.height),
-                  color: Colors.orange),
-              child: Icon(
-                Icons.hourglass_bottom_rounded,
-                color: Colors.white,
-                size: context.largeText * 5,
+          RotationTransition(
+            turns: _rotationController,
+            child: Hero(
+              tag: '1',
+              child: Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.orange,
+                ),
+                child: const Icon(
+                  Icons.hourglass_bottom_rounded,
+                  color: Colors.white,
+                  size: 90,
+                ),
               ),
             ),
           ),
@@ -51,7 +116,7 @@ class ValidationPage extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: AppText(
               text:
-                  'Notre équipe analyse vos informations d\'inscription avec soin. Nous nous efforçons de traiter votre demande dans un délai raisonnable.\nVous recevrez une notification de l\'état de votre authentification',
+                  'Notre équipe analyse vos informations d\'inscription avec soin. Nous nous efforçons de traiter votre demande dans un délai raisonnable.\n\nVous recevrez une notification de l\'état de votre authentification',
               overflow: TextOverflow.visible,
               textAlign: TextAlign.center,
               fontSize: context.smallText,
@@ -62,7 +127,8 @@ class ValidationPage extends StatelessWidget {
 
           AppButton(
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/vendeurMainPage');
+              Navigator.pushReplacementNamed(
+                  context, AppRoutes.VENDEURPROFILPAGE);
             },
             height: context.height * 0.065,
             width: context.width * 0.9,
@@ -76,16 +142,19 @@ class ValidationPage extends StatelessWidget {
           ),
           espace,
 
-          AppButton(
-            onTap: () {},
-            height: context.height * 0.065,
-            width: context.width * 0.9,
-            color: Theme.of(context).colorScheme.background,
-            borderColor: AppColors.primaryColor,
-            child: AppText(
-              text: 'Nous contacter',
-              fontSize: context.largeText * 0.9,
-              //color: Colors.white,
+          Hero(
+            tag: 'imageProfil',
+            child: AppButton(
+              onTap: () {},
+              height: context.height * 0.065,
+              width: context.width * 0.9,
+              color: Theme.of(context).colorScheme.background,
+              borderColor: AppColors.primaryColor,
+              child: AppText(
+                text: 'Nous contacter',
+                fontSize: context.largeText * 0.9,
+                //color: Colors.white,
+              ),
             ),
           ),
           Padding(

@@ -114,7 +114,7 @@ class InfoPersonnellePage extends StatelessWidget {
                         AppTextField(
                           label: 'Date',
                           height: appHeightSize(context) * 0.08,
-                          width: appWidthSize(context) * 0.4,
+                          width: appWidthSize(context) * 0.43,
                           controller: _dateNaissanceController,
                           color: Theme.of(context).colorScheme.background,
                           prefixIcon: Icons.calendar_month_outlined,

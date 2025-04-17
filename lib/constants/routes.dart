@@ -19,7 +19,12 @@ import 'package:benin_poulet/views/pages/vendeur_pages/v_presentationBoutiquePag
 import 'package:benin_poulet/views/pages/vendeur_pages/v_profilPage.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
+
 Map<String, Widget Function(BuildContext)> routes = {
+  //======================
+  // ROUTES VENDEUR/CLIENT
+  //======================
   '/firstPage': (context) => const FirstPage(),
   '/loginPage': (context) => const LoginPage(),
   '/presentationPage': (context) => const PresentationPage(),
@@ -27,6 +32,10 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
   '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
   '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
+
+  //======================
+  // ROUTES VENDEUR
+  //======================
   '/validationPage': (context) => const ValidationPage(),
   '/vendeurMainPage': (context) => const VMainPage(),
   '/vendeurPresentationBoutiquePage': (context) =>
@@ -38,12 +47,20 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurPerformancesPage': (context) => const VPerformancesPage(),
   '/vendeurProfilPage': (context) => const VProfilPage(),
   '/vendeurPortefeuillePage': (context) => const VPortefeuillePage(),
-  'vendeurHistoriqueTranslations': (context) => const VHistoriqueTranslations(),
+  '/vendeurHistoriqueTranslations': (context) =>
+      const VHistoriqueTranslations(),
+  '/vendeurAuthentificationPage': (centext) => AuthentificationVendeurPage(),
+
+  //======================
+  // ROUTES CLIENT
+  //======================
   'clientHomePage': (context) => const CHomePage(),
 };
 
 class AppRoutes {
-  // routes vendeurs
+  //======================
+  // ROUTES VENDEUR/CLIENT
+  //======================
   static String FIRSTPAGE = '/firstPage';
   static String LOGINPAGE = '/loginPage';
   static String PRESENTATIONPAGE = '/presentationPage';
@@ -51,6 +68,10 @@ class AppRoutes {
   static String LOGINWITHEMAILPAGE = '/loginWithEmailPage';
   static String SIGNUPWITHEMAILPAGE = '/signupWithEmailPage';
   static String INSCRIPTIONVENDEURPAGE = '/inscriptionVendeurPage';
+
+  //======================
+  // ROUTES VENDEUR
+  //======================
   static String VALIDATIONPAGE = '/validationPage';
   static String VENDEURMAINPAGE = '/vendeurMainPage';
   static String VENDEURPRESENTATIONBOUTIQUEPAGE =
@@ -62,9 +83,12 @@ class AppRoutes {
   static String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
   static String VENDEURPROFILPAGE = '/vendeurProfilPage';
   static String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
-  static String VENDEURHISTORIQUEPAGE = 'vendeurHistoriqueTranslations';
+  static String VENDEURHISTORIQUEPAGE = '/vendeurHistoriqueTranslations';
+  static String VENDEURAUTHENTIFICATIONPAGE = '/vendeurAuthentificationPage';
 
-  //routes clients
+  //======================
+  // ROUTES CLIENT
+  //======================
   static String CLIENTHOMEPAGE = 'clientHomePage';
 }
 
