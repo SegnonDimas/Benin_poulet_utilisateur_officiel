@@ -1,6 +1,6 @@
 class Produit {
   final String? productId;
-  final String? sellerId;
+  final String? storeId;
   final List<String>? productImagesPath;
   final String? productName;
   final String? category; // ex : Volaille
@@ -22,7 +22,7 @@ class Produit {
 
   const Produit({
     this.productId,
-    this.sellerId,
+    this.storeId,
     this.productImagesPath,
     required this.productName,
     this.category,
@@ -41,7 +41,7 @@ class Produit {
 
   Produit copyWith({
     final String? productId,
-    final String? sellerId,
+    final String? storeId,
     final List<String>? productImagesPath,
     final String? productName,
     final String? category, // ex : Volaille
@@ -60,7 +60,7 @@ class Produit {
   }) {
     return Produit(
       productId: productId ?? this.productId,
-      sellerId: sellerId ?? this.sellerId,
+      storeId: storeId ?? this.storeId,
       productImagesPath: productImagesPath ?? this.productImagesPath,
       productName: productName ?? this.productName,
       category: category ?? this.category,
