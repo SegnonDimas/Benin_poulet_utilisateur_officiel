@@ -1,8 +1,8 @@
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../views/colors/app_colors.dart';
-import '../widgets/app_text.dart';
 
 class AppDialog {
   static void showDialog({

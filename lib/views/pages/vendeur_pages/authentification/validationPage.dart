@@ -41,6 +41,7 @@ class _ValidationPageState extends State<ValidationPage>
         timer.cancel();
         _rotationController.stop();
         Navigator.pushReplacementNamed(context, AppRoutes.VENDEURPROFILPAGE);
+        Navigator.pop(context);
       }
     });
   }
@@ -129,6 +130,7 @@ class _ValidationPageState extends State<ValidationPage>
             onTap: () {
               Navigator.pushReplacementNamed(
                   context, AppRoutes.VENDEURPROFILPAGE);
+              Navigator.pop(context);
             },
             height: context.height * 0.065,
             width: context.width * 0.9,
