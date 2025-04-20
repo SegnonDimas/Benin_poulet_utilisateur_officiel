@@ -1,3 +1,6 @@
+import 'package:benin_poulet/constants/productStatus.dart' show ProductStatus;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Produit {
   final String? productId;
   final String? storeId;
@@ -6,16 +9,14 @@ class Produit {
   final String? category; // ex : Volaille
   final String? subCategory; // ex : Poulet
   final String? productDescription;
-  final String? attributProductValue; // ?
   final int? stockValue;
   @Deprecated('Remplacé par isInPromotion (true/false)')
   final String? promotionValue; //utiliser isInPromotion à la place
   final double? productUnitPrice;
   final bool? isInPromotion;
   final double?
-      promotionalPrice; // si isInPromotion == true, donner un prix promotionnel relatif
-  final List<String>?
-      varieteProduitList; // ex : Goliath, Couveuse, Pondeuse etc.
+      promoPrice; // si isInPromotion == true, donner un prix promotionnel relatif
+  final List<String>? varieties; // ex : Goliath, Couveuse, Pondeuse etc.
   final Map<String, String>?
       productProperties; // poids : 25Kg, race : libanais, etc.
   final String? productStatus; // ex : actif, inactif, en attente, suspendu
@@ -28,16 +29,17 @@ class Produit {
     this.category,
     this.subCategory,
     this.productDescription,
-    this.attributProductValue,
-    this.varieteProduitList = const [],
+    this.varieties = const ['Standard'],
     this.stockValue = 1,
     this.promotionValue,
     required this.productUnitPrice,
     this.isInPromotion,
-    this.promotionalPrice,
+    this.promoPrice,
     this.productProperties,
-    this.productStatus,
+    this.productStatus = ProductStatus.active,
   });
+
+  ///copyWith
 
   Produit copyWith({
     final String? productId,
@@ -47,13 +49,12 @@ class Produit {
     final String? category, // ex : Volaille
     final String? subCategory, // ex : Poulet
     final String? productDescription,
-    final String? attributProductValue,
     final int? stockValue,
     final String? promotionValue,
     final double? productUnitPrice,
     final bool? isInPromotion,
-    final double? promotionalPrice,
-    final List<String>? varieteProduitList,
+    final double? promoPrice,
+    final List<String>? varieties,
     final Map<String, String>?
         productProperties, // ex : poids : 25Kg, race : libanais, etc.
     final String? productStatus, // ex : actif, inactif, en attente, suspendu
@@ -66,16 +67,60 @@ class Produit {
       category: category ?? this.category,
       subCategory: subCategory ?? this.subCategory,
       productDescription: productDescription ?? this.productDescription,
-      attributProductValue: attributProductValue ?? this.attributProductValue,
       stockValue: stockValue ?? this.stockValue,
       promotionValue: promotionValue ?? this.promotionValue,
       productUnitPrice: productUnitPrice ?? this.productUnitPrice,
       isInPromotion: isInPromotion ?? this.isInPromotion,
-      promotionalPrice: promotionalPrice ?? promotionalPrice,
-      varieteProduitList: varieteProduitList ?? this.varieteProduitList,
+      promoPrice: promoPrice ?? this.promoPrice,
+      varieties: varieties ?? this.varieties,
       productProperties: productProperties ?? this.productProperties,
       productStatus: productStatus ?? this.productStatus,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'productId': productId,
+      'storeId': storeId,
+      'images': productImagesPath,
+      'name': productName,
+      'category': category,
+      'subCategory': subCategory,
+      'description': productDescription,
+      'stock': stockValue,
+      'price': productUnitPrice,
+      'isInPromotion': isInPromotion,
+      'promoPrice': promoPrice,
+      'varieties': varieties,
+      'properties': productProperties,
+      'status': productStatus,
+    };
+  }
+
+  factory Produit.fromMap(Map<String, dynamic> map) {
+    return Produit(
+      productId: map['productId'] as String?,
+      storeId: map['storeId'] as String?,
+      productImagesPath: (map['images'] as List<dynamic>?)?.cast<String>(),
+      productName: map['name'] as String?,
+      category: map['category'] as String?,
+      subCategory: map['subCategory'] as String?,
+      productDescription: map['description'] as String?,
+      stockValue: map['stock'] as int?,
+      productUnitPrice: (map['price'] as num?)?.toDouble(),
+      isInPromotion: map['isInPromotion'] as bool?,
+      promoPrice: (map['promoPrice'] as num?)?.toDouble(),
+      varieties: (map['varieties'] as List<dynamic>?)?.cast<String>(),
+      productProperties: (map['properties'] as Map?)?.map(
+        (key, value) => MapEntry(key.toString(), value.toString()),
+      ),
+      productStatus: map['status'] as String?,
+    );
+  }
+
+  factory Produit.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Produit.fromMap(data);
   }
 }
 
@@ -91,12 +136,7 @@ List<Produit> list_produits = [
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
     productImagesPath: ['assets/images/oeuf1.png', 'assets/images/oeuf2.png'],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 15,
@@ -118,7 +158,7 @@ List<Produit> list_produits = [
       'assets/images/poulet7.png',
       'assets/images/poulet8.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 150,
@@ -130,7 +170,7 @@ List<Produit> list_produits = [
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
     productImagesPath: ['assets/images/boeuf1.png', 'assets/images/boeuf2.png'],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 100,
@@ -160,7 +200,7 @@ List<Produit> list_produits = [
       'assets/images/poulet1.png',
       'assets/images/poulet2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 150,
@@ -175,12 +215,7 @@ List<Produit> list_produits = [
       'assets/images/oeuf1.png',
       'assets/images/oeuf2.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 15,
@@ -197,7 +232,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 150,
@@ -209,12 +244,7 @@ List<Produit> list_produits = [
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
     productImagesPath: ['assets/images/oeuf1.png', 'assets/images/oeuf2.png'],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 15,
@@ -229,12 +259,7 @@ List<Produit> list_produits = [
       'assets/images/poisson1.png',
       'assets/images/poisson2.png'
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 15,
@@ -250,7 +275,7 @@ List<Produit> list_produits = [
       'assets/images/poisson2.png',
       'assets/images/poisson1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 150,
@@ -265,7 +290,7 @@ List<Produit> list_produits = [
       'assets/images/chevre1.png',
       'assets/images/chevre2.png'
     ],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 100,
@@ -292,7 +317,7 @@ List<Produit> list_produits = [
       'assets/images/poisson1.png',
       'assets/images/poisson2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 150,
@@ -307,12 +332,7 @@ List<Produit> list_produits = [
       'assets/images/poisson2.png',
       'assets/images/poisson1.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 15,
@@ -327,7 +347,7 @@ List<Produit> list_produits = [
       'assets/images/chevre1.png',
       'assets/images/chevre2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 150,
@@ -342,12 +362,7 @@ List<Produit> list_produits = [
       'assets/images/chevre1.png',
       'assets/images/chevre2.png'
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 15,
@@ -363,7 +378,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 150,
@@ -375,7 +390,7 @@ List<Produit> list_produits = [
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
     productImagesPath: ['assets/images/boeuf2.png', 'assets/images/boeuf1.png'],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 100,
@@ -405,7 +420,7 @@ List<Produit> list_produits = [
       'assets/images/poulet1.png',
       'assets/images/pouletCouveuse.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 150,
@@ -420,12 +435,7 @@ List<Produit> list_produits = [
       'assets/images/oeuf1.png',
       'assets/images/oeuf2.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 15,
@@ -441,7 +451,7 @@ List<Produit> list_produits = [
       'assets/images/poulet2.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 150,
@@ -453,12 +463,7 @@ List<Produit> list_produits = [
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
     productImagesPath: ['assets/images/oeuf2.png', 'assets/images/oeuf1.png'],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 15,
@@ -475,7 +480,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 150,
@@ -487,7 +492,7 @@ List<Produit> list_produits = [
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
     productImagesPath: ['assets/images/boeuf2.png', 'assets/images/boeuf1.png'],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 100,
@@ -516,7 +521,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 150,
@@ -531,12 +536,7 @@ List<Produit> list_produits = [
       'assets/images/oeuf1.png',
       'assets/images/oeuf2.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 15,
@@ -551,7 +551,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 150,
@@ -563,12 +563,7 @@ List<Produit> list_produits = [
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
     productImagesPath: ['assets/images/oeuf1.png', 'assets/images/oeuf2.png'],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 15,
@@ -583,7 +578,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet2.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 150,
@@ -595,7 +590,7 @@ List<Produit> list_produits = [
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
     productImagesPath: ['assets/images/boeuf2.png', 'assets/images/boeuf1.png'],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 100,
@@ -624,7 +619,7 @@ List<Produit> list_produits = [
       'assets/images/poulet1.png',
       'assets/images/pouletCouveuse.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 150,
@@ -639,12 +634,7 @@ List<Produit> list_produits = [
       'assets/images/oeuf1.png',
       'assets/images/oeuf2.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 15,
@@ -659,7 +649,7 @@ List<Produit> list_produits = [
       'assets/images/poulet2.png',
       'assets/images/pouletCouveuse.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 150,
@@ -671,12 +661,7 @@ List<Produit> list_produits = [
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,
     productImagesPath: ['assets/images/oeuf1.png', 'assets/images/oeuf2.png'],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'inactif',
     stockValue: 15,
@@ -692,7 +677,7 @@ List<Produit> list_produits = [
       'assets/images/poulet2.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 150,
@@ -704,7 +689,7 @@ List<Produit> list_produits = [
         "Notre bœuf haché est préparé à partir de morceaux sélectionnés 100 % muscle, sans ajout de gras inutile. Idéal pour les sauces, boulettes ou burgers faits maison. Il offre un goût riche et une texture tendre. Fraîcheur et traçabilité garanties.",
     productUnitPrice: 250000,
     productImagesPath: ['assets/images/boeuf1.png', 'assets/images/boeuf2.png'],
-    varieteProduitList: [],
+    varieties: [],
     promotionValue: 'NON',
     productStatus: 'suspendu',
     stockValue: 100,
@@ -733,7 +718,7 @@ List<Produit> list_produits = [
       'assets/images/pouletCouveuse.png',
       'assets/images/poulet1.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'en attente',
     stockValue: 150,
@@ -748,12 +733,7 @@ List<Produit> list_produits = [
       'assets/images/oeuf1.png',
       'assets/images/oeuf2.png',
     ],
-    varieteProduitList: [
-      'Variation1',
-      'Variation2',
-      'Variation3',
-      'Variation4'
-    ],
+    varieties: ['Variation1', 'Variation2', 'Variation3', 'Variation4'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 15,
@@ -768,7 +748,7 @@ List<Produit> list_produits = [
       'assets/images/poulet1.png',
       'assets/images/pouletCouveuse.png',
     ],
-    varieteProduitList: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
+    varieties: ['Goliath', 'Couveuse', 'Géant', 'Chair'],
     promotionValue: 'NON',
     productStatus: 'actif',
     stockValue: 150,

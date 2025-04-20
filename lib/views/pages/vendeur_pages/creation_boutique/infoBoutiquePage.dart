@@ -165,6 +165,7 @@ class InfoBoutiquePage extends StatelessWidget {
                     // à la validation
                     validator: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
+                      return null;
                     },
                   ),
                   const SizedBox(

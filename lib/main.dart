@@ -2,7 +2,6 @@ import 'package:benin_poulet/blocProviders.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -10,15 +9,13 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/routes.dart';
-import 'firebase_options.dart';
+import 'core/firebase/firebase_initializer.dart';
 
 void main() async {
   // WidgetsFlutterBinding init
   WidgetsFlutterBinding.ensureInitialized();
   // firebase init
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await FirebaseInitialize.initializeFirebase();
   // flutter_localization init
   await FlutterLocalization.instance.ensureInitialized();
   // runApp

@@ -252,7 +252,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                 .colorScheme
                                                 .inversePrimary,
                                             onFieldSubmitted: (value) =>
-                                                phoneNumber = value!,
+                                                phoneNumber = value,
                                           ),
                                           const SizedBox(height: 10),
 

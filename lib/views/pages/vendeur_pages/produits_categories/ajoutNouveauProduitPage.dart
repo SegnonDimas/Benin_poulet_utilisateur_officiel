@@ -1,4 +1,7 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/core/firebase/firestore/product_repository.dart'
+    show FirestoreProductService;
+import 'package:benin_poulet/models/produit.dart';
+import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -8,6 +11,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+import 'package:reorderables/reorderables.dart';
+
+import '../../../colors/app_colors.dart';
 
 class AjoutNouveauProduitPage extends StatefulWidget {
   const AjoutNouveauProduitPage({super.key});
@@ -45,6 +51,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController prixUnitaireController = TextEditingController();
   TextEditingController quantiteController = TextEditingController();
+  TextEditingController promoPrixController = TextEditingController();
+  TextEditingController varieteController = TextEditingController();
 
   final List<String> _categories = [
     'Volaille',
@@ -53,7 +61,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
     'Pisciculture'
   ];
 
-  Map<String, String> _proprietes = {};
+  Map<String, String> proprietes = {};
+
+  List<String> varietes = [];
 
   String _categorySelected = 'Volaille';
 
@@ -132,6 +142,19 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
       child: Divider(
           color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.2)),
     );
+    Produit produit = Produit(
+      productName: productNameController.text,
+      productDescription: productDescriptionController.text,
+      category: _categorySelected,
+      subCategory: _sousCategorySelected,
+      productUnitPrice: double.tryParse(prixUnitaireController.text),
+      stockValue: int.tryParse(quantiteController.text),
+      isInPromotion: isProductInPromotion,
+      promoPrice: double.tryParse(promoPrixController.text),
+      productProperties: proprietes,
+      varieties: varietes,
+      //productImagesPath: multiImagePickerController.images,
+    );
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -156,7 +179,25 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                     ),
-                    onTap: () {}),
+                    onTap: () async {
+                      // TODO : ajouter le produit
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: AppText(
+                            text:
+                                'Produit ${produit.productName} ajouté avec succès',
+                            //color: Colors.white,
+                            overflow: TextOverflow.visible,
+                          ),
+                          duration: Duration(seconds: 6),
+                          showCloseIcon: true,
+                          //backgroundColor: AppColors.greenColor,
+                        ),
+                      );
+
+                      await FirestoreProductService().addProduct(produit);
+                    }),
               ),
             )
           ],
@@ -655,7 +696,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                         ),
                                         minLines: 1,
                                         maxLines: 2,
-                                        controller: prixUnitaireController),
+                                        controller: promoPrixController),
                                   ),
                                 ],
                               ),
@@ -667,20 +708,17 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
               ),
             ),
 
-            /// Variations du produit
-            Padding(
-              padding: const EdgeInsets.only(
+            /// Propriétés du produit
+            ListTile(
+              minTileHeight: 0,
+              contentPadding: const EdgeInsets.only(
                   left: 10.0, right: 8.0, top: 16.0, bottom: 0.0),
-              child: AppText(
+              title: AppText(
                 text: 'Propriétés',
                 fontWeight: FontWeight.w800,
                 fontSize: context.mediumText,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 12.0, right: 8.0, top: 0.0, bottom: 8.0),
-              child: AppText(
+              subtitle: AppText(
                 text: 'Ajouter le poids, la race, etc. si nécessaire',
                 fontWeight: FontWeight.w800,
                 fontSize: context.smallText * 0.9,
@@ -689,9 +727,59 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     .inversePrimary
                     .withOpacity(0.4),
               ),
+              trailing: AppButton(
+                  borderColor: AppColors.primaryColor,
+                  height: context.height * 0.035,
+                  width: context.width * 0.15,
+                  bordeurRadius: 7,
+                  color: Colors.transparent,
+                  child: AppText(
+                    text: '+',
+                    color: AppColors.primaryColor,
+                    fontSize: context.mediumText * 1.1,
+                    fontWeight: FontWeight.bold,
+                  ) //Theme.of(context).colorScheme.surface.w,
+                  ),
+              onTap: () {
+                proprieteController.clear();
+                valeurProprieteController.clear();
+                showFormBottomSheet(context,
+                    title: 'Ajouter une propriété',
+                    subtitle: 'Ex : Poids, Race, Couleur, etc.',
+                    proprieteController: proprieteController,
+                    valeurProprieteController: valeurProprieteController,
+                    onConfirmAdd: () {
+                  setState(() {
+                    if (proprieteController.text.isNotEmpty &&
+                        valeurProprieteController.text.isNotEmpty) {
+                      proprietes[proprieteController.text] =
+                          valeurProprieteController.text;
+                      proprieteController.clear();
+                      valeurProprieteController.clear();
+                      Navigator.pop(context);
+                    } else if (proprieteController.text.trim().isEmpty ||
+                        valeurProprieteController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: AppText(
+                            text:
+                                'Veuillez remplir tous les champs : la propriété et sa valeur',
+                            color: Colors.white,
+                            overflow: TextOverflow.visible,
+                          ),
+                          duration: Duration(seconds: 6),
+                          showCloseIcon: true,
+                          backgroundColor: AppColors.redColor,
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
+                  });
+                });
+              },
             ),
 
-            _proprietes.length != 0
+            proprietes.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.only(
                         top: 8.0, right: 8.0, left: 8.0, bottom: 16.0),
@@ -711,100 +799,184 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           SizedBox(
                             height: context.height * 0.02,
                           ),
-                          ListView.separated(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.only(left: 20, right: 10),
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                          ReorderableListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: proprietes.length,
+                            buildDefaultDragHandles: true,
+                            primary: true,
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            itemBuilder: (context, index) {
+                              final entry = proprietes.entries.toList()[index];
+
+                              return SizedBox(
+                                key: ValueKey(entry
+                                    .key), // Obligatoire pour ReorderableListView
+                                child: Column(
                                   children: [
-                                    Flexible(
-                                      flex: 10,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          AppText(
-                                            text:
-                                                '${_proprietes.keys.toList()[index]} : ',
-                                            fontWeight: FontWeight.w800,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              AppDialog.showDialog(
+                                                context: context,
+                                                title: 'Suppression',
+                                                content:
+                                                    'Voulez-vous vraiment supprimer la propriété ${entry.key} ?',
+                                                confirmText: 'Oui',
+                                                cancelText: 'Non',
+                                                onConfirm: () {
+                                                  setState(() {
+                                                    proprietes
+                                                        .remove(entry.key);
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: AppColors.redColor,
+                                                size: 15,
+                                              ),
+                                            ),
                                           ),
-                                          AppText(
-                                            text:
-                                                '${_proprietes.values.toList()[index]}',
-                                            fontWeight: FontWeight.w800,
+                                        ),
+                                        Flexible(
+                                          flex: 10,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 4.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  flex: 5,
+                                                  child: AppText(
+                                                    text: '${entry.key} : ',
+                                                    fontWeight: FontWeight.w900,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  flex: 3,
+                                                  child: AppText(
+                                                    text: entry.value,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize:
+                                                        context.mediumText *
+                                                            0.75,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        Flexible(
+                                          flex: 2,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              proprieteController.text =
+                                                  entry.key;
+                                              valeurProprieteController.text =
+                                                  entry.value;
+
+                                              showFormBottomSheet(
+                                                context,
+                                                title: 'Modifier une propriété',
+                                                subtitle:
+                                                    'Ex : Poids, Race, Couleur, etc.',
+                                                proprieteController:
+                                                    proprieteController,
+                                                valeurProprieteController:
+                                                    valeurProprieteController,
+                                                onConfirmAdd: () {
+                                                  if (proprieteController
+                                                          .text.isNotEmpty &&
+                                                      valeurProprieteController
+                                                          .text.isNotEmpty) {
+                                                    setState(() {
+                                                      proprietes[
+                                                              proprieteController
+                                                                  .text] =
+                                                          valeurProprieteController
+                                                              .text;
+                                                      if (entry.key !=
+                                                          proprieteController
+                                                              .text) {
+                                                        proprietes
+                                                            .remove(entry.key);
+                                                      }
+                                                      proprieteController
+                                                          .clear();
+                                                      valeurProprieteController
+                                                          .clear();
+                                                    });
+                                                  } else if (proprieteController
+                                                          .text
+                                                          .trim()
+                                                          .isEmpty ||
+                                                      valeurProprieteController
+                                                          .text
+                                                          .trim()
+                                                          .isEmpty) {
+                                                    setState(() {
+                                                      proprietes
+                                                          .remove(entry.key);
+                                                      proprieteController
+                                                          .clear();
+                                                      valeurProprieteController
+                                                          .clear();
+                                                    });
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: AppColors.primaryColor,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Flexible(
-                                        flex: 2,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            proprieteController.text =
-                                                _proprietes.keys
-                                                    .toList()[index];
-                                            valeurProprieteController.text =
-                                                _proprietes.values
-                                                    .toList()[index];
-                                            showFormBottomSheet(
-                                              context,
-                                              proprieteController:
-                                                  proprieteController,
-                                              valeurProprieteController:
-                                                  valeurProprieteController,
-                                              onConfirmAdd: () {
-                                                var key = _proprietes.keys
-                                                    .toList()[index];
-                                                if (proprieteController
-                                                        .text.isNotEmpty &&
-                                                    valeurProprieteController
-                                                        .text.isNotEmpty) {
-                                                  setState(() {
-                                                    _proprietes[
-                                                            proprieteController
-                                                                .text] =
-                                                        valeurProprieteController
-                                                            .text;
-                                                    proprieteController.clear();
-                                                    valeurProprieteController
-                                                        .clear();
-                                                  });
-                                                } else if (proprieteController
-                                                        .text
-                                                        .trim()
-                                                        .isEmpty ||
-                                                    valeurProprieteController
-                                                        .text
-                                                        .trim()
-                                                        .isEmpty) {
-                                                  setState(() {
-                                                    _proprietes.remove(key);
-                                                    _proprietes.remove('');
-                                                    proprieteController.clear();
-                                                    valeurProprieteController
-                                                        .clear();
-                                                  });
-                                                }
-                                                Navigator.pop(context);
-                                              },
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.edit,
-                                            color: AppColors.primaryColor,
-                                            size: 18,
-                                          ),
-                                        ))
+                                    index != proprietes.length - 1
+                                        ? divider
+                                        : SizedBox(),
                                   ],
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return divider;
-                              },
-                              itemCount: _proprietes.length),
+                                ),
+                              );
+                            },
+                            onReorder: (oldIndex, newIndex) {
+                              setState(() {
+                                if (newIndex > oldIndex) newIndex -= 1;
+
+                                final entries = proprietes.entries.toList();
+                                final item = entries.removeAt(oldIndex);
+                                entries.insert(newIndex, item);
+
+                                // Recréer la map avec le nouvel ordre
+                                proprietes
+                                  ..clear()
+                                  ..addEntries(entries);
+                              });
+                            },
+                          ),
                           SizedBox(
                             height: context.height * 0.02,
                           ),
@@ -814,50 +986,227 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                   )
                 : SizedBox(),
 
+            proprietes.length >= 2
+                ? showInfo(
+                    info:
+                        'Faites un appui long sur un élément puis glissez pour le déplacer',
+                  ).animate(delay: Duration(milliseconds: 500)).flipH()
+                : SizedBox(),
+
+            /// Variétés du produit
+            ListTile(
+              minTileHeight: 0,
+              contentPadding: const EdgeInsets.only(
+                  left: 10.0, right: 8.0, top: 16.0, bottom: 0.0),
+              title: AppText(
+                text: 'Variétés',
+                fontWeight: FontWeight.w800,
+                fontSize: context.mediumText,
+              ),
+              subtitle: AppText(
+                text: 'Ajouter les variétés du produit, si nécessaire',
+                fontWeight: FontWeight.w800,
+                fontSize: context.smallText * 0.9,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.4),
+              ),
+              trailing: AppButton(
+                  borderColor: AppColors.primaryColor,
+                  height: context.height * 0.035,
+                  width: context.width * 0.15,
+                  bordeurRadius: 7,
+                  color: Colors.transparent,
+                  child: AppText(
+                    text: '+',
+                    color: AppColors.primaryColor,
+                    fontSize: context.mediumText * 1.1,
+                    fontWeight: FontWeight.bold,
+                  ) //Theme.of(context).colorScheme.surface.w,
+                  ),
+              onTap: () {
+                varieteController.clear();
+                showFormBottomSheet(context,
+                    title: 'Ajouter une variété',
+                    subtitle: 'Ex : Pondeuse, couveuse, etc.',
+                    proprieteController: varieteController, onConfirmAdd: () {
+                  setState(() {
+                    if (varieteController.text.isNotEmpty) {
+                      varietes.add(varieteController.text);
+                      varieteController.clear();
+                      Navigator.pop(context);
+                    } else if (varieteController.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: AppText(
+                            text:
+                                'Veuillez remplir le champs pour ajouter une variété',
+                            color: Colors.white,
+                            overflow: TextOverflow.visible,
+                          ),
+                          duration: Duration(seconds: 6),
+                          showCloseIcon: true,
+                          backgroundColor: AppColors.redColor,
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
+                  });
+                });
+              },
+            ),
+
+            varietes.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                        top: 8.0, right: 8.0, left: 8.0, bottom: 16.0),
+                    child: Container(
+                      //height: context.height * 0.3,
+                      //width: context.width * 0.9,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.5))),
+                      child: ReorderableWrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        needsLongPressDraggable: true,
+                        onReorder: (oldIndex, newIndex) {
+                          setState(() {
+                            final item = varietes.removeAt(oldIndex);
+                            varietes.insert(newIndex, item);
+                          });
+                        },
+                        children: List.generate(varietes.length, (index) {
+                          final variete = varietes[index];
+                          return GestureDetector(
+                            key: ValueKey(variete),
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      AppDialog.showDialog(
+                                        context: context,
+                                        title: 'Suppression',
+                                        content:
+                                            'Voulez-vous vraiment supprimer la variété $variete ?',
+                                        confirmText: 'Oui',
+                                        cancelText: 'Non',
+                                        onConfirm: () {
+                                          setState(() {
+                                            varietes.removeAt(index);
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.delete,
+                                      color:
+                                          AppColors.redColor.withOpacity(0.5),
+                                      size: 15,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 4.0),
+                                    child: AppText(
+                                      text: variete,
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.w900,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              var key = varietes[index];
+                              varieteController.text = key;
+                              showFormBottomSheet(
+                                context,
+                                title: 'Modifier une variété',
+                                subtitle: 'Ex : Couveuse, Pondeuse, etc.',
+                                proprieteController: varieteController,
+                                onConfirmAdd: () {
+                                  if (varieteController.text
+                                          .trim()
+                                          .isNotEmpty &&
+                                      varieteController.text != key) {
+                                    setState(() {
+                                      varietes.add(varieteController.text);
+                                      varietes.removeAt(index);
+                                    });
+                                  } else if (varieteController.text
+                                      .trim()
+                                      .isEmpty) {
+                                    setState(() {
+                                      varietes.removeAt(index);
+                                      varieteController.clear();
+                                    });
+                                  }
+                                  varieteController.clear();
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+
+            varietes.length >= 2
+                ? showInfo(
+                        info:
+                            'Faites un appui long sur un élément puis glissez a pour réorganiser la liste')
+                    .animate(delay: Duration(milliseconds: 500))
+                    .flipH()
+                : SizedBox(),
+
+            /// Button d'ajout de produit
             Padding(
               padding: const EdgeInsets.only(
-                  left: 8.0, right: 8.0, bottom: 20, top: 8.0),
+                  left: 8.0, right: 8.0, bottom: 20, top: 20.0),
               child: AppButton(
                   borderColor: AppColors.primaryColor,
                   height: context.height * 0.06,
                   width: context.width * 0.8,
                   bordeurRadius: 10,
-                  onTap: () {
-                    showFormBottomSheet(context,
-                        proprieteController: proprieteController,
-                        valeurProprieteController: valeurProprieteController,
-                        onConfirmAdd: () {
-                      setState(() {
-                        if (proprieteController.text.isNotEmpty &&
-                            valeurProprieteController.text.isNotEmpty) {
-                          _proprietes[proprieteController.text] =
-                              valeurProprieteController.text;
-                          proprieteController.clear();
-                          valeurProprieteController.clear();
-                          Navigator.pop(context);
-                        } else if (proprieteController.text.trim().isEmpty ||
-                            valeurProprieteController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: AppText(
-                                text:
-                                    'Veuillez remplir tous les champs : la propriété et sa valeur',
-                                color: Colors.white,
-                                overflow: TextOverflow.visible,
-                              ),
-                              duration: Duration(seconds: 6),
-                              showCloseIcon: true,
-                              backgroundColor: AppColors.redColor,
-                            ),
-                          );
-                          Navigator.pop(context);
-                        }
-                      });
-                    });
+                  onTap: () async {
+                    // TODO : ajouter le produit
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: AppText(
+                          text:
+                              'Le produit ${produit.productName} est ajouté avec succès',
+                          //color: Colors.white,
+                          overflow: TextOverflow.visible,
+                        ),
+                        duration: Duration(seconds: 6),
+                        showCloseIcon: true,
+                        //backgroundColor: AppColors.greenColor,
+                      ),
+                    );
+
+                    await FirestoreProductService().addProduct(produit);
                   },
                   color: Colors.transparent,
                   child: AppText(
-                    text: 'Ajoutez des propriétés',
+                    text: 'Ajoutez le produit',
                     color: AppColors.primaryColor,
                   ) //Theme.of(context).colorScheme.surface.w,
                   ),
@@ -877,23 +1226,29 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
     prixUnitaireController.dispose();
     productNameController.dispose();
     quantiteController.dispose();
+    valeurProprieteController.dispose();
+    proprieteController.dispose();
+    varieteController.dispose();
+    promoPrixController.dispose();
     super.dispose();
   }
 }
 
 void showFormBottomSheet(BuildContext context,
-    {required TextEditingController proprieteController,
-    required TextEditingController valeurProprieteController,
+    {String? title,
+    String? subtitle,
+    required TextEditingController proprieteController,
+    TextEditingController? valeurProprieteController,
     void Function()? onConfirmAdd}) {
   showModalBottomSheet(
     context: context,
     showDragHandle: true,
     useSafeArea: true,
     enableDrag: true,
+    isScrollControlled: true,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
-    isScrollControlled: true,
     builder: (BuildContext context) {
       return Padding(
         padding: EdgeInsets.only(
@@ -907,12 +1262,12 @@ void showFormBottomSheet(BuildContext context,
           mainAxisSize: MainAxisSize.min,
           children: [
             AppText(
-              text: 'Ajouter une propriété',
+              text: title ?? 'Ajouter',
               fontSize: context.mediumText * 1.2,
               fontWeight: FontWeight.bold,
             ),
             AppText(
-                text: 'Ex : Poids, Race, Couleur...',
+                text: subtitle ?? 'Ex : ...',
                 fontSize: context.smallText * 1.2,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context)
@@ -923,14 +1278,20 @@ void showFormBottomSheet(BuildContext context,
             TextFormField(
               controller: proprieteController,
               decoration: InputDecoration(
-                label: Text('Propriété'),
+                label: title != null &&
+                        title.toLowerCase().trim().contains('propriété')
+                    ? Text('Propriété')
+                    : Text('Variété'),
                 labelStyle: TextStyle(
                     color: Colors.grey.withOpacity(0.6),
                     fontSize: context.smallText * 1.2),
                 floatingLabelStyle: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: context.mediumText * 1.2),
-                hintText: 'ex : Poids',
+                hintText: title != null &&
+                        title.toLowerCase().trim().contains('propriété')
+                    ? 'ex : Poids'
+                    : 'ex : Pondeuse',
                 hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
                 border: OutlineInputBorder(
                     borderSide:
@@ -939,23 +1300,25 @@ void showFormBottomSheet(BuildContext context,
               ),
             ),
             SizedBox(height: 16),
-            TextFormField(
-              controller: valeurProprieteController,
-              decoration: InputDecoration(
-                labelText: 'Valeur',
-                labelStyle: TextStyle(
-                    color: Colors.grey.withOpacity(0.6),
-                    fontSize: context.smallText * 1.2),
-                floatingLabelStyle: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: context.mediumText * 1.2),
-                hintText: 'ex : 2 KG',
-                hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-              ),
-              keyboardType: TextInputType.text,
-            ),
+            title != null && title.toLowerCase().trim().contains('propriété')
+                ? TextFormField(
+                    controller: valeurProprieteController,
+                    decoration: InputDecoration(
+                      labelText: 'Valeur',
+                      labelStyle: TextStyle(
+                          color: Colors.grey.withOpacity(0.6),
+                          fontSize: context.smallText * 1.2),
+                      floatingLabelStyle: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: context.mediumText * 1.2),
+                      hintText: 'ex : 2 KG',
+                      hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
+                    keyboardType: TextInputType.text,
+                  )
+                : SizedBox(),
             SizedBox(height: 24),
             AppButton(
               height: context.height * 0.07,
@@ -967,7 +1330,7 @@ void showFormBottomSheet(BuildContext context,
                   },
               color: AppColors.primaryColor,
               child: AppText(
-                text: 'Ajouter',
+                text: 'Confirmer',
                 fontSize: context.mediumText * 1.2,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -978,4 +1341,40 @@ void showFormBottomSheet(BuildContext context,
       );
     },
   );
+}
+
+Widget showInfo({required String info}) {
+  return Builder(builder: (context) {
+    return Padding(
+        padding: const EdgeInsets.only(
+            top: 1.0, right: 8.0, left: 8.0, bottom: 16.0),
+        child: Container(
+          padding:
+              EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.info_outline,
+                color: Colors.orange,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: AppText(
+                  text: info,
+                  fontSize: context.smallText,
+                  color: Colors.orange,
+                  overflow: TextOverflow.visible,
+                ),
+              ),
+            ],
+          ),
+        ));
+  });
 }

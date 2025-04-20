@@ -115,9 +115,9 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                             _selectedCountry = code!.name;
                           });
                           print(code!.name);
-                          print(code!.code);
-                          print(code!.dialCode);
-                          print(code!.flagUri);
+                          print(code.code);
+                          print(code.dialCode);
+                          print(code.flagUri);
                         },
                       ),
                     ),

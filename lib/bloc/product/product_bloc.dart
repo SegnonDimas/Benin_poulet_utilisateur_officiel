@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/produit.dart';
 
@@ -17,7 +16,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         final nomCorrespond =
             produit.productName!.toLowerCase().contains(query);
 
-        final variationCorrespond = produit.varieteProduitList!.any(
+        final variationCorrespond = produit.varieties!.any(
           (variation) => variation.toLowerCase().contains(query),
         );
 

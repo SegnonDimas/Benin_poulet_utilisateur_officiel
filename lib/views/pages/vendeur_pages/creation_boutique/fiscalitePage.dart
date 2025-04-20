@@ -274,6 +274,7 @@ class FiscalitePage extends StatelessWidget {
                     },
                     validator: (string) {
                       _updateFiscalInfo(context, storeCreationState);
+                      return null;
                     },
                   ),
                   const SizedBox(height: 20),

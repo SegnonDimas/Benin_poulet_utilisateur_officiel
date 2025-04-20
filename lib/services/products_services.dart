@@ -374,21 +374,21 @@ Widget showProducts(BuildContext context, List<Produit> list) {
                                                                       Axis
                                                                           .horizontal,
                                                                   itemCount: list[index]
-                                                                              .varieteProduitList!
+                                                                              .varieties!
                                                                               .length !=
                                                                           0
                                                                       ? list[index]
-                                                                          .varieteProduitList!
+                                                                          .varieties!
                                                                           .length
                                                                       : 1,
                                                                   itemBuilder:
                                                                       (context,
                                                                           indexVariete) {
-                                                                    return list[index].varieteProduitList!.length !=
+                                                                    return list[index].varieties!.length !=
                                                                             0
                                                                         ? ModelSecteur(
                                                                             text: list[index]
-                                                                                .varieteProduitList![
+                                                                                .varieties![
                                                                                     indexVariete]
                                                                                 .toString(),
                                                                             isSelected:

@@ -360,7 +360,7 @@ Future showAccountState(
                               'assets/lotties/accountVerified.json'),
                         ],
                       )
-                    : accountStatus!.toLowerCase().trim() ==
+                    : accountStatus.toLowerCase().trim() ==
                             AccountStatus.PENDING
                         ? Lottie.asset(
                             'assets/lotties/accountAuthentificationPending.json')

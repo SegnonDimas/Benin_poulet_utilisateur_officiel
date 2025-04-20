@@ -102,15 +102,15 @@ class ModelProduit extends StatelessWidget {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: List.generate(
-                                produit.varieteProduitList!.isNotEmpty
-                                    ? produit.varieteProduitList!.length
+                                produit.varieties!.isNotEmpty
+                                    ? produit.varieties!.length
                                     : 1, (index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
                                     bottom: 2.0, top: 2, right: 10),
                                 child: AppText(
-                                  text: produit.varieteProduitList!.isNotEmpty
-                                      ? produit.varieteProduitList![index]
+                                  text: produit.varieties!.isNotEmpty
+                                      ? produit.varieties![index]
                                       : 'Standard',
                                   fontSize: context.smallText * 0.9,
                                   color: Theme.of(context)
