@@ -1,11 +1,11 @@
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart'
-    show FirestoreProductService;
+import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
@@ -69,8 +69,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   String _sousCategorySelected = 'Poulet';
 
-  int _quantite = 0;
-
   bool isProductInPromotion = false;
 
   void incrementerQuantite() {
@@ -121,11 +119,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    quantiteController.text = '0';
-
+    quantiteController.text = '1';
+    prixUnitaireController.text = '0';
     multiImagePickerController = MultiImagePickerController(
         maxImages: 10,
         picker: (int pickCount, Object? params) async {
@@ -133,67 +128,54 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
           /*picker: (allowMultiple) async {
           return await pickImagesUsingImagePicker(allowMultiple);*/
         });
-  }
 
-  Future<bool> _showExitConfirmationDialog(BuildContext context) async {
-    bool result = false;
-
-    AppDialog.showDialog(
-      context: context,
-      title: 'Confirmation',
-      content: 'Voulez-vous vraiment abandonner et quitter cette page ?',
-      confirmText: 'Oui',
-      cancelText: 'Non',
-      onConfirm: () {
-        result = true;
-        Navigator.of(context).pop(); // ferme le dialogue
-        Navigator.of(context).pop(); // quitte la page courante
-      },
-      onCancel: () {
-        result = false;
-        Navigator.of(context).pop(); // ferme le dialogue
-      },
-    );
-
-    return result;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // divider
     var divider = Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: Divider(
           color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.2)),
     );
+    // produit
     Produit produit = Produit(
       productName: productNameController.text,
       productDescription: productDescriptionController.text,
       category: _categorySelected,
       subCategory: _sousCategorySelected,
-      productUnitPrice: double.tryParse(prixUnitaireController.text),
-      stockValue: int.tryParse(quantiteController.text),
+      productUnitPrice: double.tryParse(prixUnitaireController.text) ?? 1.0,
+      stockValue: int.tryParse(quantiteController.text) ?? 1,
       isInPromotion: isProductInPromotion,
       promoPrice: double.tryParse(promoPrixController.text),
       productProperties: proprietes,
       varieties: varietes,
       //productImagesPath: multiImagePickerController.images,
     );
+
     return PopScope(
       canPop: false, // Important pour forcer l’interception
       onPopInvokedWithResult: (didPop, t) async {
-        //if (didPop) return;
         // Si l'utilisateur a appuyé sur le bouton retour, afficher la boîte de dialogue de confirmation
-        _showExitConfirmationDialog(context);
+        showExitConfirmationDialog(context);
       },
 
       child: SafeArea(
         top: false,
         child: Scaffold(
+          //=================
+          // APPBAR
+          //=================
           appBar: AppBar(
+            // titre
             title: AppText(
               text: 'Ajouter Produit',
             ),
             centerTitle: true,
+
+            // actions (boutons d'ajout de produit)
             actions: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -211,32 +193,23 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                         color: Colors.white,
                       ),
                       onTap: () async {
-                        // TODO : ajouter le produit
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: AppText(
-                              text:
-                                  'Produit ${produit.productName} ajouté avec succès',
-                              //color: Colors.white,
-                              overflow: TextOverflow.visible,
-                            ),
-                            duration: Duration(seconds: 6),
-                            showCloseIcon: true,
-                            //backgroundColor: AppColors.greenColor,
-                          ),
-                        );
-
-                        await FirestoreProductService().addProduct(produit);
+                        // ajout de produit avec tous les contrôles possibles
+                        await addProduct(context, produit);
                       }),
                 ),
               )
             ],
           ),
+
+          //=================
+          // BODY
+          //=================
           body: ListView(
             //physics: BouncingScrollPhysics(),
             children: [
-              /// images multiples
+              //============================
+              // IMAGES MULTIPLES DU PRODUIT
+              //============================
               SizedBox(
                 child: Padding(
                   padding: const EdgeInsets.all(0.0),
@@ -286,7 +259,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 ),
               ),
 
-              /// nom - catégorie - sous-catégorie
+              //==================================
+              // NOM - CATEGORIE - SOUS-CATEGORIE
+              //==================================
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -478,7 +453,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 ),
               ),
 
-              /// Prix et stock
+              //===============
+              // PRIX ET STOCK
+              //===============
               Padding(
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 8.0, top: 16.0, bottom: 8.0),
@@ -526,18 +503,41 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               ),
                               Expanded(
                                 child: AppTextField(
-                                    alignment: Alignment.topRight,
-                                    contentPadding: const EdgeInsets.only(
-                                      left: 8.0,
-                                    ),
-                                    isPrefixIconWidget: true,
-                                    keyboardType: TextInputType.number,
-                                    suffixIcon: AppText(
-                                      text: 'F CFA',
-                                    ),
-                                    minLines: 1,
-                                    maxLines: 2,
-                                    controller: prixUnitaireController),
+                                  alignment: Alignment.topRight,
+                                  contentPadding: const EdgeInsets.only(
+                                    left: 8.0,
+                                  ),
+                                  isPrefixIconWidget: true,
+                                  keyboardType: TextInputType.number,
+                                  suffixIcon: AppText(
+                                    text: 'F CFA',
+                                  ),
+                                  minLines: 1,
+                                  maxLines: 2,
+                                  controller: prixUnitaireController,
+                                  onChanged: (s) {
+                                    // éviter les entrées vites (mettre 0 à la place d'un champ vite)
+                                    if (prixUnitaireController.text.trim() ==
+                                        '') {
+                                      setState(() {
+                                        prixUnitaireController.text = "0";
+                                      });
+                                    }
+
+                                    // éviter les Zeros inutils au début (02 => 2)
+                                    if (prixUnitaireController.text.length >
+                                            1 &&
+                                        prixUnitaireController.text
+                                            .startsWith('0')) {
+                                      setState(() {
+                                        prixUnitaireController.text =
+                                            prixUnitaireController.text
+                                                .replaceFirst(
+                                                    RegExp(r'^0+'), '');
+                                      });
+                                    }
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -618,7 +618,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 ),
               ),
 
-              /// Etat promotionnel du produit
+              //=============================
+              //ETAT PROMOTIONNEL DU PRODUIT
+              //=============================
               Padding(
                 padding: const EdgeInsets.only(
                     left: 10.0, right: 8.0, top: 16.0, bottom: 8.0),
@@ -743,7 +745,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 ),
               ),
 
-              /// Propriétés du produit
+              //=======================
+              // PROPRIÉTÉS DU PRODUIT
+              //=======================
               ListTile(
                 minTileHeight: 0,
                 contentPadding: const EdgeInsets.only(
@@ -778,42 +782,74 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                 onTap: () {
                   proprieteController.clear();
                   valeurProprieteController.clear();
-                  showFormBottomSheet(context,
-                      title: 'Ajouter une propriété',
-                      subtitle: 'Ex : Poids, Race, Couleur, etc.',
-                      proprieteController: proprieteController,
-                      valeurProprieteController: valeurProprieteController,
-                      onConfirmAdd: () {
-                    setState(() {
-                      if (proprieteController.text.isNotEmpty &&
-                          valeurProprieteController.text.isNotEmpty) {
-                        proprietes[proprieteController.text] =
-                            valeurProprieteController.text;
-                        proprieteController.clear();
-                        valeurProprieteController.clear();
-                        Navigator.pop(context);
-                      } else if (proprieteController.text.trim().isEmpty ||
-                          valeurProprieteController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: AppText(
-                              text:
+                  showFormBottomSheet(
+                    context,
+                    title: 'Ajouter une propriété',
+                    subtitle: 'Ex : Poids, Race, Couleur, etc.',
+                    proprieteController: proprieteController,
+                    valeurProprieteController: valeurProprieteController,
+                    onConfirmAdd: () {
+                      try {
+                        setState(() {
+                          final String key = proprieteController.text.trim();
+                          final String value =
+                              valeurProprieteController.text.trim();
+
+                          if (key.isEmpty || value.isEmpty) {
+                            showMessage(
+                              context: context,
+                              message:
                                   'Veuillez remplir tous les champs : la propriété et sa valeur',
-                              color: Colors.white,
-                              overflow: TextOverflow.visible,
-                            ),
-                            duration: Duration(seconds: 6),
-                            showCloseIcon: true,
-                            backgroundColor: AppColors.redColor,
-                          ),
+                              backgroundColor: AppColors.redColor,
+                            );
+                            Navigator.pop(context);
+                            return;
+                          }
+
+                          final bool alreadyExists = proprietes.keys.any(
+                            (existingKey) =>
+                                existingKey.trim().toLowerCase() ==
+                                key.toLowerCase(),
+                          );
+
+                          if (alreadyExists) {
+                            showMessage(
+                              context: context,
+                              message:
+                                  'Cette propriété existe déjà, veuillez en ajouter une autre',
+                              backgroundColor: AppColors.redColor,
+                            );
+                          } else {
+                            proprietes[key] = value;
+                            showMessage(
+                              context: context,
+                              message: 'Propriété ajoutée avec succès',
+                              backgroundColor: AppColors.primaryColor,
+                            );
+                          }
+
+                          proprieteController.clear();
+                          valeurProprieteController.clear();
+                          Navigator.pop(context);
+                        });
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print(
+                              ':::::::::::::::::Erreur : $e ::::::::::::::::::::');
+                        }
+                        showMessage(
+                          context: context,
+                          message:
+                              'Une erreur s\'est produite lors de l\'ajout de la propriété. Veuillez réessayer.',
+                          backgroundColor: AppColors.redColor,
                         );
-                        Navigator.pop(context);
                       }
-                    });
-                  });
+                    },
+                  );
                 },
               ),
 
+              // Liste des propriétés
               proprietes.isNotEmpty
                   ? Padding(
                       padding: const EdgeInsets.only(
@@ -929,9 +965,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                             child: IconButton(
                                               onPressed: () {
                                                 proprieteController.text =
-                                                    entry.key;
+                                                    entry.key.trim();
                                                 valeurProprieteController.text =
-                                                    entry.value;
+                                                    entry.value.trim();
 
                                                 showFormBottomSheet(
                                                   context,
@@ -944,19 +980,170 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                                   valeurProprieteController:
                                                       valeurProprieteController,
                                                   onConfirmAdd: () {
-                                                    if (proprieteController
-                                                            .text.isNotEmpty &&
+                                                    try {
+                                                      final String newKey =
+                                                          proprieteController
+                                                              .text
+                                                              .trim();
+                                                      final String newValue =
+                                                          valeurProprieteController
+                                                              .text
+                                                              .trim();
+                                                      final String oldKey =
+                                                          entry.key.trim();
+
+                                                      setState(() {
+                                                        if (newKey.isNotEmpty &&
+                                                            newValue
+                                                                .isNotEmpty) {
+                                                          // Vérifie si une clé (autre que celle qu'on modifie) existe déjà avec la même valeur en minuscules
+                                                          final String
+                                                              existingKey =
+                                                              proprietes.keys
+                                                                  .firstWhere(
+                                                            (k) =>
+                                                                k.toLowerCase() ==
+                                                                    newKey
+                                                                        .toLowerCase() &&
+                                                                k != oldKey,
+                                                            orElse: () => '',
+                                                          );
+
+                                                          if (existingKey
+                                                              .isNotEmpty) {
+                                                            // Si un doublon existe (ex: "Poids" vs "poids"), on supprime l'existant
+                                                            proprietes.remove(
+                                                                existingKey);
+                                                          }
+
+                                                          // Ajoute ou met à jour la propriété
+                                                          proprietes[newKey] =
+                                                              newValue;
+
+                                                          // Supprime l'ancienne si son nom a changé (même avec casse différente)
+                                                          if (oldKey
+                                                                  .toLowerCase() !=
+                                                              newKey
+                                                                  .toLowerCase()) {
+                                                            final String
+                                                                oldKeyMatch =
+                                                                proprietes.keys
+                                                                    .firstWhere(
+                                                              (k) =>
+                                                                  k.toLowerCase() ==
+                                                                  oldKey
+                                                                      .toLowerCase(),
+                                                              orElse: () => '',
+                                                            );
+                                                            if (oldKeyMatch
+                                                                .isNotEmpty) {
+                                                              proprietes.remove(
+                                                                  oldKeyMatch);
+                                                            }
+                                                          }
+                                                        } else {
+                                                          // Si l'utilisateur a supprimé les champs, on supprime aussi l'ancienne propriété
+                                                          final String
+                                                              oldKeyMatch =
+                                                              proprietes.keys
+                                                                  .firstWhere(
+                                                            (k) =>
+                                                                k.toLowerCase() ==
+                                                                oldKey
+                                                                    .toLowerCase(),
+                                                            orElse: () => '',
+                                                          );
+                                                          if (oldKeyMatch
+                                                              .isNotEmpty) {
+                                                            proprietes.remove(
+                                                                oldKeyMatch);
+                                                          }
+                                                        }
+
+                                                        proprieteController
+                                                            .clear();
                                                         valeurProprieteController
-                                                            .text.isNotEmpty) {
+                                                            .clear();
+                                                      });
+                                                    } catch (e) {
+                                                      if (kDebugMode) {
+                                                        print(
+                                                            '::::::::::::::::::: ERREUR $e :::::::::::::::::::');
+                                                      }
+                                                      showMessage(
+                                                        context: context,
+                                                        message:
+                                                            'Erreur lors de la mise à jour de la propriété. Veuillez réessayer.',
+                                                        backgroundColor:
+                                                            AppColors.redColor,
+                                                      );
+                                                    }
+
+                                                    Navigator.pop(context);
+                                                  },
+
+                                                  /*onConfirmAdd: () {
+                                                    final String key =
+                                                        proprieteController.text
+                                                            .trim();
+                                                    final String value =
+                                                        valeurProprieteController
+                                                            .text
+                                                            .trim();
+                                                    final String oldKey =
+                                                        entry.key.trim();
+
+                                                    setState(() {
+                                                      if (key.isNotEmpty &&
+                                                          value.isNotEmpty) {
+                                                        // Mise à jour ou ajout
+                                                        proprietes[key] = value;
+
+                                                        // Si on a changé la clé, on supprime l'ancienne
+                                                        if (oldKey
+                                                                .toLowerCase() !=
+                                                            key.toLowerCase()) {
+                                                          proprietes
+                                                              .remove(oldKey);
+                                                        }
+                                                      } else {
+                                                        // Si les champs sont vides, on supprime l'entrée existante
+                                                        proprietes
+                                                            .remove(oldKey);
+                                                      }
+
+                                                      proprieteController
+                                                          .clear();
+                                                      valeurProprieteController
+                                                          .clear();
+                                                    });
+
+                                                    Navigator.pop(context);
+                                                  },*/
+
+                                                  /*onConfirmAdd: () {
+                                                    if (proprieteController.text
+                                                            .trim()
+                                                            .isNotEmpty &&
+                                                        valeurProprieteController
+                                                            .text
+                                                            .trim()
+                                                            .isNotEmpty) {
                                                       setState(() {
                                                         proprietes[
                                                                 proprieteController
-                                                                    .text] =
+                                                                    .text
+                                                                    .trim()] =
                                                             valeurProprieteController
-                                                                .text;
-                                                        if (entry.key !=
+                                                                .text
+                                                                .trim();
+                                                        if (entry.key
+                                                                .trim()
+                                                                .toLowerCase() !=
                                                             proprieteController
-                                                                .text) {
+                                                                .text
+                                                                .trim()
+                                                                .toLowerCase()) {
                                                           proprietes.remove(
                                                               entry.key);
                                                         }
@@ -983,7 +1170,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                                       });
                                                     }
                                                     Navigator.pop(context);
-                                                  },
+                                                  },*/
                                                 );
                                               },
                                               icon: Icon(
@@ -1026,6 +1213,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     )
                   : SizedBox(),
 
+              // Message d'indication de glissement
               proprietes.length >= 2
                   ? showInfo(
                       info:
@@ -1033,7 +1221,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     ).animate(delay: Duration(milliseconds: 500)).flipH()
                   : SizedBox(),
 
-              /// Variétés du produit
+              //=====================
+              // VARIÉTÉS DU PRODUIT
+              //=====================
               ListTile(
                 minTileHeight: 0,
                 contentPadding: const EdgeInsets.only(
@@ -1072,8 +1262,29 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       subtitle: 'Ex : Pondeuse, couveuse, etc.',
                       proprieteController: varieteController, onConfirmAdd: () {
                     setState(() {
-                      if (varieteController.text.isNotEmpty) {
-                        varietes.add(varieteController.text);
+                      if (varieteController.text.trim().isNotEmpty &&
+                          !(varietes.contains(varieteController.text))) {
+                        varietes.forEach((element) {
+                          if (element.trim().toLowerCase() ==
+                              varieteController.text.trim().toLowerCase()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: AppText(
+                                  text:
+                                      'Cette variété existe déjà, veuillez en ajouter une autre',
+                                  color: Colors.white,
+                                  overflow: TextOverflow.visible,
+                                ),
+                                duration: Duration(seconds: 6),
+                                showCloseIcon: true,
+                                backgroundColor: AppColors.redColor,
+                              ),
+                            );
+                          } else {
+                            varietes.add(varieteController.text.trim());
+                          }
+                        });
+
                         varieteController.clear();
                         Navigator.pop(context);
                       } else if (varieteController.text.trim().isEmpty) {
@@ -1091,12 +1302,29 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           ),
                         );
                         Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: AppText(
+                              text:
+                                  'Cette variété existe déjà, veuillez en ajouter une autre',
+                              color: Colors.white,
+                              overflow: TextOverflow.visible,
+                            ),
+                            duration: Duration(seconds: 6),
+                            showCloseIcon: true,
+                            backgroundColor: AppColors.redColor,
+                          ),
+                        );
+                        varieteController.clear();
+                        Navigator.pop(context);
                       }
                     });
                   });
                 },
               ),
 
+              // Liste des variétés
               varietes.isNotEmpty
                   ? Padding(
                       padding: const EdgeInsets.only(
@@ -1184,7 +1412,12 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                     if (varieteController.text
                                             .trim()
                                             .isNotEmpty &&
-                                        varieteController.text != key) {
+                                        varieteController.text
+                                                .trim()
+                                                .toLowerCase() !=
+                                            key.trim().toLowerCase() &&
+                                        !varietes.contains(
+                                            varieteController.text.trim())) {
                                       setState(() {
                                         varietes.add(varieteController.text);
                                         varietes.removeAt(index);
@@ -1196,6 +1429,21 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                         varietes.removeAt(index);
                                         varieteController.clear();
                                       });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: AppText(
+                                            text:
+                                                'Cette variété existe déjà, veuillez en ajouter une autre',
+                                            color: Colors.white,
+                                            overflow: TextOverflow.visible,
+                                          ),
+                                          duration: Duration(seconds: 6),
+                                          showCloseIcon: true,
+                                          backgroundColor: AppColors.redColor,
+                                        ),
+                                      );
                                     }
                                     varieteController.clear();
                                     Navigator.pop(context);
@@ -1209,6 +1457,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     )
                   : SizedBox(),
 
+              // Message d'indication de glissement
               varietes.length >= 2
                   ? showInfo(
                           info:
@@ -1217,7 +1466,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       .flipH()
                   : SizedBox(),
 
-              /// Button d'ajout de produit
+              //==========================
+              // BOUTON D'AJOUT DE PRODUIT
+              //==========================
               Padding(
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8.0, bottom: 20, top: 20.0),
@@ -1227,23 +1478,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     width: context.width * 0.8,
                     bordeurRadius: 10,
                     onTap: () async {
-                      // TODO : ajouter le produit
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: AppText(
-                            text:
-                                'Le produit ${produit.productName} est ajouté avec succès',
-                            //color: Colors.white,
-                            overflow: TextOverflow.visible,
-                          ),
-                          duration: Duration(seconds: 6),
-                          showCloseIcon: true,
-                          //backgroundColor: AppColors.greenColor,
-                        ),
-                      );
-
-                      await FirestoreProductService().addProduct(produit);
+                      // ajout de produit avec tous les contrôles possibles
+                      await addProduct(context, produit);
                     },
                     color: Colors.transparent,
                     child: AppText(
@@ -1276,6 +1512,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   }
 }
 
+//=================================================
+//FORMULAIRE DE SAISIE DE PROPRIÉTÉS ET DE VARIÉTÉS
+//=================================================
 void showFormBottomSheet(BuildContext context,
     {String? title,
     String? subtitle,
@@ -1319,6 +1558,7 @@ void showFormBottomSheet(BuildContext context,
             SizedBox(height: 16),
             TextFormField(
               controller: proprieteController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 label: title != null &&
                         title.toLowerCase().trim().contains('propriété')
@@ -1345,6 +1585,7 @@ void showFormBottomSheet(BuildContext context,
             title != null && title.toLowerCase().trim().contains('propriété')
                 ? TextFormField(
                     controller: valeurProprieteController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       labelText: 'Valeur',
                       labelStyle: TextStyle(
@@ -1385,6 +1626,9 @@ void showFormBottomSheet(BuildContext context,
   );
 }
 
+//==============================================
+//AFFICHAGE D'INFOS DANS L'INTERFACE UTILISATEUR
+//==============================================
 Widget showInfo({required String info}) {
   return Builder(builder: (context) {
     return Padding(
@@ -1419,4 +1663,137 @@ Widget showInfo({required String info}) {
           ),
         ));
   });
+}
+
+//============================================
+//DIALOGE DE CONFIRMATION DE SORTIE DE LA PAGE
+//============================================
+Future<bool> showExitConfirmationDialog(BuildContext context) async {
+  bool result = false;
+
+  AppDialog.showDialog(
+    context: context,
+    title: 'Confirmation',
+    content: 'Voulez-vous vraiment abandonner et quitter cette page ?',
+    confirmText: 'Oui',
+    cancelText: 'Non',
+    onConfirm: () {
+      result = true;
+      Navigator.of(context).pop(); // ferme le dialogue
+      Navigator.of(context).pop(); // quitte la page courante
+    },
+    onCancel: () {
+      result = false;
+      Navigator.of(context).pop(); // ferme le dialogue
+    },
+  );
+
+  return result;
+}
+
+//===================================
+//FONCTION D'AJOUT DE NOUVEAU PRODUIT
+//===================================
+Future<void> addProduct(BuildContext context, Produit product) async {
+  try {
+    // Vérifications individuelles pour des messages clairs
+    if (product.productName == null || product.productName!.trim().isEmpty) {
+      showMessage(
+        context: context,
+        message: 'Veuillez renseigner le nom du produit.',
+        backgroundColor: AppColors.redColor,
+      );
+      return;
+    }
+
+    if (product.category == null || product.category!.trim().isEmpty) {
+      showMessage(
+        context: context,
+        message: 'Veuillez sélectionner une catégorie pour le produit.',
+        backgroundColor: AppColors.redColor,
+      );
+      return;
+    }
+
+    if (product.productUnitPrice <= 0) {
+      showMessage(
+        context: context,
+        message: 'Le prix unitaire doit être supérieur à 0.',
+        backgroundColor: AppColors.redColor,
+      );
+      return;
+    }
+
+    if (product.stockValue == null || product.stockValue! <= 0) {
+      showMessage(
+        context: context,
+        message: 'La quantité en stock doit être supérieure à 0.',
+        backgroundColor: AppColors.redColor,
+      );
+      return;
+    }
+
+    // Gestion des cas de promotion
+    if (product.isInPromotion == true) {
+      if (product.promoPrice == null || product.promoPrice! <= 0) {
+        showMessage(
+          context: context,
+          message: 'Veuillez définir un prix promotionnel valide.',
+          backgroundColor: AppColors.redColor,
+        );
+        return;
+      }
+
+      if (product.promoPrice! >= product.productUnitPrice) {
+        showMessage(
+          context: context,
+          message: 'Le prix promotionnel doit être inférieur au prix unitaire.',
+          backgroundColor: AppColors.redColor,
+        );
+        return;
+      }
+    }
+
+    // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
+    await FirestoreProductService().addProduct(product);
+
+    showMessage(
+      context: context,
+      message: 'Produit "${product.productName}" ajouté avec succès.',
+      backgroundColor: AppColors.primaryColor,
+    );
+  } catch (e) {
+    print(":::::::::::::::ERREUR : $e :::::::::::::::::");
+    showMessage(
+      context: context,
+      message:
+          'Une erreur est survenue lors de l’ajout du produit. Veuillez réessayer.',
+      backgroundColor: AppColors.redColor,
+    );
+  }
+}
+
+//=======================================================
+//SNACKBAR QUI AFFICHE LES MESSAGES D'ERREUR OU DE SUCCES
+//=======================================================
+void showMessage({
+  required BuildContext context,
+  String? message,
+  Color? backgroundColor,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      width: context.width * 0.97,
+      behavior: SnackBarBehavior.floating,
+      content: AppText(
+        text: message ?? '',
+        color: Colors.white,
+        overflow: TextOverflow.visible,
+      ),
+      duration: Duration(seconds: 6),
+      showCloseIcon: true,
+      backgroundColor: backgroundColor ?? AppColors.redColor,
+      closeIconColor: Colors.white,
+    ),
+  );
 }

@@ -12,7 +12,7 @@ class Produit {
   final int? stockValue;
   @Deprecated('Remplacé par isInPromotion (true/false)')
   final String? promotionValue; //utiliser isInPromotion à la place
-  final double? productUnitPrice;
+  final double productUnitPrice;
   final bool? isInPromotion;
   final double?
       promoPrice; // si isInPromotion == true, donner un prix promotionnel relatif
@@ -33,8 +33,8 @@ class Produit {
     this.stockValue = 1,
     this.promotionValue,
     required this.productUnitPrice,
-    this.isInPromotion,
-    this.promoPrice,
+    this.isInPromotion = false,
+    this.promoPrice = 0,
     this.productProperties,
     this.productStatus = ProductStatus.active,
   });
@@ -107,7 +107,7 @@ class Produit {
       subCategory: map['subCategory'] as String?,
       productDescription: map['description'] as String?,
       stockValue: map['stock'] as int?,
-      productUnitPrice: (map['price'] as num?)?.toDouble(),
+      productUnitPrice: (map['price'] as num?)!.toDouble(),
       isInPromotion: map['isInPromotion'] as bool?,
       promoPrice: (map['promoPrice'] as num?)?.toDouble(),
       varieties: (map['varieties'] as List<dynamic>?)?.cast<String>(),

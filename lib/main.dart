@@ -107,7 +107,7 @@ class _MyAppState extends State<MyApp> {
         //home: const FirstPage(),
 
         routes: routes,
-        initialRoute: '/firstPage',
+        initialRoute: AppRoutes.FIRSTPAGE,
         //home: FiscalityPage(),
       ),
     );
