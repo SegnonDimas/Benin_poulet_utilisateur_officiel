@@ -536,6 +536,13 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                                     RegExp(r'^0+'), '');
                                       });
                                     }
+
+                                    setState(() {
+                                      produit.copyWith(
+                                        productUnitPrice: double.tryParse(
+                                            prixUnitaireController.text),
+                                      );
+                                    });
                                   },
                                 ),
                               ),
@@ -720,18 +727,47 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                     //champ de saisie du prix promotionnel
                                     Expanded(
                                       child: AppTextField(
-                                          alignment: Alignment.topRight,
-                                          contentPadding: const EdgeInsets.only(
-                                            left: 8.0,
-                                          ),
-                                          isPrefixIconWidget: true,
-                                          keyboardType: TextInputType.number,
-                                          suffixIcon: AppText(
-                                            text: 'F CFA',
-                                          ),
-                                          minLines: 1,
-                                          maxLines: 2,
-                                          controller: promoPrixController),
+                                        alignment: Alignment.topRight,
+                                        contentPadding: const EdgeInsets.only(
+                                          left: 8.0,
+                                        ),
+                                        isPrefixIconWidget: true,
+                                        keyboardType: TextInputType.number,
+                                        suffixIcon: AppText(
+                                          text: 'F CFA',
+                                        ),
+                                        minLines: 1,
+                                        maxLines: 2,
+                                        controller: promoPrixController,
+                                        onChanged: (s) {
+                                          // éviter les entrées vites (mettre 0 à la place d'un champ vite)
+                                          if (promoPrixController.text.trim() ==
+                                              '') {
+                                            setState(() {
+                                              promoPrixController.text = "0";
+                                            });
+                                          }
+
+                                          // éviter les Zeros inutils au début (02 => 2)
+                                          if (promoPrixController.text.length >
+                                                  1 &&
+                                              promoPrixController.text
+                                                  .startsWith('0')) {
+                                            setState(() {
+                                              promoPrixController.text =
+                                                  promoPrixController.text
+                                                      .replaceFirst(
+                                                          RegExp(r'^0+'), '');
+                                            });
+                                          }
+                                          setState(() {
+                                            produit.copyWith(
+                                              promoPrice: double.tryParse(
+                                                  promoPrixController.text),
+                                            );
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1264,27 +1300,33 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     setState(() {
                       if (varieteController.text.trim().isNotEmpty &&
                           !(varietes.contains(varieteController.text))) {
-                        varietes.forEach((element) {
-                          if (element.trim().toLowerCase() ==
-                              varieteController.text.trim().toLowerCase()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: AppText(
-                                  text:
-                                      'Cette variété existe déjà, veuillez en ajouter une autre',
-                                  color: Colors.white,
-                                  overflow: TextOverflow.visible,
+                        if (varietes.isNotEmpty) {
+                          for (var element in varietes) {
+                            if (element.trim().toLowerCase() ==
+                                varieteController.text.trim().toLowerCase()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: AppText(
+                                    text:
+                                        'Cette variété existe déjà, veuillez en ajouter une autre',
+                                    color: Colors.white,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                  duration: Duration(seconds: 6),
+                                  showCloseIcon: true,
+                                  backgroundColor: AppColors.redColor,
                                 ),
-                                duration: Duration(seconds: 6),
-                                showCloseIcon: true,
-                                backgroundColor: AppColors.redColor,
-                              ),
-                            );
-                          } else {
-                            varietes.add(varieteController.text.trim());
+                              );
+                              varieteController.clear();
+                            } else {
+                              varietes.add(varieteController.text.trim());
+                              varieteController.clear();
+                              Navigator.pop(context);
+                            }
                           }
-                        });
-
+                          Navigator.pop(context);
+                        }
+                        varietes.add(varieteController.text.trim());
                         varieteController.clear();
                         Navigator.pop(context);
                       } else if (varieteController.text.trim().isEmpty) {
