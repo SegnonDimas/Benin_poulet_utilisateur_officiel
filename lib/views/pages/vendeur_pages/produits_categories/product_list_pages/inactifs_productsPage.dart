@@ -19,10 +19,11 @@ class InactifsProductsPage extends StatelessWidget {
               .produitsFiltres
               .where((p) => p.productStatus == 'inactif')
               .toList();
-          return showProducts(context, list_produits_inactifs_filtre);
+          return ProductServices.showProducts(
+              context, list_produits_inactifs_filtre);
         }
         // liste de tous les produits actifs
-        return showProducts(context, list_produits_inactifs);
+        return ProductServices.showProducts(context, list_produits_inactifs);
       },
     );
   }

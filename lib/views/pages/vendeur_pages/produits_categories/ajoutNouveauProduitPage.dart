@@ -1,10 +1,13 @@
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
+import 'dart:async';
+
 import 'package:benin_poulet/models/produit.dart';
+import 'package:benin_poulet/services/products_services.dart';
+import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/utils/dialog.dart';
+import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:reorderables/reorderables.dart';
 
+import '../../../../widgets/app_textField.dart';
 import '../../../colors/app_colors.dart';
 
 class AjoutNouveauProduitPage extends StatefulWidget {
@@ -113,6 +117,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   String sousCategory = '';
 
+  bool quitterLaPage = false;
+
   final TextEditingController proprieteController = TextEditingController();
   final TextEditingController valeurProprieteController =
       TextEditingController();
@@ -155,13 +161,11 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
       //productImagesPath: multiImagePickerController.images,
     );
 
-    return PopScope(
-      canPop: false, // Important pour forcer l’interception
-      onPopInvokedWithResult: (didPop, t) async {
-        // Si l'utilisateur a appuyé sur le bouton retour, afficher la boîte de dialogue de confirmation
-        showExitConfirmationDialog(context);
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await AppUtils.showExitConfirmationDialog(context);
+        return shouldPop; // true = autorise le pop, false = bloque
       },
-
       child: SafeArea(
         top: false,
         child: Scaffold(
@@ -194,7 +198,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       ),
                       onTap: () async {
                         // ajout de produit avec tous les contrôles possibles
-                        await addProduct(context, produit);
+                        await ProductServices.addProduct(context, produit);
                       }),
                 ),
               )
@@ -410,10 +414,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                         ),
                       ),
                       divider,
-
-                      /*const SizedBox(
-                        height: 10,
-                      ),*/
 
                       /// Description du produit
                       Padding(
@@ -1251,7 +1251,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
               // Message d'indication de glissement
               proprietes.length >= 2
-                  ? showInfo(
+                  ? AppUtils.showInfo(
                       info:
                           'Faites un appui long sur un élément puis glissez pour le déplacer',
                     ).animate(delay: Duration(milliseconds: 500)).flipH()
@@ -1501,7 +1501,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
               // Message d'indication de glissement
               varietes.length >= 2
-                  ? showInfo(
+                  ? AppUtils.showInfo(
                           info:
                               'Faites un appui long sur un élément puis glissez a pour réorganiser la liste')
                       .animate(delay: Duration(milliseconds: 500))
@@ -1521,7 +1521,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     bordeurRadius: 10,
                     onTap: () async {
                       // ajout de produit avec tous les contrôles possibles
-                      await addProduct(context, produit);
+                      await ProductServices.addProduct(context, produit);
                     },
                     color: Colors.transparent,
                     child: AppText(
@@ -1668,153 +1668,6 @@ void showFormBottomSheet(BuildContext context,
   );
 }
 
-//==============================================
-//AFFICHAGE D'INFOS DANS L'INTERFACE UTILISATEUR
-//==============================================
-Widget showInfo({required String info}) {
-  return Builder(builder: (context) {
-    return Padding(
-        padding: const EdgeInsets.only(
-            top: 1.0, right: 8.0, left: 8.0, bottom: 16.0),
-        child: Container(
-          padding:
-              EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.orange),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.info_outline,
-                color: Colors.orange,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Expanded(
-                child: AppText(
-                  text: info,
-                  fontSize: context.smallText,
-                  color: Colors.orange,
-                  overflow: TextOverflow.visible,
-                ),
-              ),
-            ],
-          ),
-        ));
-  });
-}
-
-//============================================
-//DIALOGE DE CONFIRMATION DE SORTIE DE LA PAGE
-//============================================
-Future<bool> showExitConfirmationDialog(BuildContext context) async {
-  bool result = false;
-
-  AppDialog.showDialog(
-    context: context,
-    title: 'Confirmation',
-    content: 'Voulez-vous vraiment abandonner et quitter cette page ?',
-    confirmText: 'Oui',
-    cancelText: 'Non',
-    onConfirm: () {
-      result = true;
-      Navigator.of(context).pop(); // ferme le dialogue
-      Navigator.of(context).pop(); // quitte la page courante
-    },
-    onCancel: () {
-      result = false;
-      Navigator.of(context).pop(); // ferme le dialogue
-    },
-  );
-
-  return result;
-}
-
-//===================================
-//FONCTION D'AJOUT DE NOUVEAU PRODUIT
-//===================================
-Future<void> addProduct(BuildContext context, Produit product) async {
-  try {
-    // Vérifications individuelles pour des messages clairs
-    if (product.productName == null || product.productName!.trim().isEmpty) {
-      showMessage(
-        context: context,
-        message: 'Veuillez renseigner le nom du produit.',
-        backgroundColor: AppColors.redColor,
-      );
-      return;
-    }
-
-    if (product.category == null || product.category!.trim().isEmpty) {
-      showMessage(
-        context: context,
-        message: 'Veuillez sélectionner une catégorie pour le produit.',
-        backgroundColor: AppColors.redColor,
-      );
-      return;
-    }
-
-    if (product.productUnitPrice <= 0) {
-      showMessage(
-        context: context,
-        message: 'Le prix unitaire doit être supérieur à 0.',
-        backgroundColor: AppColors.redColor,
-      );
-      return;
-    }
-
-    if (product.stockValue == null || product.stockValue! <= 0) {
-      showMessage(
-        context: context,
-        message: 'La quantité en stock doit être supérieure à 0.',
-        backgroundColor: AppColors.redColor,
-      );
-      return;
-    }
-
-    // Gestion des cas de promotion
-    if (product.isInPromotion == true) {
-      if (product.promoPrice == null || product.promoPrice! <= 0) {
-        showMessage(
-          context: context,
-          message: 'Veuillez définir un prix promotionnel valide.',
-          backgroundColor: AppColors.redColor,
-        );
-        return;
-      }
-
-      if (product.promoPrice! >= product.productUnitPrice) {
-        showMessage(
-          context: context,
-          message: 'Le prix promotionnel doit être inférieur au prix unitaire.',
-          backgroundColor: AppColors.redColor,
-        );
-        return;
-      }
-    }
-
-    // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
-    await FirestoreProductService().addProduct(product);
-
-    showMessage(
-      context: context,
-      message: 'Produit "${product.productName}" ajouté avec succès.',
-      backgroundColor: AppColors.primaryColor,
-    );
-  } catch (e) {
-    print(":::::::::::::::ERREUR : $e :::::::::::::::::");
-    showMessage(
-      context: context,
-      message:
-          'Une erreur est survenue lors de l’ajout du produit. Veuillez réessayer.',
-      backgroundColor: AppColors.redColor,
-    );
-  }
-}
-
 //=======================================================
 //SNACKBAR QUI AFFICHE LES MESSAGES D'ERREUR OU DE SUCCES
 //=======================================================
@@ -1823,19 +1676,8 @@ void showMessage({
   String? message,
   Color? backgroundColor,
 }) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      width: context.width * 0.97,
-      behavior: SnackBarBehavior.floating,
-      content: AppText(
-        text: message ?? '',
-        color: Colors.white,
-        overflow: TextOverflow.visible,
-      ),
-      duration: Duration(seconds: 6),
-      showCloseIcon: true,
+  AppSnackBar.showSnackBar(context, message ?? '',
       backgroundColor: backgroundColor ?? AppColors.redColor,
       closeIconColor: Colors.white,
-    ),
-  );
+      messageColor: Colors.white);
 }

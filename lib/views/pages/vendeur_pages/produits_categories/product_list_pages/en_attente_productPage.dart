@@ -19,10 +19,11 @@ class EnAttenteProductsPage extends StatelessWidget {
               .produitsFiltres
               .where((p) => p.productStatus == 'en attente')
               .toList();
-          return showProducts(context, list_produits_enAttente_filtre);
+          return ProductServices.showProducts(
+              context, list_produits_enAttente_filtre);
         }
         // liste de tous les produits enAttente
-        return showProducts(context, list_produits_enAttente);
+        return ProductServices.showProducts(context, list_produits_enAttente);
       },
     );
   }

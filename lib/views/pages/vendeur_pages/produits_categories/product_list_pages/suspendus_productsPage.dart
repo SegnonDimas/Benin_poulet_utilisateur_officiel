@@ -19,10 +19,11 @@ class SuspendusProductsPage extends StatelessWidget {
               .produitsFiltres
               .where((p) => p.productStatus == 'suspendu')
               .toList();
-          return showProducts(context, list_produits_suspendus_filtre);
+          return ProductServices.showProducts(
+              context, list_produits_suspendus_filtre);
         }
         // liste de tous les produits actifs
-        return showProducts(context, list_produits_suspendus);
+        return ProductServices.showProducts(context, list_produits_suspendus);
       },
     );
   }

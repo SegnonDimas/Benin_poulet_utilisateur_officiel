@@ -41,9 +41,10 @@ class _CategoriesListState extends State<CategoriesList>
                       p.category?.toLowerCase().trim() ==
                       categorie.toLowerCase().trim())
                   .toList();
-              return showProducts(context, list_produits_filtres);
+              return ProductServices.showProducts(
+                  context, list_produits_filtres);
             }
-            return showProducts(context, list_produits);
+            return ProductServices.showProducts(context, list_produits);
           }
 
           return Column(

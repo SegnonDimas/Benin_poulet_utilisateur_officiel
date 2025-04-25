@@ -18,10 +18,11 @@ class ActifsProductsPage extends StatelessWidget {
               .produitsFiltres
               .where((p) => p.productStatus == 'actif')
               .toList();
-          return showProducts(context, list_produits_actifs_filtre);
+          return ProductServices.showProducts(
+              context, list_produits_actifs_filtre);
         }
         // liste de tous les produits actifs
-        return showProducts(context, list_produits_actifs);
+        return ProductServices.showProducts(context, list_produits_actifs);
       },
     );
   }

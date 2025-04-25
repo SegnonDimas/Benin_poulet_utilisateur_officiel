@@ -1,27 +1,31 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../views/sizes/app_sizes.dart';
 import '../widgets/app_text.dart';
 
 class AppSnackBar {
-  static void showSnackBar(BuildContext context, String message) {
+  static void showSnackBar(BuildContext context, String message,
+      {Color? backgroundColor, Color? messageColor, Color? closeIconColor}) {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 2),
           content: AppText(
             text: message,
-            color: Theme.of(context).colorScheme.surface,
+            color: messageColor ?? Theme.of(context).colorScheme.surface,
             overflow: TextOverflow.visible,
           ),
-          backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+          backgroundColor:
+              backgroundColor ?? Theme.of(context).colorScheme.inverseSurface,
           elevation: 3,
           duration: const Duration(seconds: 6),
-          closeIconColor: Theme.of(context).colorScheme.surface,
+          closeIconColor:
+              closeIconColor ?? Theme.of(context).colorScheme.surface,
           showCloseIcon: true,
           // permettre de
           behavior: SnackBarBehavior.floating,
-          width: appWidthSize(context) * 0.9,
+          width: context.width * 0.97,
         ),
         snackBarAnimationStyle: AnimationStyle(
             reverseCurve: Curves.fastEaseInToSlowEaseOut,
@@ -45,7 +49,8 @@ class AppSnackBar {
       content: AwesomeSnackbarContent(
         title: title,
         message: message,
-        titleTextStyle: TextStyle(fontSize: mediumText(), color: Colors.white),
+        titleTextStyle:
+            TextStyle(fontSize: context.mediumText, color: Colors.white),
 
         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
         contentType: contentType,
