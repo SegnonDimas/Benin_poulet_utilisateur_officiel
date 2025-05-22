@@ -32,11 +32,15 @@ android {
     compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
+
+
     compileOptions {
         //sourceCompatibility = JavaVersion.VERSION_1_8
         //targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        //
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -49,8 +53,8 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         //minSdk = flutter.minSdkVersion
-        //minSdk = 33
-        minSdk = 21 //pour les Android de version inferieure
+        minSdk = 33
+        //minSdk = 21 //pour les Android de version inferieure
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
@@ -70,6 +74,9 @@ android {
 dependencies {
     // Add this in addition to your other dependencies
     implementation "androidx.activity:activity:1.10.1"
+
+    //
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }
 
 flutter {

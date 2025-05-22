@@ -23,33 +23,10 @@ class _VProduitsListPageState extends State<VProduitsListPage>
   late TabController controller;
   String search = '';
 
-  Future<bool> _showConfirmationDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Confirmer'),
-            content: Text('Voulez-vous vraiment quitter cette page ?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('Non'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text('Oui'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     controller = TabController(length: 2, vsync: this, initialIndex: 0);
-    //context.read<ProduitBloc>().add(ReinitialiserRecherche());
+    super.initState();
   }
 
   @override
@@ -72,16 +49,13 @@ class _VProduitsListPageState extends State<VProduitsListPage>
               text: 'Produits',
             ),
             centerTitle: true,
-            /*leading: IconButton(
-                onPressed: () {
-                  // Réinitialiser l'état de la recherche de produits lorsque l'utilisateur appuie sur le bouton retour
-                  context.read<ProductBloc>().add(ReinitialiserRecherche());
-                  Get.back();
-                },
-                icon: Icon(Icons.arrow_back_outlined)),*/
             actions: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      controller.index = 1;
+                    });
+                  },
                   icon: Icon(
                     Icons.filter_list_outlined,
                     color: AppColors.primaryColor,

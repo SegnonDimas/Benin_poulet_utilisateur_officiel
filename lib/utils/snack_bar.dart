@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../widgets/app_text.dart';
 
+@Deprecated("Utiliser AppUtils à la place")
 class AppSnackBar {
   static void showSnackBar(BuildContext context, String message,
       {Color? backgroundColor, Color? messageColor, Color? closeIconColor}) {
@@ -28,8 +29,8 @@ class AppSnackBar {
           width: context.width * 0.97,
         ),
         snackBarAnimationStyle: AnimationStyle(
-            reverseCurve: Curves.fastEaseInToSlowEaseOut,
-            curve: Curves.fastOutSlowIn,
+            reverseCurve: Curves.easeOutExpo,
+            curve: Curves.easeOutExpo,
             duration: const Duration(seconds: 2),
             reverseDuration: const Duration(seconds: 2)));
   }

@@ -3,39 +3,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Produit {
   final String? productId;
-  final String? storeId;
-  final List<String>? productImagesPath;
-  final String? productName;
-  final String? category; // ex : Volaille
-  final String? subCategory; // ex : Poulet
-  final String? productDescription;
-  final int? stockValue;
+  final String storeId;
+  final List<String> productImagesPath;
+  final String productName;
+  final String category; // ex : Volaille
+  final String subCategory; // ex : Poulet
+  final String productDescription;
+  final int stockValue;
   @Deprecated('Remplacé par isInPromotion (true/false)')
   final String? promotionValue; //utiliser isInPromotion à la place
   final double productUnitPrice;
-  final bool? isInPromotion;
-  final double?
+  final bool isInPromotion;
+  final double
       promoPrice; // si isInPromotion == true, donner un prix promotionnel relatif
-  final List<String>? varieties; // ex : Goliath, Couveuse, Pondeuse etc.
-  final Map<String, String>?
+  final List<String> varieties; // ex : Goliath, Couveuse, Pondeuse etc.
+  final Map<String, String>
       productProperties; // poids : 25Kg, race : libanais, etc.
-  final String? productStatus; // ex : actif, inactif, en attente, suspendu
+  final String productStatus; // ex : actif, inactif, en attente, suspendu
 
   const Produit({
     this.productId,
-    this.storeId,
-    this.productImagesPath,
+    this.storeId = "1",
+    this.productImagesPath = const [],
     required this.productName,
-    this.category,
-    this.subCategory,
-    this.productDescription,
+    this.category = '',
+    this.subCategory = '',
+    this.productDescription = '',
     this.varieties = const ['Standard'],
     this.stockValue = 1,
     this.promotionValue,
     required this.productUnitPrice,
     this.isInPromotion = false,
     this.promoPrice = 0,
-    this.productProperties,
+    this.productProperties = const {},
     this.productStatus = ProductStatus.active,
   });
 
@@ -99,22 +99,22 @@ class Produit {
 
   factory Produit.fromMap(Map<String, dynamic> map) {
     return Produit(
-      productId: map['productId'] as String?,
-      storeId: map['storeId'] as String?,
-      productImagesPath: (map['images'] as List<dynamic>?)?.cast<String>(),
-      productName: map['name'] as String?,
-      category: map['category'] as String?,
-      subCategory: map['subCategory'] as String?,
-      productDescription: map['description'] as String?,
-      stockValue: map['stock'] as int?,
-      productUnitPrice: (map['price'] as num?)!.toDouble(),
-      isInPromotion: map['isInPromotion'] as bool?,
-      promoPrice: (map['promoPrice'] as num?)?.toDouble(),
-      varieties: (map['varieties'] as List<dynamic>?)?.cast<String>(),
-      productProperties: (map['properties'] as Map?)?.map(
+      productId: map['productId'] /*as String?*/,
+      storeId: map['storeId'] /*as String*/,
+      productImagesPath: (map['images'] as List<dynamic>).cast<String>(),
+      productName: map['name'] /*as String*/,
+      category: map['category'] /*as String*/,
+      subCategory: map['subCategory'] /*as String*/,
+      productDescription: map['description'] /*as String*/,
+      stockValue: map['stock'] as int,
+      productUnitPrice: (map['price'] as num).toDouble(),
+      isInPromotion: map['isInPromotion'] as bool,
+      promoPrice: (map['promoPrice'] as num).toDouble(),
+      varieties: (map['varieties'] as List<dynamic>).cast<String>(),
+      productProperties: (map['properties'] as Map).map(
         (key, value) => MapEntry(key.toString(), value.toString()),
       ),
-      productStatus: map['status'] as String?,
+      productStatus: map['status'] /*as String*/,
     );
   }
 

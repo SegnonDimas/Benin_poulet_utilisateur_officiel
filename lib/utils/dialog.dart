@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../views/colors/app_colors.dart';
 
+@Deprecated("Utiliser AppUtils.showDialog() à la place")
 class AppDialog {
   static Future<T?> showDialog<T>({
     required BuildContext context,

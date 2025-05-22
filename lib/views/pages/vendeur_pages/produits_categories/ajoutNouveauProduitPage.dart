@@ -155,7 +155,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
       productUnitPrice: double.tryParse(prixUnitaireController.text) ?? 1.0,
       stockValue: int.tryParse(quantiteController.text) ?? 1,
       isInPromotion: isProductInPromotion,
-      promoPrice: double.tryParse(promoPrixController.text),
+      promoPrice: double.parse(promoPrixController.text),
       productProperties: proprietes,
       varieties: varietes,
       //productImagesPath: multiImagePickerController.images,
@@ -857,11 +857,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                             );
                           } else {
                             proprietes[key] = value;
-                            showMessage(
-                              context: context,
-                              message: 'Propriété ajoutée avec succès',
-                              backgroundColor: AppColors.primaryColor,
-                            );
                           }
 
                           proprieteController.clear();
@@ -1117,96 +1112,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
                                                     Navigator.pop(context);
                                                   },
-
-                                                  /*onConfirmAdd: () {
-                                                    final String key =
-                                                        proprieteController.text
-                                                            .trim();
-                                                    final String value =
-                                                        valeurProprieteController
-                                                            .text
-                                                            .trim();
-                                                    final String oldKey =
-                                                        entry.key.trim();
-
-                                                    setState(() {
-                                                      if (key.isNotEmpty &&
-                                                          value.isNotEmpty) {
-                                                        // Mise à jour ou ajout
-                                                        proprietes[key] = value;
-
-                                                        // Si on a changé la clé, on supprime l'ancienne
-                                                        if (oldKey
-                                                                .toLowerCase() !=
-                                                            key.toLowerCase()) {
-                                                          proprietes
-                                                              .remove(oldKey);
-                                                        }
-                                                      } else {
-                                                        // Si les champs sont vides, on supprime l'entrée existante
-                                                        proprietes
-                                                            .remove(oldKey);
-                                                      }
-
-                                                      proprieteController
-                                                          .clear();
-                                                      valeurProprieteController
-                                                          .clear();
-                                                    });
-
-                                                    Navigator.pop(context);
-                                                  },*/
-
-                                                  /*onConfirmAdd: () {
-                                                    if (proprieteController.text
-                                                            .trim()
-                                                            .isNotEmpty &&
-                                                        valeurProprieteController
-                                                            .text
-                                                            .trim()
-                                                            .isNotEmpty) {
-                                                      setState(() {
-                                                        proprietes[
-                                                                proprieteController
-                                                                    .text
-                                                                    .trim()] =
-                                                            valeurProprieteController
-                                                                .text
-                                                                .trim();
-                                                        if (entry.key
-                                                                .trim()
-                                                                .toLowerCase() !=
-                                                            proprieteController
-                                                                .text
-                                                                .trim()
-                                                                .toLowerCase()) {
-                                                          proprietes.remove(
-                                                              entry.key);
-                                                        }
-                                                        proprieteController
-                                                            .clear();
-                                                        valeurProprieteController
-                                                            .clear();
-                                                      });
-                                                    } else if (proprieteController
-                                                            .text
-                                                            .trim()
-                                                            .isEmpty ||
-                                                        valeurProprieteController
-                                                            .text
-                                                            .trim()
-                                                            .isEmpty) {
-                                                      setState(() {
-                                                        proprietes
-                                                            .remove(entry.key);
-                                                        proprieteController
-                                                            .clear();
-                                                        valeurProprieteController
-                                                            .clear();
-                                                      });
-                                                    }
-                                                    Navigator.pop(context);
-                                                  },*/
                                                 );
                                               },
                                               icon: Icon(
@@ -1254,7 +1159,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                   ? AppUtils.showInfo(
                       info:
                           'Faites un appui long sur un élément puis glissez pour le déplacer',
-                    ).animate(delay: Duration(milliseconds: 500)).flipH()
+                    )
+                      .animate(delay: Duration(milliseconds: 500))
+                      .fade(duration: Duration(milliseconds: 500))
                   : SizedBox(),
 
               //=====================
@@ -1297,71 +1204,88 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       title: 'Ajouter une variété',
                       subtitle: 'Ex : Pondeuse, couveuse, etc.',
                       proprieteController: varieteController, onConfirmAdd: () {
-                    setState(() {
-                      if (varieteController.text.trim().isNotEmpty &&
-                          !(varietes.contains(varieteController.text))) {
-                        if (varietes.isNotEmpty) {
-                          for (var element in varietes) {
-                            if (element.trim().toLowerCase() ==
-                                varieteController.text.trim().toLowerCase()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: AppText(
-                                    text:
-                                        'Cette variété existe déjà, veuillez en ajouter une autre',
-                                    color: Colors.white,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                  duration: Duration(seconds: 6),
-                                  showCloseIcon: true,
-                                  backgroundColor: AppColors.redColor,
+                    if (varieteController.text.trim().isNotEmpty &&
+                        !(varietes.contains(varieteController.text))) {
+                      if (varietes.isNotEmpty) {
+                        for (var element in varietes) {
+                          if (element.trim().toLowerCase() ==
+                              varieteController.text.trim().toLowerCase()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: AppText(
+                                  text:
+                                      'Cette variété existe déjà, veuillez en ajouter une autre',
+                                  color: Colors.white,
+                                  overflow: TextOverflow.visible,
                                 ),
-                              );
+                                duration: Duration(seconds: 6),
+                                showCloseIcon: true,
+                                backgroundColor: AppColors.redColor,
+                              ),
+                            );
+                            setState(() {
                               varieteController.clear();
-                            } else {
+                            });
+                          } else {
+                            setState(() {
                               varietes.add(varieteController.text.trim());
                               varieteController.clear();
-                              Navigator.pop(context);
-                            }
+                            });
+                            Navigator.pop(context);
                           }
-                          Navigator.pop(context);
                         }
-                        varietes.add(varieteController.text.trim());
-                        varieteController.clear();
-                        Navigator.pop(context);
-                      } else if (varieteController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: AppText(
-                              text:
-                                  'Veuillez remplir le champs pour ajouter une variété',
-                              color: Colors.white,
-                              overflow: TextOverflow.visible,
-                            ),
-                            duration: Duration(seconds: 6),
-                            showCloseIcon: true,
-                            backgroundColor: AppColors.redColor,
-                          ),
-                        );
-                        Navigator.pop(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: AppText(
-                              text:
-                                  'Cette variété existe déjà, veuillez en ajouter une autre',
-                              color: Colors.white,
-                              overflow: TextOverflow.visible,
-                            ),
-                            duration: Duration(seconds: 6),
-                            showCloseIcon: true,
-                            backgroundColor: AppColors.redColor,
-                          ),
-                        );
-                        varieteController.clear();
                         Navigator.pop(context);
                       }
-                    });
+                      setState(() {
+                        varietes.add(varieteController.text.trim());
+                        varieteController.clear();
+                      });
+                      Navigator.pop(context);
+                    } else if (varieteController.text.trim().isEmpty) {
+                      showMessage(
+                          context: context,
+                          message:
+                              'Veuillez remplir le champs pour ajouter une variété');
+                      /*ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: AppText(
+                            text:
+                                'Veuillez remplir le champs pour ajouter une variété',
+                            color: Colors.white,
+                            overflow: TextOverflow.visible,
+                          ),
+                          duration: Duration(seconds: 6),
+                          width: context.width * 0.8,
+                          behavior: SnackBarBehavior.floating,
+                          showCloseIcon: true,
+                          backgroundColor: AppColors.redColor,
+                        ),
+                      );*/
+                      Navigator.pop(context);
+                    } else {
+                      showMessage(
+                        context: context,
+                        message:
+                            'Cette variété existe déjà, veuillez en ajouter une autre',
+                      );
+                      /*ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: AppText(
+                            text:
+                                'Cette variété existe déjà, veuillez en ajouter une autre',
+                            color: Colors.white,
+                            overflow: TextOverflow.visible,
+                          ),
+                          duration: Duration(seconds: 6),
+                          showCloseIcon: true,
+                          backgroundColor: AppColors.redColor,
+                        ),
+                      );*/
+                      setState(() {
+                        varieteController.clear();
+                      });
+                      Navigator.pop(context);
+                    }
                   });
                 },
               ),
@@ -1399,9 +1323,11 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               child: Container(
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color:
-                                      AppColors.primaryColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(15),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .background, //Colors.grey.shade700.withOpacity(0.2),
+                                  //AppColors.primaryColor.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1425,16 +1351,20 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                       },
                                       child: Icon(
                                         Icons.delete,
-                                        color:
-                                            AppColors.redColor.withOpacity(0.5),
+                                        color: AppColors.redColor,
                                         size: 15,
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 4.0),
+                                      padding: const EdgeInsets.only(
+                                          left: 4.0, right: 4.0),
                                       child: AppText(
                                         text: variete,
-                                        color: AppColors.primaryColor,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .inverseSurface
+                                            .withOpacity(
+                                                0.65), //AppColors.primaryColor,
                                         fontWeight: FontWeight.w900,
                                         overflow: TextOverflow.visible,
                                       ),
@@ -1472,7 +1402,12 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                         varieteController.clear();
                                       });
                                     } else {
-                                      ScaffoldMessenger.of(context)
+                                      showMessage(
+                                        context: context,
+                                        message:
+                                            'Cette variété existe déjà, veuillez en ajouter une autre',
+                                      );
+                                      /*ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
                                           content: AppText(
@@ -1485,7 +1420,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                           showCloseIcon: true,
                                           backgroundColor: AppColors.redColor,
                                         ),
-                                      );
+                                      );*/
                                     }
                                     varieteController.clear();
                                     Navigator.pop(context);
@@ -1504,8 +1439,8 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                   ? AppUtils.showInfo(
                           info:
                               'Faites un appui long sur un élément puis glissez a pour réorganiser la liste')
-                      .animate(delay: Duration(milliseconds: 500))
-                      .flipH()
+                      .animate(delay: Duration(milliseconds: 1000))
+                      .fade(duration: Duration(milliseconds: 500))
                   : SizedBox(),
 
               //==========================
@@ -1622,6 +1557,10 @@ void showFormBottomSheet(BuildContext context,
                         BorderSide(width: 2, color: AppColors.primaryColor),
                     borderRadius: BorderRadius.circular(15)),
               ),
+              textInputAction: title != null &&
+                      title.toLowerCase().trim().contains('propriété')
+                  ? TextInputAction.next
+                  : TextInputAction.done,
             ),
             SizedBox(height: 16),
             title != null && title.toLowerCase().trim().contains('propriété')
@@ -1642,6 +1581,7 @@ void showFormBottomSheet(BuildContext context,
                           borderRadius: BorderRadius.circular(15)),
                     ),
                     keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
                   )
                 : SizedBox(),
             SizedBox(height: 24),
