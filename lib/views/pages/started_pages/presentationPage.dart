@@ -1,10 +1,11 @@
 import 'dart:ui';
 
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
@@ -28,15 +29,15 @@ class _PresentationPageState extends State<PresentationPage> {
   List<ModelPresentationPage> views = [
     //pageView 1
     ModelPresentationPage(
-        title: "Bénin Poulet",
-        description: "Bienvenue sur notre application Bénin Poulet ...",
+        title: AppAttributes.appName,
+        description: "Bienvenue sur notre application BÉNIN POULET ...",
         image: "assets/images/welcome.png",
         nextMsg: 'Next',
         descriptionTitle: 'Bienvenue'),
 
     //pageView 2
     ModelPresentationPage(
-        title: "Bénin Poulet",
+        title: AppAttributes.appName,
         description:
             "Créez une boutique et faites découvrir votre ferme à travers le monde ...",
         image: "assets/images/shopCreating.png",
@@ -45,7 +46,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
     //pageView 3
     ModelPresentationPage(
-        title: "Bénin Poulet",
+        title: AppAttributes.appName,
         description:
             "Explorez les produits et boutiques disponibles sur l'app...",
         image: "assets/images/exploration.png",
@@ -54,7 +55,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
     //pageView 4
     ModelPresentationPage(
-        title: "Bénin Poulet",
+        title: AppAttributes.appName,
         description:
             "Recherchez des produits et boutiques disponibles à proximité...",
         image: "assets/images/proximiteRecherche.png",
@@ -63,7 +64,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
     //pageView 5
     ModelPresentationPage(
-        title: "Bénin Poulet",
+        title: AppAttributes.appName,
         description:
             "Commandez ce que vous comptez et payer en toute sécurité ...",
         image: "assets/images/paid.png",
@@ -72,7 +73,7 @@ class _PresentationPageState extends State<PresentationPage> {
 
     //pageView 6
     ModelPresentationPage(
-        title: "Bénin Poulet",
+        title: AppAttributes.appName,
         description: "Soyez livrés en toute sécurité ...",
         image: "assets/images/receive.png",
         nextMsg: 'Next',
@@ -80,129 +81,131 @@ class _PresentationPageState extends State<PresentationPage> {
   ];
 
   void showUserProfilChoice() {
-    showDialog(
+    showCupertinoDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: AppText(
-            text: 'Que comptez-vous faire sur l\'application ?',
-            fontSize: context.mediumText,
-            maxLine: 2,
-            textAlign: TextAlign.center,
+        return CupertinoAlertDialog(
+          title: CircleAvatar(
+            radius: context.height * 0.05,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            child: Icon(
+              Icons.question_mark,
+              size: context.largeText * 2,
+              color: AppColors.primaryColor,
+            ),
           ),
-          content: SizedBox(
-            height: context.height * 0.17,
-            child: Column(
-              children: [
-                ///VENDRE
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.INSCRIPTIONVENDEURPAGE);
-                    },
-                    child: Container(
-                      height: appHeightSize(context) * 0.06,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(15),
+          content: Column(
+            children: [
+              const SizedBox(height: 16),
+              AppText(
+                text: 'Que comptez-vous faire sur l\'application ?',
+                fontSize: context.mediumText,
+                maxLine: 2,
+                textAlign: TextAlign.center,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 16),
+              // VENDRE
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(AppRoutes.INSCRIPTIONVENDEURPAGE);
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  height: context.height * 0.06,
+                  decoration: BoxDecoration(
+                    //color: AppColors.primaryColor,
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.monetization_on_outlined,
+                        color: Theme.of(context).colorScheme.inversePrimary,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.monetization_on_outlined,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: appWidthSize(context) * 0.05,
-                          ),
-                          AppText(
-                            text: 'Vendre',
-                            fontSize: context.mediumText,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: appWidthSize(context) * 0.05,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: context.largeText,
-                            color: Colors.white,
-                          ),
-                        ],
+                      SizedBox(width: context.width * 0.05),
+                      AppText(
+                        text: 'Vendre',
+                        fontSize: context.mediumText,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        //color: Colors.white,
+                        //fontWeight: FontWeight.bold,
                       ),
-                    ),
+                      SizedBox(width: context.width * 0.05),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: context.largeText,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ],
                   ),
                 ),
+              ),
 
-                ///ACHETER
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.INSCRIPTIONPAGE);
-                    },
-                    child: Container(
-                      height: appHeightSize(context) * 0.06,
-                      decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.shopping_cart_outlined,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: appWidthSize(context) * 0.05,
-                          ),
-                          AppText(
-                            text: 'Acheter',
-                            fontSize: context.mediumText,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: appWidthSize(context) * 0.05,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: context.largeText,
-                            color: Colors.white,
-                          ),
-                        ],
+              // ACHETER
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  height: context.height * 0.06,
+                  decoration: BoxDecoration(
+                    //color: AppColors.primaryColor,
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                      SizedBox(width: context.width * 0.05),
+                      AppText(
+                        text: 'Acheter',
+                        fontSize: context.mediumText,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        //fontWeight: FontWeight.bold,
+                      ),
+                      SizedBox(width: context.width * 0.05),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: context.largeText,
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // annuler
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CupertinoDialogAction(
+                      onPressed: () => Navigator.pop(context),
+                      isDestructiveAction: true,
+                      child: AppText(
+                        text: 'Annuler',
+                        fontSize: context.mediumText,
+                        color: AppColors.redColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                  ],
+                ),
+              )
+            ],
           ),
-          icon: CircleAvatar(
-              radius: context.height * 0.05,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              child: Icon(
-                Icons.question_mark,
-                size: context.largeText * 2,
-                color: AppColors.primaryColor,
-              )),
-          iconColor: Colors.white,
-          elevation: 25,
-          shadowColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: <Widget>[
-            TextButton(
-              child: AppText(
-                text: 'Annuler',
-                color: Theme.of(context).colorScheme.inversePrimary,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
@@ -296,14 +299,12 @@ class _PresentationPageState extends State<PresentationPage> {
                               ),
                             ),
 
-                            // le titre : Bénin Poulet (de la pageView)
-                            Text(
-                              views[selectedPage].title,
-                              style: TextStyle(
-                                  fontSize: context.largeText * 1.3,
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.w900),
-                            ),
+                            // le titre : BÉNIN POULET (de la pageView)
+                            AppText(
+                                text: views[selectedPage].title,
+                                fontSize: context.largeText * 1.3,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w900),
                             const SizedBox(
                               width: 1,
                             )

@@ -38,6 +38,7 @@ class AppTextField extends StatefulWidget {
   bool? isPrefixIconWidget;
   Widget? preficIconWidget;
   TextInputAction? textInputAction;
+  TextCapitalization? textCapitalization; // Default capitalization
   //bool? isLabelDefined;
 
   AppTextField({
@@ -53,6 +54,7 @@ class AppTextField extends StatefulWidget {
     this.onChanged,
     this.keyboardType,
     this.prefixIconColor,
+    this.hintTextColor,
     this.maxLines = 1,
     this.expands = false,
     this.minLines = 1,
@@ -75,6 +77,8 @@ class AppTextField extends StatefulWidget {
     this.isPrefixIconWidget = false,
     this.preficIconWidget,
     this.textInputAction,
+    this.textCapitalization,
+
     //this.isLabelDefined = true,
   });
 
@@ -128,12 +132,12 @@ class _AppTextFieldState extends State<AppTextField> {
                     widget.label ?? widget.hintText ?? '',
                     style: TextStyle(
                         color: widget.hintTextColor ?? Colors.grey,
-                        fontSize: mediumText()),
+                        fontSize: context.mediumText),
                   ),
 
-                  labelStyle: TextStyle(fontSize: mediumText()),
+                  labelStyle: TextStyle(fontSize: context.mediumText),
                   //labelText: widget.label,
-                  //hintStyle: TextStyle(fontSize: mediumText()),
+                  //hintStyle: TextStyle(fontSize: context.mediumText),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
                   /* border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15.0),
@@ -166,9 +170,11 @@ class _AppTextFieldState extends State<AppTextField> {
                           ),
                   ),
                   floatingLabelStyle: TextStyle(
-                      fontSize: widget.showFloatingLabel! ? mediumText() : 0),
+                      fontSize:
+                          widget.showFloatingLabel! ? context.mediumText : 0),
                 ),
-                textCapitalization: TextCapitalization.words,
+                textCapitalization:
+                    widget.textCapitalization ?? TextCapitalization.none,
                 textInputAction: widget.textInputAction ?? TextInputAction.done,
               ),
             )
@@ -206,11 +212,12 @@ class _AppTextFieldState extends State<AppTextField> {
                           widget.label ?? widget.hintText ?? '',
                           style: TextStyle(
                               color: widget.hintTextColor ?? Colors.grey,
-                              fontSize: mediumText()),
+                              fontSize: context.mediumText),
                         )
                       : null,
                   floatingLabelStyle: TextStyle(
-                      fontSize: widget.showFloatingLabel! ? mediumText() : 0),
+                      fontSize:
+                          widget.showFloatingLabel! ? context.mediumText : 0),
                   //labelStyle: TextStyle(color: Colors.white),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
                   /*border: const OutlineInputBorder(
@@ -227,7 +234,8 @@ class _AppTextFieldState extends State<AppTextField> {
                           color: widget.prefixIconColor,
                         ),
                 ),
-                textCapitalization: TextCapitalization.sentences,
+                textCapitalization:
+                    widget.textCapitalization ?? TextCapitalization.sentences,
                 textInputAction: widget.textInputAction ?? TextInputAction.done,
               ),
             ),

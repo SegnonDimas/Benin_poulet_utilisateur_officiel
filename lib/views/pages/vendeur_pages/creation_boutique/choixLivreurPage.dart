@@ -1,3 +1,4 @@
+import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,6 +51,7 @@ class ChoixLivreurPage extends StatelessWidget {
 
           return BlocBuilder<StoreCreationBloc, StoreCreationState>(
             builder: (context, storeCreationState) {
+              bool isDeliveryEnabled = info.sellerOwnDeliver ?? true;
               return Padding(
                 padding: const EdgeInsets.only(
                     bottom: 8.0, right: 8.0, left: 8.0, top: 0),
@@ -65,8 +67,8 @@ class ChoixLivreurPage extends StatelessWidget {
                         children: [
                           _buildRadioOption(
                             context: context,
-                            value: false,
-                            groupValue: info.sellerOwnDeliver ?? true,
+                            value: !isDeliveryEnabled,
+                            groupValue: isDeliveryEnabled,
                             controller: _controllerOui,
                             label: 'OUI',
                             tooltip:
@@ -74,8 +76,8 @@ class ChoixLivreurPage extends StatelessWidget {
                           ),
                           _buildRadioOption(
                             context: context,
-                            value: true,
-                            groupValue: info.sellerOwnDeliver ?? true,
+                            value: isDeliveryEnabled,
+                            groupValue: isDeliveryEnabled,
                             controller: _controllerNon,
                             label: 'NON',
                             tooltip:
@@ -134,16 +136,27 @@ class ChoixLivreurPage extends StatelessWidget {
                       text: 'Veuillez partager avec nous votre emplacement',
                       overflow: TextOverflow.visible,
                       fontSize: mediumText() * 0.8,
-                      color: Theme.of(context).colorScheme.inversePrimary,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.2),
                     ),
                     const SizedBox(height: 10),
                     AppTextField(
                       //label: '',
                       // height: context.height * 0.08,
                       width: context.width * 0.9,
+                      readOnly: true,
                       controller: deliveryBloc.emplacementController,
                       prefixIcon: Icons.location_on_outlined,
-                      color: Theme.of(context).colorScheme.background,
+                      prefixIconColor: Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .background
+                          .withOpacity(0.4),
                       maxLines: 3,
                       fontSize: mediumText() * 0.9,
                       fontColor: Theme.of(context).colorScheme.inversePrimary,
@@ -154,6 +167,14 @@ class ChoixLivreurPage extends StatelessWidget {
                       onFieldSubmitted: (string) {
                         _updateDeliveryInfo(context,
                             storeCreationState as StoreCreationGlobalState);
+                      },
+
+                      onTap: () {
+                        AppUtils.showInfoDialog(
+                          context: context,
+                          message: 'Cette fonctionnalité arrive bientôt',
+                          type: InfoType.info,
+                        );
                       },
                     ),
                   ],

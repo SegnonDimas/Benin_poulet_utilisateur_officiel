@@ -33,7 +33,7 @@ class _VProduitsListPageState extends State<VProduitsListPage>
   Widget build(BuildContext context) {
     // Filtrage dynamique en fonction de search
     final List<Produit> produitsFiltres = list_produits.where((produit) {
-      return produit.productName!.toLowerCase().contains(search.toLowerCase());
+      return produit.productName.toLowerCase().contains(search.toLowerCase());
     }).toList();
 
     return PopScope(

@@ -8,6 +8,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/routes.dart';
+import '../../../utils/app_attributs.dart';
+import '../../../widgets/app_text.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -99,45 +101,17 @@ class _FirstPageState extends State<FirstPage> {
                               .animate(
                                   delay: 5000.ms,
                                   onComplete: (animatedCopntroller) {
-                                    Navigator.pushNamedAndRemoveUntil(context,
-                                        AppRoutes.LOGINPAGE, (route) => false);
+                                    Navigator.pushReplacementNamed(
+                                        context, AppRoutes.LOGINPAGE);
                                   })
-                              .fade()
-                          /*AnimatedContainer(
-                              alignment: Alignment.center,
-                              duration: const Duration(milliseconds: 4000),
-                              curve: Curves.bounceOut,
-                              width: _isLoading
-                                  ? MediaQuery.of(context).size.height * 0.05
-                                  : MediaQuery.of(context).size.height * 0.1,
-                              height: _isLoading
-                                  ? MediaQuery.of(context).size.height * 0.05
-                                  : MediaQuery.of(context).size.height * 0.1,
-                              onEnd: () {
-                                setState(() {
-                                  //_isLoading = !_isLoading;
-
-                                  duration = duration + 2;
-                                  print(":::::::::::::::::::$duration");
-                                  _isLoading = !_isLoading;
-                                });
-                                if (duration == 4) {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      AppRoutes.LOGINPAGE, (route) => false);
-                                  //Navigator.of(context).push(Transitions.rotation(const LoginPage()));
-                                }
-                              },
-                              child: Image.asset(
-                                ImagesPaths.LOGOBLANC,
-                                fit: BoxFit.cover,
-                              ))*/
-                          ))),
+                              .fade()))),
             ),
             Positioned(
               bottom: 10,
               right: 5,
               left: 5,
-              child: Container(
+              child: SafeArea(
+                  child: Container(
                 width: context.screenWidth,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
@@ -149,15 +123,27 @@ class _FirstPageState extends State<FirstPage> {
                 child: Image.asset(ImagesPaths.POWEREDBYSSI,
                     fit: BoxFit.fitHeight),
               )
-                  .animate()
-                  .slide(
-                      begin: const Offset(0, -0.03),
-                      end: const Offset(0, -0.25),
-                      //curve: Curves.linear,
-                      delay: 500.ms,
-                      duration: 2000.ms)
-                  .fadeIn(duration: 500.ms),
-            )
+                  /*.animate()
+                    .slide(
+                        begin: const Offset(0, -0.03),
+                        end: const Offset(0, -0.25),
+                        //curve: Curves.linear,
+                        delay: 500.ms,
+                        duration: 2000.ms)
+                    .fadeIn(duration: 500.ms),*/
+                  ),
+            ),
+
+            //version de l'app
+            Positioned(
+                bottom: 13,
+                child: SafeArea(
+                  child: AppText(
+                      text: AppAttributes.appVersion,
+                      //color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12),
+                ))
           ]),
         );
       },

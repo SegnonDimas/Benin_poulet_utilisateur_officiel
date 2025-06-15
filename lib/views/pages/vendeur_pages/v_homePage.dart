@@ -1,4 +1,5 @@
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -92,10 +93,43 @@ class _VHomePageState extends State<VHomePage> {
               height: context.height * 0.1,
               width: appWidthSize(context),
               child: ListTile(
-                title: AppText(
-                  text: 'Salut, ${storeInfoState.storeName}!',
+                title: RichText(
+                    text: TextSpan(children: [
+                  TextSpan(
+                    text: 'S',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: context.mediumText * 1.3,
+                        fontFamily: AppAttributes.appDefaultFontFamily,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  TextSpan(
+                    text: 'alut, ',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.inversePrimary,
+                        fontSize: context.mediumText,
+                        fontFamily: AppAttributes.appDefaultFontFamily,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: storeInfoState.storeName,
+                    style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontSize: context.mediumText * 1.2,
+                        fontFamily: AppAttributes.appDefaultFontFamily,
+                        fontWeight: FontWeight.w900),
+                  )
+                ])),
+
+                /*
+                AppText(
+                  text: 'Salut, ${storeInfoState.storeName} service de Dieu!',
                   fontWeight: FontWeight.bold,
-                ),
+                  fontSize: context.mediumText * 1.1,
+                  overflow: TextOverflow.visible,
+                )
+                */
+
                 subtitle: AppText(
                   text: 'Votre boutique est maintenant en ligne',
                   fontSize: smallText(),

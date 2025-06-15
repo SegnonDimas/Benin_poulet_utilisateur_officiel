@@ -2,8 +2,10 @@ import 'package:benin_poulet/blocProviders.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,9 @@ void main() async {
   await FirebaseInitialize.initializeFirebase();
   // flutter_localization init
   await FlutterLocalization.instance.ensureInitialized();
+  // cached_network_image init
+  CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+
   // runApp
   runApp(MultiProvider(
     providers: [
@@ -108,6 +113,8 @@ class _MyAppState extends State<MyApp> {
 
         routes: routes,
         initialRoute: AppRoutes.FIRSTPAGE,
+
+        builder: EasyLoading.init(),
         //home: ListProduitFirebase(),
       ),
     );

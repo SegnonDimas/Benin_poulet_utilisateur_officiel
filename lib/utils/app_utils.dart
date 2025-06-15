@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../constants/imagesPaths.dart';
 import '../views/colors/app_colors.dart';
 
 class AppUtils {
@@ -218,4 +223,116 @@ class AppUtils {
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
+  //==================================
+  //DIALOGE D'AFFICHAGE D'INFORMATIONS
+  //==================================
+  static void showInfoDialog({
+    required BuildContext context,
+    required String message,
+    Duration duration = const Duration(seconds: 5),
+    Widget? titleIcon,
+    InfoType type = InfoType.info,
+  }) {
+    Color iconColor;
+
+    switch (type) {
+      case InfoType.success:
+        iconColor = CupertinoColors.activeGreen;
+        titleIcon = Icon(
+          CupertinoIcons.check_mark_circled_solid,
+          color: iconColor,
+          weight: 1,
+          size: 45,
+        );
+        break;
+      case InfoType.error:
+        iconColor = CupertinoColors.destructiveRed;
+        titleIcon = Icon(
+          CupertinoIcons.clear_circled_solid,
+          color: iconColor,
+          weight: 1,
+          size: 45,
+        );
+
+        break;
+      case InfoType.loading:
+        titleIcon = SizedBox(
+          height: 80,
+          child: Shimmer.fromColors(
+            highlightColor: Theme.of(context).colorScheme.inverseSurface,
+            baseColor: Theme.of(context).colorScheme.inversePrimary,
+            child: Lottie.asset(
+              'assets/lotties/loading.json',
+            ),
+          ),
+        );
+        break;
+      case InfoType.waiting:
+        iconColor = CupertinoColors.systemGrey;
+        titleIcon = SizedBox(
+          height: 40,
+          child: Lottie.asset(
+            'assets/lotties/accountAuthentificationPending.json',
+          ),
+        );
+        break;
+      case InfoType.info:
+        iconColor = CupertinoColors.systemOrange;
+        titleIcon = Icon(
+          CupertinoIcons.info_circle_fill,
+          color: iconColor,
+          weight: 1,
+          size: 45,
+        );
+        break;
+      case InfoType.warning:
+        iconColor = CupertinoColors.systemYellow;
+        titleIcon = Icon(
+          CupertinoIcons.exclamationmark_triangle_fill,
+          color: iconColor,
+          weight: 1,
+          size: 45,
+        );
+        break;
+      case InfoType.other:
+        titleIcon = CircleAvatar(
+          radius: 25,
+          backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+          child: Image.asset(
+            ImagesPaths.LOGOBLANC,
+            fit: BoxFit.cover,
+            height: 25,
+          ),
+        );
+    }
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        // Délai avant fermeture automatique
+        Future.delayed(duration, () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+
+        return CupertinoAlertDialog(
+          title: titleIcon,
+          content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AppText(
+              text: message,
+              fontSize: 16,
+              overflow: TextOverflow.visible,
+              //color: CupertinoColors.label,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+
+enum InfoType { success, error, info, loading, waiting, warning, other }

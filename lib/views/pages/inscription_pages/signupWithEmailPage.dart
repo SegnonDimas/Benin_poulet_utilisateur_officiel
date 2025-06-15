@@ -12,8 +12,9 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
 import '../../../tests/blurryContainer.dart';
-import '../../../utils/snack_bar.dart';
+import '../../../utils/app_utils.dart';
 import '../../../utils/wave_painter.dart';
+import '../../../widgets/app_button.dart';
 import '../../models_ui/model_optionsDeConnexion.dart';
 
 class SignupWithEmailPage extends StatefulWidget {
@@ -36,431 +37,366 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /* SizedBox(
-              height: appHeightSize(context) * 0.02,
-            ),
-
-            /// Image d'arrière-plan et bouton de retour
-            SizedBox(
-              height: appHeightSize(context) * 0.17,
-              width: appWidthSize(context),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // image d'arrière-plan
-                  Positioned(
-                    top: appHeightSize(context) * 0.04,
-                    child: Hero(
-                      tag: 'emailTag',
-                      transitionOnUserGestures: true,
-                      child: Image.asset(
-                        'assets/logos/email2.png',
-                        fit: BoxFit.fitHeight,
-                        height: appHeightSize(context) * 0.12,
-                        //width: appWidthSize(context) * 0.5,
+    Widget divider = Divider(
+      color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
+    );
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              /// Image d'arrière-plan et bouton de retour
+              SizedBox(
+                height: context.height * 0.2,
+                width: context.width,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      top: 20,
+                      left: 5,
+                      child: Hero(
+                        tag: '2',
+                        child: GradientBall(
+                            size: Size.square(context.height * 0.09),
+                            colors: const [
+                              //blueColor,
+                              Colors.deepPurple,
+                              Colors.purpleAccent
+                            ]),
                       ),
                     ),
-                  ),
-
-                  // bouton de retour
-                  Positioned(
-                    top: appHeightSize(context) * 0.035,
-                    left: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: appHeightSize(context) * 0.06,
-                          width: appHeightSize(context) * 0.06,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(
-                              appHeightSize(context),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            size: mediumText(),
-                            weight: 50,
-                          ),
+                    Positioned(
+                      bottom: 0, //context.height * 0.8,
+                      right: 10,
+                      child: Hero(
+                        tag: '1',
+                        child: GradientBall(
+                            size: Size.square(context.height * 0.06),
+                            colors: const [Colors.orange, Colors.yellow]),
+                      ),
+                    ),
+                    // image d'arrière-plan
+                    Positioned(
+                      top: context.height * 0.08,
+                      child: Hero(
+                        tag: 'emailTag',
+                        transitionOnUserGestures: true,
+                        child: Image.asset(
+                          'assets/logos/email2.png',
+                          fit: BoxFit.fitHeight,
+                          height: context.height * 0.12,
+                          //width: context.width * 0.4,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),*/
 
-            /// Image d'arrière-plan et bouton de retour
-            SizedBox(
-              height: appHeightSize(context) * 0.2,
-              width: appWidthSize(context),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    top: 20,
-                    left: 5,
-                    child: Hero(
-                      tag: '2',
-                      child: GradientBall(
-                          size: Size.square(appHeightSize(context) * 0.09),
-                          colors: const [
-                            //blueColor,
-                            Colors.deepPurple,
-                            Colors.purpleAccent
-                          ]),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0, //appHeightSize(context) * 0.8,
-                    right: 10,
-                    child: Hero(
-                      tag: '1',
-                      child: GradientBall(
-                          size: Size.square(appHeightSize(context) * 0.06),
-                          colors: const [Colors.orange, Colors.yellow]),
-                    ),
-                  ),
-                  // image d'arrière-plan
-                  Positioned(
-                    top: appHeightSize(context) * 0.08,
-                    child: Hero(
-                      tag: 'emailTag',
-                      transitionOnUserGestures: true,
-                      child: Image.asset(
-                        'assets/logos/email2.png',
-                        fit: BoxFit.fitHeight,
-                        height: appHeightSize(context) * 0.12,
-                        //width: appWidthSize(context) * 0.4,
-                      ),
-                    ),
-                  ),
-
-                  // bouton de retour
-                  Positioned(
-                    top: appHeightSize(context) * 0.05,
-                    left: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: appHeightSize(context) * 0.055,
-                          width: appHeightSize(context) * 0.055,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(
-                              appHeightSize(context),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: Theme.of(context).colorScheme.inversePrimary,
-                            size: mediumText(),
-                            weight: 50,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Contenu avec forme sinusoïdale
-            CustomPaint(
-              painter: WavePainter(
-                color: Theme.of(context).colorScheme.surface,
-              ),
-              child: Container(
-                height: appHeightSize(context) * 0.8,
-                padding: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: appHeightSize(context) * 0.08),
-
-                      /// texte : Bienvenue
-                      Text(
-                        'Bienvenue !',
-                        style: TextStyle(
-                            fontSize: largeText() * 1.5,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor),
-                      ),
-                      const SizedBox(height: 0),
-
-                      /// Formulaire de connexion
-
-                      SizedBox(
-                        height: appHeightSize(context) * 0.35,
-                        child: ListView(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: appHeightSize(context) * 0.2,
-                                        width: 5,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10),
-                                          ),
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .inversePrimary
-                                              .withOpacity(0.4),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: appHeightSize(context) * 0.075,
-                                        width: 5,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            bottomRight: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                          ),
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .inversePrimary
-                                              .withOpacity(0.1),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      // Adresse Email
-                                      AppTextField(
-                                        label: 'Adresse Email',
-                                        height: appHeightSize(context) * 0.08,
-                                        width: appWidthSize(context) * 0.9,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        controller: _passWordController,
-                                        prefixIcon: Icons.email,
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        fontSize: mediumText() * 0.9,
-                                        fontColor: Theme.of(context)
-                                            .colorScheme
-                                            .inversePrimary,
-                                      ),
-                                      const SizedBox(height: 10),
-
-                                      // mot de passe
-                                      AppTextField(
-                                        label: 'Mot de passe',
-                                        height: appHeightSize(context) * 0.08,
-                                        width: appWidthSize(context) * 0.9,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        isPassword: true,
-                                        controller: _emailcontroller,
-                                        fontSize: mediumText() * 0.9,
-                                        fontColor: Theme.of(context)
-                                            .colorScheme
-                                            .inversePrimary,
-                                      ),
-                                      const SizedBox(height: 10),
-
-                                      // confirmation de mot de passe
-                                      AppTextField(
-                                        label: 'Confirmer mot de passe',
-                                        height: appHeightSize(context) * 0.08,
-                                        width: appWidthSize(context) * 0.9,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        isPassword: true,
-                                        controller: _passWordConfirmController,
-                                        fontSize: mediumText() * 0.9,
-                                        fontColor: Theme.of(context)
-                                            .colorScheme
-                                            .inversePrimary,
-                                      ),
-                                      const SizedBox(height: 5),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(height: appHeightSize(context) * 0.015),
-
-                      // bouton de connexion
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isLoggedIn = !isLoggedIn;
-                            emailSignup();
-                          });
-                        },
-                        child: Container(
+                    // bouton de retour
+                    Positioned(
+                      top: context.height * 0.05,
+                      left: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
                             alignment: Alignment.center,
-                            height: appHeightSize(context) * 0.07,
-                            width: appWidthSize(context) * 0.9,
+                            height: context.height * 0.055,
+                            width: context.height * 0.055,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(
+                                context.height,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                              size: context.mediumText,
+                              weight: 50,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Contenu avec forme sinusoïdale
+              CustomPaint(
+                painter: WavePainter(
+                  color: Theme.of(context).colorScheme.surface,
+                ),
+                child: Container(
+                  //height: context.height * 0.8,
+                  padding: const EdgeInsets.only(
+                      top: 20, bottom: 0, right: 20, left: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: context.height * 0.07),
+
+                        /// texte : Bienvenue
+                        AppText(
+                            text: 'Bienvenue !',
+                            fontSize: context.largeText * 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryColor),
+
+                        const SizedBox(height: 0),
+
+                        /// Formulaire de connexion
+                        SizedBox(
+                          height: context.height * 0.31,
+                          child: NotificationListener<ScrollNotification>(
+                              onNotification: (notification) {
+                                if (notification is OverscrollNotification) {
+                                  // Transfère le scroll vers le parent à la fin du scroll
+                                  PrimaryScrollController.of(context).jumpTo(
+                                    PrimaryScrollController.of(context).offset +
+                                        notification.overscroll / 2,
+                                  );
+                                }
+                                return false;
+                              },
+                              child: Scrollbar(
+                                child: ListView(
+                                  padding: EdgeInsets.only(top: 20),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        // Adresse Email
+                                        AppTextField(
+                                          label: 'Adresse Email',
+                                          height: context.height * 0.08,
+                                          width: context.width * 0.9,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          controller: _passWordController,
+                                          prefixIcon: Icons.email,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          fontSize: context.mediumText * 0.9,
+                                          fontColor: Theme.of(context)
+                                              .colorScheme
+                                              .inversePrimary,
+                                        ),
+                                        const SizedBox(height: 10),
+
+                                        // mot de passe
+                                        AppTextField(
+                                          label: 'Mot de passe',
+                                          height: context.height * 0.08,
+                                          width: context.width * 0.9,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          isPassword: true,
+                                          controller: _emailcontroller,
+                                          fontSize: context.mediumText * 0.9,
+                                          fontColor: Theme.of(context)
+                                              .colorScheme
+                                              .inversePrimary,
+                                        ),
+                                        const SizedBox(height: 10),
+
+                                        // confirmation de mot de passe
+                                        AppTextField(
+                                          label: 'Confirmer mot de passe',
+                                          height: context.height * 0.08,
+                                          width: context.width * 0.9,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          isPassword: true,
+                                          controller:
+                                              _passWordConfirmController,
+                                          fontSize: context.mediumText * 0.9,
+                                          fontColor: Theme.of(context)
+                                              .colorScheme
+                                              .inversePrimary,
+                                        ),
+                                        const SizedBox(height: 0),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+
+                        //SizedBox(height: context.height * 0.015),
+
+                        // bouton de connexion
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isLoggedIn = !isLoggedIn;
+                              emailSignup();
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: context.height * 0.07,
+                            width: context.width * 0.9,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
-                                color: primaryColor),
+                                color: AppColors.primaryColor),
                             child: isLoggedIn
                                 ? const CupertinoActivityIndicator(
                                     radius:
                                         20.0, // Taille du spinnerupcolor: Colors.white,
                                   )
-                                : Text(
-                                    'Inscription',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: largeText()),
-                                  )),
-                      ),
-                      const SizedBox(height: 20),
+                                : AppText(
+                                    text: 'Inscription',
+                                    color: Colors.white,
+                                    fontSize: context.largeText),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
 
-                      /// Fin du formulaire de connexion
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomSheet:
+                        /// Fin du formulaire de connexion
 
-          /// Autres options de connexion
+                        // texte : 'ou continuer avec'
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: SizedBox(
+                                //width: context.screenWidth * 0.15,
+                                child: divider,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: AppButton(
+                                borderColor: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary
+                                    .withOpacity(0.1),
+                                bordeurRadius: 7,
+                                height: context.screenHeight * 0.035,
+                                child: AppText(
+                                  text: "ou continuer avec",
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary
+                                      .withOpacity(0.4),
+                                  fontSize: context.smallText * 1.2,
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: SizedBox(
+                                //width: context.screenWidth * 0.15,
+                                child: divider,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
 
-          // texte : 'ou continuer avec'
-          SizedBox(
-        height: appHeightSize(context) * 0.17,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(
-                    width: 1,
-                  ),
-                  AppText(
-                    text: "ou continuer avec",
-                    color: Theme.of(context)
-                        .colorScheme
-                        .inversePrimary
-                        .withOpacity(0.4),
-                    fontSize: smallText() * 1.2,
-                  ),
-                  const SizedBox(
-                    width: 1,
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Divider(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .inversePrimary
-                      .withOpacity(0.4),
-                ),
-              ),
+                        /// Autres options de connexion
 
-              // méthode de connexion Google, Apple et Email
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //Google
-                  Hero(
-                    tag: 'googleTag',
-                    child: ModelOptionDeConnexion(
-                      onTap: () {
-                        setState(() {
-                          isLoggedIn = !isLoggedIn;
-                        });
-                      },
-                      child: Image.asset(
-                        'assets/logos/google.png',
-                        fit: BoxFit.contain,
-                      ),
+                        SizedBox(
+                          //height: context.height * 0.17,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                // méthode de connexion Google, Apple et Email
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    //Google
+                                    Hero(
+                                      tag: 'googleTag',
+                                      child: ModelOptionDeConnexion(
+                                        onTap: () {
+                                          setState(() {
+                                            isLoggedIn = !isLoggedIn;
+                                          });
+                                        },
+                                        child: Image.asset(
+                                          'assets/logos/google.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width: context.width * 0.15,
+                                    ),
+
+                                    //Apple
+                                    Hero(
+                                      tag: 'appleTag',
+                                      child: ModelOptionDeConnexion(
+                                        onTap: () {
+                                          /*setState(() {
+                                            isLoggedIn = !isLoggedIn;
+                                          });*/
+                                          AppUtils.showInfoDialog(
+                                            context: context,
+                                            message:
+                                                'Cette fonctionnalité arrive bientôt',
+                                            type: InfoType.info,
+                                          );
+                                        },
+                                        child: Image.asset(
+                                          'assets/logos/apple.png',
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                // texte : 'Vous n'avez pas encore de compte? S'inscrire'
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    AppText(
+                                      text: 'Avez-vous déjà de compte ?',
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                          .withOpacity(0.4),
+                                      fontSize: context.smallText * 1.2,
+                                    ),
+
+                                    // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, AppRoutes.LOGINPAGE);
+                                        },
+                                        child: AppText(
+                                          text: 'Se connecter',
+                                          color: AppColors.primaryColor,
+                                          fontSize: context.smallText * 1.2,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  SizedBox(
-                    width: appWidthSize(context) * 0.15,
-                  ),
-
-                  //Apple
-                  Hero(
-                    tag: 'appleTag',
-                    child: ModelOptionDeConnexion(
-                      onTap: () {
-                        setState(() {
-                          isLoggedIn = !isLoggedIn;
-                        });
-                      },
-                      child: Image.asset(
-                        'assets/logos/apple.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // texte : 'Vous n'avez pas encore de compte? S'inscrire'
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppText(
-                    text: 'Avez-vous déjà de compte ?',
-                    color: Theme.of(context)
-                        .colorScheme
-                        .inversePrimary
-                        .withOpacity(0.4),
-                    fontSize: smallText() * 1.2,
-                  ),
-
-                  // le clic devrait conduire sur la page de choix de profil (vendeur / acheteur)
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.LOGINPAGE);
-                      },
-                      child: AppText(
-                        text: 'Se connecter',
-                        color: primaryColor,
-                        fontSize: smallText() * 1.2,
-                      )),
-                ],
+                ),
               ),
             ],
           ),
@@ -497,10 +433,10 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
 
 /// snackbars
 void _showSnackBar(BuildContext context, String message) {
-  AppSnackBar.showSnackBar(context, message);
+  AppUtils.showSnackBar(context, message);
 }
 
 void _showAwesomeSnackBar(BuildContext context, String title, String message,
     ContentType contentType, Color? color) {
-  AppSnackBar.showAwesomeSnackBar(context, title, message, contentType, color);
+  AppUtils.showAwesomeSnackBar(context, title, message, contentType, color);
 }

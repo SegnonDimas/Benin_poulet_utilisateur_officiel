@@ -1,3 +1,4 @@
+import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 
@@ -40,9 +41,9 @@ class AppText extends StatelessWidget {
       text ?? '',
       maxLines: maxLine,
       style: TextStyle(
-          fontSize: fontSize ?? context.mediumText * 0.8,
+          fontSize: fontSize ?? context.mediumText * 0.9,
           fontWeight: fontWeight,
-          fontFamily: fontFamily,
+          fontFamily: fontFamily ?? AppAttributes.appDefaultFontFamily,
           color: color ?? defaultColor,
           overflow: overflow ?? TextOverflow.ellipsis,
           fontStyle: fontStyle,

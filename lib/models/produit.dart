@@ -14,7 +14,7 @@ class Produit {
   final String? promotionValue; //utiliser isInPromotion à la place
   final double productUnitPrice;
   final bool isInPromotion;
-  final double
+  final double?
       promoPrice; // si isInPromotion == true, donner un prix promotionnel relatif
   final List<String> varieties; // ex : Goliath, Couveuse, Pondeuse etc.
   final Map<String, String>

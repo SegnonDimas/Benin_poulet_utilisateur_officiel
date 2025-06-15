@@ -1,9 +1,9 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../widgets/app_phone_textField.dart';
@@ -54,19 +54,19 @@ class InfoBoutiquePage extends StatelessWidget {
                   AppText(
                     text: 'Nom de votre boutique',
                     fontWeight: FontWeight.bold,
-                    fontSize: mediumText() * 1.1,
+                    fontSize: context.mediumText * 1.1,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   AppTextField(
-                    label: 'Nom de la boutique',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
+                    //label: 'Nom de la boutique',
+                    height: context.height * 0.075,
+                    width: context.width * 0.9,
                     controller: nomBoutiqueController,
                     prefixIcon: Icons.storefront,
                     color: Theme.of(context).colorScheme.background,
-                    fontSize: mediumText() * 0.9,
+                    fontSize: context.mediumText,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
 
                     // à chaque saisie
@@ -106,7 +106,7 @@ class InfoBoutiquePage extends StatelessWidget {
                   AppText(
                     text:
                         'Voici comment votre boutique apparaitra aux clients dans l\'application Bénin Poulet ',
-                    fontSize: smallText() * 1.2,
+                    fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
                         .inversePrimary
@@ -122,14 +122,14 @@ class InfoBoutiquePage extends StatelessWidget {
                   AppText(
                     text: 'Numéro de votre boutique',
                     fontWeight: FontWeight.bold,
-                    fontSize: mediumText() * 1.1,
+                    fontSize: context.mediumText * 1.1,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   AppPhoneTextField(
                     controller: numeroBoutiqueController,
-                    fontSize: mediumText() * 0.9,
+                    fontSize: context.mediumText,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
 
                     // à chaque saisie
@@ -173,7 +173,7 @@ class InfoBoutiquePage extends StatelessWidget {
                   ),
                   AppText(
                     text: 'Nous appelerons ce numéro en cas de nécessité ',
-                    fontSize: smallText() * 1.2,
+                    fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
                         .inversePrimary
@@ -186,21 +186,23 @@ class InfoBoutiquePage extends StatelessWidget {
                   AppText(
                     text: 'Adresse email',
                     fontWeight: FontWeight.bold,
-                    fontSize: mediumText() * 1.1,
+                    fontSize: context.mediumText * 1.1,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   AppTextField(
-                    label: 'Adresse email',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.9,
+                    //label: 'Adresse email',
+                    height: context.height * 0.075,
+                    width: context.width * 0.9,
                     controller: adresseEmailController,
                     prefixIcon: Icons.email_outlined,
                     color: Theme.of(context).colorScheme.background,
                     keyboardType: TextInputType.emailAddress,
-                    fontSize: mediumText() * 0.9,
+                    fontSize: context.mediumText,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    textInputAction: TextInputAction.done,
+                    textCapitalization: TextCapitalization.none,
 
                     // à chaque saisie
                     onChanged: (String string) {
@@ -237,7 +239,7 @@ class InfoBoutiquePage extends StatelessWidget {
                   AppText(
                     text:
                         'Nous vous enverrons des courriers concernant vos activités sur notre application ',
-                    fontSize: smallText() * 1.2,
+                    fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
                         .inversePrimary

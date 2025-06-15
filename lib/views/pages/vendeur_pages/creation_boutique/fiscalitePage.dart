@@ -209,7 +209,7 @@ class FiscalitePage extends StatelessWidget {
                   // Mobile money
                   AppText(
                     text: 'Mobile Money',
-                    fontSize: mediumText(),
+                    fontSize: context.mediumText,
                     fontWeight: FontWeight.bold,
                   ),
                   const SizedBox(
@@ -318,7 +318,7 @@ class FiscalitePage extends StatelessWidget {
                           .inversePrimary
                           .withOpacity(0.3),
                       overflow: TextOverflow.visible,
-                      fontSize: smallText() * 1.1,
+                      fontSize: context.smallText * 1.1,
                     ),
                   ),
 

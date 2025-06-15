@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:benin_poulet/services/products_services.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/utils/dialog.dart';
-import 'package:benin_poulet/utils/snack_bar.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -155,7 +153,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
       productUnitPrice: double.tryParse(prixUnitaireController.text) ?? 1.0,
       stockValue: int.tryParse(quantiteController.text) ?? 1,
       isInPromotion: isProductInPromotion,
-      promoPrice: double.parse(promoPrixController.text),
+      promoPrice: double.tryParse(promoPrixController.text),
       productProperties: proprietes,
       varieties: varietes,
       //productImagesPath: multiImagePickerController.images,
@@ -925,7 +923,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                             flex: 1,
                                             child: GestureDetector(
                                               onTap: () {
-                                                AppDialog.showDialog(
+                                                AppUtils.showDialog(
                                                   context: context,
                                                   title: 'Suppression',
                                                   content:
@@ -1334,7 +1332,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        AppDialog.showDialog(
+                                        AppUtils.showDialog(
                                           context: context,
                                           title: 'Suppression',
                                           content:
@@ -1536,6 +1534,7 @@ void showFormBottomSheet(BuildContext context,
             TextFormField(
               controller: proprieteController,
               textCapitalization: TextCapitalization.sentences,
+              autofocus: true,
               decoration: InputDecoration(
                 label: title != null &&
                         title.toLowerCase().trim().contains('propriété')
@@ -1616,7 +1615,7 @@ void showMessage({
   String? message,
   Color? backgroundColor,
 }) {
-  AppSnackBar.showSnackBar(context, message ?? '',
+  AppUtils.showSnackBar(context, message ?? '',
       backgroundColor: backgroundColor ?? AppColors.redColor,
       closeIconColor: Colors.white,
       messageColor: Colors.white);

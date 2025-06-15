@@ -26,7 +26,7 @@ class AppPhoneTextField extends StatefulWidget {
     this.initialCountry = 'BJ',
     this.hintText = 'Numéro de téléphone',
     this.errorMessage = 'numéro incorrect',
-    this.label = 'Numéro de téléphone',
+    this.label,
     this.labelColor = Colors.grey,
     this.controller,
     this.onSeved,
@@ -113,10 +113,12 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
           inputBorder: const OutlineInputBorder(),
           inputDecoration: InputDecoration(
             border: InputBorder.none,
-            label: AppText(
-              text: widget.label!,
-              color: widget.labelColor!,
-            ),
+            label: widget.label != null
+                ? AppText(
+                    text: widget.label!,
+                    color: widget.labelColor!,
+                  )
+                : null,
           ),
           onSaved: widget.onSeved,
           cursorColor: AppColors.primaryColor,

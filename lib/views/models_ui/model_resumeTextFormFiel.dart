@@ -28,7 +28,7 @@ class ModelResumeTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: appHeightSize(context) * 0.01, bottom: 1),
+      padding: EdgeInsets.only(top: appHeightSize(context) * 0.02, bottom: 2),
       child: Column(
         children: [
           SizedBox(
@@ -47,7 +47,7 @@ class ModelResumeTextField extends StatelessWidget {
                         .inversePrimary
                         .withOpacity(0.5),
                     fontSize: smallText() * 1.1,
-                    overflow: labelOverflow,
+                    overflow: labelOverflow ?? TextOverflow.visible,
                   ),
                 ),
                 listeValeur! == false

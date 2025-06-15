@@ -175,7 +175,7 @@ class _ResumeCreationBoutiquePageState
           ),
           ModelResumeTextField(
             attribut: 'Description de l\'emplacement',
-            valeur: storeInfoState.sellerOwnDeliver.toString(),
+            valeur: storeInfoState.locationDescription,
             valueOverflow: TextOverflow.visible,
           ),
 
@@ -183,7 +183,7 @@ class _ResumeCreationBoutiquePageState
           SizedBox(
             height: 50,
           ),
-
+/*
           //============================
           // RESUME INFOS PERSONNELLES
           //============================
@@ -254,6 +254,7 @@ class _ResumeCreationBoutiquePageState
           /*SizedBox(
             height: context.height * 0.07,
           )*/
+          */
         ]),
       ),
     );
