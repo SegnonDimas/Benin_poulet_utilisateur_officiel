@@ -1,12 +1,15 @@
 import 'dart:ui';
 
+import 'package:benin_poulet/bloc/user_profile_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
@@ -95,116 +98,126 @@ class _PresentationPageState extends State<PresentationPage> {
               color: AppColors.primaryColor,
             ),
           ),
-          content: Column(
-            children: [
-              const SizedBox(height: 16),
-              AppText(
-                text: 'Que comptez-vous faire sur l\'application ?',
-                fontSize: context.mediumText,
-                maxLine: 2,
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.bold,
-              ),
-              const SizedBox(height: 16),
-              // VENDRE
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(AppRoutes.INSCRIPTIONVENDEURPAGE);
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  height: context.height * 0.06,
-                  decoration: BoxDecoration(
-                    //color: AppColors.primaryColor,
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(15),
+          content: BlocConsumer<UserProfileBloc, UserProfileState>(
+            listener: (context, state) {
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              return Column(
+                children: [
+                  const SizedBox(height: 16),
+                  AppText(
+                    text: 'Que comptez-vous faire sur l\'application ?',
+                    fontSize: context.mediumText,
+                    maxLine: 2,
+                    textAlign: TextAlign.center,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.monetization_on_outlined,
-                        color: Theme.of(context).colorScheme.inversePrimary,
+                  const SizedBox(height: 16),
+                  // VENDRE
+                  GestureDetector(
+                    onTap: () {
+                      context.read<UserProfileBloc>().add(
+                            UpdateUserRole(UserRoles.SELLER),
+                          );
+                      Navigator.of(context).pushReplacementNamed(
+                          AppRoutes.INSCRIPTIONVENDEURPAGE);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      height: context.height * 0.06,
+                      decoration: BoxDecoration(
+                        //color: AppColors.primaryColor,
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      SizedBox(width: context.width * 0.05),
-                      AppText(
-                        text: 'Vendre',
-                        fontSize: context.mediumText,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        //color: Colors.white,
-                        //fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(width: context.width * 0.05),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: context.largeText,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // ACHETER
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
-                },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  height: context.height * 0.06,
-                  decoration: BoxDecoration(
-                    //color: AppColors.primaryColor,
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.shopping_cart_outlined,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                      SizedBox(width: context.width * 0.05),
-                      AppText(
-                        text: 'Acheter',
-                        fontSize: context.mediumText,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        //fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(width: context.width * 0.05),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: context.largeText,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // annuler
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CupertinoDialogAction(
-                      onPressed: () => Navigator.pop(context),
-                      isDestructiveAction: true,
-                      child: AppText(
-                        text: 'Annuler',
-                        fontSize: context.mediumText,
-                        color: AppColors.redColor,
-                        fontWeight: FontWeight.bold,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.monetization_on_outlined,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                          SizedBox(width: context.width * 0.05),
+                          AppText(
+                            text: 'Vendre',
+                            fontSize: context.mediumText,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            //color: Colors.white,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(width: context.width * 0.05),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: context.largeText,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )
-            ],
+                  ),
+
+                  // ACHETER
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      height: context.height * 0.06,
+                      decoration: BoxDecoration(
+                        //color: AppColors.primaryColor,
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                          SizedBox(width: context.width * 0.05),
+                          AppText(
+                            text: 'Acheter',
+                            fontSize: context.mediumText,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(width: context.width * 0.05),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: context.largeText,
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // annuler
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CupertinoDialogAction(
+                          onPressed: () => Navigator.pop(context),
+                          isDestructiveAction: true,
+                          child: AppText(
+                            text: 'Annuler',
+                            fontSize: context.mediumText,
+                            color: AppColors.redColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
           ),
         );
       },
@@ -253,8 +266,8 @@ class _PresentationPageState extends State<PresentationPage> {
                 child: Hero(
                   tag: '2',
                   child: GradientBall(
-                      size: Size.square(context.height * 0.17),
-                      colors: const [Colors.orange, Colors.yellow]),
+                      size: Size.square(context.height * 0.15),
+                      colors: const [Colors.orange, Colors.deepOrange]),
                 ),
               ),
 

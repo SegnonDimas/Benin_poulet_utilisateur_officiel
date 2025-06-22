@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passWordController = TextEditingController();
   final TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
-  PhoneNumber number = PhoneNumber(isoCode: 'BJ');
+  PhoneNumber number = PhoneNumber(isoCode: 'BJ', dialCode: "+229");
   bool isLoggedIn = false;
   bool seSouvenir = true;
   bool _shouldInterceptBack = true;
@@ -63,9 +63,49 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Theme.of(context).colorScheme.background,
               body: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
+                  final contryCode =
+                      number.isoCode == 'BJ' ? '+229' : number.isoCode;
+
+                  /*//TODO : CONDITIONS À VÉRIFIER ==> DEBUT
+                  final justNumber = number.phoneNumber
+                      ?.trim()
+                      .replaceAll(number.dialCode!, '')
+                      .trim();
                   if (state is AuthFailure) {
-                    AppUtils.showSnackBar(context, state.errorMessage);
+                    if (number.dialCode == "+229" && justNumber != null) {
+                      if (justNumber.isEmpty) {
+                        AppUtils.showSnackBar(context,
+                            "Veuillez saisir votre numéro de téléphone");
+                      } else {
+                        AppUtils.showInfoDialog(
+                            context: context,
+                            message:
+                                "Vérifier bien que votre numéro commence par 01 pour le Bénin et comporte 10 chiffres",
+                            type: InfoType.error);
+                      }
+                    } else {
+                      AppUtils.showSnackBar(context, state.errorMessage);
+                    }
                   }
+                  //TODO : CONDITIONS À VÉRIFIER ==> FIN*/
+
+                  if (state is AuthFailure) {
+                    final errorMsg = state.errorMessage.toLowerCase();
+
+                    // Cas spécifique : numéro béninois invalide
+                    if (errorMsg.contains('bénin') ||
+                        errorMsg.contains('commencer par 01')) {
+                      AppUtils.showInfoDialog(
+                        context: context,
+                        message: state.errorMessage,
+                        type: InfoType.error,
+                      );
+                    } else {
+                      // Autres cas : snackBar classique
+                      AppUtils.showSnackBar(context, state.errorMessage);
+                    }
+                  }
+
                   if (state is AuthLoading) {
                   } else if (state is AuthAuthenticated) {
                     _passWordController.clear();
@@ -164,7 +204,11 @@ class _LoginPageState extends State<LoginPage> {
                                   // numéro de téléphone
                                   AppPhoneTextField(
                                     controller: _phoneNumbercontroller,
+                                    initialCountry: number.isoCode,
                                     fontSize: context.mediumText * 0.9,
+                                    maxLength: number.dialCode == "+229"
+                                        ? 10
+                                        : 15, // 10 pour le Bénin, 15 pour les autres pays
                                     fontColor: Theme.of(context)
                                         .colorScheme
                                         .inversePrimary,
@@ -172,6 +216,11 @@ class _LoginPageState extends State<LoginPage> {
                                         .colorScheme
                                         .background
                                         .withOpacity(0.8),
+                                    onInputChanged: (PhoneNumber number) {
+                                      setState(() {
+                                        this.number = number;
+                                      });
+                                    },
                                   ),
                                   const SizedBox(height: 20),
 
@@ -248,11 +297,10 @@ class _LoginPageState extends State<LoginPage> {
                                   // bouton de connexion
                                   GestureDetector(
                                     onTap: () {
+                                      print("::::::::::${number.phoneNumber}");
                                       context.read<AuthBloc>().add(
                                           PhoneLoginRequested(
-                                              phoneNumber:
-                                                  _phoneNumbercontroller
-                                                      .value.text,
+                                              phoneNumber: number,
                                               password: _passWordController
                                                   .value.text));
                                     },
@@ -355,9 +403,15 @@ class _LoginPageState extends State<LoginPage> {
                                         tag: 'googleTag',
                                         child: ModelOptionDeConnexion(
                                           onTap: () {
-                                            context
+                                            AppUtils.showInfoDialog(
+                                              context: context,
+                                              message:
+                                                  'Cette fonctionnalité arrive bientôt',
+                                              type: InfoType.info,
+                                            );
+                                            /* context
                                                 .read<AuthBloc>()
-                                                .add(ICloudLoginRequested());
+                                                .add(ICloudLoginRequested());*/
                                           },
                                           child: Image.asset(
                                             'assets/logos/apple.png',

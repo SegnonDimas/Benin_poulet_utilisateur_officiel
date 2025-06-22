@@ -20,26 +20,27 @@ class AppPhoneTextField extends StatefulWidget {
   final Function(String)? onFieldSubmitted;
   final void Function()? onSubmit;
   final String? Function(String?)? validator;
+  final int maxLength;
 
-  AppPhoneTextField({
-    super.key,
-    this.initialCountry = 'BJ',
-    this.hintText = 'Numéro de téléphone',
-    this.errorMessage = 'numéro incorrect',
-    this.label,
-    this.labelColor = Colors.grey,
-    this.controller,
-    this.onSeved,
-    this.onInputChanged,
-    this.onInputValidated,
-    this.fontColor = Colors.black,
-    this.fontSize = 16,
-    this.onFieldSubmitted,
-    this.fileColor,
-    this.fileBorderColor,
-    this.onSubmit,
-    this.validator,
-  });
+  AppPhoneTextField(
+      {super.key,
+      this.initialCountry = 'BJ',
+      this.hintText = 'Numéro de téléphone',
+      this.errorMessage = 'numéro incorrect',
+      this.label,
+      this.labelColor = Colors.grey,
+      this.controller,
+      this.onSeved,
+      this.onInputChanged,
+      this.onInputValidated,
+      this.fontColor = Colors.black,
+      this.fontSize = 16,
+      this.onFieldSubmitted,
+      this.fileColor,
+      this.fileBorderColor,
+      this.onSubmit,
+      this.validator,
+      this.maxLength = 15});
 
   @override
   State<AppPhoneTextField> createState() => _AppPhoneTextFieldState();
@@ -75,6 +76,7 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
         child: InternationalPhoneNumberInput(
           onFieldSubmitted: widget.onFieldSubmitted,
           onInputChanged: widget.onInputChanged,
+          maxLength: widget.maxLength,
           /*(PhoneNumber number) {
             // le numéro de téléphone saisi.
             print(number.phoneNumber);

@@ -371,9 +371,15 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                                   tag: 'appleTag',
                                   child: ModelOptionDeConnexion(
                                     onTap: () {
-                                      setState(() {
+                                      AppUtils.showInfoDialog(
+                                        context: context,
+                                        message:
+                                            'Cette fonctionnalité arrive bientôt',
+                                        type: InfoType.info,
+                                      );
+                                      /*setState(() {
                                         isLoggedIn = !isLoggedIn;
-                                      });
+                                      });*/
                                     },
                                     child: Image.asset(
                                       'assets/logos/apple.png',

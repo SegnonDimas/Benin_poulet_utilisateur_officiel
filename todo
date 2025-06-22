@@ -192,7 +192,7 @@ FRONT-END
     - chips_choice 3.0.1
     - MenuBar
     - circular_countdown_timer 0.2.4
-    - shimmer 3.0.0
+    - shimmer 3.0.0 || redacted 1.0.13
     - Hero
     - SliverAppBar
     - ExpansionTile

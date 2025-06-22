@@ -1,5 +1,8 @@
 //import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
+import '../../constants/userRoles.dart';
 
 part 'auth_events.dart';
 part 'auth_states.dart';
@@ -9,12 +12,63 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<PhoneLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        final phoneNumber = event.phoneNumber;
+        /* //TODO : CONDITIONS À VÉRIFIER ==> DEBUT
+        final countryCode =
+            event.phoneNumber.dialCode ?? '+229'; // Default to Benin code
+        final phone = event.phoneNumber;
         final password = event.password;
-        if (phoneNumber.isEmpty) {
+        final justPhoneNumber =
+            phone.phoneNumber!.trim().replaceAll(phone.dialCode!, '').trim();
+        if (phone.phoneNumber!.isEmpty) {
           return emit(PhoneLoginRequestFailure(
               errorMessage: 'Veuillez renseigner votre numéro de téléphone'));
+        } else if (phone.phoneNumber!.isNotEmpty &&
+            countryCode == '+229' &&
+            (justPhoneNumber.length != 10 ||
+                (justPhoneNumber.length == 10 &&
+                    justPhoneNumber.startsWith('01')))) {
+          if (kDebugMode) {
+            print("""
+          =====================================
+            countryCode   : $countryCode
+            Phone Number  : ${justPhoneNumber.length} caractères
+            Is phone start with 01 ? : ${phone.phoneNumber!.startsWith('01')}
+          =====================================
+            
+            """);
+            return emit(PhoneLoginRequestFailure(
+                errorMessage:
+                    'Le numéro de téléphone doit comporter 10 chiffres pour le Bénin et doit commencer par 01'));
+          }
         }
+        //TODO : CONDITIONS À VÉRIFIER ==> FIN*/
+        final countryCode =
+            event.phoneNumber.dialCode ?? '+229'; // Bénin par défaut
+        final fullPhoneNumber = event.phoneNumber.phoneNumber?.trim() ?? '';
+        final phone = event.phoneNumber;
+        final password = event.password;
+
+// Extraire la partie sans l'indicatif (ex: 0123456789)
+        final nationalNumber =
+            fullPhoneNumber.replaceFirst(countryCode, '').trim();
+
+// Vérification : champ vide
+        if (fullPhoneNumber.isEmpty) {
+          return emit(PhoneLoginRequestFailure(
+            errorMessage: 'Veuillez renseigner votre numéro de téléphone',
+          ));
+        }
+
+// Vérification spécifique au Bénin
+        if (countryCode == '+229') {
+          if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
+            return emit(PhoneLoginRequestFailure(
+              errorMessage:
+                  'Le numéro de téléphone doit comporter 10 chiffres pour le Bénin et commencer par 01',
+            ));
+          }
+        }
+
         if (password.isEmpty) {
           return emit(PhoneLoginRequestFailure(
               errorMessage: 'Veuillez renseigner votre mot de passe'));
@@ -25,12 +79,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           await Future.delayed(const Duration(seconds: 2), () {
             return emit(PhoneLoginRequestSuccess(
-                userId: '$phoneNumber$password',
+                userId: '${phone.phoneNumber}$password',
                 successMessage: 'Utilisateur connecté avec succès'));
           });
         }
       } catch (e) {
-        return emit(PhoneLoginRequestFailure(errorMessage: e.toString()));
+        print("::::::::::ERREURE : $e ::::::::::::");
+        if (e.toString() == "Null check operator used on a null value") {
+          return emit(PhoneLoginRequestFailure(
+              errorMessage: "Veuillez renseigner votre numéro de téléphone"));
+        }
       }
     });
 
