@@ -1,12 +1,112 @@
 import 'package:benin_poulet/constants/accountStatus.dart';
 
+import '../constants/authProviders.dart';
 import '../constants/userRoles.dart';
 
+class AppUser {
+  final String userId;
+  final String authProvider; // phone, email, google, icloud, anonymous
+  final String? authIdentifier; // numéro, email, id externe, etc.
+  final String? fullName;
+  final String? photoUrl;
+  final String accountStatus;
+  final String role;
+  final List<String>? storeIds;
+  final bool isAnonymous;
+  final bool profileComplete;
+  final DateTime? createdAt;
+  final DateTime? lastLogin;
+
+  const AppUser({
+    required this.userId,
+    this.authProvider = AuthProviders.ANONYMOUS,
+    this.authIdentifier,
+    this.fullName,
+    this.photoUrl,
+    this.accountStatus = AccountStatus.ACTIVE,
+    this.role = UserRoles.VISITOR,
+    this.storeIds = const [],
+    this.profileComplete = false,
+    this.isAnonymous = true,
+    this.createdAt,
+    this.lastLogin,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'authProvider': authProvider,
+      'authIdentifier': authIdentifier,
+      'fullName': fullName,
+      'photoUrl': photoUrl,
+      'accountStatus': accountStatus,
+      'role': role,
+      'storeIds': storeIds,
+      'isAnonymous': isAnonymous,
+      'profileComplete': profileComplete,
+      'createdAt': createdAt?.toIso8601String(),
+      'lastLogin': lastLogin?.toIso8601String(),
+    };
+  }
+
+  factory AppUser.fromMap(Map<String, dynamic> map) {
+    return AppUser(
+      userId: map['userId'],
+      authProvider: map['authProvider'] ?? AuthProviders.ANONYMOUS,
+      authIdentifier: map['authIdentifier'],
+      fullName: map['fullName'],
+      photoUrl: map['photoUrl'],
+      accountStatus: map['accountStatus'] ?? AccountStatus.ACTIVE,
+      role: map['role'] ?? UserRoles.VISITOR,
+      storeIds:
+          map['storeIds'] != null ? List<String>.from(map['storeIds']) : [],
+      isAnonymous: map['isAnonymous'] ?? true,
+      profileComplete: map['profileComplete'] ?? false,
+      createdAt:
+          map['createdAt'] != null ? DateTime.tryParse(map['createdAt']) : null,
+      lastLogin:
+          map['lastLogin'] != null ? DateTime.tryParse(map['lastLogin']) : null,
+    );
+  }
+
+  AppUser copyWith({
+    String? userId,
+    String? authProvider,
+    final String? authIdentifier,
+    String? fullName,
+    String? photoUrl,
+    DateTime? createdAt,
+    DateTime? lastLogin,
+    bool? profileComplete,
+    String? accountStatus,
+    String? role,
+    List<String>? storeIds,
+    bool? isAnonymous,
+  }) {
+    return AppUser(
+      userId: userId ?? this.userId,
+      authProvider: authProvider ?? this.authProvider,
+      authIdentifier: authIdentifier ?? this.authIdentifier,
+      fullName: fullName ?? this.fullName,
+      photoUrl: photoUrl ?? this.photoUrl,
+      createdAt: createdAt ?? this.createdAt,
+      lastLogin: lastLogin ?? this.lastLogin,
+      profileComplete: profileComplete ?? this.profileComplete,
+      accountStatus: accountStatus ?? this.accountStatus,
+      role: role ?? this.role,
+      storeIds: storeIds ?? this.storeIds,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
+    );
+  }
+}
+
+//@Deprecated("Utiliser AppUser à la place")
+/*
 class User {
   final String userId;
   final String? email;
   final String accountStatus;
-  final String? phoneNumber;
+  final String? phoneNumber; // pour l'authentification par numéro de téléphone
   final String? emailAdress; // pour l'authentification par email
   final String? googleAccount; // pour l'authentification par Google
   final String? iCloudAccount; // pour l'authentification par iCloud
@@ -21,13 +121,13 @@ class User {
     required this.userId,
     this.accountStatus = AccountStatus.ACTIVE, // par défaut 'active'
     this.email,
-    this.phoneNumber,
+    this.phoneNumber, // pour l'authentification par numéro de téléphone
     this.emailAdress, // pour l'authentification par email
     this.googleAccount, // pour l'authentification par Google
     this.iCloudAccount, // pour l'authentification par iCloud
     this.fullName,
     this.photoUrl,
-    this.role = UserRoles.BUYER, // par défaut 'buyer'
+    this.role = UserRoles.VISITOR, // par défaut 'visitor'
     this.profileComplete = false, // par défaut 'false'
     this.createdAt,
     this.lastLogin,
@@ -58,13 +158,14 @@ class User {
       userId: map['userId'],
       accountStatus: map['accountStatus'] ?? 'active',
       email: map['email'],
-      phoneNumber: map['phoneNumber'],
+      phoneNumber:
+          map['phoneNumber'], // pour l'authentification par numéro de téléphone
       emailAdress: map['emailAdress'], // pour l'authentification par email
       googleAccount: map['googleAccount'], // pour l'authentification par Google
       iCloudAccount: map['iCloudAccount'], // pour l'authentification par iCloud
       fullName: map['fullName'],
       photoUrl: map['photoUrl'],
-      role: map['role'] ?? UserRoles.BUYER,
+      role: map['role'] ?? UserRoles.VISITOR,
       profileComplete: map['profileComplete'] ?? false,
       createdAt:
           map['createdAt'] != null ? DateTime.tryParse(map['createdAt']) : null,
@@ -78,7 +179,7 @@ class User {
     String? userId,
     String? accountStatus,
     String? email,
-    String? phoneNumber,
+    String? phoneNumber, // pour l'authentification par numéro de téléphone
     String? emailAdress, // pour l'authentification par email
     String? googleAccount, // pour l'authentification par Google
     String? iCloudAccount, // pour l'authentification par iCloud
@@ -106,3 +207,4 @@ class User {
     );
   }
 }
+*/

@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:benin_poulet/bloc/user_profile_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
+import '../../../constants/userRoles.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../models_ui/model_presentationPage.dart';
 
@@ -117,6 +117,7 @@ class _PresentationPageState extends State<PresentationPage> {
                   // VENDRE
                   GestureDetector(
                     onTap: () {
+                      //TODO : à implémenter
                       context.read<UserProfileBloc>().add(
                             UpdateUserRole(UserRoles.SELLER),
                           );
