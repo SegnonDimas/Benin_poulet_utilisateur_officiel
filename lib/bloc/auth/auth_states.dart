@@ -61,6 +61,19 @@ class ICloudLoginRequestFailure extends AuthFailure {
   ICloudLoginRequestFailure({required super.errorMessage});
 }
 
+class PhoneSignUpRequestSuccess extends AuthAuthenticated {
+  final String? successMessage;
+
+  PhoneSignUpRequestSuccess({
+    required super.userId,
+    this.successMessage,
+  });
+}
+
+class PhoneSignUpRequestFailure extends AuthFailure {
+  PhoneSignUpRequestFailure({required super.errorMessage});
+}
+
 class AuthSignedUp extends AuthState {
   final String userId;
 

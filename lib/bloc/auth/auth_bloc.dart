@@ -9,57 +9,30 @@ part 'auth_states.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
+    //==========
+    //CONNEXION
+    //==========
     on<PhoneLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        /* //TODO : CONDITIONS À VÉRIFIER ==> DEBUT
-        final countryCode =
-            event.phoneNumber.dialCode ?? '+229'; // Default to Benin code
-        final phone = event.phoneNumber;
-        final password = event.password;
-        final justPhoneNumber =
-            phone.phoneNumber!.trim().replaceAll(phone.dialCode!, '').trim();
-        if (phone.phoneNumber!.isEmpty) {
-          return emit(PhoneLoginRequestFailure(
-              errorMessage: 'Veuillez renseigner votre numéro de téléphone'));
-        } else if (phone.phoneNumber!.isNotEmpty &&
-            countryCode == '+229' &&
-            (justPhoneNumber.length != 10 ||
-                (justPhoneNumber.length == 10 &&
-                    justPhoneNumber.startsWith('01')))) {
-          if (kDebugMode) {
-            print("""
-          =====================================
-            countryCode   : $countryCode
-            Phone Number  : ${justPhoneNumber.length} caractères
-            Is phone start with 01 ? : ${phone.phoneNumber!.startsWith('01')}
-          =====================================
-            
-            """);
-            return emit(PhoneLoginRequestFailure(
-                errorMessage:
-                    'Le numéro de téléphone doit comporter 10 chiffres pour le Bénin et doit commencer par 01'));
-          }
-        }
-        //TODO : CONDITIONS À VÉRIFIER ==> FIN*/
         final countryCode =
             event.phoneNumber.dialCode ?? '+229'; // Bénin par défaut
         final fullPhoneNumber = event.phoneNumber.phoneNumber?.trim() ?? '';
         final phone = event.phoneNumber;
         final password = event.password;
 
-// Extraire la partie sans l'indicatif (ex: 0123456789)
+        // Extraire la partie sans l'indicatif (ex: 0123456789)
         final nationalNumber =
             fullPhoneNumber.replaceFirst(countryCode, '').trim();
 
-// Vérification : champ vide
+        // Vérification : champ vide
         if (fullPhoneNumber.isEmpty) {
           return emit(PhoneLoginRequestFailure(
             errorMessage: 'Veuillez renseigner votre numéro de téléphone',
           ));
         }
 
-// Vérification spécifique au Bénin
+        // Vérification spécifique au Bénin
         if (countryCode == '+229') {
           if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
             return emit(PhoneLoginRequestFailure(
@@ -140,6 +113,65 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         return emit(ICloudLoginRequestFailure(errorMessage: e.toString()));
       }
+    });
+
+    //============
+    //INSCRIPTION
+    //============
+    on<PhoneSignUpRequested>((event, emit) {
+      emit(AuthLoading());
+
+      try {
+        final lastName = event.lastName;
+        final firstName = event.firstName;
+        final countryCode =
+            event.phoneNumber.dialCode ?? '+229'; // Bénin par défaut
+        final fullPhoneNumber = event.phoneNumber.phoneNumber?.trim() ?? '';
+        final phone = event.phoneNumber;
+        final password = event.password;
+        final confirmPassword = event.confirmPassword;
+
+        // Extraire la partie sans l'indicatif (ex: 0123456789)
+        final nationalNumber =
+            fullPhoneNumber.replaceFirst(countryCode, '').trim();
+
+        if (firstName.isEmpty ||
+            lastName.isEmpty ||
+            fullPhoneNumber.isEmpty ||
+            password.isEmpty ||
+            confirmPassword.isEmpty) {
+          return emit(PhoneSignUpRequestFailure(
+              errorMessage: "Veuillez renseigner tous les champs"));
+        } else if (password != confirmPassword) {
+          return emit(PhoneSignUpRequestFailure(
+              errorMessage: "Les mots de passe ne correspondent pas"));
+        }
+        // Vérification : champ vide
+        else if (fullPhoneNumber.isEmpty) {
+          return emit(PhoneSignUpRequestFailure(
+            errorMessage: 'Veuillez renseigner votre numéro de téléphone',
+          ));
+        }
+
+        // Vérification spécifique au Bénin
+        if (countryCode == '+229') {
+          if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
+            return emit(PhoneLoginRequestFailure(
+              errorMessage:
+                  'Le numéro de téléphone doit comporter 10 chiffres pour le Bénin et commencer par 01',
+            ));
+          }
+        }
+
+        if (password.isEmpty) {
+          return emit(PhoneLoginRequestFailure(
+              errorMessage: 'Veuillez renseigner votre mot de passe'));
+        } else if (password.length < 4) {
+          return emit(PhoneLoginRequestFailure(
+              errorMessage:
+                  'Le mot de passe doit être d\'au moins 4 caractères'));
+        }
+      } catch (e) {}
     });
   }
 

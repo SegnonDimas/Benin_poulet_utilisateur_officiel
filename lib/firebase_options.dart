@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
     authDomain: 'beninpoulet-8f04a.firebaseapp.com',
+    databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
     measurementId: 'G-X2XGRFP6SH',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:1095274966890:android:bf9ef0ca7954fd97feff13',
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
+    databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
   );
 
@@ -63,7 +65,9 @@ class DefaultFirebaseOptions {
     appId: '1:1095274966890:ios:f5332d7ba940d851feff13',
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
+    databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
+    iosClientId: '1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com',
     iosBundleId: 'com.codeurplus.beninPoulet',
   );
 
@@ -72,7 +76,9 @@ class DefaultFirebaseOptions {
     appId: '1:1095274966890:ios:f5332d7ba940d851feff13',
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
+    databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
+    iosClientId: '1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com',
     iosBundleId: 'com.codeurplus.beninPoulet',
   );
 
@@ -82,7 +88,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
     authDomain: 'beninpoulet-8f04a.firebaseapp.com',
+    databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
     measurementId: 'G-RR231PVTP5',
   );
+
 }

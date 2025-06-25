@@ -63,38 +63,11 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Theme.of(context).colorScheme.background,
               body: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
-                  final contryCode =
-                      number.isoCode == 'BJ' ? '+229' : number.isoCode;
-
-                  /*//TODO : CONDITIONS À VÉRIFIER ==> DEBUT
-                  final justNumber = number.phoneNumber
-                      ?.trim()
-                      .replaceAll(number.dialCode!, '')
-                      .trim();
-                  if (state is AuthFailure) {
-                    if (number.dialCode == "+229" && justNumber != null) {
-                      if (justNumber.isEmpty) {
-                        AppUtils.showSnackBar(context,
-                            "Veuillez saisir votre numéro de téléphone");
-                      } else {
-                        AppUtils.showInfoDialog(
-                            context: context,
-                            message:
-                                "Vérifier bien que votre numéro commence par 01 pour le Bénin et comporte 10 chiffres",
-                            type: InfoType.error);
-                      }
-                    } else {
-                      AppUtils.showSnackBar(context, state.errorMessage);
-                    }
-                  }
-                  //TODO : CONDITIONS À VÉRIFIER ==> FIN*/
-
                   if (state is AuthFailure) {
                     final errorMsg = state.errorMessage.toLowerCase();
 
                     // Cas spécifique : numéro béninois invalide
-                    if (errorMsg.contains('bénin') ||
-                        errorMsg.contains('commencer par 01')) {
+                    if (errorMsg.contains('bénin') || errorMsg.contains('01')) {
                       AppUtils.showInfoDialog(
                         context: context,
                         message: state.errorMessage,

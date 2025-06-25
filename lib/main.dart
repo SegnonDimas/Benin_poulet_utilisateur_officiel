@@ -1,10 +1,10 @@
 import 'package:benin_poulet/blocProviders.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -13,30 +13,24 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/routes.dart';
-import 'core/firebase/firebase_initializer.dart';
-import 'core/firebase/firestore/user_repository.dart';
+import 'firebase_options.dart';
 
-void main() async {
+Future<void> main() async {
   // WidgetsFlutterBinding init
   WidgetsFlutterBinding.ensureInitialized();
   // firebase init
-  await FirebaseInitialize.initializeFirebase();
+  //await FirebaseInitialize.initializeFirebase();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   // flutter_localization init
   await FlutterLocalization.instance.ensureInitialized();
   // cached_network_image init
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
 
-  final auth = FirebaseAuth.instance;
-  final fs = FirestoreService();
-  final u = await auth.signInAnonymously();
-  if (auth.currentUser == null) {
-    u;
-  }
-  final user = AppUser(
-      userId: u.user!.uid,
-      createdAt: DateTime.now(),
-      lastLogin: DateTime.now());
-  fs.createOrUpdateUser(user);
+  // créer une connexion anonyme au lancement
+  final anonymousUser = await AuthServices.createAnonymousAuth();
+  anonymousUser;
 
   // runApp
   runApp(MultiProvider(
@@ -49,12 +43,7 @@ void main() async {
       ),
     ],
     child: const MyApp(),
-  )
-
-      /*ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
-    child: const MyApp(),*/
-      );
+  ));
 }
 
 // pour la reconnaissance de la langue de l'App en fonction de l'amplacement de l'utilisateur
@@ -122,9 +111,6 @@ class _MyAppState extends State<MyApp> {
         darkTheme: darkMode,
         //themeMode: ThemeMode.light,
         title: 'Bénin Poulet',
-
-        //home: ChoixCategoriePage(),
-        //home: const FirstPage(),
 
         routes: routes,
         initialRoute: AppRoutes.FIRSTPAGE,

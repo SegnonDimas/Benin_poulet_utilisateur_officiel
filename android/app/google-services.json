@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1095274966890",
+    "firebase_url": "https://beninpoulet-8f04a-default-rtdb.firebaseio.com",
     "project_id": "beninpoulet-8f04a",
     "storage_bucket": "beninpoulet-8f04a.firebasestorage.app"
   },
@@ -12,7 +13,12 @@
           "package_name": "com.codeurplus.benin_poulet"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1095274966890-lc6kpktrn0ph2dljj7cvsi3chpn0elpe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBJ52clxdKdy8wtn-jzPQVsUNZ1ejllKZA"
@@ -20,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095274966890-lc6kpktrn0ph2dljj7cvsi3chpn0elpe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codeurplus.beninPoulet"
+              }
+            }
+          ]
         }
       }
     }

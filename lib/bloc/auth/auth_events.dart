@@ -62,7 +62,7 @@ class PhoneSignUpRequested extends AuthEvent {
   final String? userRole;
   final String firstName;
   final String lastName;
-  final String phoneNumber;
+  final PhoneNumber phoneNumber;
   final String password;
   final String confirmPassword;
 

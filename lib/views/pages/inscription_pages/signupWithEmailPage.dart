@@ -5,6 +5,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -183,7 +184,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                                           color: Theme.of(context)
                                               .colorScheme
                                               .background,
-                                          controller: _passWordController,
+                                          controller: _emailcontroller,
                                           prefixIcon: Icons.email,
                                           keyboardType:
                                               TextInputType.emailAddress,
@@ -203,7 +204,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                                               .colorScheme
                                               .background,
                                           isPassword: true,
-                                          controller: _emailcontroller,
+                                          controller: _passWordController,
                                           fontSize: context.mediumText * 0.9,
                                           fontColor: Theme.of(context)
                                               .colorScheme
@@ -239,11 +240,27 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
 
                         // bouton de connexion
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             setState(() {
-                              isLoggedIn = !isLoggedIn;
+                              //isLoggedIn = !isLoggedIn;
                               emailSignup();
                             });
+
+                            print(
+                                "::::::::::::::::::::${_emailcontroller.text}");
+                            final _email = _emailcontroller.text.trim();
+                            final _password = _passWordController.text.trim();
+                            try {
+                              await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: _email,
+                                password: _password,
+                              );
+                            } catch (e) {
+                              print(":::::::::::${_email}");
+                              print(
+                                  '::::::::::::::Erreur lors de la connexion : $e __::::::::::::::');
+                            }
                           },
                           child: Container(
                             alignment: Alignment.center,
