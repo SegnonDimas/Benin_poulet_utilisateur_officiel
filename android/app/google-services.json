@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1095274966890-lc6kpktrn0ph2dljj7cvsi3chpn0elpe.apps.googleusercontent.com",
+          "client_id": "1095274966890-tt6mh1vt1qb1qnig3nr2p7rrt3ljlhc6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codeurplus.benin_poulet",
+            "certificate_hash": "7f8d7902460111382acc361bce42a769b7fa1e03"
+          }
+        },
+        {
+          "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -28,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1095274966890-lc6kpktrn0ph2dljj7cvsi3chpn0elpe.apps.googleusercontent.com",
+              "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
               "client_type": 3
             },
             {

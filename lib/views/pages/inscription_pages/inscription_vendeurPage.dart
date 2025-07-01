@@ -1,6 +1,6 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/utils/app_attributs.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';

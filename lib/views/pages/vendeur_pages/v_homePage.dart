@@ -1,5 +1,5 @@
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/utils/app_attributs.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';

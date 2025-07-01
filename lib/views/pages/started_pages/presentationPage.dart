@@ -1,13 +1,14 @@
 import 'dart:ui';
 
 import 'package:benin_poulet/bloc/user_profile_bloc.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/utils/app_attributs.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
@@ -33,7 +34,8 @@ class _PresentationPageState extends State<PresentationPage> {
     //pageView 1
     ModelPresentationPage(
         title: AppAttributes.appName,
-        description: "Bienvenue sur notre application BÉNIN POULET ...",
+        description:
+            "Bienvenue sur notre application ${AppAttributes.appName} ...",
         image: "assets/images/welcome.png",
         nextMsg: 'Next',
         descriptionTitle: 'Bienvenue'),
@@ -250,31 +252,36 @@ class _PresentationPageState extends State<PresentationPage> {
                 top: 20,
                 left: 5,
                 child: Hero(
-                  tag: '1',
+                  tag: '__1',
                   child: GradientBall(
-                      size: Size.square(context.height * 0.25),
-                      colors: const [
+                      size: Size.square(context.height * 0.35),
+                      colors: [
                         //blueColor,
-                        Colors.deepPurple,
-                        Colors.purpleAccent
+                        Colors.deepPurple.withOpacity(0.25),
+                        Colors.purpleAccent.withOpacity(0.25)
                       ]),
-                ),
+                ).animate().fade(duration: 2000.ms),
               ),
               //GradientBall du bas
               Positioned(
                 bottom: 0, //context.height * 0.8,
                 right: 10,
                 child: Hero(
-                  tag: '2',
+                  tag: '__2',
                   child: GradientBall(
-                      size: Size.square(context.height * 0.15),
-                      colors: const [Colors.orange, Colors.deepOrange]),
-                ),
+                      size: Size.square(context.height * 0.25),
+                      colors: [
+                        //Colors.orange.withOpacity(0.15),
+                        //Colors.deepOrange.withOpacity(0.15)
+                        AppColors.primaryColor.withOpacity(0.25),
+                        AppColors.secondaryColor.withOpacity(0.25)
+                      ]),
+                ).animate().fade(duration: 2000.ms),
               ),
 
               // floutage de l'arrière-plan
               BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  filter: ImageFilter.blur(sigmaX: 340, sigmaY: 340),
                   //blur(sigmaX: 100, sigmaY: 100),
                   child: SizedBox()),
 
@@ -313,7 +320,7 @@ class _PresentationPageState extends State<PresentationPage> {
                               ),
                             ),
 
-                            // le titre : BÉNIN POULET (de la pageView)
+                            // le titre : ${AppAttributes.appName} (de la pageView)
                             AppText(
                                 text: views[selectedPage].title,
                                 fontSize: context.largeText * 1.3,
@@ -448,12 +455,14 @@ class _PresentationPageState extends State<PresentationPage> {
                       PageViewDotIndicator(
                         currentItem: selectedPage,
                         count: views.length,
-                        unselectedColor:
-                            Theme.of(context).colorScheme.background,
+                        unselectedColor: Theme.of(context)
+                            .colorScheme
+                            .inverseSurface
+                            .withOpacity(0.5),
                         selectedColor: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(300),
                         duration: const Duration(milliseconds: 200),
-                        size: Size(context.width * 0.1, context.height * 0.012),
+                        size: Size(context.width * 0.08, context.height * 0.01),
                         unselectedSize:
                             Size(context.width * 0.03, context.height * 0.012),
                         boxShape: BoxShape.rectangle,

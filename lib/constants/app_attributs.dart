@@ -1,5 +1,5 @@
 class AppAttributes {
-  static const String appName = 'Bénin Poulet';
+  static const String appName = 'Le Bon Produit';
   static const String appVersion = '1.0.0';
   static const String appDescription =
       '$appName est une application de gestion de produits agricoles.';

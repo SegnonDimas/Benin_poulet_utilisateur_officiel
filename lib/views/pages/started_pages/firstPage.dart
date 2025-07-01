@@ -8,7 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/routes.dart';
-import '../../../utils/app_attributs.dart';
+import '../../../constants/app_attributs.dart';
 import '../../../widgets/app_text.dart';
 
 class FirstPage extends StatefulWidget {

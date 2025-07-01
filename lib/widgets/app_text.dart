@@ -1,4 +1,4 @@
-import 'package:benin_poulet/utils/app_attributs.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 

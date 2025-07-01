@@ -57,10 +57,10 @@ class AppUtils {
   //===========================
   static Future<T?> showDialog<T>({
     required BuildContext context,
-    required String title,
-    required String content,
-    required String confirmText,
-    required String cancelText,
+    String? title,
+    String? content,
+    String? confirmText,
+    String? cancelText,
     void Function()? onConfirm,
     void Function()? onCancel,
     bool? barrierDismissible,
