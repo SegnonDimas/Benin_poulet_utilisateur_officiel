@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -11,18 +10,17 @@ import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../constants/routes.dart';
+import '../../../core/firebase/auth/auth_services.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/wave_painter.dart';
 import '../../models_ui/model_optionsDeConnexion.dart';
-import '../userSimplePage.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -52,45 +50,91 @@ class _InscriptionPageState extends State<InscriptionPage> {
   String password = '';
   String confirmPassword = '';
 
+  /// signUp()
+  Future<void> signUp(String email, String password) async {
+    try {
+      print("=======Phone signUp requeste begin=======");
+      context.read<AuthBloc>().add(
+            PhoneSignUpRequested(
+              firstName: _firstNameController.text.trim(),
+              lastName: _lastNameController.text.trim(),
+              phoneNumber: phoneNumber, // déjà formaté
+              password: password,
+              confirmPassword: _confirmPassWordController.text.trim(),
+            ),
+          );
+    } catch (e) {
+      print("::::::::::::Erreur durant l'inscription : $e :::::::::::::::");
+    }
+    print("=======Phone signUp requeste end=========");
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget divider = Divider(
       color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
     );
+
     return SafeArea(
       top: false,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthFailure) {
-              final errorMsg = state.errorMessage.toLowerCase();
+          listener: (context, state) async {
+            print(":::::::::::ICI 1");
+            print("=== STATE TYPE : ${state.runtimeType} ===");
 
-              // Cas spécifique : numéro béninois invalide
-              if (errorMsg.contains('bénin') || errorMsg.contains('01')) {
+            if (state is AuthFailure) {
+              print(":::::::::::ICI 1-2");
+              if (state.errorMessage.toLowerCase().contains('bénin') ||
+                  state.errorMessage.contains('01')) {
+                print(":::::::::::ICI 1-2-1");
                 AppUtils.showInfoDialog(
-                  context: context,
-                  message: state.errorMessage,
-                  type: InfoType.error,
-                );
+                    context: context,
+                    message: state.errorMessage,
+                    type: InfoType.error,
+                    onTitleIconTap: () => Navigator.pop(context));
               } else {
-                // Autres cas : snackBar classique
+                print(":::::::::::ICI 1-2-2");
                 AppUtils.showSnackBar(context, state.errorMessage);
               }
-            }
+            } else if (state is AuthAuthenticated ||
+                state is PhoneSignUpRequestSuccess) {
+              print(":::::::::::ICI 1-3");
+              try {
+                //final _email = _formatEmailFromPhone(phoneNumber);
+                final _password = _passWordController.text;
+                final fullName =
+                    '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
+                /*await AuthServices.createEmailAuth(_email, _password,
+                    authProvider: AuthProviders.PHONE);*/
+                await AuthServices.createPhoneAuth(phoneNumber, _password,
+                    fullName: fullName);
+                // Réinitialiser les champs
+                _passWordController.clear();
+                _phoneNumbercontroller.clear();
+                _confirmPassWordController.clear();
+                _firstNameController.clear();
+                _lastNameController.clear();
 
-            if (state is AuthLoading) {
-            } else if (state is AuthAuthenticated) {
-              _passWordController.clear();
-              _phoneNumbercontroller.clear();
-              AppUtils.showAwesomeSnackBar(
+                _showAwesomeSnackBar(
                   context,
-                  'Connexion Réussie',
-                  'Utilisateur connecté avec succès',
+                  'Inscription Réussie',
+                  'Votre inscription est effectuée avec succès',
                   ContentType.success,
-                  AppColors.primaryColor);
-              Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
+                  AppColors.primaryColor,
+                );
+
+                Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
+              } catch (e) {
+                print(":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+              }
+            } else {
+              print("::::::::::::: STATE : ${state} ::::::::::::");
+              print("::::::::::VEILLEZ PATIENTER::::::::::");
             }
+            print("::::::::::::: STATE : ${state} ::::::::::::");
+            print("::::::::::::: LISTINER END ::::::::::::");
           },
           builder: (context, state) {
             return SingleChildScrollView(
@@ -171,6 +215,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                   child: SizedBox(
                                     width: context.width,
                                   )),
+
+                              //
                               SingleChildScrollView(
                                   child: Column(
                                 /*mainAxisSize: MainAxisSize.min,*/
@@ -187,8 +233,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.primaryColor),
                                   ),
-                                  //const SizedBox(height: 15),
-                                  //const SizedBox(height: 10),
 
                                   /// Formulaire d'inscription
 
@@ -225,61 +269,80 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   children: [
                                                     //nom
                                                     AppTextField(
-                                                        label: 'Nom',
-                                                        height: context.height *
-                                                            0.08,
-                                                        width:
-                                                            context.width * 0.9,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .background,
-                                                        controller:
-                                                            _lastNameController,
-                                                        prefixIcon: CupertinoIcons
-                                                            .person_alt_circle,
-                                                        fontSize:
-                                                            context.mediumText *
-                                                                0.9,
-                                                        fontColor:
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .inversePrimary,
-                                                        onSaved: (value) =>
-                                                            lastName = value!,
-                                                        onChanged: (value) =>
-                                                            setState(() {
-                                                              lastName = value;
-                                                            })),
+                                                      label: 'Nom',
+                                                      height:
+                                                          context.height * 0.08,
+                                                      width:
+                                                          context.width * 0.9,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .background,
+                                                      controller:
+                                                          _lastNameController,
+                                                      validator: (value) =>
+                                                          value == null ||
+                                                                  value
+                                                                      .trim()
+                                                                      .isEmpty
+                                                              ? 'Veuillez entrer votre nom'
+                                                              : null,
+                                                      prefixIcon: CupertinoIcons
+                                                          .person_alt_circle,
+                                                      fontSize:
+                                                          context.mediumText *
+                                                              0.9,
+                                                      fontColor:
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .inversePrimary,
+                                                      onSaved: (value) =>
+                                                          lastName = value!,
+                                                      onChanged: (value) =>
+                                                          setState(() {
+                                                        lastName = value;
+                                                      }),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                    ),
                                                     const SizedBox(height: 10),
                                                     //prenom
                                                     AppTextField(
-                                                        label: 'Prénom',
-                                                        height: context.height *
-                                                            0.08,
-                                                        width:
-                                                            context.width * 0.9,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .background,
-                                                        controller:
-                                                            _firstNameController,
-                                                        prefixIcon: CupertinoIcons
-                                                            .person_alt_circle,
-                                                        fontSize:
-                                                            context.mediumText *
-                                                                0.9,
-                                                        fontColor:
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .inversePrimary,
-                                                        onSaved: (value) =>
-                                                            firstName = value!,
-                                                        onChanged: (value) =>
-                                                            setState(() {
-                                                              firstName = value;
-                                                            })
-                                                        //minLines: 4,
-                                                        ),
+                                                      label: 'Prénom',
+                                                      height:
+                                                          context.height * 0.08,
+                                                      width:
+                                                          context.width * 0.9,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .background,
+                                                      controller:
+                                                          _firstNameController,
+                                                      validator: (value) =>
+                                                          value == null ||
+                                                                  value
+                                                                      .trim()
+                                                                      .isEmpty
+                                                              ? 'Veuillez entrer votre prénom'
+                                                              : null,
+                                                      prefixIcon: CupertinoIcons
+                                                          .person_alt_circle,
+                                                      fontSize:
+                                                          context.mediumText *
+                                                              0.9,
+                                                      fontColor:
+                                                          Theme.of(context)
+                                                              .colorScheme
+                                                              .inversePrimary,
+                                                      onSaved: (value) =>
+                                                          firstName = value!,
+                                                      onChanged: (value) =>
+                                                          setState(() {
+                                                        firstName = value;
+                                                      }),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      //minLines: 4,
+                                                    ),
                                                     const SizedBox(height: 10),
 
                                                     // Numéro de téléphone
@@ -302,6 +365,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                           phoneNumber = number;
                                                         });
                                                       },
+                                                      validator: (value) =>
+                                                          value == null ||
+                                                                  value
+                                                                      .trim()
+                                                                      .isEmpty
+                                                              ? 'Veuillez reseigner votre numéro de téléphone'
+                                                              : null,
                                                     ),
                                                     const SizedBox(height: 10),
 
@@ -318,6 +388,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                         isPassword: true,
                                                         controller:
                                                             _passWordController,
+                                                        validator: (value) {
+                                                          if (value == null ||
+                                                              value.isEmpty)
+                                                            return 'Mot de passe requis';
+                                                          if (value.length < 6)
+                                                            return 'Au moins 6 caractères';
+                                                          return null;
+                                                        },
                                                         fontSize:
                                                             context.mediumText *
                                                                 0.9,
@@ -347,6 +425,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                         isPassword: true,
                                                         controller:
                                                             _confirmPassWordController,
+                                                        validator: (value) {
+                                                          if (value !=
+                                                              _passWordController
+                                                                  .text)
+                                                            return 'Les mots de passe ne correspondent pas';
+                                                          return null;
+                                                        },
                                                         fontSize:
                                                             context.mediumText *
                                                                 0.9,
@@ -377,97 +462,109 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                         height: context.height * 0.07,
                                         width: context.width * 0.9,
                                         color: AppColors.primaryColor,
-                                        onTap: () async {
-                                          try {
-                                            var dialCode = phoneNumber.dialCode
-                                                ?.replaceAll('+', '00');
-                                            var isCode = phoneNumber.isoCode
-                                                    ?.toLowerCase() ??
-                                                '';
-                                            var prefix = dialCode! + isCode;
-                                            var number = phoneNumber
-                                                .phoneNumber!
-                                                .toString()
-                                                .trim()
-                                                .replaceAll(
-                                                    phoneNumber.dialCode
-                                                        .toString(),
-                                                    '');
-                                            //var number = phoneNumber.nationalNumber;
-                                            final _telEmail =
-                                                '${prefix + number}@gmail.com';
+                                        onTap: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            final formattedEmail =
+                                                _formatEmailFromPhone(
+                                                    phoneNumber);
 
-                                            //
+                                            // Afficher le dialogue de confirmation du numéro
+                                            AppUtils.showDialog(
+                                              context: context,
+                                              title:
+                                                  phoneNumber.phoneNumber ?? '',
+                                              content:
+                                                  'Votre numéro est-il correct ?',
+                                              barrierDismissible: false,
+                                              cancelText: 'Oui, continuer',
+                                              confirmText: 'Non, mettre à jour',
+                                              //
+                                              cancelTextSize:
+                                                  context.smallText * 0.8,
+                                              confirmTextSize:
+                                                  context.smallText,
+                                              cancelTextColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .inversePrimary
+                                                  .withOpacity(0.4),
+                                              titleColor:
+                                                  AppColors.primaryColor,
 
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _formKey.currentState!.save();
-                                              //_formKey.currentState!.reset();
-                                              setState(() {
-                                                isSignUp = !isSignUp;
-                                              });
-                                              context.read<AuthBloc>().add(
-                                                    PhoneSignUpRequested(
-                                                      firstName: firstName,
-                                                      lastName: lastName,
-                                                      phoneNumber: phoneNumber,
-                                                      password: password,
-                                                      confirmPassword:
-                                                          confirmPassword,
-                                                    ),
-                                                  );
-                                              AppUtils.showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                title:
-                                                    '${phoneNumber.phoneNumber}',
-                                                cancelText: 'Oui, continuer',
-                                                confirmText:
-                                                    'Non, mettre à jour',
-                                                content:
-                                                    'Votre numéro est-il correct ?',
-                                                cancelTextSize:
-                                                    context.smallText * 0.8,
-                                                confirmTextSize:
-                                                    context.smallText,
-                                                cancelTextColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .inversePrimary
-                                                        .withOpacity(0.4),
-                                                titleColor:
-                                                    AppColors.primaryColor,
+                                              //
+                                              onConfirm: () {
+                                                print(":::::::::::Cancel");
+                                                Navigator.pop(context);
+                                              }, // Modifier le numéro
+                                              onCancel: () async {
+                                                print(
+                                                    ":::::::::::Confirm init");
+                                                // Confirmer et lancer inscription
 
-                                                // annulation pour correction du numéro
-                                                onConfirm: () async {
-                                                  Navigator.pop(context);
-                                                },
+                                                Navigator.pop(context);
+                                                print(":::::::::::Confirm pop");
+                                                await signUp(formattedEmail,
+                                                    _passWordController.text);
 
-                                                //Confirmation du numéro de téléphone et inscription
-                                                onCancel: () async {
-                                                  Navigator.pop(context);
-                                                  await signUp(
-                                                      _telEmail, password);
-                                                },
-                                              );
-                                              /* FirebaseAuth.instance
-                                                  .signInWithPhoneNumber(
-                                                      _phoneNumbercontroller
-                                                          .text);*/
-                                              print(
-                                                  ':::::: Je suis venu ici ::::::::');
-                                            }
-                                          } catch (e) {
+                                                print(
+                                                    "=========STATE : ${state.runtimeType} ==========");
+                                                //print("=========STATE : ${state} ==========");
+                                                print(
+                                                    ":::::::::::Confirm completed");
+
+                                                if (state
+                                                        is AuthAuthenticated ||
+                                                    state
+                                                        is PhoneSignUpRequestSuccess) {
+                                                  print(":::::::::::ICI 1-3");
+                                                  try {
+                                                    final _email =
+                                                        _formatEmailFromPhone(
+                                                            phoneNumber);
+                                                    final _password =
+                                                        _passWordController
+                                                            .text;
+                                                    await AuthServices
+                                                        .createEmailAuth(
+                                                            _email, _password);
+                                                    // Réinitialiser les champs
+                                                    _passWordController.clear();
+                                                    _phoneNumbercontroller
+                                                        .clear();
+                                                    _confirmPassWordController
+                                                        .clear();
+                                                    _firstNameController
+                                                        .clear();
+                                                    _lastNameController.clear();
+
+                                                    _showAwesomeSnackBar(
+                                                      context,
+                                                      'Inscription Réussie',
+                                                      'Votre inscription est effectuée avec succès',
+                                                      ContentType.success,
+                                                      AppColors.primaryColor,
+                                                    );
+
+                                                    Navigator.pushNamed(
+                                                        context,
+                                                        AppRoutes
+                                                            .CLIENTHOMEPAGE);
+                                                  } catch (e) {
+                                                    print(
+                                                        ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+                                                  }
+                                                }
+                                                /*await AuthServices
+                                                    .createEmailAuth(
+                                                        formattedEmail,
+                                                        _passWordController
+                                                            .text);*/
+                                                //print(":::::::::::Connexion passed");
+                                              },
+                                            );
+                                          } else {
                                             AppUtils.showSnackBar(context,
-                                                "Veuillez vérifier que vous avez rempli tous les champs ; ou vérifier votre connexion internet",
-                                                backgroundColor:
-                                                    AppColors.redColor,
-                                                messageColor: Colors.white,
-                                                closeIconColor: Colors.white);
-                                            if (kDebugMode) {
-                                              print(
-                                                  "::::::::::::::EREURE : $e ::::::::::::::");
-                                            }
+                                                "Veuillez remplir tous les champs");
                                           }
                                         },
                                         child: isSignUp
@@ -565,9 +662,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                               tag: 'googleTag',
                                               child: ModelOptionDeConnexion(
                                                 onTap: () {
-                                                  /*setState(() {
-                                                    isSignUp = !isSignUp;
-                                                  });*/
                                                   AppUtils.showInfoDialog(
                                                     context: context,
                                                     message:
@@ -668,56 +762,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
     );
   }
 
-  /// signUp()
-  Future<void> signUp(String _telEmail, String _password) async {
-    bool passWordConform =
-        _passWordController.value == _confirmPassWordController.value;
-
-    print('''
-    :::: essai => ${_lastNameController.text}
-    :::: nom => ${_lastNameController.text}
-    :::: prenom => ${_firstNameController.text}
-    :::: numéro => ${_phoneNumbercontroller.text}
-    :::: mot de passe => ${_passWordController.text}
-    :::: confirmer mot de passe => ${_confirmPassWordController.text}
-    :::: passWordConform => $passWordConform
-     ''');
-
-    if (_lastNameController.text.isEmpty || _lastNameController.text == "") {
-      _showSnackBar(context, 'Veuillez saisir votre nom');
-    } else if (_firstNameController.text.isEmpty ||
-        _firstNameController.text == "") {
-      _showSnackBar(context, 'Veuillez saisir votre prénom');
-    } else if (_phoneNumbercontroller.text.isEmpty ||
-        _phoneNumbercontroller.text == "") {
-      _showSnackBar(context, 'Veuillez saisir votre numéro de téléphone');
-    } else if (_passWordController.text.isEmpty ||
-        _passWordController.text == "") {
-      _showSnackBar(context, 'Veuillez saisir votre mot de passe');
-    } else if (_confirmPassWordController.text.isEmpty ||
-        _confirmPassWordController.text == "") {
-      _showSnackBar(context, 'Veuillez confirmer votre mot de passe');
-    } else if (!passWordConform) {
-      _showSnackBar(context, 'Les mots de passe ne sont pas identiques');
-    } else {
-      try {
-        // fonction pour l'inscription
-        //AthentificationServices.signup();
-        await AuthServices.createEmailAuth(_telEmail, _password);
-
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const UserSimplePage()));
-        // snack bar
-        _showAwesomeSnackBar(
-            context,
-            'Inscription Réussie',
-            'Votre inscription est effectuée avec succès',
-            ContentType.success,
-            AppColors.primaryColor);
-      } catch (e) {
-        print("::::::::::::ERREUR : $e::::::::::::::");
-      }
-    }
+  String _formatEmailFromPhone(PhoneNumber phone) {
+    var dialCode = phone.dialCode?.replaceAll('+', '00') ?? '';
+    var isoCode = phone.isoCode?.toLowerCase() ?? '';
+    var prefix = dialCode + isoCode;
+    var number = phone.phoneNumber
+            ?.replaceAll(phone.dialCode ?? '', '')
+            .replaceAll(' ', '') ??
+        '';
+    return '$prefix$number@gmail.com';
   }
 }
 

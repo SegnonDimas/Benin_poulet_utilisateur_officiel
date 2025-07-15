@@ -227,13 +227,13 @@ class AppUtils {
   //==================================
   //DIALOGE D'AFFICHAGE D'INFORMATIONS
   //==================================
-  static void showInfoDialog({
-    required BuildContext context,
-    required String message,
-    Duration duration = const Duration(seconds: 5),
-    Widget? titleIcon,
-    InfoType type = InfoType.info,
-  }) {
+  static void showInfoDialog(
+      {required BuildContext context,
+      required String message,
+      Duration duration = const Duration(seconds: 5),
+      Widget? titleIcon,
+      InfoType type = InfoType.info,
+      void Function()? onTitleIconTap}) {
     Color iconColor;
 
     switch (type) {
@@ -318,7 +318,7 @@ class AppUtils {
         });
 
         return CupertinoAlertDialog(
-          title: titleIcon,
+          title: GestureDetector(onTap: onTitleIconTap, child: titleIcon),
           content: Padding(
             padding: const EdgeInsets.all(8.0),
             child: AppText(

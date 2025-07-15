@@ -8,6 +8,7 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -451,15 +452,30 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
         _passWordController.text == "") {
       _showSnackBar(context, 'Veuillez saisir votre mot de passe');
     } else {
-      // fonction pour l'inscription
-      await AuthServices.createEmailAuth(_email, _password);
-      // snack bar
-      _showAwesomeSnackBar(
-          context,
-          'Connexion Réussie',
-          'Utilisateur connecté avec succès',
-          ContentType.success,
-          Colors.green);
+      try {
+        // fonction pour l'inscription
+        await AuthServices.createEmailAuth(_email, _password);
+        // snack bar
+        _showAwesomeSnackBar(
+            context,
+            'Inscription Réussie',
+            'Utilisateur connecté avec succès',
+            ContentType.success,
+            Colors.green);
+        Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
+      } catch (e) {
+        if (e.toString().contains('already')) {
+          AppUtils.showSnackBar(
+              context, "Cette adresse est deja associee a un compte");
+        }
+        if (kDebugMode) {
+          print(
+              '::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
+        }
+
+        /*AppUtils.showSnackBar(
+          context, "Cette adresse est deja associee a un compte");*/
+      }
     }
   }
 }

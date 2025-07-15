@@ -70,9 +70,9 @@ class PhoneSignUpRequestSuccess extends AuthAuthenticated {
   });
 }
 
-class PhoneSignUpRequestFailure extends AuthFailure {
+/*class PhoneSignUpRequestFailure extends AuthFailure {
   PhoneSignUpRequestFailure({required super.errorMessage});
-}
+}*/
 
 class AuthSignedUp extends AuthState {
   final String userId;

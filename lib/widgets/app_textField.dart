@@ -28,6 +28,7 @@ class AppTextField extends StatefulWidget {
   final Function()? onEditingComplete;
   final Function(PointerDownEvent?)? onTapOutside;
   final BorderRadius? borderRadius;
+
   bool? isPassword;
   bool? readOnly;
   bool? showFloatingLabel;
@@ -39,6 +40,7 @@ class AppTextField extends StatefulWidget {
   Widget? preficIconWidget;
   TextInputAction? textInputAction;
   TextCapitalization? textCapitalization; // Default capitalization
+  final String? Function(String?)? validator;
   //bool? isLabelDefined;
 
   AppTextField({
@@ -78,6 +80,7 @@ class AppTextField extends StatefulWidget {
     this.preficIconWidget,
     this.textInputAction,
     this.textCapitalization,
+    this.validator,
 
     //this.isLabelDefined = true,
   });
@@ -118,6 +121,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 onChanged: widget.onChanged,
                 onSaved: widget.onSaved,
                 onTap: widget.onTap,
+                validator: widget.validator,
                 cursorColor: AppColors.primaryColor,
                 style: TextStyle(
                     color: widget.fontColor,
@@ -193,6 +197,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 onTapOutside: widget.onTapOutside,
                 onChanged: widget.onChanged,
                 onTap: widget.onTap,
+                validator: widget.validator,
                 onSaved: widget.onSaved,
                 readOnly: widget.readOnly!,
                 scrollPadding: EdgeInsets.zero,

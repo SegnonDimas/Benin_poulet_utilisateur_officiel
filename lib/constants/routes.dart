@@ -54,7 +54,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   //======================
   // ROUTES CLIENT
   //======================
-  'clientHomePage': (context) => const CHomePage(),
+  '/clientHomePage': (context) => const CHomePage(),
 };
 
 class AppRoutes {
@@ -89,7 +89,7 @@ class AppRoutes {
   //======================
   // ROUTES CLIENT
   //======================
-  static String CLIENTHOMEPAGE = 'clientHomePage';
+  static String CLIENTHOMEPAGE = '/clientHomePage';
 }
 
 @Deprecated("Utiliser AppRoutes.[ROUTENAME] à la place")

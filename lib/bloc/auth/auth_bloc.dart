@@ -1,4 +1,5 @@
 //import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -118,8 +119,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //============
     //INSCRIPTION
     //============
-    on<PhoneSignUpRequested>((event, emit) {
+    on<PhoneSignUpRequested>((event, emit) async {
       emit(AuthLoading());
+      var instance = FirebaseAuth.instance;
+      var userId = instance.currentUser?.uid;
+      print(":::::::::::::PhoneSignUpRequested : User ID : $userId ::::::::");
 
       try {
         final lastName = event.lastName;
@@ -130,6 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final phone = event.phoneNumber;
         final password = event.password;
         final confirmPassword = event.confirmPassword;
+        final longeurMotDePasse = 6;
 
         // Extraire la partie sans l'indicatif (ex: 0123456789)
         final nationalNumber =
@@ -140,38 +145,56 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             fullPhoneNumber.isEmpty ||
             password.isEmpty ||
             confirmPassword.isEmpty) {
-          return emit(PhoneSignUpRequestFailure(
-              errorMessage: "Veuillez renseigner tous les champs"));
-        } else if (password != confirmPassword) {
-          return emit(PhoneSignUpRequestFailure(
+          emit(
+              AuthFailure(errorMessage: "Veuillez renseigner tous les champs"));
+        }
+        // Vérification : mots de passe identiques
+        else if (password != confirmPassword) {
+          emit(AuthFailure(
               errorMessage: "Les mots de passe ne correspondent pas"));
         }
-        // Vérification : champ vide
+        // Vérification : champ numéro de teléphone vide
         else if (fullPhoneNumber.isEmpty) {
-          return emit(PhoneSignUpRequestFailure(
+          emit(AuthFailure(
             errorMessage: 'Veuillez renseigner votre numéro de téléphone',
           ));
         }
-
         // Vérification spécifique au Bénin
-        if (countryCode == '+229') {
+        else if (countryCode == '+229') {
+          //vérifier que le numéro de teléphone commence par 01 et contient 10 chiffres
           if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
-            return emit(PhoneLoginRequestFailure(
+            emit(AuthFailure(
               errorMessage:
                   'Le numéro de téléphone doit comporter 10 chiffres pour le Bénin et commencer par 01',
             ));
           }
         }
-
-        if (password.isEmpty) {
-          return emit(PhoneLoginRequestFailure(
+        // Vérification : champ mot de passe vide
+        else if (password.isEmpty) {
+          emit(AuthFailure(
               errorMessage: 'Veuillez renseigner votre mot de passe'));
-        } else if (password.length < 4) {
-          return emit(PhoneLoginRequestFailure(
-              errorMessage:
-                  'Le mot de passe doit être d\'au moins 4 caractères'));
         }
-      } catch (e) {}
+        // Vérification : longueur du mot de passe
+        else if (password.length < longeurMotDePasse) {
+          emit(AuthFailure(
+              errorMessage:
+                  'Le mot de passe doit être d\'au moins $longeurMotDePasse caractères'));
+        }
+        //tout est ok
+        else {
+          //var instance = FirebaseAuth.instance;
+          //var userId = instance.currentUser?.uid;
+          /*
+          emit(PhoneSignUpRequestSuccess(userId: userId!) as AuthState);
+          */
+          print("::::::::::::::::JE SUIS VENU ICI::::::::::::");
+          //emit(AuthAuthenticated(userId: 'userId!'));
+        }
+        emit(AuthAuthenticated(userId: userId!));
+      } catch (e) {
+        print(":::::::::::ERREUR : $e :::::::::::::");
+        emit(AuthFailure(errorMessage: e.toString()));
+      }
     });
   }
 

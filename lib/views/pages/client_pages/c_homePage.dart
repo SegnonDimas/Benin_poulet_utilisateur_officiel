@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -123,13 +124,13 @@ class _CHomePageState extends State<CHomePage>
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state as AuthAuthenticated;
+    final authState = context.watch<AuthBloc>().state /*as AuthAuthenticated*/;
+    final user = FirebaseAuth.instance.currentUser;
     return SafeArea(
       top: false,
       child: Scaffold(
         appBar: AppBar(
-          title:
-              AppText(text: "@" + authState.userId.replaceAll(' ', '') + "bp"),
+          title: AppText(text: "@${user?.uid.replaceAll(' ', '')} bp"),
           centerTitle: true,
           actions: const [
             Padding(

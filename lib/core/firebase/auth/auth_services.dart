@@ -1,7 +1,10 @@
+import 'package:benin_poulet/constants/authProviders.dart';
+import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../models/user.dart';
 import '../firestore/user_repository.dart';
@@ -9,6 +12,7 @@ import '../firestore/user_repository.dart';
 class AuthServices {
   static final auth = FirebaseAuth.instance;
   static final firestoreService = FirestoreService();
+  static final userId = auth.currentUser?.uid;
   //static final GoogleSignInAccount? googleUser = GoogleSignIn().signIn();;
 
   //========================================
@@ -36,12 +40,25 @@ class AuthServices {
   //========================================
   // créer une inscription/connexion email
   //========================================
-  static Future<void> createEmailAuth(String _email, String _password) async {
+  static Future<void> createEmailAuth(String _email, String _password,
+      {String role = UserRoles.BUYER,
+      String authProvider = AuthProviders.EMAIL}) async {
     try {
       await auth.createUserWithEmailAndPassword(
         email: _email,
         password: _password,
       );
+
+      // creation de l'utilisateur anonyme dans la collection 'user' sur Firebase
+      AppUser user = AppUser(userId: userId!);
+      user = user.copyWith(
+        authProvider: authProvider,
+        authIdentifier: _email,
+        createdAt: DateTime.now(),
+        lastLogin: DateTime.now(),
+      );
+
+      firestoreService.createOrUpdateUser(user);
     } catch (e) {
       if (kDebugMode) {
         print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
@@ -52,6 +69,37 @@ class AuthServices {
   //========================================
   // créer une inscription/connexion phone
   //========================================
+  static Future<void> createPhoneAuth(
+    PhoneNumber _phoneNumber,
+    String _password, {
+    String role = UserRoles.BUYER,
+    String authProvider = AuthProviders.PHONE,
+    String? fullName,
+  }) async {
+    try {
+      await auth.createUserWithEmailAndPassword(
+        email: _formatEmailFromPhone(_phoneNumber),
+        password: _password,
+      );
+
+      // creation de l'utilisateur dans la collection 'users' sur Firebase
+      AppUser user = AppUser(userId: userId!);
+      user = user.copyWith(
+          authProvider: authProvider,
+          authIdentifier: _phoneNumber.dialCode! + _phoneNumber.phoneNumber!,
+          fullName: fullName,
+          createdAt: DateTime.now(),
+          lastLogin: DateTime.now(),
+          isAnonymous: false,
+          role: role);
+
+      firestoreService.createOrUpdateUser(user);
+    } catch (e) {
+      if (kDebugMode) {
+        print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
+      }
+    }
+  }
 
 //============================================
 // créer une inscription/connexion avec Google
@@ -87,4 +135,15 @@ class AuthServices {
       return null;
     }
   }*/
+}
+
+String _formatEmailFromPhone(PhoneNumber phone) {
+  var dialCode = phone.dialCode?.replaceAll('+', '00') ?? '';
+  var isoCode = phone.isoCode?.toLowerCase() ?? '';
+  var prefix = dialCode + isoCode;
+  var number = phone.phoneNumber
+          ?.replaceAll(phone.dialCode ?? '', '')
+          .replaceAll(' ', '') ??
+      '';
+  return '$prefix$number@gmail.com';
 }
