@@ -12,9 +12,9 @@ import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
+import '../../../core/firebase/auth/auth_services.dart';
 import '../../../services/authentification_services.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/app_utils.dart';
@@ -39,7 +39,17 @@ class _LoginPageState extends State<LoginPage> {
   bool seSouvenir = true;
   bool _shouldInterceptBack = true;
 
-  final GoogleSignIn signIn = GoogleSignIn.instance;
+  //final GoogleSignIn signIn = GoogleSignIn.instance;
+  void _handleGoogleSignIn(BuildContext context) async {
+    final user = await AuthServices.signInWithGoogle();
+    if (user != null) {
+      print('::::::::::: Connexion réussie: ${user.displayName}');
+      // Naviguez vers votre écran d'accueil
+    } else {
+      print('Échec de la connexion');
+      // Affichez un message d'erreur à l'utilisateur
+    }
+  }
 
   @override
   void initState() {
@@ -382,24 +392,10 @@ class _LoginPageState extends State<LoginPage> {
                                               onTap: () async {
                                                 /*context.read<AuthBloc>().add(
                                                     GoogleLoginRequested());*/
-                                                signIn;
-                                                try {
-                                                  if (GoogleSignIn.instance
-                                                      .supportsAuthenticate()) {
-                                                    await GoogleSignIn.instance
-                                                        .authenticate();
-                                                  }
-                                                } catch (e) {
-                                                  // ···
-                                                  print(
-                                                      ":::::::::::::::::$e:::::::::::::");
-                                                }
+                                                _handleGoogleSignIn(context);
                                               },
                                               child: Image.asset(
-                                                (GoogleSignIn.instance
-                                                        .supportsAuthenticate())
-                                                    ? 'assets/logos/google.png'
-                                                    : 'assets/logos/google2.png',
+                                                'assets/logos/google.png' /*: 'assets/logos/google2.png'*/,
                                                 fit: BoxFit.contain,
                                               ),
                                             ),

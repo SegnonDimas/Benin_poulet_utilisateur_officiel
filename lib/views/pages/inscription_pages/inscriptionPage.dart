@@ -69,6 +69,17 @@ class _InscriptionPageState extends State<InscriptionPage> {
     print("=======Phone signUp requeste end=========");
   }
 
+  void _handleGoogleSignIn(BuildContext context) async {
+    final user = await AuthServices.signInWithGoogle();
+    if (user != null) {
+      print('::::::::::: Connexion réussie: ${user.displayName}');
+      // Naviguez vers votre écran d'accueil
+    } else {
+      print('Échec de la connexion');
+      // Affichez un message d'erreur à l'utilisateur
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget divider = Divider(
@@ -649,6 +660,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   setState(() {
                                                     isSignUp = !isSignUp;
                                                   });
+                                                  _handleGoogleSignIn(context);
                                                 },
                                                 child: Image.asset(
                                                   'assets/logos/google.png',
