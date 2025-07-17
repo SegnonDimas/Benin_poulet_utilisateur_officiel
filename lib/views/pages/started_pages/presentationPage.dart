@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/bloc/user_profile_bloc.dart';
+import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
@@ -100,7 +100,7 @@ class _PresentationPageState extends State<PresentationPage> {
               color: AppColors.primaryColor,
             ),
           ),
-          content: BlocConsumer<UserProfileBloc, UserProfileState>(
+          content: BlocConsumer<UserRoleBloc, UserRoleState>(
             listener: (context, state) {
               // TODO: implement listener
             },
@@ -120,11 +120,13 @@ class _PresentationPageState extends State<PresentationPage> {
                   GestureDetector(
                     onTap: () {
                       //TODO : à implémenter
-                      context.read<UserProfileBloc>().add(
+                      context.read<UserRoleBloc>().add(
                             UpdateUserRole(UserRoles.SELLER),
                           );
-                      Navigator.of(context).pushReplacementNamed(
-                          AppRoutes.INSCRIPTIONVENDEURPAGE);
+                      Navigator.of(context)
+                          .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
+                      /*Navigator.of(context).pushReplacementNamed(
+                          AppRoutes.INSCRIPTIONVENDEURPAGE);*/
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -163,6 +165,9 @@ class _PresentationPageState extends State<PresentationPage> {
                   // ACHETER
                   GestureDetector(
                     onTap: () {
+                      context.read<UserRoleBloc>().add(
+                            UpdateUserRole(UserRoles.BUYER),
+                          );
                       Navigator.of(context)
                           .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
                     },

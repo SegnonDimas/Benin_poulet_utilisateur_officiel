@@ -13,18 +13,18 @@ class AuthFailure extends AuthState {
 }
 
 class AuthAuthenticated extends AuthState {
-  final String userId;
+  final String? successMessage;
 
-  AuthAuthenticated({required this.userId});
+  AuthAuthenticated({this.successMessage});
 }
 
 /// connexion avec numéro de téléphone
 class PhoneLoginRequestSuccess extends AuthAuthenticated {
-  final String? successMessage;
+  //final String? successMessage;
 
   PhoneLoginRequestSuccess({
-    required super.userId,
-    this.successMessage,
+    //required super.userId,
+    super.successMessage,
   });
 }
 
@@ -34,9 +34,9 @@ class PhoneLoginRequestFailure extends AuthFailure {
 
 /// connexion avec email
 class EmailLoginRequestSuccess extends AuthAuthenticated {
-  final String? successMessage;
+  //final String? successMessage;
 
-  EmailLoginRequestSuccess({this.successMessage, required super.userId});
+  EmailLoginRequestSuccess({super.successMessage});
 }
 
 class EmailLoginRequestFailure extends AuthFailure {
@@ -45,7 +45,7 @@ class EmailLoginRequestFailure extends AuthFailure {
 
 /// connexion avec Google
 class GoogleLoginRequestSuccess extends AuthAuthenticated {
-  GoogleLoginRequestSuccess({required super.userId});
+  GoogleLoginRequestSuccess({super.successMessage});
 }
 
 class GoogleLoginRequestFailure extends AuthFailure {
@@ -54,7 +54,7 @@ class GoogleLoginRequestFailure extends AuthFailure {
 
 /// connexion avec iCloud
 class ICloudLoginRequestSuccess extends AuthAuthenticated {
-  ICloudLoginRequestSuccess({required super.userId});
+  ICloudLoginRequestSuccess({super.successMessage});
 }
 
 class ICloudLoginRequestFailure extends AuthFailure {
@@ -62,11 +62,11 @@ class ICloudLoginRequestFailure extends AuthFailure {
 }
 
 class PhoneSignUpRequestSuccess extends AuthAuthenticated {
-  final String? successMessage;
+  //final String? successMessage;
 
   PhoneSignUpRequestSuccess({
-    required super.userId,
-    this.successMessage,
+    //required super.userId,
+    super.successMessage,
   });
 }
 

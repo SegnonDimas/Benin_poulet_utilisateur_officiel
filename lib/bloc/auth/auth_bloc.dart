@@ -1,5 +1,7 @@
 //import 'package:bloc/bloc.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -13,6 +15,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //==========
     //CONNEXION
     //==========
+
+    // connexion avec téléphone
     on<PhoneLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -21,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final fullPhoneNumber = event.phoneNumber.phoneNumber?.trim() ?? '';
         final phone = event.phoneNumber;
         final password = event.password;
+        final longeurMotDePasse = 6;
 
         // Extraire la partie sans l'indicatif (ex: 0123456789)
         final nationalNumber =
@@ -43,17 +48,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           }
         }
 
+        // Vérification : mot de passe
         if (password.isEmpty) {
           return emit(PhoneLoginRequestFailure(
               errorMessage: 'Veuillez renseigner votre mot de passe'));
-        } else if (password.length < 4) {
+        } else if (password.length < longeurMotDePasse) {
           return emit(PhoneLoginRequestFailure(
               errorMessage:
-                  'Le mot de passe doit être d\'au moins 4 caractères'));
+                  'Le mot de passe doit être d\'au moins $longeurMotDePasse caractères'));
         } else {
           await Future.delayed(const Duration(seconds: 2), () {
+            emit(AuthAuthenticated());
+
             return emit(PhoneLoginRequestSuccess(
-                userId: '${phone.phoneNumber}$password',
+                //userId: '${phone.phoneNumber}$password',
                 successMessage: 'Utilisateur connecté avec succès'));
           });
         }
@@ -66,6 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    // connexion avec addresse email
     on<EmailLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -83,33 +92,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               errorMessage:
                   'Le mot de passe doit être d\'au moins 4 caractères'));
         } else {
-          await Future.delayed(const Duration(seconds: 2), () {
-            return emit(EmailLoginRequestSuccess(
-                userId: email,
-                successMessage: 'Utilisateur connecté avec succès'));
-          });
+          emit(AuthAuthenticated(
+              successMessage: 'Utilisateur connecté avec succès'));
+          /*emit(EmailLoginRequestSuccess(
+              //userId: email,
+              successMessage: 'Utilisateur connecté avec succès'));*/
         }
       } catch (e) {
         return emit(EmailLoginRequestFailure(errorMessage: e.toString()));
       }
     });
 
+    // connexion avec google
     on<GoogleLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        await Future.delayed(const Duration(seconds: 2), () {
-          return emit(GoogleLoginRequestSuccess(userId: 'googleUser'));
-        });
+        final userId = AuthServices.userId;
+        return emit(GoogleLoginRequestSuccess());
       } catch (e) {
         return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));
       }
     });
 
+    // connexion avec icloud
     on<ICloudLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
         await Future.delayed(const Duration(seconds: 2), () {
-          return emit(ICloudLoginRequestSuccess(userId: 'icloudUser'));
+          return emit(ICloudLoginRequestSuccess());
         });
       } catch (e) {
         return emit(ICloudLoginRequestFailure(errorMessage: e.toString()));
@@ -119,6 +129,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //============
     //INSCRIPTION
     //============
+
+    // inscription avec téléphone
     on<PhoneSignUpRequested>((event, emit) async {
       emit(AuthLoading());
       var instance = FirebaseAuth.instance;
@@ -190,73 +202,79 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           print("::::::::::::::::JE SUIS VENU ICI::::::::::::");
           //emit(AuthAuthenticated(userId: 'userId!'));
         }
-        emit(AuthAuthenticated(userId: userId!));
+        emit(AuthAuthenticated());
       } catch (e) {
         print(":::::::::::ERREUR : $e :::::::::::::");
         emit(AuthFailure(errorMessage: e.toString()));
       }
     });
+
+    // inscription avec google
+    on<GoogleSignUpRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        emit(AuthAuthenticated());
+        //return emit(GoogleLoginRequestSuccess(userId: userId!));
+      } catch (e) {
+        emit(AuthFailure(errorMessage: e.toString()));
+        //return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));
+      }
+    });
+
+    // inscription avec addresse email
+    on<EmailSignUpRequested>((event, emit) async {
+      emit(AuthLoading());
+      final email = event.email;
+      final password = event.password;
+      final confirmPassword = event.confirmPassword;
+      final longeurMotDePasse = 6;
+
+      // Verification : email
+      if (email.isEmpty || email == "") {
+        emit(AuthFailure(errorMessage: "Veuillez saisir votre adresse email"));
+      }
+
+      // Verification : mot de passe
+      else if (password.isEmpty || password == "") {
+        emit(AuthFailure(errorMessage: 'Veuillez saisir votre mot de passe'));
+      }
+
+      // Verification : confirmation du mot de passe
+      else if (confirmPassword.isEmpty || confirmPassword == "") {
+        emit(
+            AuthFailure(errorMessage: 'Veuillez confirmer votre mot de passe'));
+      }
+
+      // Verification : mots de passe identiques
+      else if (password != confirmPassword) {
+        emit(AuthFailure(
+            errorMessage: 'Les mots de passe ne correspondent pas'));
+      }
+
+      // Verification : longueur du mot de passe
+      else if (password.length < longeurMotDePasse) {
+        emit(AuthFailure(
+            errorMessage:
+                'Le mot de passe doit contenir au moins $longeurMotDePasse caractères'));
+      } else {
+        try {
+          //final userId = AuthServices.userId;
+          emit(AuthAuthenticated());
+        } catch (e) {
+          if (e.toString().contains('already')) {
+            emit(AuthFailure(
+                errorMessage: 'Cette adresse est deja associee a un compte'));
+          }
+          if (kDebugMode) {
+            print(
+                '::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
+          }
+
+          /*AppUtils.showSnackBar(
+          context, "Cette adresse est deja associee a un compte");*/
+        }
+      }
+    });
+    // inscription avec icloud
   }
-
-  Future<void> _onGoogleLoginRequested(
-    GoogleLoginRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      //final userId = await googleAuthRepository?.signInWithGoogle();
-      //emit(AuthAuthenticated(userId));
-    } catch (e) {
-      emit(AuthFailure(errorMessage: e.toString()));
-    }
-  }
-
-  Future<void> _onEmailLoginRequested(
-    EmailLoginRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      //final userId = await emailAuthRepository?.signInWithEmail(
-      //  event.email,
-      //  event.password,
-      //);
-      // emit(AuthAuthenticated(userId));
-    } catch (error) {
-      emit(AuthFailure(errorMessage: error.toString()));
-    }
-  }
-
-  Future<void> _onPhoneSignUpRequested(
-    PhoneSignUpRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      /*final userId = await phoneAuthRepository?.signUpWithPhone(
-        event.firstName,
-        event.lastName,
-        event.phoneNumber,
-        event.password,
-      );
-      emit(AuthSignedUp(userId));*/
-    } catch (error) {
-      emit(AuthFailure(errorMessage: error.toString()));
-    }
-  }
-}
-
-class PhoneAuthRepository {
-  signUpWithPhone(
-      String firstName, String lastName, String phoneNumber, String password) {}
-}
-
-class AppleAuthRepository {}
-
-class EmailAuthRepository {
-  signInWithEmail(String email, String password) {}
-}
-
-class GoogleAuthRepository {
-  signInWithGoogle() {}
 }

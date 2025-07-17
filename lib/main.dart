@@ -25,6 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Firebase.initializeApp();
   // flutter_localization init
   await FlutterLocalization.instance.ensureInitialized();
   // cached_network_image init

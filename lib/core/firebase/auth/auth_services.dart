@@ -1,7 +1,6 @@
 import 'package:benin_poulet/constants/authProviders.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +12,7 @@ import '../../../models/user.dart';
 import '../firestore/user_repository.dart';
 
 class AuthServices {
-  static final auth = FirebaseAuth.instance;
+  static final auth = FirebaseAuth.instance; //actuelle instance
   static final firestoreService = FirestoreService();
   static final userId = auth.currentUser?.uid;
   //static final GoogleSignInAccount? googleUser = GoogleSignIn().signIn();;
@@ -22,22 +21,32 @@ class AuthServices {
   // créer une inscription/connexion anonyme
   //========================================
   static Future<void> createAnonymousAuth() async {
-    // definition de l'utilisateur anonyme
-    final anonymousUser = await auth.signInAnonymously();
+    try {
+      // creation de l'utilisateur anonyme si aucune session trouvée sur l'appareil
+      if (auth.currentUser == null) {
+        // definition de l'utilisateur anonyme
+        final anonymousUser = await auth.signInAnonymously();
 
-    // creation de l'utilisateur anonyme si aucune session trouvée sur l'appareil
-    if (auth.currentUser == null) {
-      // creation de l'utilisateur anonyme
-      anonymousUser;
+        // creation de l'utilisateur anonyme
+        anonymousUser;
 
-      // creation de l'utilisateur anonyme dans la collection 'user' sur Firebase
-      final user = AppUser(
-        userId: anonymousUser.user!.uid,
-        createdAt: DateTime.now(),
-        lastLogin: DateTime.now(),
-      );
+        // creation de l'utilisateur anonyme dans la collection 'users' sur Firebase
+        AppUser user = AppUser(
+          userId: anonymousUser.user!.uid,
+        );
 
-      firestoreService.createOrUpdateUser(user);
+        user = user.copyWith(
+          createdAt: DateTime.now(),
+          lastLogin: DateTime.now(),
+        );
+
+        await firestoreService.createOrUpdateUser(user);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+            '::::::Erreur lors de la creation de l\'utilisateur anonyme : $e :::::::');
+      }
     }
   }
 
@@ -51,13 +60,18 @@ class AuthServices {
     String authProvider = AuthProviders.EMAIL,
   }) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      final emailUser = await auth.createUserWithEmailAndPassword(
         email: _email,
         password: _password,
       );
 
-      // creation de l'utilisateur anonyme dans la collection 'user' sur Firebase
-      AppUser user = AppUser(userId: userId!);
+      emailUser;
+
+      // creation de l'utilisateur avec email dans la collection 'users' sur Firebase
+      AppUser user = AppUser(
+        userId: emailUser.user!.uid,
+        isAnonymous: false,
+      );
       user = user.copyWith(
         authProvider: authProvider,
         authIdentifier: _email,
@@ -84,13 +98,15 @@ class AuthServices {
     String? fullName,
   }) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      final phoneUser = await auth.createUserWithEmailAndPassword(
         email: _formatEmailFromPhone(_phoneNumber),
         password: _password,
       );
 
+      phoneUser;
+
       // creation de l'utilisateur dans la collection 'users' sur Firebase
-      AppUser user = AppUser(userId: userId!);
+      AppUser user = AppUser(userId: phoneUser.user!.uid);
       user = user.copyWith(
         authProvider: authProvider,
         authIdentifier: _phoneNumber.phoneNumber!,
@@ -118,13 +134,13 @@ class AuthServices {
   //============================================
   // créer une inscription/connexion avec Google
   //============================================
-  //static Future<void> createGoogleAuth() async {}
-
-  final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
-  //final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-
-  static Future<User?> signInWithGoogle() async {
+  static Future<User?> signInWithGoogle({
+    String authProvider = AuthProviders.GOOGLE,
+    String role = UserRoles.BUYER,
+  }) async {
     try {
+      // Déconnecte le compte mis en cache pour forcer la sélection à la prochaine connexion
+      await GoogleSignIn().signOut();
       // Déclenche le flux de connexion
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -147,6 +163,23 @@ class AuthServices {
       final UserCredential userCredential =
           await auth.signInWithCredential(credential);
 
+      // creation de l'utilisateur avec google dans la collection 'user' sur Firebase
+      AppUser user = AppUser(
+        userId: googleUser.id,
+        isAnonymous: false,
+      );
+      user = user.copyWith(
+        authProvider: authProvider,
+        authIdentifier: googleUser.email,
+        photoUrl: googleUser.photoUrl,
+        fullName: googleUser.displayName,
+        role: role,
+        createdAt: DateTime.now(),
+        lastLogin: DateTime.now(),
+      );
+
+      firestoreService.createOrUpdateUser(user);
+
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
       print('Erreur FirebaseAuth: ${e.code} - ${e.message}');
@@ -165,33 +198,6 @@ class AuthServices {
       print('Erreur lors de la déconnexion: $e');
     }
   }
-
-  /*Future<firebase_auth.User?> signInWithGoogle() async {
-    try {
-      // 1. Initialiser GoogleSignIn
-      await googleSignIn.initialize(
-          scopes: ['email', 'profile'],
-          );
-
-      // 2. Démarrer le processus de connexion
-      final account = await googleSignIn.signIn();
-      if (account == null) return null; // l’utilisateur a annulé
-
-      // 3. Récupérer les tokens
-      final auth = await account.authentication;
-      final credential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
-      );
-
-      // 4. Se connecter à Firebase avec ces credentials
-      final userCredential = await _auth.signInWithCredential(credential);
-      return userCredential.user;
-    } catch (e) {
-      print('Erreur Google Sign-In : $e');
-      return null;
-    }
-  }*/
 }
 
 String _formatEmailFromPhone(PhoneNumber phone) {

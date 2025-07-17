@@ -1,4 +1,7 @@
+import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -114,225 +117,252 @@ class _CHomePageState extends State<CHomePage>
     ),
   ];
 
+  bool _shouldInterceptBack = true;
+
   // initState
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _tabcontroller = TabController(length: 2, vsync: this, initialIndex: 0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _shouldInterceptBack = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state /*as AuthAuthenticated*/;
     final user = FirebaseAuth.instance.currentUser;
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: AppText(text: "@${user?.uid.replaceAll(' ', '')} bp"),
-          centerTitle: true,
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.notifications),
-            )
-          ],
-        ),
+    var doc = FirebaseFirestore.instance
+        .collection('users')
+        .doc('${user?.uid}')
+        .get();
+    return _shouldInterceptBack
+        ? WillPopScope(
+            onWillPop: () async {
+              final shouldPop = await AppUtils.showExitConfirmationDialog(
+                  context,
+                  message: 'Voulez-vous vraiment quitter l\'application ?');
+              return shouldPop; // true = autorise le pop, false = bloque
+            },
+            child: SafeArea(
+              top: false,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: AppText(text: "${doc}"),
+                  centerTitle: true,
+                  actions: const [
+                    Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.notifications),
+                    )
+                  ],
+                ),
 
-        body: PageView(
-          controller: _pageViewController,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (index) {
-            setState(() {
-              currentPage = index;
-            });
-          },
-          children: [
-            /// Première page : Page d'Accueil
-            SingleChildScrollView(
-              child: SizedBox(
-                height: appHeightSize(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                body: PageView(
+                  controller: _pageViewController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentPage = index;
+                    });
+                  },
                   children: [
-                    //caroussel
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        //products images
-                        CarouselSlider(
-                            items: _carouselList,
-                            carouselController: controller,
-                            options: CarouselOptions(
-                                autoPlay: true,
-                                autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
-                                aspectRatio: 11 / 5,
-                                enlargeFactor: 0.5,
-                                viewportFraction: 0.92,
-                                onPageChanged:
-                                    (index, CarouselPageChangedReason c) {
-                                  //return index;
-                                  setState(() {
-                                    carouselCurrentIndex = index;
-                                  });
-                                })),
+                    /// Première page : Page d'Accueil
+                    SingleChildScrollView(
+                      child: SizedBox(
+                        height: appHeightSize(context),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //caroussel
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                //products images
+                                CarouselSlider(
+                                    items: _carouselList,
+                                    carouselController: controller,
+                                    options: CarouselOptions(
+                                        autoPlay: true,
+                                        autoPlayCurve:
+                                            Curves.fastEaseInToSlowEaseOut,
+                                        aspectRatio: 11 / 5,
+                                        enlargeFactor: 0.5,
+                                        viewportFraction: 0.92,
+                                        onPageChanged: (index,
+                                            CarouselPageChangedReason c) {
+                                          //return index;
+                                          setState(() {
+                                            carouselCurrentIndex = index;
+                                          });
+                                        })),
 
-                        //dots indicator
-                        Positioned(
-                          bottom: 10,
-                          left: appWidthSize(context) * 0.35,
-                          right: appWidthSize(context) * 0.35,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 20,
-                            //width: appWidthSize(context) * 0.25,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .background
-                                    .withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: PageViewDotIndicator(
-                              currentItem: carouselCurrentIndex,
-                              count: _carouselList.length,
-                              size: const Size(8, 8),
-                              unselectedColor: Colors.grey.shade600,
-                              selectedColor: Colors.grey.shade100,
-                              onItemClicked: (index) {
-                                setState(() {
-                                  carouselCurrentIndex = index;
-                                  controller
-                                      .animateToPage(carouselCurrentIndex);
-                                });
-                              },
+                                //dots indicator
+                                Positioned(
+                                  bottom: 10,
+                                  left: appWidthSize(context) * 0.35,
+                                  right: appWidthSize(context) * 0.35,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 20,
+                                    //width: appWidthSize(context) * 0.25,
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background
+                                            .withOpacity(0.7),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: PageViewDotIndicator(
+                                      currentItem: carouselCurrentIndex,
+                                      count: _carouselList.length,
+                                      size: const Size(8, 8),
+                                      unselectedColor: Colors.grey.shade600,
+                                      selectedColor: Colors.grey.shade100,
+                                      onItemClicked: (index) {
+                                        setState(() {
+                                          carouselCurrentIndex = index;
+                                          controller.animateToPage(
+                                              carouselCurrentIndex);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                        )
+
+                            // barre de recherche
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: AppTextField(
+                                height: context.height * 0.065,
+                                color: Theme.of(context).colorScheme.background,
+                                prefixIcon: Icons.search,
+                                suffixIcon: Icon(
+                                  Icons.send,
+                                  color: Colors.black26,
+                                ),
+                                showFloatingLabel: false,
+                                label: "Rechercher",
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            //text : Recommandation
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 8.0),
+                              child: SizedBox(
+                                height: 30,
+                                child: AppText(text: 'Recommandations'),
+                              ),
+                            ),
+
+                            // list recommandation
+
+                            SizedBox(
+                              height: context.height * 0.25,
+                              child: ListView(
+                                padding: const EdgeInsets.all(5),
+                                scrollDirection: Axis.horizontal,
+                                physics: BouncingScrollPhysics(),
+                                children: _listRecommandations,
+                              ),
+                            ),
+
+                            /*SizedBox(
+                        height: 160,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _listRecommandations.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 4.0, left: 4.0),
+                                child: _listRecommandations[index],
+                              );
+                            }),
+                      )*/
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    /// Deuxième Page : Page de Panier
+                    Column(
+                      children: [
+                        /// TabBar
+                        SizedBox(
+                          height: appHeightSize(context) * 0.06,
+                          width: appWidthSize(context) * 0.9,
+                          child: TabBar(
+                              controller: _tabcontroller,
+                              indicatorColor: primaryColor,
+                              labelColor: primaryColor,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              dividerColor: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.4),
+                              unselectedLabelColor: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.4),
+                              tabs: [
+                                Tab(child: AppText(text: 'Produits')),
+                                Tab(
+                                  child: AppText(text: 'Boutiques'),
+                                ),
+                              ]),
+                        ),
+
+                        /// TabBarView
+                        Expanded(
+                          child:
+                              TabBarView(controller: _tabcontroller, children: [
+                            Center(
+                              child: AppText(
+                                  text: 'Votre liste de produits est vide'),
+                            ),
+                            Center(
+                              child: AppText(
+                                  text: 'Votre liste de boutiques est vide'),
+                            )
+                          ]),
+                        ),
                       ],
                     ),
-
-                    // barre de recherche
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AppTextField(
-                        height: context.height * 0.065,
-                        color: Theme.of(context).colorScheme.background,
-                        prefixIcon: Icons.search,
-                        suffixIcon: Icon(
-                          Icons.send,
-                          color: Colors.black26,
-                        ),
-                        showFloatingLabel: false,
-                        label: "Rechercher",
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    //text : Recommandation
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                      child: SizedBox(
-                        height: 30,
-                        child: AppText(text: 'Recommandations'),
-                      ),
-                    ),
-
-                    // list recommandation
-
-                    SizedBox(
-                      height: context.height * 0.25,
-                      child: ListView(
-                        padding: const EdgeInsets.all(5),
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        children: _listRecommandations,
-                      ),
-                    ),
-
-                    /*SizedBox(
-                      height: 160,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _listRecommandations.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 4.0, left: 4.0),
-                              child: _listRecommandations[index],
-                            );
-                          }),
-                    )*/
                   ],
+                ),
+
+                /// bottomNavigationBar
+                bottomNavigationBar: CurvedNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  height: appHeightSize(context) * 0.07,
+                  color: Theme.of(context).colorScheme.background,
+                  //buttonBackgroundColor: primaryColor,
+                  //selectedColor: Colors.white,
+                  //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
+                  items: _bottomNavigationBarItems,
+                  index: currentPage,
+                  onTap: (index) {
+                    //Handle button tap
+                    setState(() {
+                      currentPage = index;
+                      //_pageViewController.jumpToPage(currentPage);
+                      _pageViewController.animateToPage(currentPage,
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.linear);
+                    });
+                  },
                 ),
               ),
             ),
-
-            /// Deuxième Page : Page de Panier
-            Column(
-              children: [
-                /// TabBar
-                SizedBox(
-                  height: appHeightSize(context) * 0.06,
-                  width: appWidthSize(context) * 0.9,
-                  child: TabBar(
-                      controller: _tabcontroller,
-                      indicatorColor: primaryColor,
-                      labelColor: primaryColor,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      dividerColor: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.4),
-                      unselectedLabelColor: Theme.of(context)
-                          .colorScheme
-                          .inversePrimary
-                          .withOpacity(0.4),
-                      tabs: [
-                        Tab(child: AppText(text: 'Produits')),
-                        Tab(
-                          child: AppText(text: 'Boutiques'),
-                        ),
-                      ]),
-                ),
-
-                /// TabBarView
-                Expanded(
-                  child: TabBarView(controller: _tabcontroller, children: [
-                    Center(
-                      child: AppText(text: 'Votre liste de produits est vide'),
-                    ),
-                    Center(
-                      child: AppText(text: 'Votre liste de boutiques est vide'),
-                    )
-                  ]),
-                ),
-              ],
-            ),
-          ],
-        ),
-
-        /// bottomNavigationBar
-        bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Colors.transparent,
-          height: appHeightSize(context) * 0.07,
-          color: Theme.of(context).colorScheme.background,
-          //buttonBackgroundColor: primaryColor,
-          //selectedColor: Colors.white,
-          //unselectedColor: Theme.of(context).colorScheme.inversePrimary,
-          items: _bottomNavigationBarItems,
-          index: currentPage,
-          onTap: (index) {
-            //Handle button tap
-            setState(() {
-              currentPage = index;
-              //_pageViewController.jumpToPage(currentPage);
-              _pageViewController.animateToPage(currentPage,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.linear);
-            });
-          },
-        ),
-      ),
-    );
+          )
+        : LoginPage();
   }
 }
 
