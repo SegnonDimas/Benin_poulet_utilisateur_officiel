@@ -1,3 +1,4 @@
+import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajoutNouveauProduitPage.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -692,7 +693,7 @@ class ProductServices {
       }
 
       // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
-      //await FirestoreProductService().addProduct(product);
+      await FirestoreProductService().addProduct(product);
 
       showMessage(
         context: context,

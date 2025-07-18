@@ -118,7 +118,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     /*await AuthServices.createEmailAuth(_email, _password,
                     authProvider: AuthProviders.PHONE);*/
                     await AuthServices.createPhoneAuth(phoneNumber, _password,
-                        fullName: fullName);
+                        fullName: fullName, password: _passWordController.text);
                     _showAwesomeSnackBar(
                       context,
                       'Inscription Réussie',

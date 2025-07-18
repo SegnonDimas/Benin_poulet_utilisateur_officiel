@@ -91,12 +91,11 @@ class AuthServices {
   // créer une inscription/connexion phone
   //========================================
   static Future<void> createPhoneAuth(
-    PhoneNumber _phoneNumber,
-    String _password, {
-    String role = UserRoles.BUYER,
-    String authProvider = AuthProviders.PHONE,
-    String? fullName,
-  }) async {
+      PhoneNumber _phoneNumber, String _password,
+      {String role = UserRoles.BUYER,
+      String authProvider = AuthProviders.PHONE,
+      String? fullName,
+      String? password}) async {
     try {
       final phoneUser = await auth.createUserWithEmailAndPassword(
         email: _formatEmailFromPhone(_phoneNumber),
@@ -108,14 +107,14 @@ class AuthServices {
       // creation de l'utilisateur dans la collection 'users' sur Firebase
       AppUser user = AppUser(userId: phoneUser.user!.uid);
       user = user.copyWith(
-        authProvider: authProvider,
-        authIdentifier: _phoneNumber.phoneNumber!,
-        fullName: fullName,
-        createdAt: DateTime.now(),
-        lastLogin: DateTime.now(),
-        isAnonymous: false,
-        role: role,
-      );
+          authProvider: authProvider,
+          authIdentifier: _phoneNumber.phoneNumber!,
+          fullName: fullName,
+          createdAt: DateTime.now(),
+          lastLogin: DateTime.now(),
+          isAnonymous: false,
+          role: role,
+          password: password);
 
       firestoreService.createOrUpdateUser(user);
     } catch (e) {

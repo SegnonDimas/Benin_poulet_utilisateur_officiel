@@ -11,6 +11,8 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,6 +60,32 @@ class _LoginPageState extends State<LoginPage> {
       // D'autres providerId comme FacebookAuthProvider.PROVIDER_ID, etc.
     }
   }*/
+
+  User? _user;
+  Map<String, dynamic>? _userData;
+  Future<void> _loadUserData() async {
+    _user = FirebaseAuth.instance.currentUser;
+
+    if (_user != null) {
+      String userId = _user!.uid;
+
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+
+      // Récupérez les données spécifiques de l'utilisateur
+      _userData = userSnapshot.data() ?? {};
+
+      // Mettez à jour l'état pour déclencher un réaffichage
+      if (mounted) {
+        setState(() {});
+      }
+
+      _loadUserData();
+    }
+  }
 
   @override
   void initState() {
@@ -117,6 +145,11 @@ class _LoginPageState extends State<LoginPage> {
                       } else if (authState is AuthAuthenticated) {
                         _passWordController.clear();
                         _phoneNumbercontroller.clear();
+
+                        print(":::::::::::App Role : ${userRoleState.role}");
+                        /*print(
+                            ":::::::::::Firebase Role : ${_userData?['role']}");*/
+
                         AppUtils.showAwesomeSnackBar(
                             context,
                             'Connexion Réussie',

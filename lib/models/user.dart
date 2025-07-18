@@ -16,21 +16,22 @@ class AppUser {
   final bool profileComplete;
   final DateTime? createdAt;
   final DateTime? lastLogin;
+  final String? password;
 
-  const AppUser({
-    required this.userId,
-    this.authProvider = AuthProviders.ANONYMOUS,
-    this.authIdentifier,
-    this.fullName,
-    this.photoUrl,
-    this.accountStatus = AccountStatus.ACTIVE,
-    this.role = UserRoles.VISITOR,
-    this.storeIds = const [],
-    this.profileComplete = false,
-    this.isAnonymous = true,
-    this.createdAt,
-    this.lastLogin,
-  });
+  const AppUser(
+      {required this.userId,
+      this.authProvider = AuthProviders.ANONYMOUS,
+      this.authIdentifier,
+      this.fullName,
+      this.photoUrl,
+      this.accountStatus = AccountStatus.ACTIVE,
+      this.role = UserRoles.VISITOR,
+      this.storeIds = const [],
+      this.profileComplete = false,
+      this.isAnonymous = true,
+      this.createdAt,
+      this.lastLogin,
+      this.password});
 
   Map<String, dynamic> toMap() {
     return {
@@ -46,57 +47,60 @@ class AppUser {
       'profileComplete': profileComplete,
       'createdAt': createdAt?.toIso8601String(),
       'lastLogin': lastLogin?.toIso8601String(),
+      'password': password
     };
   }
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
     return AppUser(
-      userId: map['userId'],
-      authProvider: map['authProvider'] ?? AuthProviders.ANONYMOUS,
-      authIdentifier: map['authIdentifier'],
-      fullName: map['fullName'],
-      photoUrl: map['photoUrl'],
-      accountStatus: map['accountStatus'] ?? AccountStatus.ACTIVE,
-      role: map['role'] ?? UserRoles.VISITOR,
-      storeIds:
-          map['storeIds'] != null ? List<String>.from(map['storeIds']) : [],
-      isAnonymous: map['isAnonymous'] ?? true,
-      profileComplete: map['profileComplete'] ?? false,
-      createdAt:
-          map['createdAt'] != null ? DateTime.tryParse(map['createdAt']) : null,
-      lastLogin:
-          map['lastLogin'] != null ? DateTime.tryParse(map['lastLogin']) : null,
-    );
+        userId: map['userId'],
+        authProvider: map['authProvider'] ?? AuthProviders.ANONYMOUS,
+        authIdentifier: map['authIdentifier'],
+        fullName: map['fullName'],
+        photoUrl: map['photoUrl'],
+        accountStatus: map['accountStatus'] ?? AccountStatus.ACTIVE,
+        role: map['role'] ?? UserRoles.VISITOR,
+        storeIds:
+            map['storeIds'] != null ? List<String>.from(map['storeIds']) : [],
+        isAnonymous: map['isAnonymous'] ?? true,
+        profileComplete: map['profileComplete'] ?? false,
+        createdAt: map['createdAt'] != null
+            ? DateTime.tryParse(map['createdAt'])
+            : null,
+        lastLogin: map['lastLogin'] != null
+            ? DateTime.tryParse(map['lastLogin'])
+            : null,
+        password: map['password']);
   }
 
-  AppUser copyWith({
-    String? userId,
-    String? authProvider,
-    final String? authIdentifier,
-    String? fullName,
-    String? photoUrl,
-    DateTime? createdAt,
-    DateTime? lastLogin,
-    bool? profileComplete,
-    String? accountStatus,
-    String? role,
-    List<String>? storeIds,
-    bool? isAnonymous,
-  }) {
+  AppUser copyWith(
+      {String? userId,
+      String? authProvider,
+      final String? authIdentifier,
+      String? fullName,
+      String? photoUrl,
+      DateTime? createdAt,
+      DateTime? lastLogin,
+      bool? profileComplete,
+      String? accountStatus,
+      String? role,
+      List<String>? storeIds,
+      bool? isAnonymous,
+      String? password}) {
     return AppUser(
-      userId: userId ?? this.userId,
-      authProvider: authProvider ?? this.authProvider,
-      authIdentifier: authIdentifier ?? this.authIdentifier,
-      fullName: fullName ?? this.fullName,
-      photoUrl: photoUrl ?? this.photoUrl,
-      createdAt: createdAt ?? this.createdAt,
-      lastLogin: lastLogin ?? this.lastLogin,
-      profileComplete: profileComplete ?? this.profileComplete,
-      accountStatus: accountStatus ?? this.accountStatus,
-      role: role ?? this.role,
-      storeIds: storeIds ?? this.storeIds,
-      isAnonymous: isAnonymous ?? this.isAnonymous,
-    );
+        userId: userId ?? this.userId,
+        authProvider: authProvider ?? this.authProvider,
+        authIdentifier: authIdentifier ?? this.authIdentifier,
+        fullName: fullName ?? this.fullName,
+        photoUrl: photoUrl ?? this.photoUrl,
+        createdAt: createdAt ?? this.createdAt,
+        lastLogin: lastLogin ?? this.lastLogin,
+        profileComplete: profileComplete ?? this.profileComplete,
+        accountStatus: accountStatus ?? this.accountStatus,
+        role: role ?? this.role,
+        storeIds: storeIds ?? this.storeIds,
+        isAnonymous: isAnonymous ?? this.isAnonymous,
+        password: password ?? this.password);
   }
 }
 

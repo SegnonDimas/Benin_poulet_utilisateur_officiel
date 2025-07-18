@@ -15,7 +15,6 @@ import '../../../widgets/app_textField.dart';
 import '../../colors/app_colors.dart';
 import '../../models_ui/model_carouselItem.dart';
 import '../../models_ui/model_recommandation.dart';
-import '../../sizes/app_sizes.dart';
 
 class CHomePage extends StatefulWidget {
   const CHomePage({super.key});
@@ -117,7 +116,44 @@ class _CHomePageState extends State<CHomePage>
     ),
   ];
 
+  /* userData(String data) async {
+    final user = FirebaseAuth.instance.currentUser;
+    DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc('${user?.uid}')
+        .get();
+    Map<String, dynamic>? userData = doc.data() ?? {};
+    data = 'authIdentifier';
+    print(":::::::::${userData["$data"]}");
+    return userData['$data'];
+  }*/
+
   bool _shouldInterceptBack = true;
+
+  User? _user;
+  Map<String, dynamic>? _userData;
+  Future<void> _loadUserData() async {
+    _user = FirebaseAuth.instance.currentUser;
+
+    if (_user != null) {
+      String userId = _user!.uid;
+
+      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .get();
+
+      // Récupérez les données spécifiques de l'utilisateur
+      _userData = userSnapshot.data() ?? {};
+
+      // Mettez à jour l'état pour déclencher un réaffichage
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
 
   // initState
   @override
@@ -130,16 +166,18 @@ class _CHomePageState extends State<CHomePage>
         _shouldInterceptBack = true;
       });
     });
+    _loadUserData();
+    //nomUtilisateur = (userData('authIdentifier'));
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state /*as AuthAuthenticated*/;
     final user = FirebaseAuth.instance.currentUser;
-    var doc = FirebaseFirestore.instance
-        .collection('users')
-        .doc('${user?.uid}')
-        .get();
+
+    //var nomUtilisateur = userData('authIdentifier');
+    //var nomUtilisateur = 'User';
+
     return _shouldInterceptBack
         ? WillPopScope(
             onWillPop: () async {
@@ -152,7 +190,9 @@ class _CHomePageState extends State<CHomePage>
               top: false,
               child: Scaffold(
                 appBar: AppBar(
-                  title: AppText(text: "${doc}"),
+                  title: AppText(
+                      text: _userData!['fullName'] ??
+                          _userData!['authIdentifier']),
                   centerTitle: true,
                   actions: const [
                     Padding(
@@ -174,7 +214,7 @@ class _CHomePageState extends State<CHomePage>
                     /// Première page : Page d'Accueil
                     SingleChildScrollView(
                       child: SizedBox(
-                        height: appHeightSize(context),
+                        height: context.height,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -204,12 +244,12 @@ class _CHomePageState extends State<CHomePage>
                                 //dots indicator
                                 Positioned(
                                   bottom: 10,
-                                  left: appWidthSize(context) * 0.35,
-                                  right: appWidthSize(context) * 0.35,
+                                  left: context.width * 0.35,
+                                  right: context.width * 0.35,
                                   child: Container(
                                     alignment: Alignment.center,
                                     height: 20,
-                                    //width: appWidthSize(context) * 0.25,
+                                    //width: context.width * 0.25,
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -296,8 +336,8 @@ class _CHomePageState extends State<CHomePage>
                       children: [
                         /// TabBar
                         SizedBox(
-                          height: appHeightSize(context) * 0.06,
-                          width: appWidthSize(context) * 0.9,
+                          height: context.height * 0.06,
+                          width: context.width * 0.9,
                           child: TabBar(
                               controller: _tabcontroller,
                               indicatorColor: primaryColor,
@@ -341,7 +381,7 @@ class _CHomePageState extends State<CHomePage>
                 /// bottomNavigationBar
                 bottomNavigationBar: CurvedNavigationBar(
                   backgroundColor: Colors.transparent,
-                  height: appHeightSize(context) * 0.07,
+                  height: context.height * 0.07,
                   color: Theme.of(context).colorScheme.background,
                   //buttonBackgroundColor: primaryColor,
                   //selectedColor: Colors.white,
