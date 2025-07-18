@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/routes.dart';
@@ -30,6 +31,9 @@ Future<void> main() async {
   await FlutterLocalization.instance.ensureInitialized();
   // cached_network_image init
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+
+  // initialisation de get_storage
+  await GetStorage.init();
 
   // créer une connexion anonyme au lancement
   final anonymousUser = await AuthServices.createAnonymousAuth();
@@ -74,9 +78,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   final FlutterLocalization _localization = FlutterLocalization.instance;
+  final instance = GetStorage();
 
   @override
   void initState() {
+    // juste pour tests TODO : à enlever
+    GetStorage().write('se_souvenir', false);
     _localization.init(
       mapLocales: [
         const MapLocale(
@@ -95,6 +102,10 @@ class _MyAppState extends State<MyApp> {
       initLanguageCode: 'fr',
     );
     _localization.onTranslatedLanguage = _onTranslatedLanguage;
+
+    //
+    instance.write('se_souvenir', instance.read('se_souvenir') ?? false);
+
     super.initState();
   }
 

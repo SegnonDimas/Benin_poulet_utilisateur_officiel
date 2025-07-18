@@ -6,9 +6,10 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-import '../../../constants/routes.dart';
 import '../../../constants/app_attributs.dart';
+import '../../../constants/routes.dart';
 import '../../../widgets/app_text.dart';
 
 class FirstPage extends StatefulWidget {
@@ -102,7 +103,10 @@ class _FirstPageState extends State<FirstPage> {
                                   delay: 5000.ms,
                                   onComplete: (animatedCopntroller) {
                                     Navigator.pushReplacementNamed(
-                                        context, AppRoutes.LOGINPAGE);
+                                        context,
+                                        !GetStorage().read('se_souvenir')
+                                            ? AppRoutes.LOGINPAGE
+                                            : AppRoutes.CLIENTHOMEPAGE);
                                   })
                               .fade()))),
             ),

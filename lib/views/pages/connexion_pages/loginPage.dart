@@ -16,6 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
@@ -87,6 +88,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  final se_souvenir = GetStorage();
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +98,8 @@ class _LoginPageState extends State<LoginPage> {
         _shouldInterceptBack = true;
       });
     });
+
+    se_souvenir.write('se_souvenir', seSouvenir);
   }
 
   @override
@@ -329,6 +334,9 @@ class _LoginPageState extends State<LoginPage> {
                                                       setState(() {
                                                         seSouvenir =
                                                             !seSouvenir;
+                                                        se_souvenir.write(
+                                                            "se_souvenir",
+                                                            seSouvenir);
                                                       });
                                                     },
                                                     child: AppText(
@@ -364,6 +372,8 @@ class _LoginPageState extends State<LoginPage> {
                                             onTap: () {
                                               print(
                                                   "::::::::::${number.phoneNumber}");
+                                              se_souvenir.write(
+                                                  'se_souvenir', seSouvenir);
                                               context.read<AuthBloc>().add(
                                                   PhoneLoginRequested(
                                                       phoneNumber: number,
