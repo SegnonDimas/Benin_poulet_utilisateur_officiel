@@ -48,11 +48,19 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
+          listenWhen: (previous, current) {
+            // Ne réagir que si la page est dans l'arborescence de navigation
+            return ModalRoute.of(context)?.isCurrent ?? false;
+          },
           listener: (context, userRoleState) {
             //TODO : au ca où...
           },
           builder: (context, userRoleState) {
             return BlocConsumer<AuthBloc, AuthState>(
+              listenWhen: (previous, current) {
+                // Ne réagir que si la page est dans l'arborescence de navigation
+                return ModalRoute.of(context)?.isCurrent ?? false;
+              },
               listener: (context, authState) async {
                 if (authState is AuthFailure) {
                   AppUtils.showSnackBar(context, authState.errorMessage);
@@ -80,7 +88,8 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                     Navigator.pushNamedAndRemoveUntil(
                         context,
                         userRoleState.role == UserRoles.SELLER
-                            ? AppRoutes.VENDEURMAINPAGE
+                            ? AppRoutes
+                                .DEFAULTROUTEPAGE //AppRoutes.VENDEURMAINPAGE
                             : AppRoutes.CLIENTHOMEPAGE,
                         (Route<dynamic> route) => false);
 

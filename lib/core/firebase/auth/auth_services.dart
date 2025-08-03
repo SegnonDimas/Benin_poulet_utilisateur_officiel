@@ -1,12 +1,9 @@
 import 'package:benin_poulet/constants/authProviders.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:path/path.dart';
 
 import '../../../models/user.dart';
 import '../firestore/user_repository.dart';
@@ -14,7 +11,7 @@ import '../firestore/user_repository.dart';
 class AuthServices {
   static final auth = FirebaseAuth.instance; //actuelle instance
   static final firestoreService = FirestoreService();
-  static final userId = auth.currentUser?.uid;
+  static var userId = auth.currentUser?.uid;
   //static final GoogleSignInAccount? googleUser = GoogleSignIn().signIn();;
 
   //========================================
@@ -29,6 +26,8 @@ class AuthServices {
 
         // creation de l'utilisateur anonyme
         anonymousUser;
+
+        userId = anonymousUser.user?.uid;
 
         // creation de l'utilisateur anonyme dans la collection 'users' sur Firebase
         AppUser user = AppUser(
@@ -53,6 +52,8 @@ class AuthServices {
   //========================================
   // créer une inscription/connexion email
   //========================================
+
+  //Inscription avec email
   static Future<void> createEmailAuth(
     String _email,
     String _password, {
@@ -66,6 +67,8 @@ class AuthServices {
       );
 
       emailUser;
+
+      userId = emailUser.user?.uid;
 
       // creation de l'utilisateur avec email dans la collection 'users' sur Firebase
       AppUser user = AppUser(
@@ -87,43 +90,71 @@ class AuthServices {
     }
   }
 
+  // Connexion avec email
+  static Future<void> signInWithEmailAndPassword(
+    String _email,
+    String _password,
+  ) async {
+    try {
+      var email = _email.trim();
+      var password = _password.trim();
+      final emailUser = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      emailUser;
+    } catch (e) {
+      if (kDebugMode) {
+        print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
+      }
+    }
+  }
+
   //========================================
   // créer une inscription/connexion phone
   //========================================
+
+  //Inscription avec phoneNumber
   static Future<void> createPhoneAuth(
       PhoneNumber _phoneNumber, String _password,
       {String role = UserRoles.BUYER,
       String authProvider = AuthProviders.PHONE,
       String? fullName,
       String? password}) async {
+    final phoneUser = await auth.createUserWithEmailAndPassword(
+      email: _formatEmailFromPhone(_phoneNumber),
+      password: _password,
+    );
+
+    phoneUser;
+
+    userId = phoneUser.user?.uid;
+
+    // creation de l'utilisateur dans la collection 'users' sur Firebase
+    AppUser user = AppUser(userId: phoneUser.user!.uid);
+    user = user.copyWith(
+        authProvider: authProvider,
+        authIdentifier: _phoneNumber.phoneNumber!,
+        fullName: fullName,
+        createdAt: DateTime.now(),
+        lastLogin: DateTime.now(),
+        isAnonymous: false,
+        role: role,
+        password: password);
+
+    firestoreService.createOrUpdateUser(user);
+  }
+
+  //Connexion avec phoneNumber
+  static Future<void> signInWithPhone(
+    PhoneNumber _phoneNumber,
+    String _password,
+  ) async {
     try {
-      final phoneUser = await auth.createUserWithEmailAndPassword(
-        email: _formatEmailFromPhone(_phoneNumber),
-        password: _password,
-      );
-
+      var email = _formatEmailFromPhone(_phoneNumber).trim();
+      var password = _password.trim();
+      final phoneUser = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
       phoneUser;
-
-      // creation de l'utilisateur dans la collection 'users' sur Firebase
-      AppUser user = AppUser(userId: phoneUser.user!.uid);
-      user = user.copyWith(
-          authProvider: authProvider,
-          authIdentifier: _phoneNumber.phoneNumber!,
-          fullName: fullName,
-          createdAt: DateTime.now(),
-          lastLogin: DateTime.now(),
-          isAnonymous: false,
-          role: role,
-          password: password);
-
-      firestoreService.createOrUpdateUser(user);
     } catch (e) {
-      if (e.toString().contains('already')) {
-        AppUtils.showSnackBar(
-          context as BuildContext,
-          "Cette adresse est deja associee a un compte",
-        );
-      }
       if (kDebugMode) {
         print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
       }
@@ -137,56 +168,50 @@ class AuthServices {
     String authProvider = AuthProviders.GOOGLE,
     String role = UserRoles.BUYER,
   }) async {
-    try {
-      // Déconnecte le compte mis en cache pour forcer la sélection à la prochaine connexion
-      await GoogleSignIn().signOut();
-      // Déclenche le flux de connexion
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Déconnecte le compte mis en cache pour forcer la sélection à la prochaine connexion
+    await GoogleSignIn().signOut();
+    // Déclenche le flux de connexion
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      // Si l'utilisateur annule, googleUser est null
-      if (googleUser == null) {
-        return null;
-      }
-
-      // Obtient les détails d'authentification à partir de la requête
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Crée un credential pour Firebase
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Se connecte à Firebase avec le credential
-      final UserCredential userCredential =
-          await auth.signInWithCredential(credential);
-
-      // creation de l'utilisateur avec google dans la collection 'user' sur Firebase
-      AppUser user = AppUser(
-        userId: googleUser.id,
-        isAnonymous: false,
-      );
-      user = user.copyWith(
-        authProvider: authProvider,
-        authIdentifier: googleUser.email,
-        photoUrl: googleUser.photoUrl,
-        fullName: googleUser.displayName,
-        role: role,
-        createdAt: DateTime.now(),
-        lastLogin: DateTime.now(),
-      );
-
-      firestoreService.createOrUpdateUser(user);
-
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      print('Erreur FirebaseAuth: ${e.code} - ${e.message}');
-      return null;
-    } catch (e) {
-      print('Erreur générale de connexion Google: $e');
+    // Si l'utilisateur annule, googleUser est null
+    if (googleUser == null) {
       return null;
     }
+
+    // Obtient les détails d'authentification à partir de la requête
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Crée un credential pour Firebase
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Se connecte à Firebase avec le credential
+    final UserCredential userCredential =
+        await auth.signInWithCredential(credential);
+
+    // creation de l'utilisateur avec google dans la collection 'user' sur Firebase
+    AppUser user = AppUser(
+      userId: googleUser.id,
+      isAnonymous: false,
+    );
+    user = user.copyWith(
+      authProvider: authProvider,
+      authIdentifier: googleUser.email,
+      photoUrl: googleUser.photoUrl,
+      fullName: googleUser.displayName,
+      role: role,
+      createdAt: DateTime.now(),
+      lastLogin: DateTime.now(),
+    );
+
+    firestoreService.createOrUpdateUser(user);
+
+    userId = googleUser.id;
+
+    return userCredential.user;
   }
 
   static Future<void> signOutOfGoogle() async {

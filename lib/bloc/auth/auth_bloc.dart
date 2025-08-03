@@ -1,5 +1,4 @@
 //import 'package:bloc/bloc.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,9 +93,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           emit(AuthAuthenticated(
               successMessage: 'Utilisateur connecté avec succès'));
-          /*emit(EmailLoginRequestSuccess(
+          emit(EmailLoginRequestSuccess(
               //userId: email,
-              successMessage: 'Utilisateur connecté avec succès'));*/
+              successMessage: 'Utilisateur connecté avec succès'));
         }
       } catch (e) {
         return emit(EmailLoginRequestFailure(errorMessage: e.toString()));
@@ -107,8 +106,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GoogleLoginRequested>((event, emit) async {
       emit(AuthLoading());
       try {
-        final userId = AuthServices.userId;
-        return emit(GoogleLoginRequestSuccess());
+        //final userId = AuthServices.userId;
+        //emit(AuthAuthenticated());
+        //Deprecié : TODO : à délaisser au profil de AuthAuthentificated
+        emit(GoogleLoginRequestSuccess());
       } catch (e) {
         return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));
       }
@@ -152,6 +153,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final nationalNumber =
             fullPhoneNumber.replaceFirst(countryCode, '').trim();
 
+        print(
+            "DEBUG Champs : firstName=$firstName, lastName=$lastName, fullPhoneNumber=$fullPhoneNumber, password=$password, confirmPassword=$confirmPassword");
+
         if (firstName.isEmpty ||
             lastName.isEmpty ||
             fullPhoneNumber.isEmpty ||
@@ -161,18 +165,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               AuthFailure(errorMessage: "Veuillez renseigner tous les champs"));
         }
         // Vérification : mots de passe identiques
-        else if (password != confirmPassword) {
+        if (password != confirmPassword) {
           emit(AuthFailure(
               errorMessage: "Les mots de passe ne correspondent pas"));
         }
         // Vérification : champ numéro de teléphone vide
-        else if (fullPhoneNumber.isEmpty) {
+        if (fullPhoneNumber.isEmpty) {
           emit(AuthFailure(
             errorMessage: 'Veuillez renseigner votre numéro de téléphone',
           ));
         }
         // Vérification spécifique au Bénin
-        else if (countryCode == '+229') {
+        if (countryCode == '+229') {
           //vérifier que le numéro de teléphone commence par 01 et contient 10 chiffres
           if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
             emit(AuthFailure(
@@ -182,18 +186,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           }
         }
         // Vérification : champ mot de passe vide
-        else if (password.isEmpty) {
+        if (password.isEmpty) {
           emit(AuthFailure(
               errorMessage: 'Veuillez renseigner votre mot de passe'));
         }
         // Vérification : longueur du mot de passe
-        else if (password.length < longeurMotDePasse) {
+        if (password.length < longeurMotDePasse) {
           emit(AuthFailure(
               errorMessage:
                   'Le mot de passe doit être d\'au moins $longeurMotDePasse caractères'));
         }
         //tout est ok
-        else {
+        {
           //var instance = FirebaseAuth.instance;
           //var userId = instance.currentUser?.uid;
           /*
@@ -201,8 +205,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           */
           print("::::::::::::::::JE SUIS VENU ICI::::::::::::");
           //emit(AuthAuthenticated(userId: 'userId!'));
+          emit(AuthAuthenticated());
         }
-        emit(AuthAuthenticated());
       } catch (e) {
         print(":::::::::::ERREUR : $e :::::::::::::");
         emit(AuthFailure(errorMessage: e.toString()));

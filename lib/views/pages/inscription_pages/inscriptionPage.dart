@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
@@ -11,6 +12,8 @@ import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,12 +36,11 @@ class InscriptionPage extends StatefulWidget {
 }
 
 class _InscriptionPageState extends State<InscriptionPage> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _passWordController = TextEditingController();
-  final TextEditingController _confirmPassWordController =
-      TextEditingController();
-  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _passWordController = TextEditingController();
+  TextEditingController _confirmPassWordController = TextEditingController();
+  TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
   bool isSignUp = false;
@@ -72,6 +74,28 @@ class _InscriptionPageState extends State<InscriptionPage> {
     }
   }
 
+  bool _isMounted = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _isMounted = true;
+
+    _passWordController = TextEditingController(text: '12345678');
+    _confirmPassWordController = TextEditingController(text: '12345678');
+    _firstNameController = TextEditingController(text: 'John');
+    _lastNameController = TextEditingController(text: 'Doe');
+    _phoneNumbercontroller = TextEditingController(text: '0100000000');
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget divider = Divider(
@@ -83,33 +107,40 @@ class _InscriptionPageState extends State<InscriptionPage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
+          listenWhen: (previous, current) {
+            // Ne réagir que si la page est dans l'arborescence de navigation
+            return _isMounted;
+          },
           listener: (context, userRoleState) {
             // TODO: au cas où...
+            print(
+                '::::::::::::::::::::::::::${userRoleState.role}!!!!!!!!!!!!');
           },
           builder: (context, userRoleState) {
             return BlocConsumer<AuthBloc, AuthState>(
+              listenWhen: (previous, current) {
+                // Ne réagir que si la page est dans l'arborescence de navigation
+                return _isMounted;
+              },
               listener: (context, authState) async {
                 if (authState is AuthFailure) {
-                  print(":::::::::::ICI 1-2");
                   if (authState.errorMessage.toLowerCase().contains('bénin') ||
                       authState.errorMessage.contains('01')) {
-                    print(":::::::::::ICI 1-2-1");
                     AppUtils.showInfoDialog(
                         context: context,
                         message: authState.errorMessage,
                         type: InfoType.error,
                         onTitleIconTap: () => Navigator.pop(context));
                   } else {
-                    print(":::::::::::ICI 1-2-2");
                     AppUtils.showSnackBar(context, authState.errorMessage);
                   }
                 } else if (authState is AuthLoading) {
+                  //
                   AppUtils.showInfoDialog(
                       context: context,
-                      message: "Patientez...",
+                      message: "Veuillez patienter...",
                       type: InfoType.loading);
-                } else if (authState is AuthAuthenticated ||
-                    authState is PhoneSignUpRequestSuccess) {
+                } else if (authState is PhoneSignUpRequestSuccess) {
                   try {
                     //final _email = _formatEmailFromPhone(phoneNumber);
                     final _password = _passWordController.text;
@@ -118,31 +149,107 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     /*await AuthServices.createEmailAuth(_email, _password,
                     authProvider: AuthProviders.PHONE);*/
                     await AuthServices.createPhoneAuth(phoneNumber, _password,
-                        fullName: fullName, password: _passWordController.text);
-                    _showAwesomeSnackBar(
+                        fullName: fullName,
+                        password: _passWordController.text,
+                        role: userRoleState.role!);
+                    //Navigator.pop(context);
+                    /*_showAwesomeSnackBar(
                       context,
                       'Inscription Réussie',
                       'Votre inscription est effectuée avec succès',
                       ContentType.success,
                       AppColors.primaryColor,
-                    );
+                    );*/
 
-                    // rediredction vers la page de destination
-                    Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        userRoleState.role == UserRoles.SELLER
-                            ? AppRoutes.VENDEURMAINPAGE
-                            : AppRoutes.CLIENTHOMEPAGE,
-                        (Route<dynamic> route) => false);
+                    if (userRoleState.role ==
+                            UserRoles
+                                .SELLER /*&&
+                        authState is! AuthLoading*/
+                        ) {
+                      // proposition de crétation de boutique
+                      context.mounted ? _showBottomSheet(context) : null;
+                    } else if (userRoleState.role ==
+                            UserRoles
+                                .BUYER /*&&
+                        authState is! AuthLoading*/
+                        ) {
+                      // rediredction vers la page de destination
+                      context.mounted
+                          ? Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.CLIENTHOMEPAGE,
+                              (Route<dynamic> route) => false)
+                          : null;
+                    }
+
                     // Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
 
                     // Réinitialiser les champs
-                    _passWordController.clear();
+                    /* _passWordController.clear();
                     _phoneNumbercontroller.clear();
                     _confirmPassWordController.clear();
                     _firstNameController.clear();
-                    _lastNameController.clear();
+                    _lastNameController.clear();*/
                   } catch (e) {
+                    if (context.mounted) {
+                      if (e.toString().contains('already')) {
+                        AppUtils.showSnackBar(
+                          context,
+                          "Ce numéro de téléphone est deja associé a un compte",
+                          backgroundColor: AppColors.redColor,
+                        );
+                      }
+                      AppUtils.showDialog(
+                        context: context,
+                        title: 'Rapport d\'erreur',
+                        content: e.toString(),
+                        cancelText: 'Fermer',
+                        confirmText: 'Envoyer le rapport',
+                        cancelTextColor: AppColors.primaryColor,
+                        confirmTextColor: AppColors.redColor,
+                      );
+                    }
+                    if (kDebugMode) {
+                      print(
+                          ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+                    }
+                  }
+                } else if (authState is GoogleLoginRequestSuccess) {
+                  try {
+                    await AuthServices.signInWithGoogle(
+                      role: userRoleState.role!,
+                    );
+                    if (userRoleState.role == UserRoles.SELLER) {
+                      // proposition de crétation de boutique
+                      context.mounted ? _showBottomSheet(context) : null;
+                    } else if (userRoleState.role == UserRoles.BUYER) {
+                      // rediredction vers la page de destination
+                      context.mounted
+                          ? Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.CLIENTHOMEPAGE,
+                              (Route<dynamic> route) => false)
+                          : null;
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      if (e.toString().contains('already')) {
+                        AppUtils.showSnackBar(
+                          context,
+                          "Cette adresse est deja associée a un compte",
+                          backgroundColor: AppColors.redColor,
+                        );
+                      }
+                      AppUtils.showDialog(
+                        context: context,
+                        title: 'Rapport d\'erreur',
+                        content: e.toString(),
+                        cancelText: 'Fermer',
+                        confirmText: 'Envoyer le rapport',
+                        cancelTextColor: AppColors.primaryColor,
+                        confirmTextColor: AppColors.redColor,
+                      );
+                    }
                     if (kDebugMode) {
                       print(
                           ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
@@ -150,12 +257,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   }
                 } else {
                   if (kDebugMode) {
-                    print("::::::::::::: STATE : ${authState} ::::::::::::");
+                    print("::::::::::::: STATE : $authState ::::::::::::");
                     print("::::::::::VEILLEZ PATIENTER::::::::::");
                   }
                 }
                 if (kDebugMode) {
-                  print("::::::::::::: STATE : ${authState} ::::::::::::");
+                  print("::::::::::::: STATE : $authState ::::::::::::");
                   print("::::::::::::: LISTINER END ::::::::::::");
                 }
               },
@@ -437,11 +544,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                             validator: (value) {
                                                               if (value ==
                                                                       null ||
-                                                                  value.isEmpty)
+                                                                  value
+                                                                      .isEmpty) {
                                                                 return 'Mot de passe requis';
+                                                              }
                                                               if (value.length <
-                                                                  6)
+                                                                  6) {
                                                                 return 'Au moins 6 caractères';
+                                                              }
                                                               return null;
                                                             },
                                                             fontSize: context
@@ -484,8 +594,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                             validator: (value) {
                                                               if (value !=
                                                                   _passWordController
-                                                                      .text)
+                                                                      .text) {
                                                                 return 'Les mots de passe ne correspondent pas';
+                                                              }
                                                               return null;
                                                             },
                                                             fontSize: context
@@ -586,13 +697,38 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                         final _email =
                                                             _formatEmailFromPhone(
                                                                 phoneNumber);
+                                                        final fullName =
+                                                            '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
                                                         final _password =
                                                             _passWordController
-                                                                .text;
+                                                                .text
+                                                                .trim();
                                                         await AuthServices
-                                                            .createEmailAuth(
-                                                                _email,
-                                                                _password);
+                                                            .createPhoneAuth(
+                                                                phoneNumber,
+                                                                _password,
+                                                                fullName:
+                                                                    fullName,
+                                                                password:
+                                                                    _passWordController
+                                                                        .text,
+                                                                role:
+                                                                    userRoleState
+                                                                        .role!);
+
+                                                        //
+                                                        context.read<AuthBloc>().add(
+                                                            PhoneSignUpRequested(
+                                                                firstName:
+                                                                    firstName,
+                                                                lastName:
+                                                                    lastName,
+                                                                phoneNumber:
+                                                                    phoneNumber,
+                                                                password:
+                                                                    password,
+                                                                confirmPassword:
+                                                                    confirmPassword));
                                                         // Réinitialiser les champs
                                                         _passWordController
                                                             .clear();
@@ -604,31 +740,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                             .clear();
                                                         _lastNameController
                                                             .clear();
-
-                                                        _showAwesomeSnackBar(
-                                                          context,
-                                                          'Inscription Réussie',
-                                                          'Votre inscription est effectuée avec succès',
-                                                          ContentType.success,
-                                                          AppColors
-                                                              .primaryColor,
-                                                        );
-
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            AppRoutes
-                                                                .CLIENTHOMEPAGE);
                                                       } catch (e) {
                                                         print(
                                                             ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
                                                       }
                                                     }
-                                                    /*await AuthServices
-                                                    .createEmailAuth(
-                                                        formattedEmail,
-                                                        _passWordController
-                                                            .text);*/
-                                                    //print(":::::::::::Connexion passed");
                                                   },
                                                 );
                                               } else {
@@ -860,4 +976,213 @@ void _showSnackBar(BuildContext context, String message) {
 void _showAwesomeSnackBar(BuildContext context, String title, String message,
     ContentType contentType, Color? color) {
   AppUtils.showAwesomeSnackBar(context, title, message, contentType, color);
+}
+
+/// bottom sheet
+
+Future<void> _showBottomSheet(BuildContext context) async {
+  DocumentSnapshot doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(AuthServices.userId)
+      .get();
+  var name = '';
+  if (doc.exists) {
+    name = doc['fullName'] ?? '';
+  }
+  context.mounted
+      ? showModalBottomSheet(
+          context: context,
+          // TODO : enableDrag: false,
+          // TODO : isDismissible: false,
+          //showDragHandle: true,
+          builder: (context) {
+            return Column(
+              children: [
+                //SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 4.0, bottom: 8.0, left: 4.0, right: 4.0),
+                  child: SizedBox(
+                    height: 200,
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(35),
+                            topRight: Radius.circular(35),
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                          child: Image.asset(
+                            'assets/images/img_1.png',
+                            height: 200,
+                            width: context.width,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Container(
+                          height: 200,
+                          width: context.width,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(35),
+                              topRight: Radius.circular(35),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
+                            //color: Colors.black87,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.9),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.9),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.8),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.7),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.5),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.4),
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.transparent,
+                              ],
+                            ),
+                            /* color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.7),*/
+                          ),
+                        ),
+                        BlurryContainer(
+                            height: 200,
+                            width: context.width,
+                            blur: 3,
+                            child: SizedBox()),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          left: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                ),
+                                AppText(
+                                  text: 'Créer boutique',
+                                  color: AppColors.primaryColor,
+                                  fontSize: context.largeText,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          AppRoutes.VENDEURMAINPAGE,
+                                          (Route<dynamic> route) => false);
+                                    },
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                          .withOpacity(0.6),
+                                      size: 30,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AppText(
+                                  textAlign: TextAlign.center,
+                                  text:
+                                      'Bienvenue sur ${AppAttributes.appName}, $name\n',
+                                  color: Colors.white,
+                                  fontSize: context.largeText * 0.8,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.visible,
+                                ),
+                                AppText(
+                                  textAlign: TextAlign.center,
+                                  text: 'Commençons à créer votre boutique...',
+                                  color: Colors.white,
+                                  fontSize: context.largeText * 0.7,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: context.height * 0.15,
+                    child: AppText(
+                      textAlign: TextAlign.center,
+                      text:
+                          'Une boutique est la version numérique de votre ferme physique. Elle est un endroit qui vous permet de vendre vos produits et services. Vous pouvez vendre des produits et services qui vous correspondent et qui vous permettent de gagner de l\'argent.',
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.4),
+                      overflow: TextOverflow.visible,
+                      fontSize: context.smallText,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: AppButton(
+                    color: AppColors.primaryColor,
+                    height: context.height * 0.07,
+                    width: context.width * 0.9,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.INSCRIPTIONVENDEURPAGE,
+                      );
+                    },
+                    child: AppText(
+                      text: 'Commencer',
+                      //fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                )
+              ],
+            );
+          })
+      : null;
 }

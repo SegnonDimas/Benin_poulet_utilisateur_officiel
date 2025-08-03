@@ -186,10 +186,11 @@ class AppUtils {
           width: context.width * 0.97,
         ),
         snackBarAnimationStyle: AnimationStyle(
-            reverseCurve: Curves.easeOutExpo,
-            curve: Curves.easeOutExpo,
-            duration: const Duration(seconds: 2),
-            reverseDuration: const Duration(seconds: 2)));
+          reverseCurve: Curves.ease,
+          curve: Curves.ease,
+          /*duration: const Duration(seconds: 2),*/
+          /*reverseDuration: const Duration(seconds: 2)*/
+        ));
   }
 
   //====================================
@@ -230,7 +231,7 @@ class AppUtils {
   static void showInfoDialog(
       {required BuildContext context,
       required String message,
-      Duration duration = const Duration(seconds: 5),
+      Duration? duration,
       Widget? titleIcon,
       InfoType type = InfoType.info,
       void Function()? onTitleIconTap}) {
@@ -311,11 +312,13 @@ class AppUtils {
       barrierDismissible: true,
       builder: (context) {
         // Délai avant fermeture automatique
-        Future.delayed(duration, () {
-          if (Navigator.of(context).canPop()) {
-            Navigator.of(context).pop();
-          }
-        });
+        (type != InfoType.waiting && type != InfoType.loading)
+            ? Future.delayed(duration ?? const Duration(seconds: 5), () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
+              })
+            : {};
 
         return CupertinoAlertDialog(
           title: GestureDetector(onTap: onTitleIconTap, child: titleIcon),

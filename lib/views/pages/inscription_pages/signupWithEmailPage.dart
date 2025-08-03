@@ -2,14 +2,19 @@ import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -39,6 +44,19 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
   PhoneNumber number = PhoneNumber(isoCode: 'BJ');
   bool isLoggedIn = false;
   bool seSouvenir = true;
+  bool _isMounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMounted = true;
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,26 +68,31 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
+          listenWhen: (previous, current) {
+            // Ne réagir que si la page est dans l'arborescence de navigation
+            return ModalRoute.of(context)?.isCurrent ?? false;
+          },
           listener: (context, userRoleState) {
             // TODO: au cas où...
           },
           builder: (context, userRoleState) {
             return BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, authState) {
+              listenWhen: (previous, current) {
+                // Ne réagir que si la page est dans l'arborescence de navigation
+                return _isMounted;
+              },
+              listener: (context, authState) async {
                 if (authState is AuthFailure) {
                   final errorMsg = authState.errorMessage.toLowerCase();
 
-                  // Cas spécifique : numéro béninois invalide
-                  if (errorMsg.contains('bénin') || errorMsg.contains('01')) {
-                    AppUtils.showInfoDialog(
-                      context: context,
-                      message: authState.errorMessage,
-                      type: InfoType.error,
-                    );
-                  } else {
-                    // Autres cas : snackBar classique
-                    AppUtils.showSnackBar(context, authState.errorMessage);
-                  }
+                  // Autres cas : snackBar classique
+                  AppUtils.showSnackBar(context, authState.errorMessage);
+
+                  /*AppUtils.showInfoDialog(
+                    context: context,
+                    message: authState.errorMessage,
+                    type: InfoType.error,
+                  );*/
                 }
 
                 if (authState is AuthLoading) {
@@ -77,10 +100,96 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                       context: context,
                       type: InfoType.loading,
                       message: "Patientez...");
-                } else if (authState is AuthAuthenticated) {
-                  _passWordController.clear();
-                  _passWordConfirmController.clear();
-                  _emailcontroller.clear();
+                } else if (authState is GoogleLoginRequestSuccess) {
+                  try {
+                    await AuthServices.signInWithGoogle(
+                      role: userRoleState.role!,
+                    );
+                    if (userRoleState.role == UserRoles.SELLER) {
+                      // proposition de crétation de boutique
+                      context.mounted ? _showBottomSheet(context) : null;
+                    } else if (userRoleState.role == UserRoles.BUYER) {
+                      // rediredction vers la page de destination
+                      context.mounted
+                          ? Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.CLIENTHOMEPAGE,
+                              (Route<dynamic> route) => false)
+                          : null;
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      if (e.toString().contains('already')) {
+                        AppUtils.showSnackBar(
+                          context,
+                          "Cette adresse est deja associée a un compte",
+                          backgroundColor: AppColors.redColor,
+                        );
+                      }
+                      AppUtils.showDialog(
+                        context: context,
+                        title: 'Rapport d\'erreur',
+                        content: e.toString(),
+                        cancelText: 'Fermer',
+                        confirmText: 'Envoyer le rapport',
+                        cancelTextColor: AppColors.primaryColor,
+                        confirmTextColor: AppColors.redColor,
+                      );
+                    }
+                    if (kDebugMode) {
+                      print(
+                          ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+                    }
+                  }
+                } else if (authState is EmailLoginRequestSuccess) {
+                  try {
+                    final _email = _emailcontroller.text.trim();
+                    final _password = _passWordController.text.trim();
+                    await AuthServices.createEmailAuth(
+                      _email,
+                      _password,
+                      role: userRoleState.role!,
+                    );
+
+                    _passWordController.clear();
+                    _passWordConfirmController.clear();
+                    _emailcontroller.clear();
+                    if (userRoleState.role == UserRoles.SELLER) {
+                      // proposition de crétation de boutique
+                      context.mounted ? _showBottomSheet(context) : null;
+                    } else if (userRoleState.role == UserRoles.BUYER) {
+                      // rediredction vers la page de destination
+                      context.mounted
+                          ? Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.CLIENTHOMEPAGE,
+                              (Route<dynamic> route) => false)
+                          : null;
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      if (e.toString().contains('already')) {
+                        AppUtils.showSnackBar(
+                          context,
+                          "Cette adresse est deja associée a un compte",
+                          backgroundColor: AppColors.redColor,
+                        );
+                      }
+                      AppUtils.showDialog(
+                        context: context,
+                        title: 'Rapport d\'erreur',
+                        content: e.toString(),
+                        cancelText: 'Fermer',
+                        confirmText: 'Envoyer le rapport',
+                        cancelTextColor: AppColors.primaryColor,
+                        confirmTextColor: AppColors.redColor,
+                      );
+                    }
+                    if (kDebugMode) {
+                      print(
+                          ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+                    }
+                  }
 
                   AppUtils.showAwesomeSnackBar(
                       context,
@@ -92,8 +201,9 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                   Navigator.pushNamedAndRemoveUntil(
                       context,
                       userRoleState.role == UserRoles.SELLER
-                          ? AppRoutes.VENDEURMAINPAGE
-                          : AppRoutes.CLIENTHOMEPAGE,
+                          ? AppRoutes
+                              .DEFAULTROUTEPAGE // AppRoutes.VENDEURMAINPAGE
+                          : AppRoutes.LOGINWITHEMAILPAGE,
                       (Route<dynamic> route) => false);
 
                   //Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
@@ -299,21 +409,21 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
 
                                     //SizedBox(height: context.height * 0.015),
 
-                                    // bouton de connexion
+                                    // bouton d'inscription
                                     GestureDetector(
                                       onTap: () async {
-                                        final _email =
-                                            _emailcontroller.text.trim();
-                                        final _password =
-                                            _passWordController.text.trim();
-                                        final _confirmPassword =
-                                            _passWordConfirmController.text
-                                                .trim();
-                                        emailSignup(
-                                          _email,
-                                          _password,
-                                          _confirmPassword,
-                                        );
+                                        context
+                                            .read<AuthBloc>()
+                                            .add(EmailSignUpRequested(
+                                              email:
+                                                  _emailcontroller.text.trim(),
+                                              password: _passWordController.text
+                                                  .trim(),
+                                              confirmPassword:
+                                                  _passWordConfirmController
+                                                      .text
+                                                      .trim(),
+                                            ));
                                       },
                                       child: Container(
                                         alignment: Alignment.center,
@@ -562,4 +672,213 @@ void _showSnackBar(BuildContext context, String message) {
 void _showAwesomeSnackBar(BuildContext context, String title, String message,
     ContentType contentType, Color? color) {
   AppUtils.showAwesomeSnackBar(context, title, message, contentType, color);
+}
+
+/// bottom sheet
+
+Future<void> _showBottomSheet(BuildContext context) async {
+  DocumentSnapshot doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(AuthServices.userId)
+      .get();
+  var name = '';
+  if (doc.exists) {
+    name = doc['fullName'] ?? '';
+  }
+  context.mounted
+      ? showModalBottomSheet(
+          context: context,
+          // TODO : enableDrag: false,
+          // TODO : isDismissible: false,
+          //showDragHandle: true,
+          builder: (context) {
+            return Column(
+              children: [
+                //SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 4.0, bottom: 8.0, left: 4.0, right: 4.0),
+                  child: SizedBox(
+                    height: 200,
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(35),
+                            topRight: Radius.circular(35),
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                          child: Image.asset(
+                            'assets/images/img_1.png',
+                            height: 200,
+                            width: context.width,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Container(
+                          height: 200,
+                          width: context.width,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(35),
+                              topRight: Radius.circular(35),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
+                            //color: Colors.black87,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.9),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.9),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.8),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.7),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.5),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.4),
+                                Colors.transparent,
+                                Colors.transparent,
+                                Colors.transparent,
+                              ],
+                            ),
+                            /* color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.7),*/
+                          ),
+                        ),
+                        BlurryContainer(
+                            height: 200,
+                            width: context.width,
+                            blur: 3,
+                            child: SizedBox()),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          left: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                ),
+                                AppText(
+                                  text: 'Créer boutique',
+                                  color: AppColors.primaryColor,
+                                  fontSize: context.largeText,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          AppRoutes.VENDEURMAINPAGE,
+                                          (Route<dynamic> route) => false);
+                                    },
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary
+                                          .withOpacity(0.6),
+                                      size: 30,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AppText(
+                                  textAlign: TextAlign.center,
+                                  text:
+                                      'Bienvenue sur ${AppAttributes.appName}, $name\n',
+                                  color: Colors.white,
+                                  fontSize: context.largeText * 0.8,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.visible,
+                                ),
+                                AppText(
+                                  textAlign: TextAlign.center,
+                                  text: 'Commençons à créer votre boutique...',
+                                  color: Colors.white,
+                                  fontSize: context.largeText * 0.7,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: context.height * 0.15,
+                    child: AppText(
+                      textAlign: TextAlign.center,
+                      text:
+                          'Une boutique est la version numérique de votre ferme physique. Elle est un endroit qui vous permet de vendre vos produits et services. Vous pouvez vendre des produits et services qui vous correspondent et qui vous permettent de gagner de l\'argent.',
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.4),
+                      overflow: TextOverflow.visible,
+                      fontSize: context.smallText,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: AppButton(
+                    color: AppColors.primaryColor,
+                    height: context.height * 0.07,
+                    width: context.width * 0.9,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.INSCRIPTIONVENDEURPAGE,
+                      );
+                    },
+                    child: AppText(
+                      text: 'Commencer',
+                      //fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                )
+              ],
+            );
+          })
+      : null;
 }

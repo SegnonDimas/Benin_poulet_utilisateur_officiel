@@ -4,6 +4,10 @@ description: "Une application révolutionnaire dans le secteur économique au B�
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/logos/logoNoir.png"
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -81,6 +85,7 @@ dependencies:
   #google_sign_in: ^7.0.0
   google_sign_in: ^6.2.1 # C'est la dernière version compatible avec ce Firebase
   get_storage: ^2.1.1
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:

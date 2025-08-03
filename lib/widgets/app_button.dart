@@ -8,6 +8,7 @@ class AppButton extends StatefulWidget {
   final double? height;
   final double? width;
   final VoidCallback? onTap;
+  final List<BoxShadow>? boxShadow;
 
   const AppButton({
     super.key,
@@ -18,6 +19,7 @@ class AppButton extends StatefulWidget {
     this.onTap,
     this.width = 140,
     this.borderColor = Colors.transparent,
+    this.boxShadow,
   });
 
   @override
@@ -34,15 +36,15 @@ class _AppButtonState extends State<AppButton> {
         height: widget.height,
         width: widget.width,
         decoration: BoxDecoration(
-          color: widget.color ?? Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(widget.bordeurRadius!),
-          border: Border(
-            top: BorderSide(color: widget.borderColor!),
-            bottom: BorderSide(color: widget.borderColor!),
-            left: BorderSide(color: widget.borderColor!),
-            right: BorderSide(color: widget.borderColor!),
-          ),
-        ),
+            color: widget.color ?? Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(widget.bordeurRadius!),
+            border: Border(
+              top: BorderSide(color: widget.borderColor!),
+              bottom: BorderSide(color: widget.borderColor!),
+              left: BorderSide(color: widget.borderColor!),
+              right: BorderSide(color: widget.borderColor!),
+            ),
+            boxShadow: widget.boxShadow),
         child: widget.child,
       ),
     );

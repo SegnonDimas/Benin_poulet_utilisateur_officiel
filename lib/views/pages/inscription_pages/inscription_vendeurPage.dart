@@ -1,6 +1,6 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
@@ -329,7 +329,9 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                         position = _pageViewController.page!.toInt();
                         if (position == _pages.length - 1) {
                           Navigator.pushNamed(
-                              context, AppRoutes.VENDEURMAINPAGE);
+                              context,
+                              AppRoutes
+                                  .INSCRIPTIONVENDEURPAGE); //AppRoutes.VENDEURMAINPAGE);
                         }
                       },
                       child: Padding(

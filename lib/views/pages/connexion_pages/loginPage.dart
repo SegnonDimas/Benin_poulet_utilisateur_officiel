@@ -5,6 +5,7 @@ import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -90,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final se_souvenir = GetStorage();
 
+  bool _isMounted = false;
+
   @override
   void initState() {
     super.initState();
@@ -118,12 +121,20 @@ class _LoginPageState extends State<LoginPage> {
             child: Scaffold(
               backgroundColor: Theme.of(context).colorScheme.background,
               body: BlocConsumer<UserRoleBloc, UserRoleState>(
-                listener: (context, userRoleState) {
+                listenWhen: (previous, current) {
+                  // Ne réagir que si la page est dans l'arborescence de navigation
+                  return _isMounted;
+                },
+                listener: (context, uRoleState) {
                   // TODO: au cas où...
                 },
-                builder: (context, userRoleState) {
+                builder: (context, uRoleState) {
                   return BlocConsumer<AuthBloc, AuthState>(
-                    listener: (context, authState) {
+                    listenWhen: (previous, current) {
+                      // Ne réagir que si la page est dans l'arborescence de navigation
+                      return _isMounted;
+                    },
+                    listener: (context, authState) async {
                       if (authState is AuthFailure) {
                         final errorMsg = authState.errorMessage.toLowerCase();
 
@@ -142,16 +153,22 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }
 
+                      if (authState is GoogleLoginRequestFailure) {
+                        final errorMsg = authState.errorMessage.toLowerCase();
+                        AppUtils.showSnackBar(context, errorMsg);
+                      }
+
                       if (authState is AuthLoading) {
                         AppUtils.showInfoDialog(
                             context: context,
                             type: InfoType.loading,
                             message: "Patientez...");
-                      } else if (authState is AuthAuthenticated) {
+                      }
+                      if (authState is AuthAuthenticated) {
                         _passWordController.clear();
                         _phoneNumbercontroller.clear();
 
-                        print(":::::::::::App Role : ${userRoleState.role}");
+                        print(":::::::::::App Role : ${uRoleState.role}");
                         /*print(
                             ":::::::::::Firebase Role : ${_userData?['role']}");*/
 
@@ -162,13 +179,45 @@ class _LoginPageState extends State<LoginPage> {
                             ContentType.success,
                             AppColors.primaryColor);
 
-                        Navigator.pushNamedAndRemoveUntil(
+                        if (uRoleState.role == UserRoles.SELLER &&
+                            authState is! AuthLoading) {
+                        } else {}
+                        if (uRoleState.role == UserRoles.BUYER &&
+                            authState is! AuthLoading)
+
+                        // rediredction vers la page de destination
+                        {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.CLIENTHOMEPAGE,
+                              (Route<dynamic> route) => false);
+                        }
+
+                        uRoleState.role == UserRoles.SELLER
+                            ? AppUtils.showSnackBar(
+                                context, '${uRoleState.role}',
+                                backgroundColor: AppColors.redColor)
+                            : AppUtils.showSnackBar(
+                                context, '${uRoleState.role}',
+                                backgroundColor: AppColors.primaryColor);
+
+                        /*Navigator.pushNamedAndRemoveUntil(
                             context,
-                            userRoleState.role == UserRoles.SELLER
-                                ? AppRoutes.VENDEURMAINPAGE
+                            uRoleState.role == UserRoles.SELLER
+                                ? AppRoutes
+                                    .VENDEURMAINPAGE //AppRoutes.VENDEURMAINPAGE
                                 : AppRoutes.CLIENTHOMEPAGE,
-                            (Route<dynamic> route) => false);
+                            (Route<dynamic> route) => false);*/
                         // Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
+                      }
+
+                      if (authState is GoogleLoginRequestSuccess) {
+                        try {
+                          await AuthServices.signInWithGoogle();
+                        } catch (e) {
+                          AppUtils.showSnackBar(context, e.toString(),
+                              backgroundColor: AppColors.redColor);
+                        }
                       }
                     },
                     builder: (context, authState) {
@@ -619,6 +668,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _passWordController.dispose();
     _phoneNumbercontroller.dispose();
+    _isMounted = false;
     super.dispose();
   }
 }
