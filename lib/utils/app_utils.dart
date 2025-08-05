@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,6 +69,7 @@ class AppUtils {
     bool? isDestructiveActionOnCancel,
     bool? isDefaultActionOnConfirm,
     bool? isDefaultActionOnCancel,
+    bool hideContent = false,
     Curve? insetAnimationCurve,
     Color? titleColor,
     Color? confirmTextColor,
@@ -94,14 +96,40 @@ class AppUtils {
           ),
 
           // CONTENT
-          content: AppText(
-            text: content,
-            textAlign: TextAlign.center,
-            color: contentTextColor,
-            fontSize: contentSize ?? context.mediumText * 0.8,
-            overflow: TextOverflow.visible,
-            fontFamily: 'PoppinsMedium',
-          ),
+          content: !hideContent
+              ? AppText(
+                  text: content,
+                  textAlign: TextAlign.center,
+                  color: contentTextColor,
+                  fontSize: contentSize ?? context.mediumText * 0.8,
+                  overflow: TextOverflow.visible,
+                  fontFamily: 'PoppinsMedium',
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      AppText(
+                        text: content,
+                        textAlign: TextAlign.center,
+                        color: contentTextColor,
+                        fontSize: contentSize ?? context.mediumText * 0.8,
+                        overflow: TextOverflow.visible,
+                        fontFamily: 'PoppinsMedium',
+                      ),
+                      Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: BlurryContainer(
+                              borderRadius: BorderRadius.circular(0),
+                              blur: 2.2,
+                              child: SizedBox()))
+                    ],
+                  ),
+                ),
 
           // ACTIONS
           actions: [
@@ -296,23 +324,36 @@ class AppUtils {
           size: 45,
         );
         break;
-      case InfoType.other:
-        titleIcon = CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.primaryColor.withOpacity(0.5),
-          child: Image.asset(
-            ImagesPaths.LOGOBLANC,
-            fit: BoxFit.cover,
-            height: 25,
-          ),
+      case InfoType.networkError:
+        iconColor = CupertinoColors.systemGrey;
+        titleIcon = Icon(
+          CupertinoIcons.wifi_exclamationmark,
+          color: iconColor,
+          weight: 1,
+          size: 45,
         );
+        break;
+      case InfoType.other:
+        titleIcon = titleIcon ??
+            CircleAvatar(
+              radius: 25,
+              backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+              child: Image.asset(
+                ImagesPaths.LOGOBLANC,
+                fit: BoxFit.cover,
+                height: 25,
+              ),
+            );
+        break;
     }
     showCupertinoDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
         // Délai avant fermeture automatique
-        (type != InfoType.waiting && type != InfoType.loading)
+        (type != InfoType.waiting &&
+                type != InfoType.loading &&
+                type != InfoType.networkError)
             ? Future.delayed(duration ?? const Duration(seconds: 5), () {
                 if (context.mounted) {
                   if (Navigator.of(context).canPop()) {
@@ -340,4 +381,13 @@ class AppUtils {
   }
 }
 
-enum InfoType { success, error, info, loading, waiting, warning, other }
+enum InfoType {
+  success,
+  error,
+  info,
+  loading,
+  waiting,
+  warning,
+  networkError,
+  other
+}

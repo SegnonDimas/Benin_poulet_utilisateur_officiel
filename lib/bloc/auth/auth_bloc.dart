@@ -177,6 +177,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
         // Vérification spécifique au Bénin
         if (countryCode == '+229') {
+          print('''
+          :::: nationalNumber.length => ${nationalNumber.length}
+          :::: nationalNumber.startsWith('01') => ${nationalNumber.startsWith('01')}''');
+
           //vérifier que le numéro de teléphone commence par 01 et contient 10 chiffres
           if (nationalNumber.length != 10 || !nationalNumber.startsWith('01')) {
             emit(AuthFailure(
@@ -203,9 +207,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           /*
           emit(PhoneSignUpRequestSuccess(userId: userId!) as AuthState);
           */
-          print("::::::::::::::::JE SUIS VENU ICI::::::::::::");
+          print("::::::::::::::::JE SUIS VENU ICI : Authentifié ::::::::::::");
           //emit(AuthAuthenticated(userId: 'userId!'));
           emit(AuthAuthenticated());
+          emit(PhoneSignUpRequestSuccess());
         }
       } catch (e) {
         print(":::::::::::ERREUR : $e :::::::::::::");
@@ -218,7 +223,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         emit(AuthAuthenticated());
-        //return emit(GoogleLoginRequestSuccess(userId: userId!));
+        emit(GoogleLoginRequestSuccess());
       } catch (e) {
         emit(AuthFailure(errorMessage: e.toString()));
         //return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));

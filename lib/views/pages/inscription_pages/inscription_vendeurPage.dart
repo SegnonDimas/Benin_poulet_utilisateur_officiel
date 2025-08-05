@@ -1,6 +1,11 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/constants/storeState.dart';
+import 'package:benin_poulet/constants/storeStatus.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
+import 'package:benin_poulet/core/firebase/firestore/store_repository.dart';
+import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -322,64 +327,114 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                           ),
                   ],
                 ),
-                bottomNavigationBar: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: SizedBox(
-                    height: context.height * 0.07,
-                    width: context.width,
-                    child: Row(
-                      mainAxisAlignment: position == 0
-                          ? MainAxisAlignment.center
-                          : MainAxisAlignment.spaceEvenly,
-                      children: [
-                        //bouton suivant
-                        GestureDetector(
-                          onTap: () {
-                            _pageViewController.nextPage(
-                              duration: const Duration(milliseconds: 10),
-                              curve: Curves.linear,
-                            );
-                            position = _pageViewController.page!.toInt();
-                            if (position == _pages.length - 1) {
-                              Navigator.pushNamed(
-                                  context,
-                                  AppRoutes
-                                      .INSCRIPTIONVENDEURPAGE); //AppRoutes.VENDEURMAINPAGE);
-                            }
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 0,
-                                //context.width * 0.03,
-                                right: 0,
-                              ),
-                              //context.width * 0.03),
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  height: context.height * 0.07,
-                                  width: context.width * 0.9,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: AppColors.primaryColor),
-                                  child: position != _pages.length - 1
-                                      ? Text(
-                                          'Suivant',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize:
-                                                  context.mediumText * 1.2),
-                                        )
-                                      : Text(
-                                          'Soumettre',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize:
-                                                  context.mediumText * 1.2),
-                                        ))),
+                bottomNavigationBar:
+                    BlocBuilder<StoreCreationBloc, StoreCreationState>(
+                  builder: (context, state) {
+                    final storeState = context.watch<StoreCreationBloc>().state
+                        as StoreCreationGlobalState;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: SizedBox(
+                        height: context.height * 0.07,
+                        width: context.width,
+                        child: Row(
+                          mainAxisAlignment: position == 0
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.spaceEvenly,
+                          children: [
+                            //bouton suivant
+                            GestureDetector(
+                              onTap: () {
+                                _pageViewController.nextPage(
+                                  duration: const Duration(milliseconds: 10),
+                                  curve: Curves.linear,
+                                );
+                                position = _pageViewController.page!.toInt();
+                                if (position == _pages.length - 1) {
+                                  Store storeData = Store(
+                                    storeName: storeState.storeName!,
+                                    sellerId: AuthServices.userId!,
+                                    storeDescription: '', //TODO
+                                    storeAddress:
+                                        storeState.locationDescription,
+                                    storePhone: storeState.storePhoneNumber,
+                                    storeEmail: storeState.storeEmail,
+                                    storeLogoPath: '', //TODO
+                                    storeCoverPath: '', //TODO
+                                    storeState: StoreState.open,
+                                    storeStatus: StoreStatus.active,
+                                    storeSectors: storeState.storeSectors,
+                                    storeSubsectors: storeState.storeSubSectors,
+                                    storeProducts: [],
+                                    storeRatings: [0],
+                                    storeFiscalType: storeState.storeFiscalType,
+                                    paymentMethod: storeState.paymentMethod,
+                                    paymentPhoneNumber:
+                                        storeState.paymentPhoneNumber,
+                                    payementOwnerName:
+                                        storeState.payementOwnerName,
+                                    sellerOwnDeliver:
+                                        storeState.sellerOwnDeliver,
+                                    storeLocation: storeState.storeLocation,
+                                    storeComments: [],
+                                    /*'sellerLastName': storeState.sellerLastName,
+                                    'sellerBirthDate':
+                                        storeState.sellerBirthDate,
+                                    'sellerBirthPlace':
+                                        storeState.sellerBirthPlace,
+                                    'sellerCurrentLocation':
+                                        storeState.sellerCurrentLocation,*/
+
+                                    /*'country': storeState.country,
+                                    'idendityDocument':
+                                        storeState.idendityDocument,
+                                    'photoRectoIdendityDocument':
+                                        storeState.photoRectoIdendityDocument,
+                                    'photoVersoIdendityDocument':
+                                        storeState.photoVersoIdendityDocument,
+                                    'fullPhoto': storeState.fullPhoto,*/
+                                  );
+                                  FirestoreStoreService().addStore(storeData);
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.VENDEURMAINPAGE);
+                                }
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 0,
+                                    //context.width * 0.03,
+                                    right: 0,
+                                  ),
+                                  //context.width * 0.03),
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      height: context.height * 0.07,
+                                      width: context.width * 0.9,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: AppColors.primaryColor),
+                                      child: position != _pages.length - 1
+                                          ? Text(
+                                              'Suivant',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      context.mediumText * 1.2),
+                                            )
+                                          : Text(
+                                              'Soumettre',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      context.mediumText * 1.2),
+                                            ))),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ))));
   }
 

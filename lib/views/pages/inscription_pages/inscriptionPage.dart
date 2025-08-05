@@ -6,6 +6,7 @@ import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/firestore/error_report_repository.dart';
+import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
 import 'package:benin_poulet/models/error_report.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
@@ -15,7 +16,6 @@ import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -60,21 +60,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
   /// signUp()
   Future<void> signUp(String email, String password) async {
-    try {
-      context.read<AuthBloc>().add(
-            PhoneSignUpRequested(
-              firstName: _firstNameController.text.trim(),
-              lastName: _lastNameController.text.trim(),
-              phoneNumber: phoneNumber, // déjà formaté
-              password: password,
-              confirmPassword: _confirmPassWordController.text.trim(),
-            ),
-          );
-    } catch (e) {
-      if (kDebugMode) {
-        print("::::::::::::Erreur durant l'inscription : $e :::::::::::::::");
-      }
-    }
+    context.read<AuthBloc>().add(
+          PhoneSignUpRequested(
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            phoneNumber: phoneNumber, // déjà formaté
+            password: password,
+            confirmPassword: _confirmPassWordController.text.trim(),
+          ),
+        );
   }
 
   Future<Map> getDeviceInfos() async {
@@ -120,6 +114,16 @@ class _InscriptionPageState extends State<InscriptionPage> {
       top: false,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.touch_app,
+            ),
+            onPressed: () => _showBottomSheet(context),
+          ),
+        ),
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
           listenWhen: (previous, current) {
             // Ne réagir que si la page est dans l'arborescence de navigation
@@ -137,7 +141,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 return _isMounted;
               },
               listener: (context, authState) async {
+                // Lorsqu'il y a une erreur
                 if (authState is AuthFailure) {
+                  // Erreur due au  numéro de téléphone, cas du Bénin
                   if (authState.errorMessage.toLowerCase().contains('bénin') ||
                       authState.errorMessage.contains('01')) {
                     AppUtils.showInfoDialog(
@@ -146,47 +152,41 @@ class _InscriptionPageState extends State<InscriptionPage> {
                         type: InfoType.error,
                         onTitleIconTap: () => Navigator.pop(context));
                   } else {
+                    // Autres cas d'erreurs
                     AppUtils.showSnackBar(context, authState.errorMessage);
                   }
-                } else if (authState is AuthLoading) {
-                  //
-                  /*AppUtils.showInfoDialog(
+                }
+
+                // Lorsque l'inscription est en cours
+                if (authState is AuthLoading) {
+                  AppUtils.showInfoDialog(
                       context: context,
                       message: "Veuillez patienter...",
-                      type: InfoType.loading);*/
-                } else if (authState is PhoneSignUpRequestSuccess) {
+                      type: InfoType.loading);
+                }
+
+                // Lorsque l'inscription est effectuée par numéro de téléphone
+                if (authState is PhoneSignUpRequestSuccess) {
                   try {
-                    //final _email = _formatEmailFromPhone(phoneNumber);
                     final _password = _passWordController.text;
                     final fullName =
                         '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
-                    /*await AuthServices.createEmailAuth(_email, _password,
-                    authProvider: AuthProviders.PHONE);*/
+
                     await AuthServices.createPhoneAuth(phoneNumber, _password,
                         fullName: fullName,
                         password: _passWordController.text,
                         role: userRoleState.role!);
-                    //Navigator.pop(context);
-                    /*_showAwesomeSnackBar(
-                      context,
-                      'Inscription Réussie',
-                      'Votre inscription est effectuée avec succès',
-                      ContentType.success,
-                      AppColors.primaryColor,
-                    );*/
 
-                    if (userRoleState.role ==
-                            UserRoles
-                                .SELLER /*&&
-                        authState is! AuthLoading*/
-                        ) {
+                    // si c'est un vendeur
+                    if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
-                      context.mounted ? _showBottomSheet(context) : null;
-                    } else if (userRoleState.role ==
-                            UserRoles
-                                .BUYER /*&&
-                        authState is! AuthLoading*/
-                        ) {
+                      context.mounted
+                          ? {Navigator.pop(context), _showBottomSheet(context)}
+                          : null;
+                    }
+
+                    // si c'est un acheteur
+                    if (userRoleState.role == UserRoles.BUYER) {
                       // rediredction vers la page de destination
                       context.mounted
                           ? Navigator.pushNamedAndRemoveUntil(
@@ -196,55 +196,78 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           : null;
                     }
 
-                    // Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
-
                     // Réinitialiser les champs
-                    /* _passWordController.clear();
+                    _passWordController.clear();
                     _phoneNumbercontroller.clear();
                     _confirmPassWordController.clear();
                     _firstNameController.clear();
-                    _lastNameController.clear();*/
+                    _lastNameController.clear();
                   } catch (e) {
+                    // Enregistrer le rapport d'erreur
                     ErrorReport errorReport = ErrorReport(
                       errorMessage: e.toString(),
                       date: DateTime.now(),
                     );
+
+                    //
                     if (context.mounted) {
+                      // si le numéro de téléphone est deja associé à un compte
                       if (e.toString().contains('already')) {
-                        AppUtils.showSnackBar(
-                          context,
-                          "Ce numéro de téléphone est deja associé a un compte",
-                          backgroundColor: AppColors.redColor,
+                        Navigator.pop(context);
+                        AppUtils.showInfoDialog(
+                            context: context,
+                            message:
+                                "Ce numéro de téléphone est deja associé a un compte",
+                            type: InfoType.info);
+                      } else if (e.toString().contains('network') ||
+                          e.toString().contains('internal')) {
+                        Navigator.pop(context);
+                        AppUtils.showInfoDialog(
+                            context: context,
+                            message:
+                                "Veuillez verifier votre connexion internet et reessayer",
+                            type: InfoType.networkError);
+                      } else {
+                        // affichier le dialogue d'envoi du rapport d'erreur
+                        Navigator.pop(context);
+                        AppUtils.showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          hideContent: true,
+                          title: 'Rapport d\'erreur',
+                          content: e.toString(),
+                          cancelText: 'Fermer',
+                          confirmText: 'Envoyer le rapport',
+                          cancelTextColor: AppColors.primaryColor,
+                          confirmTextColor: AppColors.redColor,
+                          onConfirm: () async {
+                            await FirebaseErrorReportRepository()
+                                .sendErrorReport(errorReport);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
                         );
                       }
-                      await AppUtils.showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        title: 'Rapport d\'erreur',
-                        content: "e.toString()",
-                        cancelText: 'Fermer',
-                        confirmText: 'Envoyer le rapport',
-                        cancelTextColor: AppColors.primaryColor,
-                        confirmTextColor: AppColors.redColor,
-                        onConfirm: () async {
-                          await FirebaseErrorReportRepository()
-                              .sendErrorReport(errorReport);
-                        },
-                      );
                     }
                     if (kDebugMode) {
                       print(
                           ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
                     }
                   }
-                } else if (authState is GoogleLoginRequestSuccess) {
+                }
+
+                // Lorsque l'inscription est effectuée par compte Google
+                if (authState is GoogleLoginRequestSuccess) {
                   try {
                     await AuthServices.signInWithGoogle(
                       role: userRoleState.role!,
                     );
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
-                      context.mounted ? _showBottomSheet(context) : null;
+                      context.mounted
+                          ? {Navigator.pop(context), _showBottomSheet(context)}
+                          : null;
                     } else if (userRoleState.role == UserRoles.BUYER) {
                       // rediredction vers la page de destination
                       context.mounted
@@ -255,48 +278,58 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           : null;
                     }
                   } catch (e) {
+                    // Enregistrer le rapport d'erreur
                     ErrorReport errorReport = ErrorReport(
                       errorMessage: e.toString(),
                       date: DateTime.now(),
                     );
+
+                    //
                     if (context.mounted) {
+                      // si l'adresse est deja associée à un compte
                       if (e.toString().contains('already')) {
+                        Navigator.pop(context);
                         AppUtils.showSnackBar(
                           context,
                           "Cette adresse est deja associée a un compte",
                           backgroundColor: AppColors.redColor,
                         );
+                      } else if (e.toString().contains('network_error') ||
+                          e.toString().contains('internal')) {
+                        Navigator.pop(context);
+                        AppUtils.showInfoDialog(
+                            context: context,
+                            message:
+                                "Veuillez verifier votre connexion internet et reessayer",
+                            type: InfoType.networkError);
+                      } else {
+                        // affichier le dialogue d'envoi du rapport d'erreur
+                        Navigator.pop(context);
+                        await AppUtils.showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          hideContent: true,
+                          title: 'Rapport d\'erreur',
+                          content: e.toString(),
+                          cancelText: 'Fermer',
+                          confirmText: 'Envoyer le rapport',
+                          cancelTextColor: AppColors.primaryColor,
+                          confirmTextColor: AppColors.redColor,
+                          onConfirm: () async {
+                            await FirebaseErrorReportRepository()
+                                .sendErrorReport(errorReport);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
+                        );
                       }
-                      await AppUtils.showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        title: 'Rapport d\'erreur',
-                        content: e.toString(),
-                        cancelText: 'Fermer',
-                        confirmText: 'Envoyer le rapport',
-                        cancelTextColor: AppColors.primaryColor,
-                        confirmTextColor: AppColors.redColor,
-                        onConfirm: () async {
-                          await FirebaseErrorReportRepository()
-                              .sendErrorReport(errorReport);
-                          Navigator.pop(context);
-                        },
-                      );
                     }
                     if (kDebugMode) {
                       print(
                           ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
                     }
                   }
-                } else {
-                  if (kDebugMode) {
-                    print("::::::::::::: STATE : $authState ::::::::::::");
-                    print("::::::::::VEILLEZ PATIENTER::::::::::");
-                  }
-                }
-                if (kDebugMode) {
-                  print("::::::::::::: STATE : $authState ::::::::::::");
-                  print("::::::::::::: LISTINER END ::::::::::::");
                 }
               },
               builder: (context, authState) {
@@ -665,8 +698,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                             width: context.width * 0.9,
                                             color: AppColors.primaryColor,
                                             onTap: () {
+                                              // si le formulaire est validé
                                               if (_formKey.currentState!
                                                   .validate()) {
+                                                // conversion du numéro en email
                                                 final formattedEmail =
                                                     _formatEmailFromPhone(
                                                         phoneNumber);
@@ -676,7 +711,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   context: context,
                                                   title:
                                                       phoneNumber.phoneNumber ??
-                                                          '',
+                                                          _phoneNumbercontroller
+                                                              .text,
                                                   content:
                                                       'Votre numéro est-il correct ?',
                                                   barrierDismissible: false,
@@ -696,36 +732,25 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   titleColor:
                                                       AppColors.primaryColor,
 
-                                                  //
+                                                  // Choix de modification du numéro
                                                   onConfirm: () {
-                                                    print(":::::::::::Cancel");
                                                     Navigator.pop(context);
                                                   }, // Modifier le numéro
-                                                  onCancel: () async {
-                                                    print(
-                                                        ":::::::::::Confirm init");
-                                                    // Confirmer et lancer inscription
 
+                                                  // Confirmer et lancer inscription
+                                                  onCancel: () async {
+                                                    // Confirmer et lancer inscription
                                                     Navigator.pop(context);
-                                                    print(
-                                                        ":::::::::::Confirm pop");
                                                     await signUp(
                                                         formattedEmail,
                                                         _passWordController
                                                             .text);
 
-                                                    print(
-                                                        "=========STATE : ${authState.runtimeType} ==========");
-                                                    //print("=========STATE : ${authState} ==========");
-                                                    print(
-                                                        ":::::::::::Confirm completed");
-
-                                                    if (authState
+                                                    /*if (authState
                                                             is AuthAuthenticated ||
                                                         authState
-                                                            is PhoneSignUpRequestSuccess) {
-                                                      print(
-                                                          ":::::::::::ICI 1-3");
+                                                            is PhoneSignUpRequestSuccess)
+                                                    {
                                                       try {
                                                         final _email =
                                                             _formatEmailFromPhone(
@@ -777,12 +802,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                         print(
                                                             ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
                                                       }
-                                                    }
+                                                    }*/
                                                   },
                                                 );
                                               } else {
                                                 AppUtils.showSnackBar(context,
-                                                    "Veuillez remplir tous les champs");
+                                                    "Rassurez-vous d'avoir bien rempli tous les champs");
                                               }
                                             },
                                             child: isSignUp
@@ -1014,10 +1039,8 @@ void _showAwesomeSnackBar(BuildContext context, String title, String message,
 /// bottom sheet
 
 Future<void> _showBottomSheet(BuildContext context) async {
-  DocumentSnapshot doc = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(AuthServices.userId)
-      .get();
+  final doc = await FirestoreService.currentUser;
+
   var name = '';
   if (doc.exists) {
     name = doc['fullName'] ?? '';
@@ -1034,15 +1057,15 @@ Future<void> _showBottomSheet(BuildContext context) async {
                 //SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 4.0, bottom: 8.0, left: 4.0, right: 4.0),
+                      top: 1.0, bottom: 8.0, left: 1.0, right: 1.0),
                   child: SizedBox(
-                    height: 200,
+                    height: 180,
                     child: Stack(
                       children: [
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(35),
-                            topRight: Radius.circular(35),
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                             bottomLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20),
                           ),
@@ -1054,7 +1077,7 @@ Future<void> _showBottomSheet(BuildContext context) async {
                           ),
                         ),
                         Container(
-                          height: 200,
+                          height: 180,
                           width: context.width,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
@@ -1071,7 +1094,11 @@ Future<void> _showBottomSheet(BuildContext context) async {
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
-                                    .withOpacity(0.9),
+                                    .withOpacity(0.95),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.95),
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
@@ -1083,15 +1110,11 @@ Future<void> _showBottomSheet(BuildContext context) async {
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
-                                    .withOpacity(0.7),
+                                    .withOpacity(0.6),
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
                                     .withOpacity(0.5),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.4),
                                 Colors.transparent,
                                 Colors.transparent,
                                 Colors.transparent,
@@ -1104,9 +1127,15 @@ Future<void> _showBottomSheet(BuildContext context) async {
                           ),
                         ),
                         BlurryContainer(
-                            height: 200,
+                            height: 180,
                             width: context.width,
-                            blur: 3,
+                            blur: 2,
+                            borderRadius: const BorderRadius.only(
+                              // topLeft: Radius.circular(35),
+                              // topRight: Radius.circular(35),
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
                             child: SizedBox()),
                         Positioned(
                           top: 4,

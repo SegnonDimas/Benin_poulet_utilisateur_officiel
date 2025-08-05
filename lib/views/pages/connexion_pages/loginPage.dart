@@ -133,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                   return BlocConsumer<AuthBloc, AuthState>(
                     listenWhen: (previous, current) {
                       // Ne réagir que si la page est dans l'arborescence de navigation
-                      return _isMounted;
+                      //return _isMounted;
+                      return false;
                     },
                     listener: (context, authState) async {
                       if (authState is AuthFailure) {

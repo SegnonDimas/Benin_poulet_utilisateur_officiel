@@ -95,6 +95,7 @@ class StoreCreationGlobalState extends StoreCreationState {
   final String? storeEmail;
   final List<String>? storeSectors;
   final List<String>? storeSubSectors;
+  //TODO final List<String>? storeProducts;
   final String? storeFiscalType;
   final String? paymentMethod;
   final String? paymentPhoneNumber;
