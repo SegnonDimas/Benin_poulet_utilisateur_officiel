@@ -96,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _shouldInterceptBack = true;
@@ -159,18 +160,27 @@ class _LoginPageState extends State<LoginPage> {
                       }
 
                       if (authState is AuthLoading) {
-                        AppUtils.showInfoDialog(
+                        /*AppUtils.showInfoDialog(
                             context: context,
                             type: InfoType.loading,
-                            message: "Patientez...");
+                            message: "Patientez...");*/
                       }
-                      if (authState is AuthAuthenticated) {
-                        _passWordController.clear();
-                        _phoneNumbercontroller.clear();
+                      if (authState is PhoneLoginRequestSuccess) {
+                        try {
+                          var _password = _passWordController.text;
+                          AuthServices.signInWithPhone(number, _password);
+                          AppUtils.showSnackBar(context, 'Connexion Réussie');
+                          print("::::::::::::::::JE SUIS LÀ::::::::::::::::");
 
-                        print(":::::::::::App Role : ${uRoleState.role}");
-                        /*print(
-                            ":::::::::::Firebase Role : ${_userData?['role']}");*/
+                          /*_passWordController.clear();
+                          _phoneNumbercontroller.clear();*/
+                        } on FirebaseException catch (e) {
+                          //AppUtils.showSnackBar(context, e.toString());
+                          print('::::::::::::::ERREUR : $e');
+                        } catch (e) {
+                          //AppUtils.showSnackBar(context, e.toString());
+                          print('::::::::::::::ERREUR : $e');
+                        }
 
                         AppUtils.showAwesomeSnackBar(
                             context,

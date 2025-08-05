@@ -148,17 +148,11 @@ class AuthServices {
     PhoneNumber _phoneNumber,
     String _password,
   ) async {
-    try {
-      var email = _formatEmailFromPhone(_phoneNumber).trim();
-      var password = _password.trim();
-      final phoneUser = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      phoneUser;
-    } catch (e) {
-      if (kDebugMode) {
-        print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
-      }
-    }
+    var email = _formatEmailFromPhone(_phoneNumber).trim();
+    var password = _password.trim();
+    final phoneUser =
+        await auth.signInWithEmailAndPassword(email: email, password: password);
+    phoneUser;
   }
 
   //============================================
@@ -169,6 +163,11 @@ class AuthServices {
     String role = UserRoles.BUYER,
   }) async {
     // Déconnecte le compte mis en cache pour forcer la sélection à la prochaine connexion
+    /*if (GoogleSignIn().currentUser != null) {
+      //await auth.signOut();
+      await GoogleSignIn().signOut();
+    }*/
+
     await GoogleSignIn().signOut();
     // Déclenche le flux de connexion
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -217,7 +216,7 @@ class AuthServices {
   static Future<void> signOutOfGoogle() async {
     try {
       await GoogleSignIn().signOut();
-      await auth.signOut();
+      //await auth.signOut();
     } catch (e) {
       print('Erreur lors de la déconnexion: $e');
     }

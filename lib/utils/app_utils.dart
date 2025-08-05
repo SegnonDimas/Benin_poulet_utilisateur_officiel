@@ -314,8 +314,10 @@ class AppUtils {
         // Délai avant fermeture automatique
         (type != InfoType.waiting && type != InfoType.loading)
             ? Future.delayed(duration ?? const Duration(seconds: 5), () {
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                if (context.mounted) {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
                 }
               })
             : {};

@@ -5,6 +5,8 @@ import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/core/firebase/firestore/error_report_repository.dart';
+import 'package:benin_poulet/models/error_report.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -14,6 +16,7 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +77,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
     }
   }
 
+  Future<Map> getDeviceInfos() async {
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    final deviceInfo = await deviceInfoPlugin.deviceInfo;
+    final allInfo = deviceInfo.data;
+    return allInfo;
+  }
+
+  var deviceInfos = {};
+
   bool _isMounted = false;
 
   @override
@@ -82,6 +94,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
     super.initState();
 
     _isMounted = true;
+
+    getDeviceInfos();
 
     _passWordController = TextEditingController(text: '12345678');
     _confirmPassWordController = TextEditingController(text: '12345678');
@@ -136,10 +150,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   }
                 } else if (authState is AuthLoading) {
                   //
-                  AppUtils.showInfoDialog(
+                  /*AppUtils.showInfoDialog(
                       context: context,
                       message: "Veuillez patienter...",
-                      type: InfoType.loading);
+                      type: InfoType.loading);*/
                 } else if (authState is PhoneSignUpRequestSuccess) {
                   try {
                     //final _email = _formatEmailFromPhone(phoneNumber);
@@ -191,6 +205,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     _firstNameController.clear();
                     _lastNameController.clear();*/
                   } catch (e) {
+                    ErrorReport errorReport = ErrorReport(
+                      errorMessage: e.toString(),
+                      date: DateTime.now(),
+                    );
                     if (context.mounted) {
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
@@ -199,14 +217,19 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           backgroundColor: AppColors.redColor,
                         );
                       }
-                      AppUtils.showDialog(
+                      await AppUtils.showDialog(
                         context: context,
+                        barrierDismissible: false,
                         title: 'Rapport d\'erreur',
-                        content: e.toString(),
+                        content: "e.toString()",
                         cancelText: 'Fermer',
                         confirmText: 'Envoyer le rapport',
                         cancelTextColor: AppColors.primaryColor,
                         confirmTextColor: AppColors.redColor,
+                        onConfirm: () async {
+                          await FirebaseErrorReportRepository()
+                              .sendErrorReport(errorReport);
+                        },
                       );
                     }
                     if (kDebugMode) {
@@ -232,6 +255,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           : null;
                     }
                   } catch (e) {
+                    ErrorReport errorReport = ErrorReport(
+                      errorMessage: e.toString(),
+                      date: DateTime.now(),
+                    );
                     if (context.mounted) {
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
@@ -240,14 +267,20 @@ class _InscriptionPageState extends State<InscriptionPage> {
                           backgroundColor: AppColors.redColor,
                         );
                       }
-                      AppUtils.showDialog(
+                      await AppUtils.showDialog(
                         context: context,
+                        barrierDismissible: false,
                         title: 'Rapport d\'erreur',
                         content: e.toString(),
                         cancelText: 'Fermer',
                         confirmText: 'Envoyer le rapport',
                         cancelTextColor: AppColors.primaryColor,
                         confirmTextColor: AppColors.redColor,
+                        onConfirm: () async {
+                          await FirebaseErrorReportRepository()
+                              .sendErrorReport(errorReport);
+                          Navigator.pop(context);
+                        },
                       );
                     }
                     if (kDebugMode) {
