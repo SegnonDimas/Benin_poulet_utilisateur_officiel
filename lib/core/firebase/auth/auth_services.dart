@@ -10,7 +10,7 @@ import '../firestore/user_repository.dart';
 
 class AuthServices {
   static final auth = FirebaseAuth.instance; //actuelle instance
-  static final firestoreService = FirestoreService();
+  static final firestoreService = FirestoreUserServices();
   static var userId = auth.currentUser?.uid;
   //static final GoogleSignInAccount? googleUser = GoogleSignIn().signIn();;
 

@@ -1,9 +1,8 @@
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../core/firebase/firestore/user_repository.dart';
 
 part 'user_role_event.dart';
 part 'user_role_state.dart';
@@ -15,7 +14,7 @@ class UserRoleBloc extends Bloc<UserRoleEvent, UserRoleState> {
     on<LoadUserRole>((event, emit) async {
       try {
         final auth = FirebaseAuth.instance;
-        final fs = FirestoreService();
+        final fs = FirestoreUserServices();
         final u = await auth.signInAnonymously();
         if (auth.currentUser == null) {
           u;

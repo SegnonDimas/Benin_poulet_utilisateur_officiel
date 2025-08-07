@@ -351,6 +351,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                 );
                                 position = _pageViewController.page!.toInt();
                                 if (position == _pages.length - 1) {
+                                  // Création de la boutique avec l'id de l'utilisateur courant
                                   Store storeData = Store(
                                     storeName: storeState.storeName!,
                                     sellerId: AuthServices.userId!,
@@ -394,7 +395,13 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                         storeState.photoVersoIdendityDocument,
                                     'fullPhoto': storeState.fullPhoto,*/
                                   );
+
+                                  // Ajout de la boutique à Firebase
                                   FirestoreStoreService().addStore(storeData);
+
+                                  // Ajout de la boutique à la liste des boutiques du vendeur
+
+                                  // Redirection vers la page de vente
                                   Navigator.pushNamed(
                                       context, AppRoutes.VENDEURMAINPAGE);
                                 }

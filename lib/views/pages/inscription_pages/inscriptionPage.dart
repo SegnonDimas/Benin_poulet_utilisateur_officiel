@@ -1039,7 +1039,7 @@ void _showAwesomeSnackBar(BuildContext context, String title, String message,
 /// bottom sheet
 
 Future<void> _showBottomSheet(BuildContext context) async {
-  final doc = await FirestoreService.currentUser;
+  final doc = await FirestoreUserServices.currentUser;
 
   var name = '';
   if (doc.exists) {

@@ -2,10 +2,12 @@ import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/user.dart';
+import 'seller_repository.dart';
 
 /// Service pour interagir avec Firestore concernant les utilisateurs.
-class FirestoreService {
+class FirestoreUserServices {
   final FirebaseFirestore firebaseInstance = FirebaseFirestore.instance;
+  final SellerRepository _sellerRepository = SellerRepository();
 
   static final currentUser = FirebaseFirestore.instance
       .collection('users')
@@ -14,11 +16,30 @@ class FirestoreService {
 
   /// Crée ou met à jour un utilisateur dans Firestore.
   /// Si l'utilisateur existe déjà, seuls les champs spécifiés sont mis à jour grâce à `merge: true`.
+  /// Si l'utilisateur est un vendeur, crée ou met à jour son profil vendeur en préservant les données existantes.
   Future<void> createOrUpdateUser(AppUser user) async {
+    final userData = user.toMap();
+    
+    // Mise à jour de l'utilisateur dans la collection 'users'
     await firebaseInstance.collection('users').doc(user.userId).set(
-          user.toMap(),
+          userData,
           SetOptions(merge: true),
         );
+    
+    // Si l'utilisateur est un vendeur, on s'assure qu'il existe dans la collection 'sellers'
+    if (user.role == 'seller') {
+      // On passe le repository pour pouvoir récupérer les données existantes si nécessaire
+      final seller = await SellerRepository.createSellerFromUser(
+        userId: user.userId,
+        role: user.role,
+        fullName: user.fullName,
+        email: user.authIdentifier,
+        phoneNumber: user.authIdentifier, // Supposant que l'identifiant est un numéro de téléphone
+        repository: _sellerRepository,
+      );
+      
+      await _sellerRepository.createOrUpdateSeller(seller);
+    }
   }
 
   /// Récupère un utilisateur à partir de son ID.
