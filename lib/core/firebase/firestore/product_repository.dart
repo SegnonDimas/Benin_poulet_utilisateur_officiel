@@ -1,8 +1,11 @@
+import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
+import 'package:benin_poulet/constants/firebase_collections/productsCollection.dart';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreProductService {
-  final _productsRef = FirebaseFirestore.instance.collection('products');
+  final _productsRef = FirebaseFirestore.instance
+      .collection(FirebaseCollections.productsCollection);
 
   // Ajouter un produit
   Future<void> addProduct(Produit produit) async {
@@ -33,7 +36,10 @@ class FirestoreProductService {
 
   // Récupérer tous les produits d’un store
   Stream<List<Produit>> getProductsByStore(String storeId) {
-    return _productsRef.where('storeId', isEqualTo: storeId).snapshots().map(
+    return _productsRef
+        .where(ProductsCollection.storeId, isEqualTo: storeId)
+        .snapshots()
+        .map(
       (snapshot) {
         return snapshot.docs.map((doc) => Produit.fromDocument(doc)).toList();
       },

@@ -1,3 +1,5 @@
+import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
+import 'package:benin_poulet/constants/firebase_collections/storesCollection.dart';
 import 'package:benin_poulet/models/store.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,7 +15,8 @@ class FirestoreStoreService {
     required Store storeData,
   }) async {
     // Création de la boutique
-    final docRef = _firestore.collection('stores').doc();
+    final docRef =
+        _firestore.collection(FirebaseCollections.storesCollection).doc();
     final storeWithId = storeData.copyWith(
       storeId: docRef.id,
       sellerId: sellerId,
@@ -30,7 +33,8 @@ class FirestoreStoreService {
 
   /// Ajoute une boutique à Firestore
   Future<String> addStore(Store storeData) async {
-    final docRef = _firestore.collection('stores').doc();
+    final docRef =
+        _firestore.collection(FirebaseCollections.storesCollection).doc();
     final storeWithId = storeData.copyWith(storeId: docRef.id);
     await docRef.set(storeWithId.toMap());
 
@@ -47,7 +51,10 @@ class FirestoreStoreService {
     required String storeId,
     required Map<String, dynamic> updates,
   }) async {
-    await _firestore.collection('stores').doc(storeId).update(updates);
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update(updates);
   }
 
   /// Supprime une boutique et la retire de la liste du vendeur
@@ -59,12 +66,18 @@ class FirestoreStoreService {
     await _sellerRepository.removeStoreFromSeller(sellerId, storeId);
 
     // Suppression de la boutique
-    await _firestore.collection('stores').doc(storeId).delete();
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .delete();
   }
 
   /// Récupère une boutique par son ID
   Future<Store?> getStore(String storeId) async {
-    final doc = await _firestore.collection('stores').doc(storeId).get();
+    final doc = await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .get();
     if (doc.exists) {
       return Store.fromMap(doc.data()!);
     }
@@ -74,8 +87,8 @@ class FirestoreStoreService {
   /// Récupère toutes les boutiques d'un vendeur
   Stream<List<Store>> getStoresBySeller(String sellerId) {
     return _firestore
-        .collection('stores')
-        .where('sellerId', isEqualTo: sellerId)
+        .collection(FirebaseCollections.storesCollection)
+        .where(StoresCollection.sellerId, isEqualTo: sellerId)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Store.fromMap(doc.data())).toList());
@@ -84,7 +97,7 @@ class FirestoreStoreService {
   /// Écoute les changements sur une boutique
   Stream<Store?> streamStore(String storeId) {
     return _firestore
-        .collection('stores')
+        .collection(FirebaseCollections.storesCollection)
         .doc(storeId)
         .snapshots()
         .map((doc) => doc.exists ? Store.fromMap(doc.data()!) : null);

@@ -1,4 +1,6 @@
 import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
+import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
+import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,7 +33,7 @@ class FirestoreUserServices {
         );
 
     // Si l'utilisateur est un vendeur, on s'assure qu'il existe dans la collection 'sellers'
-    if (user.role == 'seller') {
+    if (user.role == UserRoles.SELLER) {
       // On passe le repository pour pouvoir récupérer les données existantes si nécessaire
       final seller = await SellerRepository.createSellerFromUser(
         userId: user.userId,
@@ -99,7 +101,7 @@ class FirestoreUserServices {
   Future<List<AppUser>> getUsersByRole(String role) async {
     final querySnapshot = await firebaseInstance
         .collection(FirebaseCollections.usersCollection)
-        .where('role', isEqualTo: role)
+        .where(UsersCollection.role, isEqualTo: role)
         .get();
     return querySnapshot.docs
         .map((doc) => AppUser.fromMap(doc.data()))

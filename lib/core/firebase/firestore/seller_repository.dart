@@ -1,20 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
 import 'package:benin_poulet/models/seller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SellerRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Crée ou met à jour un vendeur dans la collection 'sellers'
+  /// Crée ou met à jour un vendeur dans la collection FirebaseCollections.sellersCollection
   Future<void> createOrUpdateSeller(Seller seller) async {
     await _firestore
-        .collection('sellers')
+        .collection(FirebaseCollections.sellersCollection)
         .doc(seller.sellerId)
         .set(seller.toMap(), SetOptions(merge: true));
   }
 
   /// Récupère un vendeur par son ID
   Future<Seller?> getSeller(String sellerId) async {
-    final doc = await _firestore.collection('sellers').doc(sellerId).get();
+    final doc = await _firestore
+        .collection(FirebaseCollections.sellersCollection)
+        .doc(sellerId)
+        .get();
     if (doc.exists) {
       return Seller.fromMap(doc.data()!);
     }
@@ -41,14 +45,17 @@ class SellerRepository {
 
   /// Vérifie si un vendeur existe
   Future<bool> sellerExists(String sellerId) async {
-    final doc = await _firestore.collection('sellers').doc(sellerId).get();
+    final doc = await _firestore
+        .collection(FirebaseCollections.sellersCollection)
+        .doc(sellerId)
+        .get();
     return doc.exists;
   }
 
   /// Écoute les changements sur un vendeur
   Stream<Seller?> streamSeller(String sellerId) {
     return _firestore
-        .collection('sellers')
+        .collection(FirebaseCollections.sellersCollection)
         .doc(sellerId)
         .snapshots()
         .map((doc) => doc.exists ? Seller.fromMap(doc.data()!) : null);
@@ -65,7 +72,7 @@ class SellerRepository {
     SellerRepository? repository,
   }) async {
     List<String> existingStoreIds = [];
-    
+
     // Si un repository est fourni, on essaie de récupérer le vendeur existant
     if (repository != null) {
       final existingSeller = await repository.getSeller(userId);
@@ -73,7 +80,7 @@ class SellerRepository {
         existingStoreIds = existingSeller.storeIds;
       }
     }
-    
+
     return Seller(
       sellerId: userId,
       userId: userId,
