@@ -326,7 +326,7 @@ class FiscalitePage extends StatelessWidget {
                     height: context.height * 0.02,
                   ),
 
-                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page CreationBoutiquePage
                   /*SizedBox(
                     height: context.height * 0.07,
                   )*/

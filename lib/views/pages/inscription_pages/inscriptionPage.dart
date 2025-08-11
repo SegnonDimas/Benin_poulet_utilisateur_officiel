@@ -1232,7 +1232,7 @@ Future<void> _showBottomSheet(BuildContext context) async {
                     onTap: () {
                       Navigator.pushNamed(
                         context,
-                        AppRoutes.INSCRIPTIONVENDEURPAGE,
+                        AppRoutes.CREATIONBOUTIQUEPAGE,
                       );
                     },
                     child: AppText(

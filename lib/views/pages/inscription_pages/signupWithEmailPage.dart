@@ -100,7 +100,9 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                       context: context,
                       type: InfoType.loading,
                       message: "Patientez...");
-                } else if (authState is GoogleLoginRequestSuccess) {
+                }
+
+                if (authState is GoogleLoginRequestSuccess) {
                   try {
                     await AuthServices.signInWithGoogle(
                       role: userRoleState.role!,
@@ -125,23 +127,28 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           "Cette adresse est deja associée a un compte",
                           backgroundColor: AppColors.redColor,
                         );
+                      } else {
+                        AppUtils.showDialog(
+                          context: context,
+                          title: 'Rapport d\'erreur',
+                          content: e.toString(),
+                          hideContent: true,
+                          cancelText: 'Fermer',
+                          confirmText: 'Envoyer le rapport',
+                          cancelTextColor: AppColors.primaryColor,
+                          confirmTextColor: AppColors.redColor,
+                        );
                       }
-                      AppUtils.showDialog(
-                        context: context,
-                        title: 'Rapport d\'erreur',
-                        content: e.toString(),
-                        cancelText: 'Fermer',
-                        confirmText: 'Envoyer le rapport',
-                        cancelTextColor: AppColors.primaryColor,
-                        confirmTextColor: AppColors.redColor,
-                      );
-                    }
-                    if (kDebugMode) {
-                      print(
-                          ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+
+                      if (kDebugMode) {
+                        print(
+                            ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
+                      }
                     }
                   }
-                } else if (authState is EmailLoginRequestSuccess) {
+                }
+
+                if (authState is EmailLoginRequestSuccess) {
                   try {
                     final _email = _emailcontroller.text.trim();
                     final _password = _passWordController.text.trim();
@@ -174,16 +181,17 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           "Cette adresse est deja associée a un compte",
                           backgroundColor: AppColors.redColor,
                         );
+                      } else {
+                        AppUtils.showDialog(
+                          context: context,
+                          title: 'Rapport d\'erreur',
+                          content: e.toString(),
+                          cancelText: 'Fermer',
+                          confirmText: 'Envoyer le rapport',
+                          cancelTextColor: AppColors.primaryColor,
+                          confirmTextColor: AppColors.redColor,
+                        );
                       }
-                      AppUtils.showDialog(
-                        context: context,
-                        title: 'Rapport d\'erreur',
-                        content: e.toString(),
-                        cancelText: 'Fermer',
-                        confirmText: 'Envoyer le rapport',
-                        cancelTextColor: AppColors.primaryColor,
-                        confirmTextColor: AppColors.redColor,
-                      );
                     }
                     if (kDebugMode) {
                       print(
@@ -191,22 +199,22 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     }
                   }
 
-                  AppUtils.showAwesomeSnackBar(
+                  /*AppUtils.showAwesomeSnackBar(
                       context,
                       'Incription Réussie',
                       'Utilisateur connecté avec succès',
                       ContentType.success,
-                      AppColors.primaryColor);
+                      AppColors.primaryColor);*/
 
-                  Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      userRoleState.role == UserRoles.SELLER
-                          ? AppRoutes
-                              .DEFAULTROUTEPAGE // AppRoutes.VENDEURMAINPAGE
-                          : AppRoutes.LOGINWITHEMAILPAGE,
-                      (Route<dynamic> route) => false);
-
-                  //Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
+                  // Pour les vendeurs, on ne redirige pas automatiquement car on affiche le bottom sheet
+                  // Pour les acheteurs, on redirige vers la page client
+                  if (userRoleState.role == UserRoles.BUYER) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.CLIENTHOMEPAGE,
+                        (Route<dynamic> route) => false);
+                  }
+                  // Pour les vendeurs, le bottom sheet s'affiche automatiquement
                 }
               },
               builder: (context, authState) {
@@ -697,15 +705,15 @@ Future<void> _showBottomSheet(BuildContext context) async {
                 //SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 4.0, bottom: 8.0, left: 4.0, right: 4.0),
+                      top: 1.0, bottom: 8.0, left: 1.0, right: 1.0),
                   child: SizedBox(
-                    height: 200,
+                    height: 180,
                     child: Stack(
                       children: [
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(35),
-                            topRight: Radius.circular(35),
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                             bottomLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20),
                           ),
@@ -717,7 +725,7 @@ Future<void> _showBottomSheet(BuildContext context) async {
                           ),
                         ),
                         Container(
-                          height: 200,
+                          height: 180,
                           width: context.width,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
@@ -726,7 +734,6 @@ Future<void> _showBottomSheet(BuildContext context) async {
                               bottomLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20),
                             ),
-                            //color: Colors.black87,
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -734,7 +741,11 @@ Future<void> _showBottomSheet(BuildContext context) async {
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
-                                    .withOpacity(0.9),
+                                    .withOpacity(0.95),
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.95),
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
@@ -746,43 +757,36 @@ Future<void> _showBottomSheet(BuildContext context) async {
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
-                                    .withOpacity(0.7),
+                                    .withOpacity(0.6),
                                 Theme.of(context)
                                     .colorScheme
                                     .primary
                                     .withOpacity(0.5),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.4),
                                 Colors.transparent,
                                 Colors.transparent,
                                 Colors.transparent,
                               ],
                             ),
-                            /* color: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.7),*/
                           ),
                         ),
                         BlurryContainer(
-                            height: 200,
+                            height: 180,
                             width: context.width,
-                            blur: 3,
+                            blur: 2,
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                            ),
                             child: SizedBox()),
                         Positioned(
-                          top: 4,
-                          right: 4,
-                          left: 4,
+                          top: 0,
+                          left: 0,
+                          right: 0,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(
-                                  width: 60,
-                                ),
                                 AppText(
                                   text: 'Créer boutique',
                                   color: AppColors.primaryColor,
@@ -866,12 +870,11 @@ Future<void> _showBottomSheet(BuildContext context) async {
                     onTap: () {
                       Navigator.pushNamed(
                         context,
-                        AppRoutes.INSCRIPTIONVENDEURPAGE,
+                        AppRoutes.CREATIONBOUTIQUEPAGE,
                       );
                     },
                     child: AppText(
                       text: 'Commencer',
-                      //fontWeight: FontWeight.w900,
                       color: Colors.white,
                       fontSize: 20,
                     ),

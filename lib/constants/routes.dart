@@ -3,7 +3,7 @@ import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/defaultRoutePage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/inscriptionPage.dart';
-import 'package:benin_poulet/views/pages/inscription_pages/inscription_vendeurPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/creation_boutique/creation_boutiquePage.dart';
 import 'package:benin_poulet/views/pages/inscription_pages/signupWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/firstPage.dart';
 import 'package:benin_poulet/views/pages/started_pages/presentationPage.dart';
@@ -31,7 +31,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/inscriptionPage': (context) => const InscriptionPage(),
   '/loginWithEmailPage': (context) => const LoginWithEmailPage(),
   '/signupWithEmailPage': (context) => const SignupWithEmailPage(),
-  '/inscriptionVendeurPage': (context) => const InscriptionVendeurPage(),
+  '/creationBoutiquePage': (context) => const CreationBoutiquePage(),
 
   //======================
   // ROUTES VENDEUR
@@ -67,7 +67,7 @@ class AppRoutes {
   static String INSCRIPTIONPAGE = '/inscriptionPage';
   static String LOGINWITHEMAILPAGE = '/loginWithEmailPage';
   static String SIGNUPWITHEMAILPAGE = '/signupWithEmailPage';
-  static String INSCRIPTIONVENDEURPAGE = '/inscriptionVendeurPage';
+  static String CREATIONBOUTIQUEPAGE = '/creationBoutiquePage';
 
   //======================
   // ROUTES VENDEUR

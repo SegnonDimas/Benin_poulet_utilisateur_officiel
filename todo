@@ -306,3 +306,17 @@ Page commandes :
 
 Page ma boutique :
     - la durée indiquée sur la boutque (à repenser)
+
+
+À CORRIGER
+   1- Lorsqu'on s'inscrit (par Google) avec un compte Google d'éjà inscrit :
+        - la réinsription n'est pas bloquée au profil d'une éventuelle connexion
+        - les informations de l'utilisateur sont simplement mises à jours (en particulier createdAt et lastLogin)
+        - la liste des boutiques de l'utilisateur est ramenée à vide ([])
+        - certaines autres informations sont toutes réinitialisées.
+
+   2- Lorsque le vendeur choisit ses secteurs d'activité :
+        - on remarque sur la page de résumé des information avant confirmation de la creation de boutique, que tous les secteurs sémectionnés sont bien présents, mais sur Firebase, on ne voit que le premier secteur de la liste
+        - de même pour les sous-secteurs (que le secteur qui va sur Firebase emporte ses sous-secteurs avec lui)
+
+   3-

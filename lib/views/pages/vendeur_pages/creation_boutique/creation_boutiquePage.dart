@@ -1,11 +1,11 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
+import 'package:benin_poulet/constants/firebase_collections/sellersCollection.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/storeState.dart';
 import 'package:benin_poulet/constants/storeStatus.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -14,22 +14,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-import '../../../widgets/app_timeline_tile.dart';
-import '../../colors/app_colors.dart';
-import '../vendeur_pages/creation_boutique/choixCategoriePage.dart';
-import '../vendeur_pages/creation_boutique/choixLivreurPage.dart';
-import '../vendeur_pages/creation_boutique/fiscalitePage.dart';
-import '../vendeur_pages/creation_boutique/infoBoutiquePage.dart';
-import '../vendeur_pages/creation_boutique/resumeCreationBoutiquePage.dart';
+import '../../../../constants/firebase_collections/storesCollection.dart';
+import '../../../../widgets/app_timeline_tile.dart';
+import '../../../colors/app_colors.dart';
+import 'choixCategoriePage.dart';
+import 'choixLivreurPage.dart';
+import 'fiscalitePage.dart';
+import 'infoBoutiquePage.dart';
+import 'resumeCreationBoutiquePage.dart';
 
-class InscriptionVendeurPage extends StatefulWidget {
-  const InscriptionVendeurPage({super.key});
+class CreationBoutiquePage extends StatefulWidget {
+  const CreationBoutiquePage({super.key});
 
   @override
-  State<InscriptionVendeurPage> createState() => _InscriptionVendeurPageState();
+  State<CreationBoutiquePage> createState() => _CreationBoutiquePageState();
 }
 
-class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
+class _CreationBoutiquePageState extends State<CreationBoutiquePage> {
   int pageIndex = 0;
 
   /*Suivre l'index de la page actuelle. Cela permet d'écouter les changements de valeur et de reconstruire les AppTimelineTile en conséquence.*/
@@ -359,13 +360,13 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                       storeState.paymentPhoneNumber != null
                                           ? [
                                               {
-                                                'gsmService':
+                                                MobileMoney.gsmService:
                                                     storeState.paymentMethod ??
-                                                        'MTN',
-                                                'name': storeState
+                                                        'Aucun',
+                                                MobileMoney.name: storeState
                                                         .payementOwnerName ??
                                                     '',
-                                                'phone': storeState
+                                                MobileMoney.phone: storeState
                                                     .paymentPhoneNumber!,
                                               }
                                             ]
@@ -388,13 +389,14 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                     storeProducts: [],
                                     storeRatings: [0.0],
                                     storeComments: [],
-                                    storeState: 'open',
-                                    storeStatus: 'active',
+                                    storeState: StoreState.open,
+                                    storeStatus: StoreStatus.active,
                                     mobileMoney: mobileMoney,
                                     storeInfos: {
-                                      'name': storeState.storeName!,
-                                      'phone': storeState.storePhoneNumber,
-                                      'email': storeState.storeEmail,
+                                      StoreInfos.name: storeState.storeName!,
+                                      StoreInfos.phone:
+                                          storeState.storePhoneNumber,
+                                      StoreInfos.email: storeState.storeEmail,
                                     },
                                   );
 
@@ -408,25 +410,29 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                     subSectors: storeState.storeSubSectors,
                                     mobileMoney: mobileMoney,
                                     deliveryInfos: {
-                                      'location': storeState.location ?? '',
-                                      'locationDescription':
+                                      DeliveryInfos.location:
+                                          storeState.location ?? '',
+                                      DeliveryInfos.locationDescription:
                                           storeState.locationDescription ?? '',
-                                      'sellerOwnDeliver':
+                                      DeliveryInfos.sellerOwnDeliver:
                                           storeState.sellerOwnDeliver,
                                     },
                                     fiscality: {
                                       'fiscalType': storeState.storeFiscalType,
                                     },
                                     storeInfos: {
-                                      'name': storeState.storeName!,
-                                      'phone': storeState.storePhoneNumber,
-                                      'email': storeState.storeEmail,
+                                      StoreInfos.name: storeState.storeName!,
+                                      StoreInfos.phone:
+                                          storeState.storePhoneNumber,
+                                      StoreInfos.email: storeState.storeEmail,
                                     },
                                   );
 
                                   // Redirection vers la page de vente
-                                  Navigator.pushNamed(
-                                      context, AppRoutes.VENDEURMAINPAGE);
+                                  context.mounted
+                                      ? Navigator.pushNamed(
+                                          context, AppRoutes.VENDEURMAINPAGE)
+                                      : null;
                                 }
                               },
                               child: Padding(

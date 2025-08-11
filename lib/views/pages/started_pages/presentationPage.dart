@@ -126,7 +126,7 @@ class _PresentationPageState extends State<PresentationPage> {
                       Navigator.of(context)
                           .pushReplacementNamed(AppRoutes.INSCRIPTIONPAGE);
                       /*Navigator.of(context).pushReplacementNamed(
-                          AppRoutes.INSCRIPTIONVENDEURPAGE);*/
+                          AppRoutes.CREATIONBOUTIQUEPAGE);*/
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),

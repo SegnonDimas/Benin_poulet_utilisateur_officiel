@@ -27,17 +27,17 @@ class IdentityCardUrl {
 }
 
 //TODO : à ramener dans StoresCollection
-@Deprecated("à ramener dans StoresCollection")
-class MobileMoney {
+//@Deprecated("à ramener dans StoresCollection")
+/*class MobileMoney {
   static const String gsmService = 'gsmService';
   static const String name = 'name';
   static const String phone = 'phone';
-}
+}*/
 
 //TODO : à ramener dans StoresCollection
-@Deprecated("à ramener dans StoresCollection")
-class StoreInfos {
+//@Deprecated("à ramener dans StoresCollection")
+/*class StoreInfos {
   static const String email = 'email';
   static const String name = 'name';
   static const String phone = 'phone';
-}
+}*/

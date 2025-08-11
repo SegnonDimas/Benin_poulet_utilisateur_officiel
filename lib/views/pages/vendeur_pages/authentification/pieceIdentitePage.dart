@@ -146,7 +146,7 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                 }),
               ),
             ),
-            // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page InscriptionVendeurPage
+            // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page CreationBoutiquePage
             SizedBox(
               height: context.height * 0.07,
             ),
