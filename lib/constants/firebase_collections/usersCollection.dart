@@ -10,6 +10,8 @@ class UsersCollection {
   static const photoUrl = 'photoUrl';
   static const profileComplete = 'profileComplete';
   static const role = 'role';
+  @Deprecated('Déplacé vers StoreCollection')
   static const storeIds = 'storeIds';
+  static const favoritesStoreIds = 'favoritesStoreIds';
   static const userId = 'userId';
 }

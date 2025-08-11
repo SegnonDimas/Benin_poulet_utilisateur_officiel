@@ -26,16 +26,16 @@ class IdentityCardUrl {
   static const String verso = 'verso';
 }
 
-//TODO : à ramener dans Store
-@Deprecated("à ramener dans StoreCollection")
+//TODO : à ramener dans StoresCollection
+@Deprecated("à ramener dans StoresCollection")
 class MobileMoney {
   static const String gsmService = 'gsmService';
   static const String name = 'name';
   static const String phone = 'phone';
 }
 
-//TODO : à ramener dans Store
-@Deprecated("à ramener dans StoreCollection")
+//TODO : à ramener dans StoresCollection
+@Deprecated("à ramener dans StoresCollection")
 class StoreInfos {
   static const String email = 'email';
   static const String name = 'name';

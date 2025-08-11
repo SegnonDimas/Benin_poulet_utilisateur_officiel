@@ -114,7 +114,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       top: false,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        appBar: AppBar(
+        /*appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.background,
           elevation: 0,
           leading: IconButton(
@@ -123,7 +123,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             ),
             onPressed: () => _showBottomSheet(context),
           ),
-        ),
+        ),*/
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
           listenWhen: (previous, current) {
             // Ne réagir que si la page est dans l'arborescence de navigation

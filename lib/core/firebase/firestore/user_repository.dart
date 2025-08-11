@@ -23,7 +23,7 @@ class FirestoreUserServices {
   Future<void> createOrUpdateUser(AppUser user) async {
     final userData = user.toMap();
 
-    // Mise à jour de l'utilisateur dans la collection FirebaseCollections.usersCollection
+    // Mise à jour de l'utilisateur dans la collection users
     await firebaseInstance
         .collection(FirebaseCollections.usersCollection)
         .doc(user.userId)
@@ -106,5 +106,35 @@ class FirestoreUserServices {
     return querySnapshot.docs
         .map((doc) => AppUser.fromMap(doc.data()))
         .toList();
+  }
+
+  /// Met à jour le statut du compte d'un utilisateur
+  Future<void> updateAccountStatus(String userId, String status) async {
+    await firebaseInstance
+        .collection(FirebaseCollections.usersCollection)
+        .doc(userId)
+        .update({
+      UsersCollection.accountStatus: status,
+    });
+  }
+
+  /// Met à jour la dernière connexion d'un utilisateur
+  Future<void> updateLastLogin(String userId) async {
+    await firebaseInstance
+        .collection(FirebaseCollections.usersCollection)
+        .doc(userId)
+        .update({
+      UsersCollection.lastLogin: DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Met à jour le statut de complétude du profil
+  Future<void> updateProfileComplete(String userId, bool isComplete) async {
+    await firebaseInstance
+        .collection(FirebaseCollections.usersCollection)
+        .doc(userId)
+        .update({
+      UsersCollection.profileComplete: isComplete,
+    });
   }
 }
