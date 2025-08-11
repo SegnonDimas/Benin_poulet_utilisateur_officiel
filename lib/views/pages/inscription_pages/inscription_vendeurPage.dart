@@ -351,19 +351,17 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                 );
                                 position = _pageViewController.page!.toInt();
                                 if (position == _pages.length - 1) {
-                                  // Création de la boutique avec l'id de l'utilisateur courant
-                                  final storeInfos = {
-                                    'name': storeState.storeName!,
-                                    'phone': storeState.storePhoneNumber,
-                                    'email': storeState.storeEmail,
-                                  };
+                                  // Création de la boutique avec toutes les informations
+                                  final firestoreService = FirestoreService();
 
+                                  // Préparer les informations de mobile money
                                   final mobileMoney =
                                       storeState.paymentPhoneNumber != null
                                           ? [
                                               {
                                                 'gsmService':
-                                                    'MTN', // TODO: Détecter automatiquement
+                                                    storeState.paymentMethod ??
+                                                        'MTN',
                                                 'name': storeState
                                                         .payementOwnerName ??
                                                     '',
@@ -373,37 +371,15 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                             ]
                                           : null;
 
-                                  Store storeData = Store(
-                                    storeId: '', // Sera généré automatiquement
-                                    sellerId: AuthServices.userId!,
-                                    storeDescription: '', //TODO
-                                    storeAddress:
-                                        storeState.locationDescription,
-                                    storeLocation: storeState.storeLocation,
-                                    storeLogoPath: '', //TODO
-                                    storeCoverPath: '', //TODO
-                                    storeState: StoreState.open,
-                                    storeStatus: StoreStatus.active,
-                                    storeSectors: storeState.storeSectors,
-                                    storeSubsectors: storeState.storeSubSectors,
-                                    storeProducts: [],
-                                    storeRatings: [0.0],
-                                    storeFiscalType: storeState.storeFiscalType,
-                                    sellerOwnDeliver:
-                                        storeState.sellerOwnDeliver,
-                                    storeComments: [],
-                                    storeInfos: storeInfos,
-                                    mobileMoney: mobileMoney,
-                                  );
-
-                                  // Ajout de la boutique à Firebase avec toutes les informations
-                                  final firestoreService = FirestoreService();
-                                  await firestoreService.createCompleteStore(
+                                  // Créer la boutique avec toutes les informations
+                                  final storeId = await firestoreService
+                                      .createCompleteStore(
                                     sellerId: AuthServices.userId!,
                                     storeAddress:
                                         storeState.locationDescription,
                                     storeLocation: storeState.storeLocation,
-                                    storeDescription: '', //TODO
+                                    storeDescription: storeState.storeName ??
+                                        '', // Utiliser le nom comme description temporaire
                                     storeFiscalType: storeState.storeFiscalType,
                                     sellerOwnDeliver:
                                         storeState.sellerOwnDeliver,
@@ -414,20 +390,7 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                     storeComments: [],
                                     storeState: 'open',
                                     storeStatus: 'active',
-                                    mobileMoney:
-                                        storeState.paymentPhoneNumber != null
-                                            ? [
-                                                {
-                                                  'gsmService':
-                                                      'MTN', // TODO: Détecter automatiquement
-                                                  'name': storeState
-                                                          .payementOwnerName ??
-                                                      '',
-                                                  'phone': storeState
-                                                      .paymentPhoneNumber!,
-                                                }
-                                              ]
-                                            : null,
+                                    mobileMoney: mobileMoney,
                                     storeInfos: {
                                       'name': storeState.storeName!,
                                       'phone': storeState.storePhoneNumber,
@@ -435,7 +398,31 @@ class _InscriptionVendeurPageState extends State<InscriptionVendeurPage> {
                                     },
                                   );
 
-                                  // Ajout de la boutique à la liste des boutiques du vendeur
+                                  // Mettre à jour le profil vendeur avec les informations de la boutique
+                                  // Note: L'ID de la boutique est automatiquement ajouté à storeIds par createCompleteStore
+                                  await firestoreService
+                                      .updateSellerPreservingStores(
+                                    sellerId: AuthServices.userId!,
+                                    userId: AuthServices.userId!,
+                                    sectors: storeState.storeSectors,
+                                    subSectors: storeState.storeSubSectors,
+                                    mobileMoney: mobileMoney,
+                                    deliveryInfos: {
+                                      'location': storeState.location ?? '',
+                                      'locationDescription':
+                                          storeState.locationDescription ?? '',
+                                      'sellerOwnDeliver':
+                                          storeState.sellerOwnDeliver,
+                                    },
+                                    fiscality: {
+                                      'fiscalType': storeState.storeFiscalType,
+                                    },
+                                    storeInfos: {
+                                      'name': storeState.storeName!,
+                                      'phone': storeState.storePhoneNumber,
+                                      'email': storeState.storeEmail,
+                                    },
+                                  );
 
                                   // Redirection vers la page de vente
                                   Navigator.pushNamed(

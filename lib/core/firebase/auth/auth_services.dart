@@ -7,6 +7,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../models/user.dart';
 import '../firestore/user_repository.dart';
+import '../firestore/firestore_service.dart';
 
 class AuthServices {
   static final auth = FirebaseAuth.instance; //actuelle instance
@@ -78,11 +79,34 @@ class AuthServices {
       user = user.copyWith(
         authProvider: authProvider,
         authIdentifier: _email,
+        role: role,
         createdAt: DateTime.now(),
         lastLogin: DateTime.now(),
       );
 
-      firestoreService.createOrUpdateUser(user);
+      await firestoreService.createOrUpdateUser(user);
+
+      // Si c'est un vendeur, créer le profil vendeur avec les informations de base
+      if (role == UserRoles.SELLER) {
+        final firestoreServiceInstance = FirestoreService();
+        await firestoreServiceInstance.createCompleteSeller(
+          sellerId: emailUser.user!.uid,
+          userId: emailUser.user!.uid,
+          createdAt: DateTime.now(),
+          documentsVerified: false, // À vérifier par l'admin
+          sectors: [], // Sera mis à jour lors de la création de la boutique
+          subSectors: [], // Sera mis à jour lors de la création de la boutique
+          storeIds: [], // Liste vide au début
+          mobileMoney: [], // Sera mis à jour lors de la création de la boutique
+          deliveryInfos: {}, // Sera mis à jour lors de la création de la boutique
+          fiscality: {}, // Sera mis à jour lors de la création de la boutique
+          storeInfos: {
+            'name': '',
+            'phone': '',
+            'email': _email,
+          },
+        );
+      }
     } catch (e) {
       if (kDebugMode) {
         print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
@@ -140,7 +164,29 @@ class AuthServices {
         role: role,
         password: password);
 
-    firestoreService.createOrUpdateUser(user);
+    await firestoreService.createOrUpdateUser(user);
+
+    // Si c'est un vendeur, créer le profil vendeur avec les informations de base
+    if (role == UserRoles.SELLER) {
+      final firestoreServiceInstance = FirestoreService();
+      await firestoreServiceInstance.createCompleteSeller(
+        sellerId: phoneUser.user!.uid,
+        userId: phoneUser.user!.uid,
+        createdAt: DateTime.now(),
+        documentsVerified: false, // À vérifier par l'admin
+        sectors: [], // Sera mis à jour lors de la création de la boutique
+        subSectors: [], // Sera mis à jour lors de la création de la boutique
+        storeIds: [], // Liste vide au début
+        mobileMoney: [], // Sera mis à jour lors de la création de la boutique
+        deliveryInfos: {}, // Sera mis à jour lors de la création de la boutique
+        fiscality: {}, // Sera mis à jour lors de la création de la boutique
+        storeInfos: {
+          'name': fullName ?? '',
+          'phone': _phoneNumber.phoneNumber!,
+          'email': _formatEmailFromPhone(_phoneNumber),
+        },
+      );
+    }
   }
 
   //Connexion avec phoneNumber
@@ -206,7 +252,29 @@ class AuthServices {
       lastLogin: DateTime.now(),
     );
 
-    firestoreService.createOrUpdateUser(user);
+    await firestoreService.createOrUpdateUser(user);
+
+    // Si c'est un vendeur, créer le profil vendeur avec les informations de base
+    if (role == UserRoles.SELLER) {
+      final firestoreServiceInstance = FirestoreService();
+      await firestoreServiceInstance.createCompleteSeller(
+        sellerId: googleUser.id,
+        userId: googleUser.id,
+        createdAt: DateTime.now(),
+        documentsVerified: false, // À vérifier par l'admin
+        sectors: [], // Sera mis à jour lors de la création de la boutique
+        subSectors: [], // Sera mis à jour lors de la création de la boutique
+        storeIds: [], // Liste vide au début
+        mobileMoney: [], // Sera mis à jour lors de la création de la boutique
+        deliveryInfos: {}, // Sera mis à jour lors de la création de la boutique
+        fiscality: {}, // Sera mis à jour lors de la création de la boutique
+        storeInfos: {
+          'name': googleUser.displayName ?? '',
+          'phone': '',
+          'email': googleUser.email ?? '',
+        },
+      );
+    }
 
     userId = googleUser.id;
 

@@ -201,6 +201,41 @@ class FirestoreService {
     await _sellerRepository.createOrUpdateSeller(seller);
   }
 
+  /// Met à jour un vendeur existant en préservant sa liste de boutiques
+  Future<void> updateSellerPreservingStores({
+    required String sellerId,
+    required String userId,
+    Map<String, dynamic>? deliveryInfos,
+    bool? documentsVerified,
+    Map<String, dynamic>? fiscality,
+    Map<String, dynamic>? identityCardUrl,
+    List<Map<String, dynamic>>? mobileMoney,
+    List<String>? sectors,
+    Map<String, dynamic>? storeInfos,
+    List<String>? subSectors,
+  }) async {
+    // Récupérer le vendeur existant pour préserver sa liste de boutiques
+    final existingSeller = await _sellerRepository.getSeller(sellerId);
+    final currentStoreIds = existingSeller?.storeIds ?? [];
+
+    final seller = Seller(
+      sellerId: sellerId,
+      userId: userId,
+      createdAt: existingSeller?.createdAt ?? DateTime.now(),
+      deliveryInfos: deliveryInfos ?? existingSeller?.deliveryInfos,
+      documentsVerified: documentsVerified ?? existingSeller?.documentsVerified,
+      fiscality: fiscality ?? existingSeller?.fiscality,
+      identyCardUrl: identityCardUrl ?? existingSeller?.identyCardUrl,
+      mobileMoney: mobileMoney ?? existingSeller?.mobileMoney,
+      sectors: sectors ?? existingSeller?.sectors,
+      storeIds: currentStoreIds, // Préserver la liste existante
+      storeInfos: storeInfos ?? existingSeller?.storeInfos,
+      subSectors: subSectors ?? existingSeller?.subSectors,
+    );
+
+    await _sellerRepository.createOrUpdateSeller(seller);
+  }
+
   /// Crée une boutique complète avec toutes les informations selon StoresCollection
   Future<String> createCompleteStore({
     required String sellerId,
