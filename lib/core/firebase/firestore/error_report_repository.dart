@@ -25,6 +25,7 @@ class FirebaseErrorReportRepository {
       ErrorReportsCollection.platform: Platform.operatingSystem,
       ErrorReportsCollection.date: DateTime.now(),
       ErrorReportsCollection.deviceInfos: deviceInfos,
+      ErrorReportsCollection.errorPage: errorReport.errorPage
     };
     await docRef.set(error);
   }

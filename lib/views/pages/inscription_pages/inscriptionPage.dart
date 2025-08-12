@@ -57,6 +57,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   PhoneNumber phoneNumber = PhoneNumber(isoCode: 'BJ', dialCode: "+229");
   String password = '';
   String confirmPassword = '';
+  String currentPage = "Page d'inscription";
 
   /// signUp()
   Future<void> signUp(String email, String password) async {
@@ -206,6 +207,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     // Enregistrer le rapport d'erreur
                     ErrorReport errorReport = ErrorReport(
                       errorMessage: e.toString(),
+                      errorPage: currentPage,
                       date: DateTime.now(),
                     );
 
@@ -281,6 +283,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     // Enregistrer le rapport d'erreur
                     ErrorReport errorReport = ErrorReport(
                       errorMessage: e.toString(),
+                      errorPage: currentPage,
                       date: DateTime.now(),
                     );
 

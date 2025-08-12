@@ -9,6 +9,7 @@ import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:benin_poulet/widgets/notification_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -94,7 +95,40 @@ class _CreationBoutiquePageState extends State<CreationBoutiquePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return BlocListener<StoreCreationBloc, StoreCreationState>(
+      listener: (context, state) {
+        if (state is StoreCreationLoading) {
+          // Afficher un indicateur de chargement
+          NotificationWidgets.showLoadingNotification(
+              context, 'Création de votre boutique en cours...');
+        } else if (state is StoreCreationSuccess) {
+          // Afficher le message de succès
+          NotificationWidgets.showSuccessNotification(
+              context, 'Boutique créée avec succès !');
+
+          // Redirection vers la page principale du vendeur
+          Future.delayed(Duration(seconds: 2), () {
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.VENDEURMAINPAGE,
+                (route) => false, // Supprime toutes les routes précédentes
+              );
+            }
+          });
+        } else if (state is StoreCreationError) {
+          // Afficher le message d'erreur avec option de réessayer
+          NotificationWidgets.showErrorNotification(
+            context,
+            state.erroMessage ?? 'Erreur lors de la création de la boutique',
+            () {
+              // Réessayer la création
+              context.read<StoreCreationBloc>().add(StoreCreationSubmit());
+            },
+          );
+        }
+      },
+      child: WillPopScope(
         onWillPop: () async {
           final shouldPop = await AppUtils.showExitConfirmationDialog(context);
           return shouldPop; // true = autorise le pop, false = bloque
@@ -344,134 +378,99 @@ class _CreationBoutiquePageState extends State<CreationBoutiquePage> {
                               : MainAxisAlignment.spaceEvenly,
                           children: [
                             //bouton suivant
-                            GestureDetector(
-                              onTap: () async {
-                                _pageViewController.nextPage(
-                                  duration: const Duration(milliseconds: 10),
-                                  curve: Curves.linear,
-                                );
-                                position = _pageViewController.page!.toInt();
-                                if (position == _pages.length - 1) {
-                                  // Création de la boutique avec toutes les informations
-                                  final firestoreService = FirestoreService();
-
-                                  // Préparer les informations de mobile money
-                                  final mobileMoney =
-                                      storeState.paymentPhoneNumber != null
-                                          ? [
-                                              {
-                                                MobileMoney.gsmService:
-                                                    storeState.paymentMethod ??
-                                                        'Aucun',
-                                                MobileMoney.name: storeState
-                                                        .payementOwnerName ??
-                                                    '',
-                                                MobileMoney.phone: storeState
-                                                    .paymentPhoneNumber!,
-                                              }
-                                            ]
-                                          : null;
-
-                                  // Créer la boutique avec toutes les informations
-                                  final storeId = await firestoreService
-                                      .createCompleteStore(
-                                    sellerId: AuthServices.userId!,
-                                    storeAddress:
-                                        storeState.locationDescription,
-                                    storeLocation: storeState.storeLocation,
-                                    storeDescription: storeState.storeName ??
-                                        '', // Utiliser le nom comme description temporaire
-                                    storeFiscalType: storeState.storeFiscalType,
-                                    sellerOwnDeliver:
-                                        storeState.sellerOwnDeliver,
-                                    storeSectors: storeState.storeSectors,
-                                    storeSubsectors: storeState.storeSubSectors,
-                                    storeProducts: [],
-                                    storeRatings: [0.0],
-                                    storeComments: [],
-                                    storeState: StoreState.open,
-                                    storeStatus: StoreStatus.active,
-                                    mobileMoney: mobileMoney,
-                                    storeInfos: {
-                                      StoreInfos.name: storeState.storeName!,
-                                      StoreInfos.phone:
-                                          storeState.storePhoneNumber,
-                                      StoreInfos.email: storeState.storeEmail,
-                                    },
-                                  );
-
-                                  // Mettre à jour le profil vendeur avec les informations de la boutique
-                                  // Note: L'ID de la boutique est automatiquement ajouté à storeIds par createCompleteStore
-                                  await firestoreService
-                                      .updateSellerPreservingStores(
-                                    sellerId: AuthServices.userId!,
-                                    userId: AuthServices.userId!,
-                                    sectors: storeState.storeSectors,
-                                    subSectors: storeState.storeSubSectors,
-                                    mobileMoney: mobileMoney,
-                                    deliveryInfos: {
-                                      DeliveryInfos.location:
-                                          storeState.location ?? '',
-                                      DeliveryInfos.locationDescription:
-                                          storeState.locationDescription ?? '',
-                                      DeliveryInfos.sellerOwnDeliver:
-                                          storeState.sellerOwnDeliver,
-                                    },
-                                    fiscality: {
-                                      'fiscalType': storeState.storeFiscalType,
-                                    },
-                                    storeInfos: {
-                                      StoreInfos.name: storeState.storeName!,
-                                      StoreInfos.phone:
-                                          storeState.storePhoneNumber,
-                                      StoreInfos.email: storeState.storeEmail,
-                                    },
-                                  );
-
-                                  // Redirection vers la page de vente
-                                  context.mounted
-                                      ? Navigator.pushNamed(
-                                          context, AppRoutes.VENDEURMAINPAGE)
-                                      : null;
-                                }
-                              },
-                              child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 0,
-                                    //context.width * 0.03,
-                                    right: 0,
-                                  ),
-                                  //context.width * 0.03),
-                                  child: Container(
-                                      alignment: Alignment.center,
-                                      height: context.height * 0.07,
-                                      width: context.width * 0.9,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: AppColors.primaryColor),
-                                      child: position != _pages.length - 1
-                                          ? Text(
-                                              'Suivant',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      context.mediumText * 1.2),
-                                            )
-                                          : Text(
-                                              'Soumettre',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize:
-                                                      context.mediumText * 1.2),
-                                            ))),
+                            Opacity(
+                              opacity:
+                                  state is StoreCreationLoading ? 0.6 : 1.0,
+                              child: GestureDetector(
+                                onTap: state is StoreCreationLoading
+                                    ? null
+                                    : () async {
+                                        _pageViewController.nextPage(
+                                          duration:
+                                              const Duration(milliseconds: 10),
+                                          curve: Curves.linear,
+                                        );
+                                        position =
+                                            _pageViewController.page!.toInt();
+                                        if (position == _pages.length - 1) {
+                                          // Déclencher la création de boutique via le BLoC
+                                          context
+                                              .read<StoreCreationBloc>()
+                                              .add(StoreCreationSubmit());
+                                        }
+                                      },
+                                child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 0,
+                                      //context.width * 0.03,
+                                      right: 0,
+                                    ),
+                                    //context.width * 0.03),
+                                    child: Container(
+                                        alignment: Alignment.center,
+                                        height: context.height * 0.07,
+                                        width: context.width * 0.9,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: AppColors.primaryColor),
+                                        child: position != _pages.length - 1
+                                            ? Text(
+                                                'Suivant',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize:
+                                                        context.mediumText *
+                                                            1.2),
+                                              )
+                                            : state is StoreCreationLoading
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 20,
+                                                        height: 20,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          strokeWidth: 2,
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        'Création...',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: context
+                                                                  .mediumText *
+                                                              1.2,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Text(
+                                                    'Soumettre',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize:
+                                                            context.mediumText *
+                                                                1.2),
+                                                  ))),
+                              ),
                             ),
                           ],
                         ),
                       ),
                     );
                   },
-                ))));
+                ))),
+      ),
+    );
   }
 
   /*Retourne l'icône correspondant à l'index passé en paramètre.*/

@@ -49,45 +49,6 @@ class DeliveryInfoSubmitted extends StoreCreationState {
       required this.locationDescription});
 }
 
-/*
-// info vendeur
-class SellerInfoSubmitted extends StoreCreationState {
-  final String lastName;
-  final String firstName;
-  final String birthday;
-  final String birthLocation;
-  final String currentLocation;
-
-  SellerInfoSubmitted(
-      {required this.lastName,
-      required this.firstName,
-      required this.birthday,
-      required this.birthLocation,
-      required this.currentLocation});
-}
-
-// pièces d'identité
-class IdentityDocumentsSubmitted extends StoreCreationState {
-  final String country;
-  final String idendityDocument;
-
-  IdentityDocumentsSubmitted(
-      {required this.country, required this.idendityDocument});
-}
-
-// photo pièce d'identité
-class PhotoDocumentsSubmitted extends StoreCreationState {
-  final String photoRectoIdendityDocument;
-  final String photoVersoIdendityDocument;
-  final String fullPhoto;
-
-  PhotoDocumentsSubmitted(
-      {required this.photoRectoIdendityDocument,
-      required this.photoVersoIdendityDocument,
-      required this.fullPhoto});
-}
-*/
-
 // pour le suivi de l'état global
 class StoreCreationGlobalState extends StoreCreationState {
   final String? storeName;
@@ -201,4 +162,74 @@ class StoreCreationGlobalState extends StoreCreationState {
       sellerGlobalState: sellerGlobalState ?? this.sellerGlobalState,
     );
   }
+}
+
+// creation en cours d'exécution
+class StoreCreationLoading extends StoreCreationGlobalState {}
+
+// creation réussie
+class StoreCreationSuccess extends StoreCreationGlobalState {
+  final String? storeId;
+
+  StoreCreationSuccess({this.storeId});
+}
+
+// erreur de creation - préserve toutes les données de l'état précédent
+class StoreCreationError extends StoreCreationGlobalState {
+  final String? erroMessage;
+
+  StoreCreationError({
+    String? erroMessage,
+    String? storeName,
+    String? storePhoneNumber,
+    String? storeEmail,
+    List<String>? storeSectors,
+    List<String>? storeSubSectors,
+    String? storeFiscalType,
+    String? paymentMethod,
+    String? paymentPhoneNumber,
+    String? payementOwnerName,
+    bool? sellerOwnDeliver,
+    String? location,
+    String? locationDescription,
+    String? sellerFirstName,
+    String? sellerLastName,
+    String? sellerBirthDate,
+    String? sellerBirthPlace,
+    String? sellerCurrentLocation,
+    String? storeLocation,
+    String? country,
+    String? idendityDocument,
+    String? photoRectoIdendityDocument,
+    String? photoVersoIdendityDocument,
+    String? fullPhoto,
+    AuthentificationGlobalState? sellerGlobalState,
+  })  : erroMessage = erroMessage ??
+            'Erreur lors de la creation de votre boutique, veuillez réessayer',
+        super(
+          storeName: storeName,
+          storePhoneNumber: storePhoneNumber,
+          storeEmail: storeEmail,
+          storeSectors: storeSectors,
+          storeSubSectors: storeSubSectors,
+          storeFiscalType: storeFiscalType,
+          paymentMethod: paymentMethod,
+          paymentPhoneNumber: paymentPhoneNumber,
+          payementOwnerName: payementOwnerName,
+          sellerOwnDeliver: sellerOwnDeliver,
+          location: location,
+          locationDescription: locationDescription,
+          sellerFirstName: sellerFirstName,
+          sellerLastName: sellerLastName,
+          sellerBirthDate: sellerBirthDate,
+          sellerBirthPlace: sellerBirthPlace,
+          sellerCurrentLocation: sellerCurrentLocation,
+          storeLocation: storeLocation,
+          country: country,
+          idendityDocument: idendityDocument,
+          photoRectoIdendityDocument: photoRectoIdendityDocument,
+          photoVersoIdendityDocument: photoVersoIdendityDocument,
+          fullPhoto: fullPhoto,
+          sellerGlobalState: sellerGlobalState,
+        );
 }

@@ -50,45 +50,6 @@ class SubmitDeliveryInfo extends StoreCreationEvent {
       {this.sellerOwnDeliver, this.location, this.locationDescription});
 }
 
-/*
-// info vendeur
-class SubmitSellerInfo extends StoreCreationEvent {
-  final String lastName;
-  final String firstName;
-  final String birthday;
-  final String birthLocation;
-  final String currentLocation;
-
-  SubmitSellerInfo(
-      {required this.lastName,
-      required this.firstName,
-      required this.birthday,
-      required this.birthLocation,
-      required this.currentLocation});
-}
-
-// pièces d'identité
-class SubmitIdentityDocuments extends StoreCreationEvent {
-  final String country;
-  final String idendityDocument;
-
-  SubmitIdentityDocuments(
-      {required this.country, required this.idendityDocument});
-}
-
-// photo pièce d'identité
-class SubmitPhotoDocuments extends StoreCreationEvent {
-  final String photoRectoIdendityDocument;
-  final String photoVersoIdendityDocument;
-  final String fullPhoto;
-
-  SubmitPhotoDocuments(
-      {required this.photoRectoIdendityDocument,
-      required this.photoVersoIdendityDocument,
-      required this.fullPhoto});
-}
-*/
-
 // pour le suivi de l'état global
 class StoreCreationGlobalEvent extends StoreCreationEvent {
   final String? storeName;
@@ -201,3 +162,16 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
         fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto);
   }
 }
+
+// soumission de la creation de boutique
+class StoreCreationSubmit extends StoreCreationEvent {}
+
+//
+class StoreCreationErrorEvent extends StoreCreationEvent {
+  final String erroMessage;
+
+  StoreCreationErrorEvent({required this.erroMessage});
+}
+
+//
+class StoreCreationSuccessEvent extends StoreCreationEvent {}
