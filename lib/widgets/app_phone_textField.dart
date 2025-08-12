@@ -33,7 +33,7 @@ class AppPhoneTextField extends StatefulWidget {
       this.onSeved,
       this.onInputChanged,
       this.onInputValidated,
-      this.fontColor = Colors.black,
+      this.fontColor,
       this.fontSize = 16,
       this.onFieldSubmitted,
       this.fileColor,
@@ -100,7 +100,8 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
           autoValidateMode: AutovalidateMode.disabled,
           selectorTextStyle: const TextStyle(color: Colors.grey),
           textStyle: TextStyle(
-              color: widget.fontColor,
+              color: widget.fontColor ??
+                  Theme.of(context).colorScheme.inversePrimary,
               fontSize: widget
                   .fontSize //Theme.of(context).colorScheme.inverseSurface,
 

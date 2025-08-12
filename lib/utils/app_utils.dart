@@ -17,7 +17,7 @@ class AppUtils {
   //==============================================
   //AFFICHAGE D'INFOS DANS L'INTERFACE UTILISATEUR
   //==============================================
-  static Widget showInfo({required String info}) {
+  static Widget showInfo({required String info, Color? color}) {
     return Builder(builder: (context) {
       return Padding(
           padding: const EdgeInsets.only(
@@ -26,7 +26,7 @@ class AppUtils {
             padding:
                 EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.orange),
+              border: Border.all(color: color ?? Colors.orange),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -34,7 +34,7 @@ class AppUtils {
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: Colors.orange,
+                  color: color ?? Colors.orange,
                 ),
                 SizedBox(
                   width: 5,
@@ -43,7 +43,7 @@ class AppUtils {
                   child: AppText(
                     text: info,
                     fontSize: context.smallText,
-                    color: Colors.orange,
+                    color: color ?? Colors.orange,
                     overflow: TextOverflow.visible,
                   ),
                 ),
