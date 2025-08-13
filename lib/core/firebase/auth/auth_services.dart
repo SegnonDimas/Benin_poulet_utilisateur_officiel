@@ -6,8 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../models/user.dart';
-import '../firestore/user_repository.dart';
 import '../firestore/firestore_service.dart';
+import '../firestore/user_repository.dart';
 
 class AuthServices {
   static final auth = FirebaseAuth.instance; //actuelle instance
@@ -77,12 +77,14 @@ class AuthServices {
         isAnonymous: false,
       );
       user = user.copyWith(
-        authProvider: authProvider,
-        authIdentifier: _email,
-        role: role,
-        createdAt: DateTime.now(),
-        lastLogin: DateTime.now(),
-      );
+          authProvider: authProvider,
+          authIdentifier: _email,
+          fullName: emailUser.user!.displayName,
+          photoUrl: emailUser.user!.photoURL,
+          role: role,
+          createdAt: DateTime.now(),
+          lastLogin: DateTime.now(),
+          password: _password);
 
       await firestoreService.createOrUpdateUser(user);
 
@@ -155,14 +157,15 @@ class AuthServices {
     // creation de l'utilisateur dans la collection 'users' sur Firebase
     AppUser user = AppUser(userId: phoneUser.user!.uid);
     user = user.copyWith(
-        authProvider: authProvider,
-        authIdentifier: _phoneNumber.phoneNumber!,
-        fullName: fullName,
-        createdAt: DateTime.now(),
-        lastLogin: DateTime.now(),
-        isAnonymous: false,
-        role: role,
-        password: password);
+      authProvider: authProvider,
+      authIdentifier: _phoneNumber.phoneNumber!,
+      fullName: fullName,
+      createdAt: DateTime.now(),
+      lastLogin: DateTime.now(),
+      password: _password,
+      isAnonymous: false,
+      role: role,
+    );
 
     await firestoreService.createOrUpdateUser(user);
 

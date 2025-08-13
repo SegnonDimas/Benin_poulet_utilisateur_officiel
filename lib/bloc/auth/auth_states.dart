@@ -61,6 +61,7 @@ class ICloudLoginRequestFailure extends AuthFailure {
   ICloudLoginRequestFailure({required super.errorMessage});
 }
 
+/// inscription avec numéro de téléphone
 class PhoneSignUpRequestSuccess extends AuthAuthenticated {
   //final String? successMessage;
 
@@ -70,10 +71,24 @@ class PhoneSignUpRequestSuccess extends AuthAuthenticated {
   });
 }
 
-/*class PhoneSignUpRequestFailure extends AuthFailure {
+class PhoneSignUpRequestFailure extends AuthFailure {
   PhoneSignUpRequestFailure({required super.errorMessage});
-}*/
+}
 
+/// inscription avec numéro de téléphone
+class EmailSignUpRequestSuccess extends AuthAuthenticated {
+  //final String? successMessage;
+  EmailSignUpRequestSuccess({
+    //required super.userId,
+    super.successMessage,
+  });
+}
+
+class EmailSignUpRequestFailure extends AuthFailure {
+  EmailSignUpRequestFailure({required super.errorMessage});
+}
+
+/// inscription
 class AuthSignedUp extends AuthState {
   final String userId;
 

@@ -1,6 +1,5 @@
 //import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -233,55 +232,52 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // inscription avec addresse email
     on<EmailSignUpRequested>((event, emit) async {
       emit(AuthLoading());
-      final email = event.email;
-      final password = event.password;
-      final confirmPassword = event.confirmPassword;
-      final longeurMotDePasse = 6;
 
-      // Verification : email
-      if (email.isEmpty || email == "") {
-        emit(AuthFailure(errorMessage: "Veuillez saisir votre adresse email"));
-      }
+      try {
+        final email = event.email;
+        final password = event.password;
+        final confirmPassword = event.confirmPassword;
+        final longeurMotDePasse = 6;
 
-      // Verification : mot de passe
-      else if (password.isEmpty || password == "") {
-        emit(AuthFailure(errorMessage: 'Veuillez saisir votre mot de passe'));
-      }
-
-      // Verification : confirmation du mot de passe
-      else if (confirmPassword.isEmpty || confirmPassword == "") {
-        emit(
-            AuthFailure(errorMessage: 'Veuillez confirmer votre mot de passe'));
-      }
-
-      // Verification : mots de passe identiques
-      else if (password != confirmPassword) {
-        emit(AuthFailure(
-            errorMessage: 'Les mots de passe ne correspondent pas'));
-      }
-
-      // Verification : longueur du mot de passe
-      else if (password.length < longeurMotDePasse) {
-        emit(AuthFailure(
-            errorMessage:
-                'Le mot de passe doit contenir au moins $longeurMotDePasse caractères'));
-      } else {
-        try {
-          //final userId = AuthServices.userId;
-          emit(AuthAuthenticated());
-        } catch (e) {
-          if (e.toString().contains('already')) {
-            emit(AuthFailure(
-                errorMessage: 'Cette adresse est deja associee a un compte'));
-          }
-          if (kDebugMode) {
-            print(
-                '::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
-          }
-
-          /*AppUtils.showSnackBar(
-          context, "Cette adresse est deja associee a un compte");*/
+        // Verification : email
+        if (email.isEmpty || email == "") {
+          return emit(
+              AuthFailure(errorMessage: "Veuillez saisir votre adresse email"));
         }
+
+        // Verification : mot de passe
+        if (password.isEmpty || password == "") {
+          return emit(
+              AuthFailure(errorMessage: 'Veuillez saisir votre mot de passe'));
+        }
+
+        // Verification : confirmation du mot de passe
+        if (confirmPassword.isEmpty || confirmPassword == "") {
+          return emit(AuthFailure(
+              errorMessage: 'Veuillez confirmer votre mot de passe'));
+        }
+
+        // Verification : mots de passe identiques
+        if (password != confirmPassword) {
+          return emit(AuthFailure(
+              errorMessage: 'Les mots de passe ne correspondent pas'));
+        }
+
+        // Verification : longueur du mot de passe
+        if (password.length < longeurMotDePasse) {
+          return emit(AuthFailure(
+              errorMessage:
+                  'Le mot de passe doit contenir au moins $longeurMotDePasse caractères'));
+        }
+
+        // tout est OK
+        {
+          emit(AuthAuthenticated());
+          return emit(EmailSignUpRequestSuccess());
+        }
+      } catch (e) {
+        print(":::::::::::ERREUR : $e :::::::::::::");
+        emit(AuthFailure(errorMessage: e.toString()));
       }
     });
     // inscription avec icloud

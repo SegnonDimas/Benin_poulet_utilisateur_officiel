@@ -6,11 +6,14 @@ import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
+import 'package:benin_poulet/core/firebase/firestore/error_report_repository.dart';
+import 'package:benin_poulet/models/error_report.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:benin_poulet/widgets/notification_widgets.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +48,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
   bool isLoggedIn = false;
   bool seSouvenir = true;
   bool _isMounted = false;
+  String currentPage = "Page d'inscription avec Email";
 
   @override
   void initState() {
@@ -70,7 +74,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
         body: BlocConsumer<UserRoleBloc, UserRoleState>(
           listenWhen: (previous, current) {
             // Ne réagir que si la page est dans l'arborescence de navigation
-            return ModalRoute.of(context)?.isCurrent ?? false;
+            return _isMounted;
+            //ModalRoute.of(context)?.isCurrent ?? false;
           },
           listener: (context, userRoleState) {
             // TODO: au cas où...
@@ -82,19 +87,16 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                 return _isMounted;
               },
               listener: (context, authState) async {
+                // Lorsqu'il y a une erreur
                 if (authState is AuthFailure) {
-                  final errorMsg = authState.errorMessage.toLowerCase();
-
-                  // Autres cas : snackBar classique
-                  AppUtils.showSnackBar(context, authState.errorMessage);
-
-                  /*AppUtils.showInfoDialog(
-                    context: context,
-                    message: authState.errorMessage,
-                    type: InfoType.error,
-                  );*/
+                  final errorMsg = authState.errorMessage;
+                  //AppUtils.showSnackBar(context, authState.errorMessage);
+                  Navigator.pop(context);
+                  NotificationWidgets.showErrorNotification(
+                      context, errorMsg, null);
                 }
 
+                // Lorsque l'inscription est en cours
                 if (authState is AuthLoading) {
                   AppUtils.showInfoDialog(
                       context: context,
@@ -102,6 +104,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                       message: "Patientez...");
                 }
 
+                // Lorsque l'inscription est effectuée par compte Google
                 if (authState is GoogleLoginRequestSuccess) {
                   try {
                     await AuthServices.signInWithGoogle(
@@ -120,6 +123,12 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           : null;
                     }
                   } catch (e) {
+                    // Enregistrer le rapport d'erreur
+                    ErrorReport errorReport = ErrorReport(
+                      errorMessage: e.toString(),
+                      errorPage: currentPage,
+                      date: DateTime.now(),
+                    );
                     if (context.mounted) {
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
@@ -128,6 +137,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           backgroundColor: AppColors.redColor,
                         );
                       } else {
+                        Navigator.pop(context);
                         AppUtils.showDialog(
                           context: context,
                           title: 'Rapport d\'erreur',
@@ -137,6 +147,13 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           confirmText: 'Envoyer le rapport',
                           cancelTextColor: AppColors.primaryColor,
                           confirmTextColor: AppColors.redColor,
+                          onConfirm: () async {
+                            await FirebaseErrorReportRepository()
+                                .sendErrorReport(errorReport);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
                         );
                       }
 
@@ -148,7 +165,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                   }
                 }
 
-                if (authState is EmailLoginRequestSuccess) {
+                // Lorsque l'inscription est effectuée par adresse email
+                if (authState is EmailSignUpRequestSuccess) {
                   try {
                     final _email = _emailcontroller.text.trim();
                     final _password = _passWordController.text.trim();
@@ -163,7 +181,9 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     _emailcontroller.clear();
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
-                      context.mounted ? _showBottomSheet(context) : null;
+                      context.mounted
+                          ? {Navigator.pop(context), _showBottomSheet(context)}
+                          : null;
                     } else if (userRoleState.role == UserRoles.BUYER) {
                       // rediredction vers la page de destination
                       context.mounted
@@ -174,6 +194,12 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           : null;
                     }
                   } catch (e) {
+                    // Enregistrer le rapport d'erreur
+                    ErrorReport errorReport = ErrorReport(
+                      errorMessage: e.toString(),
+                      errorPage: currentPage,
+                      date: DateTime.now(),
+                    );
                     if (context.mounted) {
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
@@ -190,6 +216,13 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           confirmText: 'Envoyer le rapport',
                           cancelTextColor: AppColors.primaryColor,
                           confirmTextColor: AppColors.redColor,
+                          onConfirm: () async {
+                            await FirebaseErrorReportRepository()
+                                .sendErrorReport(errorReport);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          },
                         );
                       }
                     }
@@ -198,13 +231,6 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           ":::::::::::ERREUR LORS DE L'INSCRIPTION : $e::::::::::");
                     }
                   }
-
-                  /*AppUtils.showAwesomeSnackBar(
-                      context,
-                      'Incription Réussie',
-                      'Utilisateur connecté avec succès',
-                      ContentType.success,
-                      AppColors.primaryColor);*/
 
                   // Pour les vendeurs, on ne redirige pas automatiquement car on affiche le bottom sheet
                   // Pour les acheteurs, on redirige vers la page client
