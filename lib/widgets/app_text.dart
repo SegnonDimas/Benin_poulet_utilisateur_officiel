@@ -10,7 +10,9 @@ class AppText extends StatelessWidget {
   final TextOverflow? overflow;
   final TextAlign? textAlign;
   final Color? color;
+  @Deprecated('Use maxLines instead')
   final int? maxLine;
+  final int? maxLines;
   final String? text;
   final TextDecoration? decoration;
   final TextDecorationStyle? decorationStyle;
@@ -26,6 +28,7 @@ class AppText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.color,
     this.maxLine,
+    this.maxLines,
     this.context,
     this.decoration,
     this.text,
@@ -39,7 +42,7 @@ class AppText extends StatelessWidget {
     return Text(
       textAlign: textAlign,
       text ?? '',
-      maxLines: maxLine,
+      maxLines: maxLines ?? maxLine,
       style: TextStyle(
           fontSize: fontSize ?? context.mediumText * 0.9,
           fontWeight: fontWeight,

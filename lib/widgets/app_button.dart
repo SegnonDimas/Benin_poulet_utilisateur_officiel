@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppButton extends StatefulWidget {
   final Widget child;
@@ -15,7 +16,7 @@ class AppButton extends StatefulWidget {
     required this.child,
     this.color,
     this.bordeurRadius = 15,
-    this.height = 70,
+    this.height,
     this.onTap,
     this.width = 140,
     this.borderColor = Colors.transparent,
@@ -33,7 +34,7 @@ class _AppButtonState extends State<AppButton> {
       onTap: widget.onTap,
       child: Container(
         alignment: Alignment.center,
-        height: widget.height,
+        height: widget.height ?? context.height * 0.075,
         width: widget.width,
         decoration: BoxDecoration(
             color: widget.color ?? Theme.of(context).colorScheme.surface,

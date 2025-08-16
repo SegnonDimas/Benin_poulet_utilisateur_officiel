@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                     listenWhen: (previous, current) {
                       // Ne réagir que si la page est dans l'arborescence de navigation
                       //return _isMounted;
-                      return false;
+                      return true;
                     },
                     listener: (context, authState) async {
                       if (authState is AuthFailure) {

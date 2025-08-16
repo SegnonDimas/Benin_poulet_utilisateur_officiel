@@ -11,9 +11,11 @@ class AppTextField extends StatefulWidget {
   final Color? color;
   final String? hintText;
   final TextEditingController? controller;
+  final String? initialValue;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final Color? prefixIconColor;
+  final bool? enabled;
   final int maxLines;
   final int minLines;
   final bool? expands;
@@ -53,9 +55,11 @@ class AppTextField extends StatefulWidget {
     this.width,
     this.color,
     this.controller,
+    this.initialValue,
     this.onChanged,
     this.keyboardType,
     this.prefixIconColor,
+    this.enabled,
     this.hintTextColor,
     this.maxLines = 1,
     this.expands = false,
@@ -111,10 +115,12 @@ class _AppTextFieldState extends State<AppTextField> {
               child: TextFormField(
                 controller: widget.controller,
                 obscureText: !click,
+                initialValue: widget.initialValue,
                 keyboardType: widget.keyboardType,
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 expands: widget.expands!,
+                enabled: widget.enabled,
                 onEditingComplete: widget.onEditingComplete,
                 onFieldSubmitted: widget.onFieldSubmitted,
                 onTapOutside: widget.onTapOutside,
@@ -189,7 +195,9 @@ class _AppTextFieldState extends State<AppTextField> {
               child: TextFormField(
                 obscureText: false,
                 controller: widget.controller,
+                initialValue: widget.initialValue,
                 keyboardType: widget.keyboardType,
+                enabled: widget.enabled,
                 maxLines: widget.maxLines,
                 minLines: widget.minLines,
                 onFieldSubmitted: widget.onFieldSubmitted,
@@ -222,7 +230,7 @@ class _AppTextFieldState extends State<AppTextField> {
                       : null,
                   floatingLabelStyle: TextStyle(
                       fontSize:
-                          widget.showFloatingLabel! ? context.mediumText : 0),
+                          widget.showFloatingLabel! ? context.smallText : 0),
                   //labelStyle: TextStyle(color: Colors.white),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
                   /*border: const OutlineInputBorder(

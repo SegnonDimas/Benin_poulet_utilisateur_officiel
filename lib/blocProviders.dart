@@ -11,6 +11,17 @@ import 'bloc/authentification/authentification_bloc.dart';
 import 'bloc/choixCategorie/secteur_bloc.dart';
 import 'bloc/delivery/delivery_bloc.dart';
 
+// BLoCs client
+import 'bloc/client/home_client_bloc.dart';
+import 'bloc/client/store_client_bloc.dart';
+import 'bloc/client/product_client_bloc.dart';
+import 'bloc/client/cart_client_bloc.dart';
+import 'bloc/client/orders_client_bloc.dart';
+import 'bloc/client/chat_client_bloc.dart';
+import 'bloc/client/profile_client_bloc.dart';
+import 'bloc/client/favorites_client_bloc.dart';
+import 'bloc/client/review_client_bloc.dart';
+
 List<SingleChildWidget> providers = [
   // authentification
   BlocProvider(create: (context) => AuthBloc()),
@@ -38,4 +49,15 @@ List<SingleChildWidget> providers = [
 
   // produits
   BlocProvider(create: (context) => ProductBloc(list_produits)),
+
+  // BLoCs client
+  BlocProvider(create: (context) => HomeClientBloc()),
+  BlocProvider(create: (context) => StoreClientBloc()),
+  BlocProvider(create: (context) => ProductClientBloc()),
+  BlocProvider(create: (context) => CartClientBloc()),
+  BlocProvider(create: (context) => OrdersClientBloc()),
+  BlocProvider(create: (context) => ChatClientBloc()),
+  BlocProvider(create: (context) => ProfileClientBloc()),
+  BlocProvider(create: (context) => FavoritesClientBloc()),
+  BlocProvider(create: (context) => ReviewClientBloc()),
 ];

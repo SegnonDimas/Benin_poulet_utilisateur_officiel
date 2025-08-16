@@ -49,8 +49,9 @@ class ModelCarouselItem extends StatelessWidget {
                     gradient: gradient ??
                         LinearGradient(colors: [
                           Colors.grey.shade900.withOpacity(0.9),
-                          Colors.grey.shade800.withOpacity(0.5),
+                          //Colors.grey.shade800.withOpacity(0.5),
                           Colors.grey.shade700.withOpacity(0.2),
+                          Colors.transparent
                         ])),
                 child: Stack(
                   children: [
