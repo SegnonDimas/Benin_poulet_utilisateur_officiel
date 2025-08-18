@@ -320,3 +320,22 @@ Page ma boutique :
         - de même pour les sous-secteurs (que le secteur qui va sur Firebase emporte ses sous-secteurs avec lui)
 
    3-
+
+À METTRE À JOUR
+    1- Sur les stores :
+        - ajouter la description
+        - permettre aux vendeurs d'ajouter leur ville, pays (sur la page de renseignement de la localisation)
+        - permettre d'ajouter les jours et heures d'ouverture (Tous les jours par defaut)
+        - permettre d'ajouter le temps de livraison
+        - permettre d'ajouter la zone de livraison (le périmètre de livraison)
+
+    1- Sur les produits :
+        - ajouter la liste des avis
+        - permettre d'ajouter le temps de livraison
+
+À CRÉER
+    1- La collections des avis pour les boutiques
+        - créer un modèle pour les avis ("userId", "storeId", "stars", "message", "date", et autres_infos_necessaires pour les avis)
+
+    1- La collections des avis pour les produits
+        - créer un modèle pour les avis ("userId", "productId", "storeId", "stars", "message", "date", et autres_infos_necessaires pour les avis)

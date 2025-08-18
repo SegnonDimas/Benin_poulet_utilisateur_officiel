@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Modèles temporaires pour les placeholders
 class Product {
@@ -110,11 +110,11 @@ class ProductClientLoaded extends ProductClientState {
 
   @override
   List<Object?> get props => [
-    reviews,
-    reviewCount,
-    isFavorite,
-    averageRating,
-  ];
+        reviews,
+        reviewCount,
+        isFavorite,
+        averageRating,
+      ];
 
   ProductClientLoaded copyWith({
     List<Review>? reviews,
@@ -154,23 +154,28 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
     Review(
       id: '1',
       userName: 'Jean Dupont',
-      userImage: 'https://via.placeholder.com/50',
+      userImage:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/960px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg',
       rating: 5,
-      comment: 'Excellent produit, très frais et de bonne qualité. Je recommande !',
+      comment:
+          'Excellent produit, très frais et de bonne qualité. Je recommande !',
       date: 'Il y a 2 jours',
     ),
     Review(
       id: '2',
       userName: 'Marie Martin',
-      userImage: 'https://via.placeholder.com/50',
+      userImage:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/960px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg',
       rating: 4,
-      comment: 'Très satisfaite de mon achat. Le produit correspond parfaitement à la description.',
+      comment:
+          'Très satisfaite de mon achat. Le produit correspond parfaitement à la description.',
       date: 'Il y a 1 semaine',
     ),
     Review(
       id: '3',
       userName: 'Pierre Durand',
-      userImage: 'https://via.placeholder.com/50',
+      userImage:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/960px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg',
       rating: 5,
       comment: 'Prix compétitif et qualité au rendez-vous. Livraison rapide.',
       date: 'Il y a 2 semaines',
@@ -178,7 +183,8 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
     Review(
       id: '4',
       userName: 'Sophie Bernard',
-      userImage: 'https://via.placeholder.com/50',
+      userImage:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/960px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg',
       rating: 4,
       comment: 'Bon rapport qualité-prix. Je recommande ce vendeur.',
       date: 'Il y a 3 semaines',
@@ -190,18 +196,19 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
     Emitter<ProductClientState> emit,
   ) async {
     emit(ProductClientLoading());
-    
+
     try {
       // Simulation d'un délai de chargement
       await Future.delayed(const Duration(seconds: 1));
-      
+
       emit(ProductClientLoaded(
         reviews: _mockReviews,
         reviewCount: _mockReviews.length,
         averageRating: 4.5,
       ));
     } catch (e) {
-      emit(ProductClientError(message: 'Erreur lors du chargement des détails'));
+      emit(
+          ProductClientError(message: 'Erreur lors du chargement des détails'));
     }
   }
 
@@ -211,7 +218,7 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
   ) async {
     if (state is ProductClientLoaded) {
       final currentState = state as ProductClientLoaded;
-      
+
       // TODO: Implémenter la logique de favoris avec le backend
       emit(currentState.copyWith(
         isFavorite: !currentState.isFavorite,
@@ -225,7 +232,8 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
   ) async {
     // TODO: Implémenter l'ajout au panier
     // Pour l'instant, on ne fait rien
-    print('Produit ajouté au panier: ${event.product.name} (quantité: ${event.quantity})');
+    print(
+        'Produit ajouté au panier: ${event.product.name} (quantité: ${event.quantity})');
   }
 
   Future<void> _onLoadProductReviews(
@@ -234,7 +242,7 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
   ) async {
     if (state is ProductClientLoaded) {
       final currentState = state as ProductClientLoaded;
-      
+
       // TODO: Charger les avis spécifiques au produit
       emit(currentState.copyWith(
         reviews: _mockReviews,
@@ -243,5 +251,3 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
     }
   }
 }
-
-
