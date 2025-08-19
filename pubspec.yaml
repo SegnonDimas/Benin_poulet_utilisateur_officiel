@@ -82,11 +82,11 @@ dependencies:
   path_provider: ^2.1.5
   flutter_easyloading: ^3.0.5
   firebase_auth: ^5.6.2
-  #google_sign_in: ^7.0.0
-  google_sign_in: ^6.2.1 # C'est la dernière version compatible avec ce Firebase
+  google_sign_in: ^6.2.1 # Version compatible avec Firebase Auth 5.6.2
   get_storage: ^2.1.1
   flutter_launcher_icons: ^0.14.4
   device_info_plus: ^11.5.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

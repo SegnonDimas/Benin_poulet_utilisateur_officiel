@@ -10,6 +10,8 @@ import 'bloc/auth/auth_bloc.dart';
 import 'bloc/authentification/authentification_bloc.dart';
 import 'bloc/choixCategorie/secteur_bloc.dart';
 import 'bloc/delivery/delivery_bloc.dart';
+import 'bloc/store_review/store_review_bloc.dart';
+import 'bloc/product_review/product_review_bloc.dart';
 
 // BLoCs client
 import 'bloc/client/home_client_bloc.dart';
@@ -49,6 +51,12 @@ List<SingleChildWidget> providers = [
 
   // produits
   BlocProvider(create: (context) => ProductBloc(list_produits)),
+
+  // avis des boutiques
+  BlocProvider(create: (context) => StoreReviewBloc()),
+
+  // avis des produits
+  BlocProvider(create: (context) => ProductReviewBloc()),
 
   // BLoCs client
   BlocProvider(create: (context) => HomeClientBloc()),

@@ -76,6 +76,12 @@ class StoreCreationGlobalState extends StoreCreationState {
   final String? photoVersoIdendityDocument;
   final String? fullPhoto;
   final AuthentificationGlobalState? sellerGlobalState;
+  final String? description;
+  final String? zoneLivraison;
+  final Map<String, String>? joursOuverture;
+  final String? ville;
+  final String? pays;
+  final String? tempsLivraison;
 
   // Constructeur avec des valeurs par défaut.
   StoreCreationGlobalState({
@@ -103,6 +109,12 @@ class StoreCreationGlobalState extends StoreCreationState {
     this.paymentMethod = 'MTN',
     this.storeLocation,
     this.sellerGlobalState,
+    this.description,
+    this.zoneLivraison,
+    this.joursOuverture,
+    this.ville,
+    this.pays,
+    this.tempsLivraison,
   });
 
   // Copie de l'état avec des mises à jour.
@@ -131,6 +143,12 @@ class StoreCreationGlobalState extends StoreCreationState {
     String? photoVersoIdendityDocument,
     String? fullPhoto,
     AuthentificationGlobalState? sellerGlobalState,
+    String? description,
+    String? zoneLivraison,
+    Map<String, String>? joursOuverture,
+    String? ville,
+    String? pays,
+    String? tempsLivraison,
   }) {
     return StoreCreationGlobalState(
       storeName: storeName ?? this.storeName,
@@ -160,6 +178,12 @@ class StoreCreationGlobalState extends StoreCreationState {
       storeLocation: storeLocation ?? this.storeLocation,
       fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto,
       sellerGlobalState: sellerGlobalState ?? this.sellerGlobalState,
+      description: description ?? this.description,
+      zoneLivraison: zoneLivraison ?? this.zoneLivraison,
+      joursOuverture: joursOuverture ?? this.joursOuverture,
+      ville: ville ?? this.ville,
+      pays: pays ?? this.pays,
+      tempsLivraison: tempsLivraison ?? this.tempsLivraison,
     );
   }
 }
@@ -204,6 +228,12 @@ class StoreCreationError extends StoreCreationGlobalState {
     String? photoVersoIdendityDocument,
     String? fullPhoto,
     AuthentificationGlobalState? sellerGlobalState,
+    String? description,
+    String? zoneLivraison,
+    Map<String, String>? joursOuverture,
+    String? ville,
+    String? pays,
+    String? tempsLivraison,
   })  : erroMessage = erroMessage ??
             'Erreur lors de la creation de votre boutique, veuillez réessayer',
         super(
@@ -231,5 +261,11 @@ class StoreCreationError extends StoreCreationGlobalState {
           photoVersoIdendityDocument: photoVersoIdendityDocument,
           fullPhoto: fullPhoto,
           sellerGlobalState: sellerGlobalState,
+          description: description,
+          zoneLivraison: zoneLivraison,
+          joursOuverture: joursOuverture,
+          ville: ville,
+          pays: pays,
+          tempsLivraison: tempsLivraison,
         );
 }

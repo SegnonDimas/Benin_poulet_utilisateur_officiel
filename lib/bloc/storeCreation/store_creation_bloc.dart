@@ -47,6 +47,12 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
       photoVersoIdendityDocument: currentState.photoVersoIdendityDocument,
       fullPhoto: currentState.fullPhoto,
       sellerGlobalState: currentState.sellerGlobalState,
+      description: currentState.description,
+      zoneLivraison: currentState.zoneLivraison,
+      joursOuverture: currentState.joursOuverture,
+      ville: currentState.ville,
+      pays: currentState.pays,
+      tempsLivraison: currentState.tempsLivraison,
     ));
   }
 
@@ -149,6 +155,12 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
         final String? fullPhoto = event.fullPhoto;
         final AuthentificationGlobalState? sellerGlobalState =
             event.sellerGlobalState;
+        final String? description = event.description;
+        final String? zoneLivraison = event.zoneLivraison;
+        final Map<String, String>? joursOuverture = event.joursOuverture;
+        final String? ville = event.ville;
+        final String? pays = event.pays;
+        final String? tempsLivraison = event.tempsLivraison;
 
         final currentState = state is StoreCreationGlobalState
             ? state as StoreCreationGlobalState
@@ -179,6 +191,12 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
           photoVersoIdendityDocument: photoVersoIdendityDocument,
           fullPhoto: fullPhoto,
           sellerGlobalState: sellerGlobalState,
+          description: description,
+          zoneLivraison: zoneLivraison,
+          joursOuverture: joursOuverture,
+          ville: ville,
+          pays: pays,
+          tempsLivraison: tempsLivraison,
         ));
       } catch (e) {
         _emitErrorWithState(
@@ -243,6 +261,12 @@ class StoreCreationBloc extends Bloc<StoreCreationEvent, StoreCreationState> {
             StoreInfos.phone: currentState.storePhoneNumber,
             StoreInfos.email: currentState.storeEmail,
           },
+          description: currentState.description ?? currentState.storeName ?? '',
+          ville: currentState.ville ?? currentState.location ?? '',
+          pays: currentState.pays ?? 'Bénin',
+          joursOuverture: currentState.joursOuverture ?? {'default': 'Tous les jours'},
+          tempsLivraison: currentState.tempsLivraison ?? '30-60 minutes',
+          zoneLivraison: currentState.zoneLivraison ?? 'Zone locale',
         );
 
         // Mettre à jour le profil vendeur avec les informations de la boutique

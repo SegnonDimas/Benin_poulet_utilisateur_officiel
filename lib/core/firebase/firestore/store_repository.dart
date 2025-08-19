@@ -157,13 +157,65 @@ class FirestoreStoreService {
   }
 
   /// Met à jour la description de la boutique
-  Future<void> updateStoreDescription(
-      String storeId, String description) async {
+  Future<void> updateStoreDescription(String storeId, String description) async {
     await _firestore
         .collection(FirebaseCollections.storesCollection)
         .doc(storeId)
         .update({
-      StoresCollection.storeDescription: description,
+      StoresCollection.description: description,
+    });
+  }
+
+  /// Met à jour la ville de la boutique
+  Future<void> updateStoreVille(String storeId, String ville) async {
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update({
+      StoresCollection.ville: ville,
+    });
+  }
+
+  /// Met à jour le pays de la boutique
+  Future<void> updateStorePays(String storeId, String pays) async {
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update({
+      StoresCollection.pays: pays,
+    });
+  }
+
+  /// Met à jour les jours d'ouverture de la boutique
+  Future<void> updateStoreJoursOuverture(
+      String storeId, Map<String, String> joursOuverture) async {
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update({
+      StoresCollection.joursOuverture: joursOuverture,
+    });
+  }
+
+  /// Met à jour le temps de livraison de la boutique
+  Future<void> updateStoreTempsLivraison(
+      String storeId, String tempsLivraison) async {
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update({
+      StoresCollection.tempsLivraison: tempsLivraison,
+    });
+  }
+
+  /// Met à jour la zone de livraison de la boutique
+  Future<void> updateStoreZoneLivraison(
+      String storeId, String zoneLivraison) async {
+    await _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .doc(storeId)
+        .update({
+      StoresCollection.zoneLivraison: zoneLivraison,
     });
   }
 

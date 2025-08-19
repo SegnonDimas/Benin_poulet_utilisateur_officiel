@@ -5,4 +5,6 @@ class FirebaseCollections {
   static const String productsCollection = "products";
   static const String errorReportsCollection = "errorReports";
   static const String sectorsCollection = "sectors";
+  static const String storeReviewsCollection = "store_reviews";
+  static const String productReviewsCollection = "product_reviews";
 }

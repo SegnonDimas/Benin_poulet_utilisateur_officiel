@@ -6,11 +6,15 @@ import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/models/seller.dart';
 import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/models/user.dart';
+import 'package:benin_poulet/models/store_review.dart';
+import 'package:benin_poulet/models/product_review.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'seller_repository.dart';
 import 'store_repository.dart';
 import 'user_repository.dart';
+import 'store_review_repository.dart';
+import 'product_review_repository.dart';
 
 /// Service centralisé pour gérer toutes les interactions avec Firestore
 class FirestoreService {
@@ -22,6 +26,8 @@ class FirestoreService {
   final FirestoreUserServices _userService = FirestoreUserServices();
   final SellerRepository _sellerRepository = SellerRepository();
   final FirestoreStoreService _storeService = FirestoreStoreService();
+  final FirestoreStoreReviewService _storeReviewService = FirestoreStoreReviewService();
+  final FirestoreProductReviewService _productReviewService = FirestoreProductReviewService();
 
   /// Crée un nouvel utilisateur avec gestion automatique des rôles
   Future<void> createUser(AppUser user) async {
@@ -255,6 +261,12 @@ class FirestoreService {
     String? storeState,
     String? storeStatus,
     List<String>? storeSubsectors,
+    String? description,
+    String? ville,
+    String? pays,
+    Map<String, String>? joursOuverture,
+    String? tempsLivraison,
+    String? zoneLivraison,
   }) async {
     final store = Store(
       storeId: '', // Sera généré automatiquement
@@ -275,6 +287,12 @@ class FirestoreService {
       storeState: storeState,
       storeStatus: storeStatus,
       storeSubsectors: storeSubsectors,
+      description: description,
+      ville: ville,
+      pays: pays,
+      joursOuverture: joursOuverture,
+      tempsLivraison: tempsLivraison,
+      zoneLivraison: zoneLivraison,
     );
 
     final storeId = await _storeService.createStore(
@@ -419,5 +437,77 @@ class FirestoreService {
       'totalSellers': sellersSnapshot.count ?? 0,
       'totalStores': storesSnapshot.count ?? 0,
     };
+  }
+
+  // Méthodes pour les avis des boutiques
+  Future<String> createStoreReview({
+    required String userId,
+    required String storeId,
+    required int stars,
+    required String message,
+    Map<String, dynamic>? autresInfos,
+  }) async {
+    final review = StoreReview(
+      reviewId: '',
+      userId: userId,
+      storeId: storeId,
+      stars: stars,
+      message: message,
+      date: DateTime.now(),
+      autresInfos: autresInfos,
+    );
+
+    return await _storeReviewService.createStoreReview(review);
+  }
+
+  Stream<List<StoreReview>> getStoreReviews(String storeId) {
+    return _storeReviewService.getStoreReviewsByStore(storeId);
+  }
+
+  Future<double> getStoreAverageRating(String storeId) {
+    return _storeReviewService.getAverageStoreRating(storeId);
+  }
+
+  Future<int> getStoreReviewCount(String storeId) {
+    return _storeReviewService.getStoreReviewCount(storeId);
+  }
+
+  // Méthodes pour les avis des produits
+  Future<String> createProductReview({
+    required String userId,
+    required String productId,
+    required String storeId,
+    required int stars,
+    required String message,
+    Map<String, dynamic>? autresInfos,
+  }) async {
+    final review = ProductReview(
+      reviewId: '',
+      userId: userId,
+      productId: productId,
+      storeId: storeId,
+      stars: stars,
+      message: message,
+      date: DateTime.now(),
+      autresInfos: autresInfos,
+    );
+
+    return await _productReviewService.createProductReview(review);
+  }
+
+  Stream<List<ProductReview>> getProductReviews(String productId) {
+    return _productReviewService.getProductReviewsByProduct(productId);
+  }
+
+  Stream<List<ProductReview>> getStoreProductReviews(String storeId) {
+    return _productReviewService.getProductReviewsByStore(storeId);
+  }
+
+  Future<double> getProductAverageRating(String productId) {
+    return _productReviewService.getAverageProductRating(productId);
+  }
+
+  Future<int> getProductReviewCount(String productId) {
+    return _productReviewService.getProductReviewCount(productId);
   }
 }

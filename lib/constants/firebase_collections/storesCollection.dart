@@ -17,6 +17,12 @@ class StoresCollection {
   static const String storeState = 'storeState';
   static const String storeStatus = 'storeStatus';
   static const String storeSubsectors = 'storeSubsectors';
+  static const String description = 'description';
+  static const String ville = 'ville';
+  static const String pays = 'pays';
+  static const String joursOuverture = 'joursOuverture';
+  static const String tempsLivraison = 'tempsLivraison';
+  static const String zoneLivraison = 'zoneLivraison';
 }
 
 class MobileMoney {

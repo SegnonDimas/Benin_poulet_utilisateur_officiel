@@ -15,6 +15,9 @@ class AuthServices {
   static var userId = auth.currentUser?.uid;
   //static final GoogleSignInAccount? googleUser = GoogleSignIn().signIn();;
 
+  // Variable pour éviter les appels multiples simultanés
+  static bool _isGoogleSignInInProgress = false;
+
   //========================================
   // créer une inscription/connexion anonyme
   //========================================
@@ -211,15 +214,36 @@ class AuthServices {
     String authProvider = AuthProviders.GOOGLE,
     String role = UserRoles.BUYER,
   }) async {
-    // Déconnecte le compte mis en cache pour forcer la sélection à la prochaine connexion
-    /*if (GoogleSignIn().currentUser != null) {
-      //await auth.signOut();
-      await GoogleSignIn().signOut();
-    }*/
+    // Vérifier si une opération de connexion Google est déjà en cours
+    if (_isGoogleSignInInProgress) {
+      if (kDebugMode) {
+        print('Connexion Google déjà en cours, ignoré.');
+      }
+      return null;
+    }
 
-    await GoogleSignIn().signOut();
-    // Déclenche le flux de connexion
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Marquer le début de l'opération
+    _isGoogleSignInInProgress = true;
+
+    // Créer une nouvelle instance de GoogleSignIn avec des paramètres personnalisés
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email', 'profile'],
+    );
+
+    // Vérifier si un utilisateur est déjà connecté et le déconnecter silencieusement
+    if (await googleSignIn.isSignedIn()) {
+      try {
+        await googleSignIn.signOut();
+      } catch (e) {
+        // Ignorer les erreurs de déconnexion
+        if (kDebugMode) {
+          print('Déconnexion silencieuse: $e');
+        }
+      }
+    }
+
+    // Déclenche le flux de connexion avec force de sélection
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     // Si l'utilisateur annule, googleUser est null
     if (googleUser == null) {
@@ -281,15 +305,22 @@ class AuthServices {
 
     userId = googleUser.id;
 
+    // Toujours réinitialiser le flag à la fin de l'opération
+    _isGoogleSignInInProgress = false;
+
     return userCredential.user;
   }
 
   static Future<void> signOutOfGoogle() async {
     try {
+      // Déconnecter de Google Sign-In
       await GoogleSignIn().signOut();
-      //await auth.signOut();
+      // Déconnecter de Firebase Auth
+      await auth.signOut();
     } catch (e) {
-      print('Erreur lors de la déconnexion: $e');
+      if (kDebugMode) {
+        print('Erreur lors de la déconnexion Google: $e');
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ import '../../../bloc/client/product_client_bloc.dart';
 import '../../../constants/routes.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text.dart';
+import '../../../widgets/product_review_widget.dart';
 import '../../colors/app_colors.dart';
 
 class ProductClientPage extends StatefulWidget {
@@ -416,73 +417,13 @@ class _ProductClientPageState extends State<ProductClientPage>
   }
 
   Widget _buildReviewsTab(ProductClientState state) {
-    if (state is ProductClientLoaded) {
-      if (state.reviews.isEmpty) {
-        return const Center(
-          child: AppText(text: 'Aucun avis pour le moment'),
-        );
-      }
-
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: state.reviews.length,
-        itemBuilder: (context, index) {
-          final review = state.reviews[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(review.userImage),
-                        radius: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppText(
-                              text: review.userName,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            Row(
-                              children: List.generate(5, (index) {
-                                return Icon(
-                                  Icons.star,
-                                  size: 16,
-                                  color: index < review.rating
-                                      ? AppColors.orangeColor
-                                      : Colors.grey.shade300,
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      ),
-                      AppText(
-                        text: review.date,
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  AppText(text: review.comment),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    return const Center(
-      child: AppText(text: 'Chargement des avis...'),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: ProductReviewWidget(
+        productId: widget.product.id,
+        storeId: widget.product.storeId ?? 'store_id_example', // À remplacer par l'ID réel de la boutique
+        userId: 'user_id_example', // À remplacer par l'ID réel de l'utilisateur
+      ),
     );
   }
 

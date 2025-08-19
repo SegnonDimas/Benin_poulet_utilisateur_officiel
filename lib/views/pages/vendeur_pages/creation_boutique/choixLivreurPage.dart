@@ -16,6 +16,10 @@ class ChoixLivreurPage extends StatelessWidget {
 
   final _controllerOui = SuperTooltipController();
   final _controllerNon = SuperTooltipController();
+  
+  final villeController = TextEditingController();
+  final paysController = TextEditingController();
+  final tempsLivraisonController = TextEditingController();
 
   void _updateDeliveryInfo(
       BuildContext context, StoreCreationGlobalState state) {
@@ -38,6 +42,9 @@ class ChoixLivreurPage extends StatelessWidget {
           sellerOwnDeliver: info.sellerOwnDeliver,
           location: info.location,
           locationDescription: info.locationDescription,
+          ville: villeController.text,
+          pays: paysController.text,
+          tempsLivraison: tempsLivraisonController.text,
         ));
   }
 
@@ -101,6 +108,117 @@ class ChoixLivreurPage extends StatelessWidget {
                     Divider(
                       color: Theme.of(context).colorScheme.background,
                     ),
+                    
+                    // Ville
+                    const SizedBox(height: 20),
+                    AppText(
+                      text: 'Ville',
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.mediumText * 1.1,
+                    ),
+                    const SizedBox(height: 10),
+                    AppTextField(
+                      width: context.width * 0.9,
+                      controller: villeController,
+                      prefixIcon: Icons.location_city,
+                      color: Theme.of(context).colorScheme.background,
+                      fontSize: mediumText() * 0.9,
+                      fontColor: Theme.of(context).colorScheme.inversePrimary,
+                      textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (string) {
+                        _updateDeliveryInfo(context,
+                            storeCreationState as StoreCreationGlobalState);
+                      },
+                      onFieldSubmitted: (string) {
+                        _updateDeliveryInfo(context,
+                            storeCreationState as StoreCreationGlobalState);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    AppText(
+                      text: 'Ville où se trouve votre boutique',
+                      overflow: TextOverflow.visible,
+                      fontSize: mediumText() * 0.8,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.3),
+                    ),
+                    
+                    // Pays
+                    const SizedBox(height: 20),
+                    AppText(
+                      text: 'Pays',
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.mediumText * 1.1,
+                    ),
+                    const SizedBox(height: 10),
+                    AppTextField(
+                      width: context.width * 0.9,
+                      controller: paysController,
+                      prefixIcon: Icons.public,
+                      color: Theme.of(context).colorScheme.background,
+                      fontSize: mediumText() * 0.9,
+                      fontColor: Theme.of(context).colorScheme.inversePrimary,
+                      textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.words,
+                      readOnly: true,
+                      onTap: () {
+                        // Par défaut, on met Bénin
+                        paysController.text = 'Bénin';
+                        _updateDeliveryInfo(context,
+                            storeCreationState as StoreCreationGlobalState);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    AppText(
+                      text: 'Pays où se trouve votre boutique (actuellement limité au Bénin)',
+                      overflow: TextOverflow.visible,
+                      fontSize: mediumText() * 0.8,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.3),
+                    ),
+                    
+                    // Temps de livraison
+                    const SizedBox(height: 20),
+                    AppText(
+                      text: 'Temps de livraison moyen',
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.mediumText * 1.1,
+                    ),
+                    const SizedBox(height: 10),
+                    AppTextField(
+                      width: context.width * 0.9,
+                      controller: tempsLivraisonController,
+                      prefixIcon: Icons.access_time,
+                      color: Theme.of(context).colorScheme.background,
+                      fontSize: mediumText() * 0.9,
+                      fontColor: Theme.of(context).colorScheme.inversePrimary,
+                      textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (string) {
+                        _updateDeliveryInfo(context,
+                            storeCreationState as StoreCreationGlobalState);
+                      },
+                      onFieldSubmitted: (string) {
+                        _updateDeliveryInfo(context,
+                            storeCreationState as StoreCreationGlobalState);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    AppText(
+                      text: 'Exemple: 30-60 minutes, 1-2 heures, etc.',
+                      overflow: TextOverflow.visible,
+                      fontSize: mediumText() * 0.8,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.3),
+                    ),
+                    
                     const SizedBox(height: 20),
                     AppText(
                       text:
@@ -111,8 +229,6 @@ class ChoixLivreurPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     AppTextField(
-                      //label: '',
-                      //height: context.height * 0.08,
                       width: context.width * 0.9,
                       controller: deliveryBloc.descriptionEmplacementController,
                       prefixIcon: Icons.not_listed_location_rounded,
@@ -143,8 +259,6 @@ class ChoixLivreurPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     AppTextField(
-                      //label: '',
-                      // height: context.height * 0.08,
                       width: context.width * 0.9,
                       readOnly: true,
                       controller: deliveryBloc.emplacementController,

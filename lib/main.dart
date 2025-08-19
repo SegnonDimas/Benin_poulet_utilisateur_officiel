@@ -17,7 +17,6 @@ import 'package:provider/provider.dart';
 
 import 'constants/routes.dart';
 import 'firebase_options.dart';
-import 'views/pages/client_pages/home_client_page.dart';
 
 Future<void> main() async {
   // WidgetsFlutterBinding init
@@ -128,10 +127,10 @@ class _MyAppState extends State<MyApp> {
         title: 'Bénin Poulet',
 
         routes: routes,
-        //initialRoute: AppRoutes.FIRSTPAGE,
+        initialRoute: AppRoutes.FIRSTPAGE,
 
         builder: EasyLoading.init(),
-        home: HomeClientPage(),
+        //home: HomeClientPage(),
         //home: ListProduitFirebase(),
       ),
     );

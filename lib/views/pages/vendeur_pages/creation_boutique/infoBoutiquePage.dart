@@ -13,14 +13,24 @@ class InfoBoutiquePage extends StatelessWidget {
   final infoBoutiqueFormKey = GlobalKey<FormState>();
 
   final nomBoutiqueController = TextEditingController();
-
   final numeroBoutiqueController = TextEditingController();
-
   final adresseEmailController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final zoneLivraisonController = TextEditingController();
 
   final String initialCountry = 'BJ';
-
   final PhoneNumber number = PhoneNumber(isoCode: 'BJ');
+
+  // Horaires d'ouverture par défaut
+  final Map<String, String> defaultJoursOuverture = {
+    'Lundi': '08:00-18:00',
+    'Mardi': '08:00-18:00',
+    'Mercredi': '08:00-18:00',
+    'Jeudi': '08:00-18:00',
+    'Vendredi': '08:00-18:00',
+    'Samedi': '08:00-18:00',
+    'Dimanche': '08:00-18:00',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +43,16 @@ class InfoBoutiquePage extends StatelessWidget {
             final state = context.watch<StoreCreationBloc>().state
                 as StoreCreationGlobalState;
 
-            /*final storeInfo = SubmitStoreInfo(
-              storeName: state.storeName,
-              storeEmail: state.storeEmail,
-              storePhoneNumber: state.storePhoneNumber,
-            );*/
-
             final storeInfo = StoreCreationGlobalEvent(
               storeName: nomBoutiqueController.text,
               storeEmail: adresseEmailController.text,
               storePhoneNumber: numeroBoutiqueController.text,
+              description: descriptionController.text,
+              zoneLivraison: zoneLivraisonController.text,
+              joursOuverture: defaultJoursOuverture,
             );
 
             return Form(
-              //key: infoBoutiqueFormKey,
               child: ListView(
                 padding: const EdgeInsets.only(top: 20),
                 children: <Widget>[
@@ -60,7 +66,6 @@ class InfoBoutiquePage extends StatelessWidget {
                     height: 10,
                   ),
                   AppTextField(
-                    //label: 'Nom de la boutique',
                     height: context.height * 0.075,
                     width: context.width * 0.9,
                     controller: nomBoutiqueController,
@@ -77,25 +82,19 @@ class InfoBoutiquePage extends StatelessWidget {
                     // à la soumission
                     onFieldSubmitted: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // à la fin de la saisie
                     onEditingComplete: () {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // à la sauvegarde
                     onSaved: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
                   ),
 
@@ -115,6 +114,160 @@ class InfoBoutiquePage extends StatelessWidget {
                   ),
                   const SizedBox(
                     height: 10,
+                  ),
+
+                  // Description de la boutique
+                  const SizedBox(height: 20),
+                  AppText(
+                    text: 'Description de votre boutique',
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.mediumText * 1.1,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppTextField(
+                    height: context.height * 0.12,
+                    width: context.width * 0.9,
+                    controller: descriptionController,
+                    prefixIcon: Icons.description,
+                    color: Theme.of(context).colorScheme.background,
+                    fontSize: context.mediumText,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    maxLines: 4,
+                    textInputAction: TextInputAction.newline,
+                    textCapitalization: TextCapitalization.sentences,
+
+                    // à chaque saisie
+                    onChanged: (String string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+
+                    // à la soumission
+                    onFieldSubmitted: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+
+                    // à la fin de la saisie
+                    onEditingComplete: () {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+
+                    // à la sauvegarde
+                    onSaved: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppText(
+                    text: 'Décrivez votre boutique, vos spécialités et ce qui vous rend unique',
+                    fontSize: context.smallText * 1.2,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.3),
+                    overflow: TextOverflow.visible,
+                  ),
+
+                  // Zone de livraison
+                  const SizedBox(height: 20),
+                  AppText(
+                    text: 'Zone de livraison',
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.mediumText * 1.1,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppTextField(
+                    height: context.height * 0.075,
+                    width: context.width * 0.9,
+                    controller: zoneLivraisonController,
+                    prefixIcon: Icons.location_on,
+                    color: Theme.of(context).colorScheme.background,
+                    fontSize: context.mediumText,
+                    fontColor: Theme.of(context).colorScheme.inversePrimary,
+                    textInputAction: TextInputAction.done,
+                    textCapitalization: TextCapitalization.words,
+
+                    // à chaque saisie
+                    onChanged: (String string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                    },
+
+                    // à la soumission
+                    onFieldSubmitted: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+
+                    // à la fin de la saisie
+                    onEditingComplete: () {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+
+                    // à la sauvegarde
+                    onSaved: (String? string) {
+                      context.read<StoreCreationBloc>().add(storeInfo);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppText(
+                    text: 'Précisez les quartiers ou zones où vous livrez vos produits',
+                    fontSize: context.smallText * 1.2,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.3),
+                    overflow: TextOverflow.visible,
+                  ),
+
+                  // Horaires d'ouverture
+                  const SizedBox(height: 20),
+                  AppText(
+                    text: 'Horaires d\'ouverture',
+                    fontWeight: FontWeight.bold,
+                    fontSize: context.mediumText * 1.1,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: context.width * 0.9,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          text: 'Horaires par défaut : Tous les jours de 08:00 à 18:00',
+                          fontSize: context.smallText,
+                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
+                        ),
+                        const SizedBox(height: 8),
+                        AppText(
+                          text: 'Vous pourrez modifier ces horaires plus tard dans les paramètres de votre boutique',
+                          fontSize: context.smallText * 0.9,
+                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ],
+                    ),
                   ),
 
                   // Numéro de téléphone
@@ -139,17 +292,13 @@ class InfoBoutiquePage extends StatelessWidget {
                     //  à la soumission
                     onSubmit: () {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // à la soumission
                     onFieldSubmitted: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // lorsque le numéro saisi est valide
@@ -192,7 +341,6 @@ class InfoBoutiquePage extends StatelessWidget {
                     height: 10,
                   ),
                   AppTextField(
-                    //label: 'Adresse email',
                     height: context.height * 0.075,
                     width: context.width * 0.9,
                     controller: adresseEmailController,
@@ -212,25 +360,19 @@ class InfoBoutiquePage extends StatelessWidget {
                     // à la soumission
                     onFieldSubmitted: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // à la fin de la saisie
                     onEditingComplete: () {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
 
                     // à la sauvegarde
                     onSaved: (String? string) {
                       context.read<StoreCreationBloc>().add(storeInfo);
-
-                      FocusScope.of(context)
-                          .unfocus(); //force le clavier à valider
+                      FocusScope.of(context).unfocus();
                     },
                   ),
                   const SizedBox(
@@ -246,11 +388,6 @@ class InfoBoutiquePage extends StatelessWidget {
                         .withOpacity(0.3),
                     overflow: TextOverflow.visible,
                   ),
-
-                  // Espace pour compenser l'espace occupé par le bouton "Suivant" dans la page CreationBoutiquePage
-                  /*SizedBox(
-                    height: context.height * 0.07,
-                  )*/
                 ],
               ),
             );

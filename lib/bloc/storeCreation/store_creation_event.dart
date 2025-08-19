@@ -76,6 +76,12 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
   final String? photoVersoIdendityDocument;
   final String? fullPhoto;
   final AuthentificationGlobalState? sellerGlobalState;
+  final String? description;
+  final String? zoneLivraison;
+  final Map<String, String>? joursOuverture;
+  final String? ville;
+  final String? pays;
+  final String? tempsLivraison;
 
   // Constructeur avec des valeurs par défaut.
   StoreCreationGlobalEvent({
@@ -103,6 +109,12 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
     this.paymentMethod,
     this.storeLocation,
     this.sellerGlobalState,
+    this.description,
+    this.zoneLivraison,
+    this.joursOuverture,
+    this.ville,
+    this.pays,
+    this.tempsLivraison,
   });
 
   // Copie de l'état avec des mises à jour.
@@ -130,6 +142,12 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
     String? photoRectoIdendityDocument,
     String? photoVersoIdendityDocument,
     String? fullPhoto,
+    String? description,
+    String? zoneLivraison,
+    Map<String, String>? joursOuverture,
+    String? ville,
+    String? pays,
+    String? tempsLivraison,
   }) {
     return StoreCreationGlobalEvent(
         storeName: storeName ?? this.storeName,
@@ -159,7 +177,13 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
         sellerBirthPlace:
             sellerBirthPlace ?? sellerGlobalState?.sellerBirthPlace,
         storeLocation: storeLocation ?? this.storeLocation,
-        fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto);
+        fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto,
+        description: description ?? this.description,
+        zoneLivraison: zoneLivraison ?? this.zoneLivraison,
+        joursOuverture: joursOuverture ?? this.joursOuverture,
+        ville: ville ?? this.ville,
+        pays: pays ?? this.pays,
+        tempsLivraison: tempsLivraison ?? this.tempsLivraison);
   }
 }
 

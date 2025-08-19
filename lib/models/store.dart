@@ -21,6 +21,12 @@ class Store {
   final String? storeState;
   final String? storeStatus;
   final List<String>? storeSubsectors;
+  final String? description;
+  final String? ville;
+  final String? pays;
+  final Map<String, String>? joursOuverture;
+  final String? tempsLivraison;
+  final String? zoneLivraison;
 
   Store({
     required this.storeId,
@@ -41,6 +47,12 @@ class Store {
     this.storeState = StoreState.open,
     this.storeStatus = StoreStatus.active,
     this.storeSubsectors,
+    this.description,
+    this.ville,
+    this.pays,
+    this.joursOuverture,
+    this.tempsLivraison,
+    this.zoneLivraison,
   });
 
   //copyWith
@@ -63,6 +75,12 @@ class Store {
     String? storeState,
     String? storeStatus,
     List<String>? storeSubsectors,
+    String? description,
+    String? ville,
+    String? pays,
+    Map<String, String>? joursOuverture,
+    String? tempsLivraison,
+    String? zoneLivraison,
   }) {
     return Store(
       storeId: storeId ?? this.storeId,
@@ -83,6 +101,12 @@ class Store {
       storeState: storeState ?? this.storeState,
       storeStatus: storeStatus ?? this.storeStatus,
       storeSubsectors: storeSubsectors ?? this.storeSubsectors,
+      description: description ?? this.description,
+      ville: ville ?? this.ville,
+      pays: pays ?? this.pays,
+      joursOuverture: joursOuverture ?? this.joursOuverture,
+      tempsLivraison: tempsLivraison ?? this.tempsLivraison,
+      zoneLivraison: zoneLivraison ?? this.zoneLivraison,
     );
   }
 
@@ -106,6 +130,12 @@ class Store {
       StoresCollection.storeState: storeState,
       StoresCollection.storeStatus: storeStatus,
       StoresCollection.storeSubsectors: storeSubsectors,
+      StoresCollection.description: description,
+      StoresCollection.ville: ville,
+      StoresCollection.pays: pays,
+      StoresCollection.joursOuverture: joursOuverture,
+      StoresCollection.tempsLivraison: tempsLivraison,
+      StoresCollection.zoneLivraison: zoneLivraison,
     };
   }
 
@@ -141,6 +171,14 @@ class Store {
       storeSubsectors: map[StoresCollection.storeSubsectors] != null
           ? List<String>.from(map[StoresCollection.storeSubsectors])
           : null,
+      description: map[StoresCollection.description],
+      ville: map[StoresCollection.ville],
+      pays: map[StoresCollection.pays],
+      joursOuverture: map[StoresCollection.joursOuverture] != null
+          ? Map<String, String>.from(map[StoresCollection.joursOuverture])
+          : null,
+      tempsLivraison: map[StoresCollection.tempsLivraison],
+      zoneLivraison: map[StoresCollection.zoneLivraison],
     );
   }
 
@@ -174,6 +212,14 @@ class Store {
       storeComments: json[StoresCollection.storeComments] != null
           ? List<String>.from(json[StoresCollection.storeComments])
           : null,
+      description: json[StoresCollection.description],
+      ville: json[StoresCollection.ville],
+      pays: json[StoresCollection.pays],
+      joursOuverture: json[StoresCollection.joursOuverture] != null
+          ? Map<String, String>.from(json[StoresCollection.joursOuverture])
+          : null,
+      tempsLivraison: json[StoresCollection.tempsLivraison],
+      zoneLivraison: json[StoresCollection.zoneLivraison],
     );
   }
 }

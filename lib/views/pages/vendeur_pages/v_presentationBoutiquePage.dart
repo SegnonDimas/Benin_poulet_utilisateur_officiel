@@ -3,6 +3,7 @@ import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:benin_poulet/widgets/store_review_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,23 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
     'je suis satisfait'
   ];
   bool voirAvisClient = false;
+
+  // Nouvelles données pour les champs manquants
+  final String description =
+      'Boutique spécialisée dans la vente de poulets frais et de qualité. Nous proposons une large gamme de produits avicoles pour satisfaire tous vos besoins.';
+  final String ville = 'Cotonou';
+  final String pays = 'Bénin';
+  final String zoneLivraison = 'Cotonou, Abomey-Calavi, Ouidah';
+  final String tempsLivraison = '30-60 minutes';
+  final Map<String, String> joursOuverture = {
+    'Lundi': '08:00-18:00',
+    'Mardi': '08:00-18:00',
+    'Mercredi': '08:00-18:00',
+    'Jeudi': '08:00-18:00',
+    'Vendredi': '08:00-18:00',
+    'Samedi': '08:00-18:00',
+    'Dimanche': '08:00-18:00',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -226,6 +244,42 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                     fontWeight: FontWeight.bold,
                   ),
 
+                  /// description de la boutique
+                  const SizedBox(height: 16),
+                  AppText(
+                    text: 'Description',
+                    fontSize: mediumText(),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.7),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.3),
+                      ),
+                    ),
+                    child: AppText(
+                      text: description,
+                      fontSize: smallText(),
+                      overflow: TextOverflow.visible,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.8),
+                    ),
+                  ),
+
                   /// les attributs de la boutique
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -263,6 +317,65 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                             value: "$dureeMin-$dureeMax",
                             description: 'Mins'),
                       )
+                    ],
+                  ),
+
+                  /// nouveaux attributs de la boutique
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.25,
+                            icon: Icon(
+                              Icons.location_city,
+                              color: primaryColor,
+                            ),
+                            value: ville,
+                            description: 'Ville'),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.35,
+                            icon: Icon(
+                              Icons.public,
+                              color: primaryColor,
+                            ),
+                            value: pays,
+                            description: 'Pays'),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.35,
+                            icon: Icon(
+                              Icons.access_time,
+                              color: primaryColor,
+                            ),
+                            value: tempsLivraison,
+                            description: 'Livraison'),
+                      )
+                    ],
+                  ),
+
+                  /// zone de livraison
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ModelAttributBoutique(
+                            width: appWidthSize(context) * 0.5,
+                            icon: Icon(
+                              Icons.delivery_dining,
+                              color: primaryColor,
+                            ),
+                            value: zoneLivraison,
+                            description: 'Zone de livraison'),
+                      ),
                     ],
                   ),
 
@@ -397,7 +510,7 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
               fontSize: mediumText(),
             ),
             subtitle: AppText(
-              text: 'Abomey-Calavi',
+              text: ville,
             ),
             trailing: Icon(
               Icons.edit_note_rounded,
@@ -414,8 +527,50 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
               fontSize: mediumText(),
             ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: joursOuverture.entries.map((entry) {
+                return AppText(
+                  text: '${entry.key}: ${entry.value}',
+                  fontSize: smallText(),
+                );
+              }).toList(),
+            ),
+            trailing: Icon(
+              Icons.edit_note_rounded,
+              color: primaryColor,
+            ),
+          ),
+
+          // Zone de livraison
+          ListTile(
+            leading: const Icon(Icons.delivery_dining),
+            title: AppText(
+              text: 'Zone de livraison',
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+              fontSize: mediumText(),
+            ),
             subtitle: AppText(
-              text: 'Tous les jours',
+              text: zoneLivraison,
+            ),
+            trailing: Icon(
+              Icons.edit_note_rounded,
+              color: primaryColor,
+            ),
+          ),
+
+          // Temps de livraison
+          ListTile(
+            leading: const Icon(Icons.access_time),
+            title: AppText(
+              text: 'Temps de livraison',
+              color:
+                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+              fontSize: mediumText(),
+            ),
+            subtitle: AppText(
+              text: tempsLivraison,
             ),
             trailing: Icon(
               Icons.edit_note_rounded,
@@ -461,6 +616,48 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   ),
                 );
               }),
+            ),
+          ),
+
+          /// widget d'avis interactif
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText(
+                  text: 'Système d\'avis interactif',
+                  fontSize: mediumText(),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inversePrimary
+                      .withOpacity(0.7),
+                ),
+                const SizedBox(height: 16),
+                // Temporairement commenté en attendant la création de l'index Firestore
+                // StoreReviewWidget(
+                //   storeId:
+                //       'store_id_example', // À remplacer par l'ID réel de la boutique
+                //   userId:
+                //       'user_id_example', // À remplacer par l'ID réel de l'utilisateur
+                // ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    ),
+                  ),
+                  child: AppText(
+                    text: 'Système d\'avis en cours de configuration...',
+                    fontSize: smallText(),
+                    color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.6),
+                  ),
+                ),
+              ],
             ),
           )
         ],
