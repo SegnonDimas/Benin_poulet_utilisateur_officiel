@@ -21,6 +21,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
+import '../../../services/navigation_service.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/wave_painter.dart';
@@ -169,65 +170,124 @@ class _LoginPageState extends State<LoginPage> {
                       if (authState is PhoneLoginRequestSuccess) {
                         try {
                           var _password = _passWordController.text;
-                          AuthServices.signInWithPhone(number, _password);
-                          AppUtils.showSnackBar(context, 'Connexion Réussie');
-                          print("::::::::::::::::JE SUIS LÀ::::::::::::::::");
-
-                          /*_passWordController.clear();
-                          _phoneNumbercontroller.clear();*/
-                        } on FirebaseException catch (e) {
-                          //AppUtils.showSnackBar(context, e.toString());
-                          print('::::::::::::::ERREUR : $e');
-                        } catch (e) {
-                          //AppUtils.showSnackBar(context, e.toString());
-                          print('::::::::::::::ERREUR : $e');
-                        }
-
-                        AppUtils.showAwesomeSnackBar(
-                            context,
-                            'Connexion Réussie',
-                            'Utilisateur connecté avec succès',
-                            ContentType.success,
-                            AppColors.primaryColor);
-
-                        if (uRoleState.role == UserRoles.SELLER &&
-                            authState is! AuthLoading) {
-                        } else {}
-                        if (uRoleState.role == UserRoles.BUYER &&
-                            authState is! AuthLoading)
-
-                        // rediredction vers la page de destination
-                        {
-                          Navigator.pushNamedAndRemoveUntil(
+                          await AuthServices.signInWithPhone(number, _password);
+                          
+                          AppUtils.showAwesomeSnackBar(
                               context,
-                              AppRoutes.CLIENTHOMEPAGE,
-                              (Route<dynamic> route) => false);
+                              'Connexion Réussie',
+                              'Utilisateur connecté avec succès',
+                              ContentType.success,
+                              AppColors.primaryColor);
+
+                          // Redirection basée sur le rôle
+                          await NavigationService.redirectBasedOnRole(context);
+
+                          // Nettoyage des champs
+                          _passWordController.clear();
+                          _phoneNumbercontroller.clear();
+                        } on FirebaseAuthException catch (e) {
+                          String errorMessage;
+                          switch (e.code) {
+                            case 'user-not-found':
+                              errorMessage = 'Aucun compte trouvé avec ce numéro de téléphone. Veuillez vous inscrire.';
+                              // Rediriger vers l'inscription après un délai
+                              Future.delayed(const Duration(seconds: 3), () {
+                                if (mounted) {
+                                  NavigationService.redirectToSignup(context);
+                                }
+                              });
+                              break;
+                            case 'wrong-password':
+                              errorMessage = 'Mot de passe incorrect. Veuillez réessayer.';
+                              break;
+                            case 'invalid-credential':
+                              errorMessage = 'Identifiants invalides. Veuillez vérifier vos informations.';
+                              break;
+                            case 'too-many-requests':
+                              errorMessage = 'Trop de tentatives. Veuillez réessayer plus tard.';
+                              break;
+                            default:
+                              errorMessage = 'Erreur de connexion: ${e.message}';
+                              break;
+                          }
+                          
+                          AppUtils.showInfoDialog(
+                            context: context,
+                            message: errorMessage,
+                            type: InfoType.error,
+                          );
+                        } catch (e) {
+                          AppUtils.showInfoDialog(
+                            context: context,
+                            message: 'Une erreur inattendue s\'est produite. Veuillez réessayer.',
+                            type: InfoType.error,
+                          );
                         }
-
-                        uRoleState.role == UserRoles.SELLER
-                            ? AppUtils.showSnackBar(
-                                context, '${uRoleState.role}',
-                                backgroundColor: AppColors.redColor)
-                            : AppUtils.showSnackBar(
-                                context, '${uRoleState.role}',
-                                backgroundColor: AppColors.primaryColor);
-
-                        /*Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            uRoleState.role == UserRoles.SELLER
-                                ? AppRoutes
-                                    .VENDEURMAINPAGE //AppRoutes.VENDEURMAINPAGE
-                                : AppRoutes.CLIENTHOMEPAGE,
-                            (Route<dynamic> route) => false);*/
-                        // Navigator.pushNamed(context, AppRoutes.CLIENTHOMEPAGE);
                       }
 
                       if (authState is GoogleLoginRequestSuccess) {
                         try {
-                          await AuthServices.signInWithGoogle();
+                          final user = await AuthServices.signInWithGoogle();
+                          
+                          if (user != null) {
+                            AppUtils.showAwesomeSnackBar(
+                                context,
+                                'Connexion Réussie',
+                                'Utilisateur connecté avec succès',
+                                ContentType.success,
+                                AppColors.primaryColor);
+
+                            // Redirection basée sur le rôle
+                            await NavigationService.redirectBasedOnRole(context);
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          String errorMessage;
+                          switch (e.code) {
+                            case 'user-not-found':
+                              errorMessage = 'Aucun compte n\'est associé à cette adresse Google. Veuillez vous inscrire.';
+                              AppUtils.showInfoDialog(
+                                context: context,
+                                message: errorMessage,
+                                type: InfoType.error,
+                              );
+                              // Rediriger vers l'inscription après un délai
+                              Future.delayed(const Duration(seconds: 3), () {
+                                if (mounted) {
+                                  NavigationService.redirectToSignup(context);
+                                }
+                              });
+                              return;
+                            case 'account-exists-with-different-credential':
+                              errorMessage = 'Un compte existe déjà avec cette adresse email mais avec une méthode de connexion différente.';
+                              break;
+                            case 'invalid-credential':
+                              errorMessage = 'Erreur d\'authentification. Veuillez réessayer.';
+                              break;
+                            case 'operation-not-allowed':
+                              errorMessage = 'La connexion Google n\'est pas activée.';
+                              break;
+                            case 'user-disabled':
+                              errorMessage = 'Ce compte a été désactivé.';
+                              break;
+                            case 'too-many-requests':
+                              errorMessage = 'Trop de tentatives. Veuillez réessayer plus tard.';
+                              break;
+                            default:
+                              errorMessage = 'Erreur de connexion Google: ${e.message}';
+                              break;
+                          }
+                          
+                          AppUtils.showInfoDialog(
+                            context: context,
+                            message: errorMessage,
+                            type: InfoType.error,
+                          );
                         } catch (e) {
-                          AppUtils.showSnackBar(context, e.toString(),
-                              backgroundColor: AppColors.redColor);
+                          AppUtils.showInfoDialog(
+                            context: context,
+                            message: 'Une erreur inattendue s\'est produite lors de la connexion Google. Veuillez réessayer.',
+                            type: InfoType.error,
+                          );
                         }
                       }
                     },

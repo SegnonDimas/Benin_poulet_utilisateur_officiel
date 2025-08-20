@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/user.dart';
 import '../firestore/firestore_service.dart';
@@ -49,6 +50,86 @@ class AuthServices {
       if (kDebugMode) {
         print(
             '::::::Erreur lors de la creation de l\'utilisateur anonyme : $e :::::::');
+      }
+    }
+  }
+
+  //========================================
+  // VÉRIFICATION DE L'EXISTENCE DE L'UTILISATEUR
+  //========================================
+  
+  /// Vérifie si un utilisateur existe avec l'email donné
+  static Future<bool> userExistsWithEmail(String email) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .where('authIdentifier', isEqualTo: email)
+          .get();
+      
+      return userDoc.docs.isNotEmpty;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Vérifie si un utilisateur existe avec le numéro de téléphone donné
+  static Future<bool> userExistsWithPhone(String phoneNumber) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .where('authIdentifier', isEqualTo: phoneNumber)
+          .get();
+      
+      return userDoc.docs.isNotEmpty;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Récupère le rôle de l'utilisateur connecté
+  static Future<String?> getUserRole() async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser == null) return null;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      if (userDoc.exists) {
+        return userDoc.data()?['role'] as String?;
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la récupération du rôle: $e');
+      }
+      return null;
+    }
+  }
+
+  /// Met à jour la dernière connexion de l'utilisateur
+  static Future<void> updateLastLogin() async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser == null) return;
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({
+        'lastLogin': DateTime.now(),
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la mise à jour de la dernière connexion: $e');
       }
     }
   }
@@ -116,6 +197,7 @@ class AuthServices {
       if (kDebugMode) {
         print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
       }
+      rethrow;
     }
   }
 
@@ -127,13 +209,28 @@ class AuthServices {
     try {
       var email = _email.trim();
       var password = _password.trim();
+      
+      // Vérifier d'abord si l'utilisateur existe
+      final userExists = await userExistsWithEmail(email);
+      if (!userExists) {
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'Aucun compte trouvé avec cette adresse email. Veuillez vous inscrire.',
+        );
+      }
+
       final emailUser = await auth.signInWithEmailAndPassword(
           email: email, password: password);
+      
+      // Mettre à jour la dernière connexion
+      await updateLastLogin();
+      
       emailUser;
     } catch (e) {
       if (kDebugMode) {
         print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
       }
+      rethrow;
     }
   }
 
@@ -200,20 +297,38 @@ class AuthServices {
     PhoneNumber _phoneNumber,
     String _password,
   ) async {
-    var email = _formatEmailFromPhone(_phoneNumber).trim();
-    var password = _password.trim();
-    final phoneUser =
-        await auth.signInWithEmailAndPassword(email: email, password: password);
-    phoneUser;
+    try {
+      var email = _formatEmailFromPhone(_phoneNumber).trim();
+      var password = _password.trim();
+      
+      // Vérifier d'abord si l'utilisateur existe
+      final userExists = await userExistsWithPhone(_phoneNumber.phoneNumber!);
+      if (!userExists) {
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'Aucun compte trouvé avec ce numéro de téléphone. Veuillez vous inscrire.',
+        );
+      }
+
+      final phoneUser =
+          await auth.signInWithEmailAndPassword(email: email, password: password);
+      
+      // Mettre à jour la dernière connexion
+      await updateLastLogin();
+      
+      phoneUser;
+    } catch (e) {
+      if (kDebugMode) {
+        print('::::::::::::::Erreur lors de la connexion : $e ::::::::::::::');
+      }
+      rethrow;
+    }
   }
 
   //============================================
-  // créer une inscription/connexion avec Google
+  // CONNEXION avec Google (pas d'inscription automatique)
   //============================================
-  static Future<User?> signInWithGoogle({
-    String authProvider = AuthProviders.GOOGLE,
-    String role = UserRoles.BUYER,
-  }) async {
+  static Future<User?> signInWithGoogle() async {
     // Vérifier si une opération de connexion Google est déjà en cours
     if (_isGoogleSignInInProgress) {
       if (kDebugMode) {
@@ -225,113 +340,204 @@ class AuthServices {
     // Marquer le début de l'opération
     _isGoogleSignInInProgress = true;
 
-    // Créer une nouvelle instance de GoogleSignIn avec des paramètres personnalisés
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: ['email', 'profile'],
-    );
+    try {
+      // Créer une nouvelle instance de GoogleSignIn avec des paramètres personnalisés
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
 
-    // Vérifier si un utilisateur est déjà connecté et le déconnecter silencieusement
-    if (await googleSignIn.isSignedIn()) {
-      try {
-        await googleSignIn.signOut();
-      } catch (e) {
-        // Ignorer les erreurs de déconnexion
-        if (kDebugMode) {
-          print('Déconnexion silencieuse: $e');
+      // Vérifier si un utilisateur est déjà connecté et le déconnecter silencieusement
+      if (await googleSignIn.isSignedIn()) {
+        try {
+          await googleSignIn.signOut();
+        } catch (e) {
+          // Ignorer les erreurs de déconnexion
+          if (kDebugMode) {
+            print('Déconnexion silencieuse: $e');
+          }
         }
       }
+
+      // Déclenche le flux de connexion avec force de sélection
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // Si l'utilisateur annule, googleUser est null
+      if (googleUser == null) {
+        return null;
+      }
+
+      // Vérifier si l'utilisateur existe déjà dans notre base
+      final userExists = await userExistsWithEmail(googleUser.email);
+      if (!userExists) {
+        // L'utilisateur n'existe pas, déconnecter et lever une exception
+        await googleSignIn.signOut();
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'Aucun compte n\'est associé à cette adresse Google. Veuillez vous inscrire.',
+        );
+      }
+
+      // Obtient les détails d'authentification à partir de la requête
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Crée un credential pour Firebase
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Se connecte à Firebase avec le credential
+      final UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+
+      // Mettre à jour la dernière connexion
+      await updateLastLogin();
+
+      return userCredential.user;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la connexion Google: $e');
+      }
+      rethrow;
+    } finally {
+      // Marquer la fin de l'opération
+      _isGoogleSignInInProgress = false;
     }
+  }
 
-    // Déclenche le flux de connexion avec force de sélection
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-    // Si l'utilisateur annule, googleUser est null
-    if (googleUser == null) {
+  //============================================
+  // INSCRIPTION avec Google
+  //============================================
+  static Future<User?> signUpWithGoogle({
+    String authProvider = AuthProviders.GOOGLE,
+    String role = UserRoles.BUYER,
+  }) async {
+    // Vérifier si une opération de connexion Google est déjà en cours
+    if (_isGoogleSignInInProgress) {
+      if (kDebugMode) {
+        print('Inscription Google déjà en cours, ignoré.');
+      }
       return null;
     }
 
-    // Obtient les détails d'authentification à partir de la requête
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    // Marquer le début de l'opération
+    _isGoogleSignInInProgress = true;
 
-    // Crée un credential pour Firebase
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Se connecte à Firebase avec le credential
-    final UserCredential userCredential =
-        await auth.signInWithCredential(credential);
-
-    // creation de l'utilisateur avec google dans la collection 'user' sur Firebase
-    AppUser user = AppUser(
-      userId: googleUser.id,
-      isAnonymous: false,
-    );
-    user = user.copyWith(
-      authProvider: authProvider,
-      authIdentifier: googleUser.email,
-      photoUrl: googleUser.photoUrl,
-      fullName: googleUser.displayName,
-      role: role,
-      createdAt: DateTime.now(),
-      lastLogin: DateTime.now(),
-    );
-
-    await firestoreService.createOrUpdateUser(user);
-
-    // Si c'est un vendeur, créer le profil vendeur avec les informations de base
-    if (role == UserRoles.SELLER) {
-      final firestoreServiceInstance = FirestoreService();
-      await firestoreServiceInstance.createCompleteSeller(
-        sellerId: googleUser.id,
-        userId: googleUser.id,
-        createdAt: DateTime.now(),
-        documentsVerified: false, // À vérifier par l'admin
-        sectors: [], // Sera mis à jour lors de la création de la boutique
-        subSectors: [], // Sera mis à jour lors de la création de la boutique
-        storeIds: [], // Liste vide au début
-        mobileMoney: [], // Sera mis à jour lors de la création de la boutique
-        deliveryInfos: {}, // Sera mis à jour lors de la création de la boutique
-        fiscality: {}, // Sera mis à jour lors de la création de la boutique
-        storeInfos: {
-          'name': googleUser.displayName ?? '',
-          'phone': '',
-          'email': googleUser.email ?? '',
-        },
-      );
-    }
-
-    userId = googleUser.id;
-
-    // Toujours réinitialiser le flag à la fin de l'opération
-    _isGoogleSignInInProgress = false;
-
-    return userCredential.user;
-  }
-
-  static Future<void> signOutOfGoogle() async {
     try {
-      // Déconnecter de Google Sign-In
-      await GoogleSignIn().signOut();
-      // Déconnecter de Firebase Auth
-      await auth.signOut();
+      // Créer une nouvelle instance de GoogleSignIn avec des paramètres personnalisés
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
+
+      // Vérifier si un utilisateur est déjà connecté et le déconnecter silencieusement
+      if (await googleSignIn.isSignedIn()) {
+        try {
+          await googleSignIn.signOut();
+        } catch (e) {
+          // Ignorer les erreurs de déconnexion
+          if (kDebugMode) {
+            print('Déconnexion silencieuse: $e');
+          }
+        }
+      }
+
+      // Déclenche le flux de connexion avec force de sélection
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // Si l'utilisateur annule, googleUser est null
+      if (googleUser == null) {
+        return null;
+      }
+
+      // Vérifier si l'utilisateur existe déjà
+      final userExists = await userExistsWithEmail(googleUser.email);
+      if (userExists) {
+        // L'utilisateur existe déjà, déconnecter et lever une exception
+        await googleSignIn.signOut();
+        throw FirebaseAuthException(
+          code: 'email-already-in-use',
+          message: 'Un compte existe déjà avec cette adresse email.',
+        );
+      }
+
+      // Obtient les détails d'authentification à partir de la requête
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Crée un credential pour Firebase
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Se connecte à Firebase avec le credential
+      final UserCredential userCredential =
+          await auth.signInWithCredential(credential);
+
+      // Création de l'utilisateur avec google dans la collection 'users' sur Firebase
+      AppUser user = AppUser(
+        userId: googleUser.id,
+        isAnonymous: false,
+      );
+      user = user.copyWith(
+        authProvider: authProvider,
+        authIdentifier: googleUser.email,
+        photoUrl: googleUser.photoUrl,
+        fullName: googleUser.displayName,
+        role: role,
+        createdAt: DateTime.now(),
+        lastLogin: DateTime.now(),
+      );
+
+      await firestoreService.createOrUpdateUser(user);
+
+      // Si c'est un vendeur, créer le profil vendeur avec les informations de base
+      if (role == UserRoles.SELLER) {
+        final firestoreServiceInstance = FirestoreService();
+        await firestoreServiceInstance.createCompleteSeller(
+          sellerId: googleUser.id,
+          userId: googleUser.id,
+          createdAt: DateTime.now(),
+          documentsVerified: false, // À vérifier par l'admin
+          sectors: [], // Sera mis à jour lors de la création de la boutique
+          subSectors: [], // Sera mis à jour lors de la création de la boutique
+          storeIds: [], // Liste vide au début
+          mobileMoney: [], // Sera mis à jour lors de la création de la boutique
+          deliveryInfos: {}, // Sera mis à jour lors de la création de la boutique
+          fiscality: {}, // Sera mis à jour lors de la création de la boutique
+          storeInfos: {
+            'name': googleUser.displayName ?? '',
+            'phone': '',
+            'email': googleUser.email,
+          },
+        );
+      }
+
+      // Mettre à jour la dernière connexion
+      await updateLastLogin();
+
+      return userCredential.user;
     } catch (e) {
       if (kDebugMode) {
-        print('Erreur lors de la déconnexion Google: $e');
+        print('Erreur lors de l\'inscription Google: $e');
       }
+      rethrow;
+    } finally {
+      // Marquer la fin de l'opération
+      _isGoogleSignInInProgress = false;
     }
   }
-}
 
-String _formatEmailFromPhone(PhoneNumber phone) {
-  var dialCode = phone.dialCode?.replaceAll('+', '00') ?? '';
-  var isoCode = phone.isoCode?.toLowerCase() ?? '';
-  var prefix = dialCode + isoCode;
-  var number = phone.phoneNumber
-          ?.replaceAll(phone.dialCode ?? '', '')
-          .replaceAll(' ', '') ??
-      '';
-  return '$prefix$number@gmail.com';
+  //========================================
+  // UTILITAIRES
+  //========================================
+
+  static String _formatEmailFromPhone(PhoneNumber phoneNumber) {
+    return '${phoneNumber.phoneNumber}@phone.beninpoulet.com';
+  }
+
+  static void signOut() {
+    auth.signOut();
+  }
 }

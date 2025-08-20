@@ -1,4 +1,5 @@
 import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajoutNouveauProduitPage.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -631,6 +632,20 @@ class ProductServices {
   //==============================================
   //FONCTION D'AJOUT DE NOUVEAU PRODUIT À FIREBASE
   //==============================================
+
+  //==============================================
+  //FONCTION DE RÉCUPÉRATION DES PRODUITS DU VENDEUR
+  //==============================================
+  static Stream<List<Produit>> getVendorProducts() {
+    final currentUserId = AuthServices.userId;
+    if (currentUserId == null) {
+      print(":::::::::::::::ERREUR : Aucun utilisateur connecté :::::::::::::::::");
+      return Stream.value([]);
+    }
+
+    print(":::::::::::::::RÉCUPÉRATION PRODUITS : sellerId=$currentUserId :::::::::::::::::");
+    return ProductRepository().getProductsBySeller(currentUserId);
+  }
   static Future<void> addProduct(BuildContext context, Produit product) async {
     try {
       // Vérifications individuelles pour des messages clairs
@@ -693,7 +708,25 @@ class ProductServices {
       }
 
       // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
-      await ProductRepository().createProduct(product);
+      // Vérification du sellerId (CRITIQUE)
+      final currentUserId = AuthServices.userId;
+      if (currentUserId == null) {
+        showMessage(
+          context: context,
+          message: 'Erreur d\'authentification. Veuillez vous reconnecter.',
+          backgroundColor: AppColors.redColor,
+        );
+        return;
+      }
+
+      // S'assurer que le produit a le bon sellerId
+      final productWithSellerId = product.copyWith(sellerId: currentUserId);
+
+      // Log pour traçabilité
+      print(":::::::::::::::AJOUT PRODUIT : sellerId=$currentUserId, nom=${productWithSellerId.productName} :::::::::::::::::");
+
+      // Tout est bon → Envoi vers la base de données
+      await ProductRepository().createProduct(productWithSellerId);
 
       showMessage(
         context: context,

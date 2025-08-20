@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Produit {
   final String? productId;
   final String storeId;
+  final String sellerId; // Ajout du sellerId pour filtrer par vendeur
   final List<String> productImagesPath;
   final String productName;
   final String category; // ex : Volaille
@@ -24,6 +25,7 @@ class Produit {
   const Produit({
     this.productId,
     this.storeId = "1",
+    this.sellerId = "unknown", // Temporairement optionnel pour compatibilité
     this.productImagesPath = const [],
     required this.productName,
     this.category = '',
@@ -44,6 +46,7 @@ class Produit {
   Produit copyWith({
     final String? productId,
     final String? storeId,
+    final String? sellerId,
     final List<String>? productImagesPath,
     final String? productName,
     final String? category, // ex : Volaille
@@ -62,6 +65,7 @@ class Produit {
     return Produit(
       productId: productId ?? this.productId,
       storeId: storeId ?? this.storeId,
+      sellerId: sellerId ?? this.sellerId,
       productImagesPath: productImagesPath ?? this.productImagesPath,
       productName: productName ?? this.productName,
       category: category ?? this.category,
@@ -82,6 +86,7 @@ class Produit {
     return {
       'productId': productId,
       'storeId': storeId,
+      'sellerId': sellerId, // Ajout du sellerId
       'images': productImagesPath,
       'name': productName,
       'category': category,
@@ -100,7 +105,8 @@ class Produit {
   factory Produit.fromMap(Map<String, dynamic> map) {
     return Produit(
       productId: map['productId'] /*as String?*/,
-      storeId: map['storeId'] /*as String*/,
+      storeId: map['storeId'] ?? '1', // Fallback pour compatibilité
+      sellerId: map['sellerId'] ?? 'unknown', // Fallback pour compatibilité
       productImagesPath: (map['images'] as List<dynamic>).cast<String>(),
       productName: map['name'] /*as String*/,
       category: map['category'] /*as String*/,
@@ -125,13 +131,15 @@ class Produit {
 }
 
 //================================
-// Liste fictive de produits
+// Liste fictive de produits (DÉPRÉCIÉ - Utiliser les données Firestore)
 //================================
 
+@Deprecated('Utiliser les données Firestore au lieu de cette liste mock')
 List<Produit> list_produits = [
   const Produit(
     productName: 'Œufs Poulet',
     category: 'Volaille',
+    sellerId: 'mock_seller_1', // Mock pour compatibilité
     productDescription:
         "Nos œufs frais proviennent de poules élevées en liberté et nourries avec des aliments naturels. Leur jaune est riche et leur goût authentique. Idéals pour vos recettes, petits-déjeuners ou pâtisseries. Une source naturelle de protéines et de bons nutriments.",
     productUnitPrice: 1500,

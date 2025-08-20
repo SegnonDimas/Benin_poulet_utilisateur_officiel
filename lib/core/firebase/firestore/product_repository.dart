@@ -36,6 +36,17 @@ class ProductRepository {
             snapshot.docs.map((doc) => Produit.fromMap(doc.data())).toList());
   }
 
+  /// Récupère tous les produits d'un vendeur
+  Stream<List<Produit>> getProductsBySeller(String sellerId) {
+    return _firestore
+        .collection(FirebaseCollections.productsCollection)
+        .where('sellerId', isEqualTo: sellerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Produit.fromMap(doc.data())).toList());
+  }
+
   /// Récupère tous les produits actifs (pour les clients)
   Stream<List<Produit>> getAllActiveProducts() {
     return _firestore

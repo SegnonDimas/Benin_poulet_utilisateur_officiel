@@ -4,7 +4,7 @@ import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/bloc/store/store_bloc.dart';
 import 'package:benin_poulet/bloc/order/order_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
-import 'package:benin_poulet/models/produit.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -58,7 +58,7 @@ List<SingleChildWidget> providers = [
   BlocProvider(create: (context) => DeliveryBloc()),
 
   // produits
-  BlocProvider(create: (context) => ProductBloc(list_produits)),
+  BlocProvider(create: (context) => ProductBloc()),
 
   // avis des boutiques
   BlocProvider(create: (context) => StoreReviewBloc()),

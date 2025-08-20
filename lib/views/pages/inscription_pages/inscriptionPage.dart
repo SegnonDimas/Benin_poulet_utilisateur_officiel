@@ -260,9 +260,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 }
 
                 // Lorsque l'inscription est effectuée par compte Google
-                if (authState is GoogleLoginRequestSuccess) {
+                if (authState is GoogleSignUpRequestSuccess) {
                   try {
-                    await AuthServices.signInWithGoogle(
+                    await AuthServices.signUpWithGoogle(
                       role: userRoleState.role!,
                     );
                     if (userRoleState.role == UserRoles.SELLER) {

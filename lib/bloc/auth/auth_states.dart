@@ -75,7 +75,7 @@ class PhoneSignUpRequestFailure extends AuthFailure {
   PhoneSignUpRequestFailure({required super.errorMessage});
 }
 
-/// inscription avec numéro de téléphone
+/// inscription avec adresse email
 class EmailSignUpRequestSuccess extends AuthAuthenticated {
   //final String? successMessage;
   EmailSignUpRequestSuccess({
@@ -86,6 +86,19 @@ class EmailSignUpRequestSuccess extends AuthAuthenticated {
 
 class EmailSignUpRequestFailure extends AuthFailure {
   EmailSignUpRequestFailure({required super.errorMessage});
+}
+
+/// inscription avec Google
+class GoogleSignUpRequestSuccess extends AuthAuthenticated {
+  //final String? successMessage;
+  GoogleSignUpRequestSuccess({
+    //required super.userId,
+    super.successMessage,
+  });
+}
+
+class GoogleSignUpRequestFailure extends AuthFailure {
+  GoogleSignUpRequestFailure({required super.errorMessage});
 }
 
 /// inscription

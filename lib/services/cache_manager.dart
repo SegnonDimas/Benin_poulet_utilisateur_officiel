@@ -42,7 +42,7 @@ class CacheManager {
   /// Vérifie si la connexion internet est disponible
   static Future<bool> isOnline() async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
+    return connectivityResult.isNotEmpty && connectivityResult.first != ConnectivityResult.none;
   }
 
   /// Vérifie si le cache est valide
@@ -116,15 +116,32 @@ class CacheManager {
     await _productsBox.write('store_products_$storeId', productsData);
   }
 
-  /// Récupère les produits d'une boutique depuis le cache
-  static List<Produit> getCachedStoreProducts(String storeId) {
-    final productsData = _productsBox.read('store_products_$storeId') as List<dynamic>?;
-    if (productsData == null) return [];
-    
-    return productsData
-        .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
-        .toList();
-  }
+                /// Récupère les produits d'une boutique depuis le cache
+              static List<Produit> getCachedStoreProducts(String storeId) {
+                final productsData = _productsBox.read('store_products_$storeId') as List<dynamic>?;
+                if (productsData == null) return [];
+
+                return productsData
+                    .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
+                    .toList();
+              }
+
+              /// Sauvegarde les produits d'un vendeur en cache
+              static Future<void> cacheVendorProducts(String sellerId, List<Produit> products) async {
+                final productsData = products.map((product) => product.toMap()).toList();
+                await _productsBox.write('vendor_products_$sellerId', productsData);
+                updateLastSync();
+              }
+
+              /// Récupère les produits d'un vendeur depuis le cache
+              static List<Produit> getCachedVendorProducts(String sellerId) {
+                final productsData = _productsBox.read('vendor_products_$sellerId') as List<dynamic>?;
+                if (productsData == null) return [];
+
+                return productsData
+                    .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
+                    .toList();
+              }
 
   // ===== GESTION DES COMMANDES =====
 

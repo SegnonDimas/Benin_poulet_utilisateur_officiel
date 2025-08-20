@@ -222,9 +222,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         emit(AuthAuthenticated());
-        emit(GoogleLoginRequestSuccess());
+        emit(GoogleSignUpRequestSuccess());
       } catch (e) {
-        emit(AuthFailure(errorMessage: e.toString()));
+        return emit(AuthFailure(errorMessage: e.toString()));
         //return emit(GoogleLoginRequestFailure(errorMessage: e.toString()));
       }
     });

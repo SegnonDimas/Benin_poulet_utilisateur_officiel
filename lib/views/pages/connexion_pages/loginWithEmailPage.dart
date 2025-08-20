@@ -6,6 +6,7 @@ import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -19,6 +20,7 @@ import 'package:get/get.dart';
 
 import '../../../constants/routes.dart';
 import '../../../services/authentification_services.dart';
+import '../../../services/navigation_service.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/wave_painter.dart';
 import '../../../widgets/app_button.dart';
@@ -63,20 +65,41 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
               },
               listener: (context, authState) async {
                 if (authState is AuthFailure) {
-                  AppUtils.showSnackBar(context, authState.errorMessage);
+                  String errorMessage = authState.errorMessage;
+                  
+                  // Améliorer les messages d'erreur pour une meilleure UX
+                  if (errorMessage.toLowerCase().contains('user-not-found')) {
+                    errorMessage = 'Aucun compte n\'est associé à cette adresse. Veuillez vous inscrire.';
+                    // Rediriger vers l'inscription après un délai
+                    Future.delayed(const Duration(seconds: 3), () {
+                      if (mounted) {
+                        NavigationService.redirectToSignup(context);
+                      }
+                    });
+                  } else if (errorMessage.toLowerCase().contains('wrong-password')) {
+                    errorMessage = 'Mot de passe incorrect. Réessayez.';
+                  } else if (errorMessage.toLowerCase().contains('invalid-credential')) {
+                    errorMessage = 'Identifiants invalides. Veuillez vérifier vos informations.';
+                  } else if (errorMessage.toLowerCase().contains('too-many-requests')) {
+                    errorMessage = 'Trop de tentatives. Veuillez réessayer plus tard.';
+                  }
+                  
+                  AppUtils.showInfoDialog(
+                    context: context,
+                    message: errorMessage,
+                    type: InfoType.error,
+                  );
                 }
 
                 if (authState is AuthLoading) {
-                  AppUtils.showInfoDialog(
-                      context: context,
-                      message: 'Patientez...',
-                      type: InfoType.loading);
+                  // Ne pas afficher de dialog de chargement pour éviter le blocage
+                  // Le chargement sera géré par l'état du bouton
                 } else if (authState is AuthAuthenticated) {
                   try {
-                    //connexion avec email
-                    await AuthServices.createEmailAuth(
-                        _emailcontroller.text, _passWordController.text,
-                        role: userRoleState.role!);
+                    // Connexion avec email
+                    await AuthServices.signInWithEmailAndPassword(
+                        _emailcontroller.text, _passWordController.text);
+                    
                     AppUtils.showAwesomeSnackBar(
                         context,
                         'Connexion Réussie',
@@ -84,22 +107,52 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage> {
                         ContentType.success,
                         AppColors.primaryColor);
 
-                    // navigation vers la page de destination
-                    Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        userRoleState.role == UserRoles.SELLER
-                            ? AppRoutes
-                                .DEFAULTROUTEPAGE //AppRoutes.VENDEURMAINPAGE
-                            : AppRoutes.CLIENTHOMEPAGE,
-                        (Route<dynamic> route) => false);
+                    // Redirection basée sur le rôle
+                    await NavigationService.redirectBasedOnRole(context);
 
-                    // nétoyage des champs de saisie
+                    // Nettoyage des champs de saisie
                     _emailcontroller.clear();
                     _passWordController.clear();
-                  } catch (e) {
-                    if (kDebugMode) {
-                      print(':::::Erreur lors de la connexion : $e ::::::');
+                  } on FirebaseAuthException catch (e) {
+                    String errorMessage;
+                    switch (e.code) {
+                      case 'user-not-found':
+                        errorMessage = 'Aucun compte trouvé avec cette adresse email. Veuillez vous inscrire.';
+                        // Rediriger vers l'inscription après un délai
+                        Future.delayed(const Duration(seconds: 3), () {
+                          if (mounted) {
+                            NavigationService.redirectToSignup(context);
+                          }
+                        });
+                        break;
+                      case 'wrong-password':
+                        errorMessage = 'Mot de passe incorrect. Veuillez réessayer.';
+                        break;
+                      case 'invalid-credential':
+                        errorMessage = 'Identifiants invalides. Veuillez vérifier vos informations.';
+                        break;
+                      case 'user-disabled':
+                        errorMessage = 'Ce compte a été désactivé.';
+                        break;
+                      case 'too-many-requests':
+                        errorMessage = 'Trop de tentatives. Veuillez réessayer plus tard.';
+                        break;
+                      default:
+                        errorMessage = 'Erreur de connexion: ${e.message}';
+                        break;
                     }
+                    
+                    AppUtils.showInfoDialog(
+                      context: context,
+                      message: errorMessage,
+                      type: InfoType.error,
+                    );
+                  } catch (e) {
+                    AppUtils.showInfoDialog(
+                      context: context,
+                      message: 'Une erreur inattendue s\'est produite. Veuillez réessayer.',
+                      type: InfoType.error,
+                    );
                   }
                 }
               },
