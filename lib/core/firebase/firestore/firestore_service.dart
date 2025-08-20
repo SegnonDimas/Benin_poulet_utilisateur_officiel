@@ -510,4 +510,34 @@ class FirestoreService {
   Future<int> getProductReviewCount(String productId) {
     return _productReviewService.getProductReviewCount(productId);
   }
+
+  /// Récupère une boutique par son ID
+  Future<Store?> getStore(String storeId) async {
+    return await _storeService.getStore(storeId);
+  }
+
+  /// Met à jour une boutique
+  Future<void> updateStore(String storeId, Map<String, dynamic> updates) async {
+    await _storeService.updateStore(storeId: storeId, updates: updates);
+  }
+
+  /// Récupère toutes les boutiques d'un vendeur
+  Stream<List<Store>> getStoresBySeller(String sellerId) {
+    return _storeService.getStoresBySeller(sellerId);
+  }
+
+  /// Écoute les changements sur une boutique
+  Stream<Store?> streamStore(String storeId) {
+    return _storeService.streamStore(storeId);
+  }
+
+  /// Récupère toutes les boutiques actives
+  Stream<List<Store>> getAllStores() {
+    return _firestore
+        .collection(FirebaseCollections.storesCollection)
+        .where('storeStatus', isEqualTo: 'active')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Store.fromMap(doc.data())).toList());
+  }
 }

@@ -1,13 +1,12 @@
-import 'package:benin_poulet/views/pages/client_pages/c_homePage.dart';
-import 'package:benin_poulet/views/pages/client_pages/home_client_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/store_client_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/product_client_page.dart';
 import 'package:benin_poulet/views/pages/client_pages/cart_client_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/orders_client_page.dart';
 import 'package:benin_poulet/views/pages/client_pages/chat_client_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/profile_client_page.dart';
 import 'package:benin_poulet/views/pages/client_pages/favorites_client_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/home_client_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/orders_client_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/product_client_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/profile_client_page.dart';
 import 'package:benin_poulet/views/pages/client_pages/review_client_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/store_client_page.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginWithEmailPage.dart';
 import 'package:benin_poulet/views/pages/defaultRoutePage.dart';
@@ -30,7 +29,6 @@ import 'package:flutter/cupertino.dart';
 
 // Import des modèles depuis les BLoCs client
 import '../bloc/client/home_client_bloc.dart';
-
 import '../views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
@@ -66,10 +64,11 @@ Map<String, Widget Function(BuildContext)> routes = {
   //======================
   // ROUTES CLIENT
   //======================
-  '/clientHomePage': (context) => const CHomePage(),
+  //'/clientHomePage': (context) => const CHomePage(),
+  '/clientHomePage': (context) => const HomeClientPage(),
   '/home': (context) => const HomeClientPage(),
   '/store-details': (context) => StoreClientPage(
-        store: ModalRoute.of(context)!.settings.arguments as Store,
+        store: ModalRoute.of(context)!.settings.arguments as StoreClient,
       ),
   '/product-details': (context) => ProductClientPage(
         product: ModalRoute.of(context)!.settings.arguments as Product,
@@ -77,17 +76,22 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/cart': (context) => const CartClientPage(),
   '/orders': (context) => const OrdersClientPage(),
   '/chat': (context) => ChatClientPage(
-        store: ModalRoute.of(context)!.settings.arguments as Store,
+        store: ModalRoute.of(context)!.settings.arguments as StoreClient,
       ),
   '/profile': (context) => const ProfileClientPage(),
   '/favorites': (context) => const FavoritesClientPage(),
   '/review': (context) => ReviewClientPage(
         item: ModalRoute.of(context)!.settings.arguments as dynamic,
-        type: ModalRoute.of(context)!.settings.arguments is Product ? 'product' : 'store',
+        type: ModalRoute.of(context)!.settings.arguments is Product
+            ? 'product'
+            : 'store',
       ),
-  '/checkout': (context) => const DefaultRoutePage(), // TODO: Créer CheckoutClientPage
-  '/order-details': (context) => const DefaultRoutePage(), // TODO: Créer OrderDetailsClientPage
-  '/change-password': (context) => const DefaultRoutePage(), // TODO: Créer ChangePasswordClientPage
+  '/checkout': (context) =>
+      const DefaultRoutePage(), // TODO: Créer CheckoutClientPage
+  '/order-details': (context) =>
+      const DefaultRoutePage(), // TODO: Créer OrderDetailsClientPage
+  '/change-password': (context) =>
+      const DefaultRoutePage(), // TODO: Créer ChangePasswordClientPage
 };
 
 class AppRoutes {

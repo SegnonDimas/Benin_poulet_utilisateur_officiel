@@ -1,6 +1,8 @@
 import 'package:benin_poulet/bloc/fiscalty/fiscal_bloc.dart';
 import 'package:benin_poulet/bloc/product/product_bloc.dart';
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:benin_poulet/bloc/store/store_bloc.dart';
+import 'package:benin_poulet/bloc/order/order_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +35,12 @@ List<SingleChildWidget> providers = [
 
   // creation boutique
   BlocProvider(create: (context) => StoreCreationBloc()),
+
+  // gestion des boutiques
+  BlocProvider(create: (context) => StoreBloc()),
+
+  // gestion des commandes
+  BlocProvider(create: (context) => OrderBloc()),
 
   // niveau creation boutique
   //BlocProvider(create: (context) => NiveauCreationBoutiqueBloc()),

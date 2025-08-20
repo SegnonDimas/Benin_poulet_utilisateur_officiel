@@ -1,7 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
+import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
+import 'package:benin_poulet/models/produit.dart';
+import 'package:benin_poulet/models/store.dart';
+import 'package:benin_poulet/services/cache_manager.dart';
+import 'package:benin_poulet/services/sync_service.dart';
 
-// Modèles temporaires pour les placeholders
+// Modèles adaptés pour l'interface client
 class Product {
   final String id;
   final String name;
@@ -18,9 +24,20 @@ class Product {
     required this.description,
     required this.category,
   });
+
+  factory Product.fromProduit(Produit produit) {
+    return Product(
+      id: produit.productId ?? '',
+      name: produit.productName,
+      imageUrl: produit.productImagesPath.isNotEmpty ? produit.productImagesPath.first : '',
+      price: produit.isInPromotion && produit.promoPrice != null ? produit.promoPrice! : produit.productUnitPrice,
+      description: produit.productDescription,
+      category: produit.category,
+    );
+  }
 }
 
-class Store {
+class StoreClient {
   final String id;
   final String name;
   final String imageUrl;
@@ -28,7 +45,7 @@ class Store {
   final double rating;
   final String description;
 
-  Store({
+  StoreClient({
     required this.id,
     required this.name,
     required this.imageUrl,
@@ -36,6 +53,19 @@ class Store {
     required this.rating,
     required this.description,
   });
+
+  factory StoreClient.fromStoreModel(Store storeModel) {
+    return StoreClient(
+      id: storeModel.storeId,
+      name: storeModel.storeInfos?['name'] ?? 'Boutique',
+      imageUrl: storeModel.storeLogoPath ?? '',
+      location: storeModel.ville ?? storeModel.storeAddress ?? 'Localisation non définie',
+      rating: storeModel.storeRatings?.isNotEmpty == true 
+          ? storeModel.storeRatings!.reduce((a, b) => a + b) / storeModel.storeRatings!.length
+          : 0.0,
+      description: storeModel.description ?? storeModel.storeDescription ?? 'Aucune description',
+    );
+  }
 }
 
 // Événements
@@ -85,6 +115,8 @@ class AddToFavorites extends HomeClientEvent {
   List<Object?> get props => [item, type];
 }
 
+class RefreshHomeData extends HomeClientEvent {}
+
 // États
 abstract class HomeClientState extends Equatable {
   const HomeClientState();
@@ -99,11 +131,12 @@ class HomeClientLoading extends HomeClientState {}
 
 class HomeClientLoaded extends HomeClientState {
   final List<Product> products;
-  final List<Store> stores;
+  final List<StoreClient> stores;
   final List<Product> filteredProducts;
-  final List<Store> filteredStores;
+  final List<StoreClient> filteredStores;
   final String? searchQuery;
   final String? selectedCategory;
+  final bool isFromCache;
 
   const HomeClientLoaded({
     required this.products,
@@ -112,6 +145,7 @@ class HomeClientLoaded extends HomeClientState {
     required this.filteredStores,
     this.searchQuery,
     this.selectedCategory,
+    this.isFromCache = false,
   });
 
   @override
@@ -122,15 +156,17 @@ class HomeClientLoaded extends HomeClientState {
         filteredStores,
         searchQuery,
         selectedCategory,
+        isFromCache,
       ];
 
   HomeClientLoaded copyWith({
     List<Product>? products,
-    List<Store>? stores,
+    List<StoreClient>? stores,
     List<Product>? filteredProducts,
-    List<Store>? filteredStores,
+    List<StoreClient>? filteredStores,
     String? searchQuery,
     String? selectedCategory,
+    bool? isFromCache,
   }) {
     return HomeClientLoaded(
       products: products ?? this.products,
@@ -139,89 +175,53 @@ class HomeClientLoaded extends HomeClientState {
       filteredStores: filteredStores ?? this.filteredStores,
       searchQuery: searchQuery ?? this.searchQuery,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      isFromCache: isFromCache ?? this.isFromCache,
     );
   }
 }
 
 class HomeClientError extends HomeClientState {
   final String message;
+  final bool hasCachedData;
 
-  const HomeClientError({required this.message});
+  const HomeClientError({required this.message, this.hasCachedData = false});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, hasCachedData];
+}
+
+class HomeClientOffline extends HomeClientState {
+  final List<Product> products;
+  final List<StoreClient> stores;
+  final List<Product> filteredProducts;
+  final List<StoreClient> filteredStores;
+  final String message;
+
+  const HomeClientOffline({
+    required this.products,
+    required this.stores,
+    required this.filteredProducts,
+    required this.filteredStores,
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [products, stores, filteredProducts, filteredStores, message];
 }
 
 // BLoC
 class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
+  final FirestoreService _firestoreService = FirestoreService();
+  final ProductRepository _productRepository = ProductRepository();
+
   HomeClientBloc() : super(HomeClientInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
     on<SearchProducts>(_onSearchProducts);
     on<FilterByCategory>(_onFilterByCategory);
     on<AddToCart>(_onAddToCart);
     on<AddToFavorites>(_onAddToFavorites);
+    on<RefreshHomeData>(_onRefreshHomeData);
   }
-
-  // Données temporaires pour les placeholders
-  final List<Product> _mockProducts = [
-    Product(
-      id: '1',
-      name: 'Poulet de chair',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      price: 2500.0,
-      description: 'Poulet de chair frais et de qualité',
-      category: 'Poulets',
-    ),
-    Product(
-      id: '2',
-      name: 'Œufs frais',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      price: 500.0,
-      description: 'Œufs frais du jour',
-      category: 'Œufs',
-    ),
-    Product(
-      id: '3',
-      name: 'Aliment pour volaille',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      price: 15000.0,
-      description: 'Aliment complet pour volaille',
-      category: 'Aliments',
-    ),
-  ];
-
-  final List<Store> _mockStores = [
-    Store(
-      id: '1',
-      name: 'Le Poulailler',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      location: 'Cotonou, Bénin',
-      rating: 4.5,
-      description: 'Spécialiste en volailles',
-    ),
-    Store(
-      id: '2',
-      name: 'Mike Store',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      location: 'Porto-Novo, Bénin',
-      rating: 4.2,
-      description: 'Produits avicoles de qualité',
-    ),
-    Store(
-      id: '3',
-      name: 'Le gros',
-      imageUrl:
-          'https://img-3.journaldesfemmes.fr/vFEM-3POiKT8i8NmZvqwIZiG9kg=/1500x/smart/1a712856aaaf419dbfa5d24cc9808e03/ccmcms-jdf/35925017.jpg',
-      location: 'Parakou, Bénin',
-      rating: 4.8,
-      description: 'Grossiste en volailles',
-    ),
-  ];
 
   Future<void> _onLoadHomeData(
     LoadHomeData event,
@@ -230,17 +230,88 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     emit(HomeClientLoading());
 
     try {
-      // Simulation d'un délai de chargement
-      await Future.delayed(const Duration(seconds: 1));
+      // Vérifier d'abord le cache
+      final cachedProducts = CacheManager.getCachedProducts();
+      final cachedStores = CacheManager.getCachedStores();
+      
+      if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
+        final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+        final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+        
+        emit(HomeClientLoaded(
+          products: productList,
+          stores: storeList,
+          filteredProducts: productList,
+          filteredStores: storeList,
+          isFromCache: true,
+        ));
+      }
+
+      // Vérifier la connectivité
+      final isOnline = await CacheManager.isOnline();
+      if (!isOnline) {
+        if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
+          final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+          final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+          
+          emit(HomeClientOffline(
+            products: productList,
+            stores: storeList,
+            filteredProducts: productList,
+            filteredStores: storeList,
+            message: 'Mode hors ligne - Données en cache affichées',
+          ));
+        } else {
+          emit(HomeClientError(
+            message: 'Aucune donnée disponible hors ligne. Veuillez vérifier votre connexion.',
+            hasCachedData: false,
+          ));
+        }
+        return;
+      }
+
+      // Récupérer les données depuis Firestore
+      final productsStream = _productRepository.getAllActiveProducts();
+      final products = await productsStream.first;
+      final productList = products.map((p) => Product.fromProduit(p)).toList();
+
+      final storesStream = _firestoreService.getAllStores();
+      final stores = await storesStream.first;
+      final storeList = stores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
+      // Mettre en cache les données
+      await CacheManager.cacheProducts(products);
+      await CacheManager.cacheStores(stores);
 
       emit(HomeClientLoaded(
-        products: _mockProducts,
-        stores: _mockStores,
-        filteredProducts: _mockProducts,
-        filteredStores: _mockStores,
+        products: productList,
+        stores: storeList,
+        filteredProducts: productList,
+        filteredStores: storeList,
+        isFromCache: false,
       ));
     } catch (e) {
-      emit(HomeClientError(message: 'Erreur lors du chargement des données'));
+      // En cas d'erreur, essayer d'utiliser le cache
+      final cachedProducts = CacheManager.getCachedProducts();
+      final cachedStores = CacheManager.getCachedStores();
+      
+      if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
+        final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+        final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+        
+        emit(HomeClientOffline(
+          products: productList,
+          stores: storeList,
+          filteredProducts: productList,
+          filteredStores: storeList,
+          message: 'Erreur de connexion. Données en cache affichées.',
+        ));
+      } else {
+        emit(HomeClientError(
+          message: 'Erreur lors du chargement des données: $e',
+          hasCachedData: false,
+        ));
+      }
     }
   }
 
@@ -248,35 +319,69 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     SearchProducts event,
     Emitter<HomeClientState> emit,
   ) async {
-    if (state is HomeClientLoaded) {
-      final currentState = state as HomeClientLoaded;
+    if (state is HomeClientLoaded || state is HomeClientOffline) {
+      try {
+        List<Product> filteredProducts;
+        List<StoreClient> filteredStores;
+        List<Product> allProducts;
+        List<StoreClient> allStores;
+        String message = '';
 
-      List<Product> filteredProducts = _mockProducts;
-      List<Store> filteredStores = _mockStores;
+        if (state is HomeClientLoaded) {
+          final currentState = state as HomeClientLoaded;
+          allProducts = currentState.products;
+          allStores = currentState.stores;
+        } else {
+          final currentState = state as HomeClientOffline;
+          allProducts = currentState.products;
+          allStores = currentState.stores;
+          message = currentState.message;
+        }
 
-      if (event.query.isNotEmpty) {
-        filteredProducts = _mockProducts.where((product) {
-          return product.name
-                  .toLowerCase()
-                  .contains(event.query.toLowerCase()) ||
-              product.description
-                  .toLowerCase()
-                  .contains(event.query.toLowerCase());
-        }).toList();
+        filteredProducts = allProducts;
+        filteredStores = allStores;
 
-        filteredStores = _mockStores.where((store) {
-          return store.name.toLowerCase().contains(event.query.toLowerCase()) ||
-              store.description
-                  .toLowerCase()
-                  .contains(event.query.toLowerCase());
-        }).toList();
+        if (event.query.isNotEmpty) {
+          final isOnline = await CacheManager.isOnline();
+          
+          if (isOnline) {
+            // Recherche en ligne
+            final searchResults = await _productRepository.searchProducts(event.query);
+            filteredProducts = searchResults.map((p) => Product.fromProduit(p)).toList();
+          } else {
+            // Recherche dans le cache
+            filteredProducts = allProducts.where((product) {
+              return product.name.toLowerCase().contains(event.query.toLowerCase()) ||
+                  product.description.toLowerCase().contains(event.query.toLowerCase());
+            }).toList();
+          }
+
+          // Recherche dans les boutiques (toujours depuis le cache)
+          filteredStores = allStores.where((store) {
+            return store.name.toLowerCase().contains(event.query.toLowerCase()) ||
+                store.description.toLowerCase().contains(event.query.toLowerCase());
+          }).toList();
+        }
+
+        if (state is HomeClientLoaded) {
+          final currentState = state as HomeClientLoaded;
+          emit(currentState.copyWith(
+            filteredProducts: filteredProducts,
+            filteredStores: filteredStores,
+            searchQuery: event.query,
+          ));
+        } else {
+          emit(HomeClientOffline(
+            products: allProducts,
+            stores: allStores,
+            filteredProducts: filteredProducts,
+            filteredStores: filteredStores,
+            message: message,
+          ));
+        }
+      } catch (e) {
+        emit(HomeClientError(message: 'Erreur lors de la recherche: $e'));
       }
-
-      emit(currentState.copyWith(
-        filteredProducts: filteredProducts,
-        filteredStores: filteredStores,
-        searchQuery: event.query,
-      ));
     }
   }
 
@@ -284,21 +389,62 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     FilterByCategory event,
     Emitter<HomeClientState> emit,
   ) async {
-    if (state is HomeClientLoaded) {
-      final currentState = state as HomeClientLoaded;
+    if (state is HomeClientLoaded || state is HomeClientOffline) {
+      try {
+        List<Product> filteredProducts;
+        List<Product> allProducts;
+        List<StoreClient> allStores;
+        List<StoreClient> filteredStores;
+        String message = '';
 
-      List<Product> filteredProducts = _mockProducts;
+        if (state is HomeClientLoaded) {
+          final currentState = state as HomeClientLoaded;
+          allProducts = currentState.products;
+          allStores = currentState.stores;
+          filteredStores = currentState.filteredStores;
+        } else {
+          final currentState = state as HomeClientOffline;
+          allProducts = currentState.products;
+          allStores = currentState.stores;
+          filteredStores = currentState.filteredStores;
+          message = currentState.message;
+        }
 
-      if (event.category != 'Tous') {
-        filteredProducts = _mockProducts.where((product) {
-          return product.category == event.category;
-        }).toList();
+        filteredProducts = allProducts;
+
+        if (event.category != 'Tous') {
+          final isOnline = await CacheManager.isOnline();
+          
+          if (isOnline) {
+            // Filtrage en ligne
+            final categoryResults = await _productRepository.getProductsByCategory(event.category);
+            filteredProducts = categoryResults.map((p) => Product.fromProduit(p)).toList();
+          } else {
+            // Filtrage dans le cache
+            filteredProducts = allProducts.where((product) {
+              return product.category == event.category;
+            }).toList();
+          }
+        }
+
+        if (state is HomeClientLoaded) {
+          final currentState = state as HomeClientLoaded;
+          emit(currentState.copyWith(
+            filteredProducts: filteredProducts,
+            selectedCategory: event.category,
+          ));
+        } else {
+          emit(HomeClientOffline(
+            products: allProducts,
+            stores: allStores,
+            filteredProducts: filteredProducts,
+            filteredStores: filteredStores,
+            message: message,
+          ));
+        }
+      } catch (e) {
+        emit(HomeClientError(message: 'Erreur lors du filtrage: $e'));
       }
-
-      emit(currentState.copyWith(
-        filteredProducts: filteredProducts,
-        selectedCategory: event.category,
-      ));
     }
   }
 
@@ -318,5 +464,13 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     // TODO: Implémenter l'ajout aux favoris
     // Pour l'instant, on ne fait rien
     print('Ajouté aux favoris: ${event.type}');
+  }
+
+  Future<void> _onRefreshHomeData(
+    RefreshHomeData event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    // Forcer le rechargement depuis Firestore
+    add(LoadHomeData());
   }
 }

@@ -22,8 +22,8 @@ class ListProduitFirebase extends StatefulWidget {
 
 class _ListProduitFirebaseState extends State<ListProduitFirebase> {
   late Stream<List<Produit>> allProducts;
-  final FirestoreProductService productService =
-      FirestoreProductService(); // ou comme tu récupères ton service
+  final ProductRepository productService =
+      ProductRepository(); // ou comme tu récupères ton service
   final StreamController<List<Produit>> streamController = StreamController();
 
   late final multiImagePickerController;
@@ -53,7 +53,7 @@ class _ListProduitFirebaseState extends State<ListProduitFirebase> {
 
   @override
   initState() {
-    allProducts = FirestoreProductService().getAllProducts();
+    allProducts = ProductRepository().getAllActiveProducts();
 
     //
     multiImagePickerController = MultiImagePickerController(
@@ -151,7 +151,7 @@ class _ListProduitFirebaseState extends State<ListProduitFirebase> {
           Flexible(
             flex: 15,
             child: StreamBuilder<List<Produit>>(
-                stream: productService.getAllProducts(),
+                stream: productService.getAllActiveProducts(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -227,14 +227,13 @@ class _ListProduitFirebaseState extends State<ListProduitFirebase> {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     // Logique pour enregistrer les modifications
-                                                    FirestoreProductService()
+                                                    ProductRepository()
                                                         .updateProduct(
-                                                      produit.copyWith(
-                                                        productName:
-                                                            produit.productName,
-                                                        productDescription: produit
-                                                            .productDescription,
-                                                      ),
+                                                      produit.productId!,
+                                                      {
+                                                        'productName': produit.productName,
+                                                        'productDescription': produit.productDescription,
+                                                      },
                                                     )
                                                         .then((_) {
                                                       ScaffoldMessenger.of(
@@ -271,7 +270,7 @@ class _ListProduitFirebaseState extends State<ListProduitFirebase> {
                                 icon: Icon(Icons.delete),
                                 onPressed: () {
                                   // Logique pour supprimer le produit
-                                  FirestoreProductService()
+                                  ProductRepository()
                                       .deleteProduct(produit.productId!)
                                       .then((_) {
                                     ScaffoldMessenger.of(context).showSnackBar(

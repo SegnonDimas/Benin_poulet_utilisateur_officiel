@@ -693,7 +693,7 @@ class ProductServices {
       }
 
       // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
-      await FirestoreProductService().addProduct(product);
+      await ProductRepository().createProduct(product);
 
       showMessage(
         context: context,

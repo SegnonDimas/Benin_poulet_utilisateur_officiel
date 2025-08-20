@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:benin_poulet/blocProviders.dart';
+import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
+import 'package:benin_poulet/services/cache_manager.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
@@ -10,31 +13,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 
-import 'constants/routes.dart';
-import 'firebase_options.dart';
-
-Future<void> main() async {
-  // WidgetsFlutterBinding init
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // firebase init
-  //await FirebaseInitialize.initializeFirebase();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await Firebase.initializeApp();
-  // flutter_localization init
-  await FlutterLocalization.instance.ensureInitialized();
-  // cached_network_image init
-  CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
 
-  // initialisation de get_storage
+  // Initialiser Firebase
+  await Firebase.initializeApp();
+
+  // Initialiser GetStorage
   await GetStorage.init();
 
+  // Initialiser le cache manager
+  await CacheManager.init();
+  
+
+  
   // créer une connexion anonyme au lancement
   final anonymousUser = await AuthServices.createAnonymousAuth();
   anonymousUser;
@@ -53,20 +51,7 @@ Future<void> main() async {
   ));
 }
 
-// pour la reconnaissance de la langue de l'App en fonction de l'amplacement de l'utilisateur
-mixin AppLocale {
-  static const String title = 'title';
-  static const String thisIs = 'thisIs';
 
-  static const Map<String, dynamic> EN = {
-    title: 'Localization',
-    thisIs: 'This is %a package, version %a.',
-  };
-  static const Map<String, dynamic> FR = {
-    title: 'Localisation',
-    thisIs: 'Ceci est un paquet %a, version %a.',
-  };
-}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -77,31 +62,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  final FlutterLocalization _localization = FlutterLocalization.instance;
   final instance = GetStorage();
 
   @override
   void initState() {
     // juste pour tests TODO : à enlever
     GetStorage().write('se_souvenir', false);
-    _localization.init(
-      mapLocales: [
-        const MapLocale(
-          'en',
-          AppLocale.EN,
-          countryCode: 'US',
-          //fontFamily: 'Font EN',
-        ),
-        const MapLocale(
-          'fr',
-          AppLocale.FR,
-          countryCode: 'FR',
-          //fontFamily: 'Font FR',
-        ),
-      ],
-      initLanguageCode: 'fr',
-    );
-    _localization.onTranslatedLanguage = _onTranslatedLanguage;
 
     //
     instance.write('se_souvenir', instance.read('se_souvenir') ?? false);
@@ -109,17 +75,20 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  void _onTranslatedLanguage(Locale? locale) {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: providers,
       child: GetMaterialApp(
-        supportedLocales: _localization.supportedLocales,
-        localizationsDelegates: _localization.localizationsDelegates,
+        supportedLocales: const [
+          Locale('fr', 'FR'),
+          Locale('en', 'US'),
+        ],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         theme: Provider.of<ThemeProvider>(context).themeData,
         darkTheme: darkMode,

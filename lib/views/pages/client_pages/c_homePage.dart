@@ -1,3 +1,4 @@
+/*
 import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -116,7 +117,8 @@ class _CHomePageState extends State<CHomePage>
     ),
   ];
 
-  /* userData(String data) async {
+  */
+/* userData(String data) async {
     final user = FirebaseAuth.instance.currentUser;
     DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore
         .instance
@@ -127,7 +129,8 @@ class _CHomePageState extends State<CHomePage>
     data = 'authIdentifier';
     print(":::::::::${userData["$data"]}");
     return userData['$data'];
-  }*/
+  }*/ /*
+
 
   bool _shouldInterceptBack = true;
 
@@ -172,7 +175,9 @@ class _CHomePageState extends State<CHomePage>
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state /*as AuthAuthenticated*/;
+    final authState = context.watch<AuthBloc>().state */
+/*as AuthAuthenticated*/ /*
+;
     final user = FirebaseAuth.instance.currentUser;
 
     //var nomUtilisateur = userData('authIdentifier');
@@ -314,7 +319,8 @@ class _CHomePageState extends State<CHomePage>
                               ),
                             ),
 
-                            /*SizedBox(
+                            */
+/*SizedBox(
                         height: 160,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -325,7 +331,8 @@ class _CHomePageState extends State<CHomePage>
                                 child: _listRecommandations[index],
                               );
                             }),
-                      )*/
+                      )*/ /*
+
                           ],
                         ),
                       ),
@@ -407,3 +414,4 @@ class _CHomePageState extends State<CHomePage>
 }
 
 /// Recommandations
+*/
