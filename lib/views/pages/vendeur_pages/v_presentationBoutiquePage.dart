@@ -1,16 +1,17 @@
+import 'package:benin_poulet/constants/imagesPaths.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:benin_poulet/widgets/store_review_widget.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
-import '../../models_ui/model_attributBoutique.dart';
 import '../../../bloc/store/store_bloc.dart';
-import '../../../core/firebase/auth/auth_services.dart';
+import '../../models_ui/model_attributBoutique.dart';
 
 class VPresentationBoutiquePage extends StatefulWidget {
   const VPresentationBoutiquePage({super.key});
@@ -66,29 +67,72 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  AppText(
-                    text: 'Erreur',
-                    fontSize: largeText(),
-                    fontWeight: FontWeight.bold,
-                  ),
+                  if (state.message
+                      .toLowerCase()
+                      .contains('aucune boutique')) ...[
+                    Image.asset(
+                      ImagesPaths.shopCreating,
+                      height: context.height * 0.25,
+                    ),
+                    const SizedBox(height: 16),
+                    AppText(
+                      text: 'Aucune boutique',
+                      fontSize: largeText(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ] else ...[
+                    Icon(
+                      Icons.storefront_sharp,
+                      size: 64,
+                      color: AppColors.redColor.withOpacity(0.6),
+                    ),
+                  ],
                   const SizedBox(height: 8),
-                  AppText(
-                    text: state.message,
-                    fontSize: mediumText(),
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppText(
+                      text: state.message,
+                      fontSize: context.mediumText,
+                      overflow: TextOverflow.visible,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  AppButton(
-                    onTap: () {
-                      context.read<StoreBloc>().add(LoadVendorStore());
-                    },
-                    child: AppText(text: 'Réessayer'),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 10.0,
+                    ),
+                    child: Row(
+                      children: [
+                        AppButton(
+                          onTap: () {
+                            context.read<StoreBloc>().add(LoadVendorStore());
+                          },
+                          child: AppText(
+                            text: 'Réessayer',
+                            fontSize: context.smallText,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withOpacity(0.5),
+                          ),
+                        ),
+                        Expanded(
+                          child: FloatingActionButton.extended(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.CREATIONBOUTIQUEPAGE);
+                            },
+                            label: AppText(
+                              text: 'Créez une boutique',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            icon: Icon(Icons.add),
+                            backgroundColor: AppColors.primaryColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -96,8 +140,10 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
           }
 
           if (state is StoreLoaded || state is StoreUpdated) {
-            final store = state is StoreLoaded ? state.store : (state as StoreUpdated).store;
-            
+            final store = state is StoreLoaded
+                ? state.store
+                : (state as StoreUpdated).store;
+
             return ListView(
               children: [
                 /// les attributs de la boutique (profil, miniature, attibuts, sous-secteurs....)
@@ -146,8 +192,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
 
                         /// miature et logo de la boutique
                         Padding(
-                          padding:
-                              EdgeInsets.only(top: appHeightSize(context) * 0.01),
+                          padding: EdgeInsets.only(
+                              top: appHeightSize(context) * 0.01),
                           child: SizedBox(
                             height: appHeightSize(context) * 0.3,
                             child: Padding(
@@ -186,7 +232,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                       right: appWidthSize(context) * 0.05,
                                       top: appHeightSize(context) * 0.02,
                                       child: AppButton(
-                                          height: appHeightSize(context) * 0.035,
+                                          height:
+                                              appHeightSize(context) * 0.035,
                                           width: appWidthSize(context) * 0.22,
                                           bordeurRadius: 5,
                                           borderColor: primaryColor,
@@ -194,7 +241,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                           child: AppText(
                                             text: 'Miniature',
                                             fontSize: smallText(),
-                                            color: Colors.white.withOpacity(0.8),
+                                            color:
+                                                Colors.white.withOpacity(0.8),
                                           ),
                                           onTap: () {})),
 
@@ -211,10 +259,12 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                         children: [
                                           Positioned(
                                             left: 0,
-                                            bottom: appHeightSize(context) * 0.01,
+                                            bottom:
+                                                appHeightSize(context) * 0.01,
                                             top: 0,
                                             child: DottedBorder(
-                                              color: primaryColor.withOpacity(0.8),
+                                              color:
+                                                  primaryColor.withOpacity(0.8),
                                               // Couleur de la bordure
                                               strokeWidth: 1.5,
                                               // Largeur de la bordure
@@ -225,8 +275,10 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                               // Rayon des coins pour un effet arrondi
                                               child: Container(
                                                 alignment: Alignment.center,
-                                                height: appHeightSize(context) * 0.11,
-                                                width: appHeightSize(context) * 0.11,
+                                                height: appHeightSize(context) *
+                                                    0.11,
+                                                width: appHeightSize(context) *
+                                                    0.11,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(20),
@@ -255,7 +307,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                                   .colorScheme
                                                   .background,
                                               child: Icon(
-                                                Icons.add_circle_outline_outlined,
+                                                Icons
+                                                    .add_circle_outline_outlined,
                                                 size: largeText() * 1.5,
                                                 color: primaryColor,
                                               ),
@@ -273,13 +326,15 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
 
                         /// le nom de la boutique
                         AppText(
-                          text: store.storeInfos?['name'] ?? 'Nom de la boutique',
+                          text:
+                              store.storeInfos?['name'] ?? 'Nom de la boutique',
                           fontSize: largeText() * 0.9,
                           fontWeight: FontWeight.bold,
                         ),
 
                         /// description de la boutique
-                        if (store.description != null && store.description!.isNotEmpty) ...[
+                        if (store.description != null &&
+                            store.description!.isNotEmpty) ...[
                           const SizedBox(height: 16),
                           AppText(
                             text: 'Description',
@@ -328,10 +383,13 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                                     Icons.star,
                                     color: Colors.amber,
                                   ),
-                                  value: store.storeRatings?.isNotEmpty == true 
-                                      ? store.storeRatings!.reduce((a, b) => a + b).toStringAsFixed(1)
+                                  value: store.storeRatings?.isNotEmpty == true
+                                      ? store.storeRatings!
+                                          .reduce((a, b) => a + b)
+                                          .toStringAsFixed(1)
                                       : "0.0",
-                                  description: '${store.storeRatings?.length ?? 0} avis'),
+                                  description:
+                                      '${store.storeRatings?.length ?? 0} avis'),
                             ),
                             Flexible(
                               flex: 1,
@@ -400,7 +458,8 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                         ),
 
                         /// zone de livraison
-                        if (store.zoneLivraison != null && store.zoneLivraison!.isNotEmpty) ...[
+                        if (store.zoneLivraison != null &&
+                            store.zoneLivraison!.isNotEmpty) ...[
                           const SizedBox(height: 16),
                           Row(
                             children: [
@@ -428,16 +487,20 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                               ...store.storeSectors!.map((sector) => AppButton(
                                   height: appHeightSize(context) * 0.04,
                                   width: appWidthSize(context) * 0.25,
-                                  color: Theme.of(context).colorScheme.background,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                   child: AppText(text: sector),
                                   onTap: () {})),
                             if (store.storeSubsectors != null)
-                              ...store.storeSubsectors!.map((subsector) => AppButton(
-                                  height: appHeightSize(context) * 0.04,
-                                  width: appWidthSize(context) * 0.25,
-                                  color: Theme.of(context).colorScheme.background,
-                                  child: AppText(text: subsector),
-                                  onTap: () {})),
+                              ...store.storeSubsectors!.map((subsector) =>
+                                  AppButton(
+                                      height: appHeightSize(context) * 0.04,
+                                      width: appWidthSize(context) * 0.25,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                      child: AppText(text: subsector),
+                                      onTap: () {})),
                           ],
                         )
                       ],
@@ -451,8 +514,10 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   leading: const Icon(Icons.storefront),
                   title: AppText(
                     text: 'Nom de la boutique',
-                    color:
-                        Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
                     fontSize: mediumText(),
                   ),
                   subtitle: AppText(
@@ -465,24 +530,29 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                 ),
 
                 // Secteurs d'activité
-                if (store.storeSectors != null && store.storeSectors!.isNotEmpty)
+                if (store.storeSectors != null &&
+                    store.storeSectors!.isNotEmpty)
                   ListTile(
                     leading: const Icon(Icons.grid_view),
                     title: AppText(
                       text: 'Secteurs d\'activité',
-                      color:
-                          Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
                       fontSize: mediumText(),
                     ),
                     subtitle: Wrap(
                       spacing: 5,
                       runSpacing: 5,
-                      children: store.storeSectors!.map((sector) => AppButton(
-                          height: appHeightSize(context) * 0.04,
-                          width: appWidthSize(context) * 0.25,
-                          color: Theme.of(context).colorScheme.background,
-                          child: AppText(text: sector),
-                          onTap: () {})).toList(),
+                      children: store.storeSectors!
+                          .map((sector) => AppButton(
+                              height: appHeightSize(context) * 0.04,
+                              width: appWidthSize(context) * 0.25,
+                              color: Theme.of(context).colorScheme.background,
+                              child: AppText(text: sector),
+                              onTap: () {}))
+                          .toList(),
                     ),
                     isThreeLine: true,
                   ),
@@ -492,12 +562,16 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   leading: const Icon(Icons.location_on_outlined),
                   title: AppText(
                     text: 'Adresse de la boutique',
-                    color:
-                        Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
                     fontSize: mediumText(),
                   ),
                   subtitle: AppText(
-                    text: store.ville ?? store.storeAddress ?? 'Adresse non définie',
+                    text: store.ville ??
+                        store.storeAddress ??
+                        'Adresse non définie',
                   ),
                   trailing: Icon(
                     Icons.edit_note_rounded,
@@ -510,11 +584,14 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   leading: const Icon(Icons.timer_rounded),
                   title: AppText(
                     text: 'Heures d\'activité',
-                    color:
-                        Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inversePrimary
+                        .withOpacity(0.4),
                     fontSize: mediumText(),
                   ),
-                  subtitle: store.joursOuverture != null && store.joursOuverture!.isNotEmpty
+                  subtitle: store.joursOuverture != null &&
+                          store.joursOuverture!.isNotEmpty
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: store.joursOuverture!.entries.map((entry) {
@@ -534,13 +611,16 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                 ),
 
                 // Zone de livraison
-                if (store.zoneLivraison != null && store.zoneLivraison!.isNotEmpty)
+                if (store.zoneLivraison != null &&
+                    store.zoneLivraison!.isNotEmpty)
                   ListTile(
                     leading: const Icon(Icons.delivery_dining),
                     title: AppText(
                       text: 'Zone de livraison',
-                      color:
-                          Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
                       fontSize: mediumText(),
                     ),
                     subtitle: AppText(
@@ -553,13 +633,16 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                   ),
 
                 // Temps de livraison
-                if (store.tempsLivraison != null && store.tempsLivraison!.isNotEmpty)
+                if (store.tempsLivraison != null &&
+                    store.tempsLivraison!.isNotEmpty)
                   ListTile(
                     leading: const Icon(Icons.access_time),
                     title: AppText(
                       text: 'Temps de livraison',
-                      color:
-                          Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
                       fontSize: mediumText(),
                     ),
                     subtitle: AppText(
@@ -641,13 +724,19 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                           color: Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withOpacity(0.3),
                           ),
                         ),
                         child: AppText(
                           text: 'Système d\'avis en cours de configuration...',
                           fontSize: smallText(),
-                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.6),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inversePrimary
+                              .withOpacity(0.6),
                         ),
                       ),
                     ],
