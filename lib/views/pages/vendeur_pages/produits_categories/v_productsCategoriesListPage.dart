@@ -31,11 +31,6 @@ class _VProduitsListPageState extends State<VProduitsListPage>
 
   @override
   Widget build(BuildContext context) {
-    // Filtrage dynamique en fonction de search
-    final List<Produit> produitsFiltres = list_produits.where((produit) {
-      return produit.productName.toLowerCase().contains(search.toLowerCase());
-    }).toList();
-
     return PopScope(
       onPopInvokedWithResult: (p, t) {
         // Réinitialiser l'état de la recherche de produits lorsque l'utilisateur appuie sur le bouton retour
@@ -71,93 +66,132 @@ class _VProduitsListPageState extends State<VProduitsListPage>
                   ))
             ],
           ),
-          body: Column(
-            children: [
-              /// TabBar
-              SizedBox(
-                height: context.height * 0.07,
-                width: context.width * 0.9,
-                child: TabBar(
-                  controller: controller,
-                  indicatorColor: AppColors.primaryColor,
-                  labelColor: AppColors.primaryColor,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontFamily: 'PoppinsMedium',
-                    fontSize: context.mediumText,
+          body: BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, produitsState) {
+              // Filtrage dynamique en fonction de search
+              List<Produit> produitsFiltres = [];
+              
+              if (produitsState is ProductsLoaded) {
+                produitsFiltres = produitsState.products.where((produit) {
+                  return produit.productName.toLowerCase().contains(search.toLowerCase());
+                }).toList();
+              } else if (produitsState is ProduitFiltre) {
+                produitsFiltres = produitsState.produitsFiltres.where((produit) {
+                  return produit.productName.toLowerCase().contains(search.toLowerCase());
+                }).toList();
+              }
+              
+              // États de chargement et d'erreur
+              if (produitsState is ProductLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              
+              if (produitsState is ProductError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Erreur: ${produitsState.message}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
-                  unselectedLabelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'PoppinsMedium',
-                    fontSize: context.mediumText * 0.8,
-                  ),
-                  dividerColor: Theme.of(context)
-                      .colorScheme
-                      .inversePrimary
-                      .withOpacity(0.4),
-                  unselectedLabelColor: Theme.of(context)
-                      .colorScheme
-                      .inversePrimary
-                      .withOpacity(0.4),
-                  tabs: [
-                    Tab(child: Text('Produits')),
-                    Tab(
-                      child: Text('Catégories'),
-                    ),
-                  ],
-                  /*onTap: (index) {
-                setState(() {
-                  index == 0 ? search = 'un produit' : search = 'une catégorie';
-                });
-              },*/
-                ),
-              ),
-
-              ///Barre de recherche
-              SizedBox(
-                width: context.width * 0.9,
-                //height: context.height * 0.07,
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SearchBar(
-                        elevation: const WidgetStatePropertyAll(0),
-                        hintText: 'Rechercher . . . ',
-                        leading: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Icon(
-                            Icons.search,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .inversePrimary
-                                .withOpacity(0.4),
-                          ),
+                );
+              }
+              
+              return Column(
+                children: [
+                  /// TabBar
+                  SizedBox(
+                    height: context.height * 0.07,
+                    width: context.width * 0.9,
+                    child: TabBar(
+                      controller: controller,
+                      indicatorColor: AppColors.primaryColor,
+                      labelColor: AppColors.primaryColor,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontFamily: 'PoppinsMedium',
+                        fontSize: context.mediumText,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'PoppinsMedium',
+                        fontSize: context.mediumText * 0.8,
+                      ),
+                      dividerColor: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
+                      unselectedLabelColor: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.4),
+                      tabs: [
+                        Tab(child: Text('Produits')),
+                        Tab(
+                          child: Text('Catégories'),
                         ),
-                        onChanged: (value) {
-                          context
-                              .read<ProductBloc>()
-                              .add(RechercherProduit(value.trim()));
-                        },
-                        hintStyle: WidgetStatePropertyAll(TextStyle(
-                          fontSize: 13,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inversePrimary
-                              .withOpacity(0.4),
-                        )))),
-              ),
+                      ],
+                      /*onTap: (index) {
+                    setState(() {
+                      index == 0 ? search = 'un produit' : search = 'une catégorie';
+                    });
+                  },*/
+                    ),
+                  ),
 
-              /// TabBarView
-              Expanded(
-                child: TabBarView(
-                    controller: controller,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: const [
-                      ProductsList(),
-                      CategoriesList(),
-                    ]),
-              ),
-            ],
+                  ///Barre de recherche
+                  SizedBox(
+                    width: context.width * 0.9,
+                    //height: context.height * 0.07,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SearchBar(
+                            elevation: const WidgetStatePropertyAll(0),
+                            hintText: 'Rechercher . . . ',
+                            leading: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(
+                                Icons.search,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary
+                                    .withOpacity(0.4),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              context
+                                  .read<ProductBloc>()
+                                  .add(RechercherProduit(value.trim()));
+                            },
+                            hintStyle: WidgetStatePropertyAll(TextStyle(
+                              fontSize: 13,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inversePrimary
+                                  .withOpacity(0.4),
+                            )))),
+                  ),
+
+                  /// TabBarView
+                  Expanded(
+                    child: TabBarView(
+                        controller: controller,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: const [
+                          ProductsList(),
+                          CategoriesList(),
+                        ]),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

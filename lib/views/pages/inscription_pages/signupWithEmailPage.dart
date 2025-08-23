@@ -605,6 +605,8 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                                                     },
                                                     child: AppText(
                                                       text: 'Se connecter',
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                       color: AppColors
                                                           .primaryColor,
                                                       fontSize:

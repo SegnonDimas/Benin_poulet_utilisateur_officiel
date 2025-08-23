@@ -44,7 +44,42 @@ class _CategoriesListState extends State<CategoriesList>
               return ProductServices.showProducts(
                   context, list_produits_filtres);
             }
-            return ProductServices.showProducts(context, list_produits);
+            
+            if (produitsState is ProductsLoaded) {
+              final list_produits = produitsState.products
+                  .where((p) =>
+                      p.category?.toLowerCase().trim() ==
+                      categorie.toLowerCase().trim())
+                  .toList();
+              return ProductServices.showProducts(context, list_produits);
+            }
+            
+            // États de chargement et d'erreur
+            if (produitsState is ProductLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            
+            if (produitsState is ProductError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Erreur: ${produitsState.message}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              );
+            }
+            
+            // État initial ou autres états
+            return const Center(
+              child: Text('Aucun produit trouvé'),
+            );
           }
 
           return Column(

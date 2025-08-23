@@ -80,6 +80,8 @@ class AppUtils {
     double? confirmTextSize,
     double? cancelTextSize,
   }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     return showCupertinoDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible ?? true,
@@ -174,6 +176,8 @@ class AppUtils {
   //============================================
   static Future<bool> showExitConfirmationDialog(BuildContext context,
       {String? message}) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     return await AppUtils.showDialog<bool>(
       context: context,
       title: 'Confirmation',
@@ -194,6 +198,8 @@ class AppUtils {
   //========================
   static void showSnackBar(BuildContext context, String message,
       {Color? backgroundColor, Color? messageColor, Color? closeIconColor}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 2),
@@ -262,7 +268,10 @@ class AppUtils {
       Duration? duration,
       Widget? titleIcon,
       InfoType type = InfoType.info,
-      void Function()? onTitleIconTap}) {
+      void Function()? onTitleIconTap,
+      bool? barrierDismissible}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     Color iconColor;
 
     switch (type) {
@@ -348,7 +357,7 @@ class AppUtils {
     }
     showCupertinoDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible ?? true,
       builder: (context) {
         // Délai avant fermeture automatique
         (type != InfoType.waiting &&
@@ -363,6 +372,10 @@ class AppUtils {
               })
             : {};
 
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ();
         return CupertinoAlertDialog(
           title: GestureDetector(onTap: onTitleIconTap, child: titleIcon),
           content: Padding(
@@ -377,6 +390,142 @@ class AppUtils {
           ),
         );
       },
+    );
+  }
+
+  ///
+
+  /// Affiche une notification de chargement
+  static void showLoadingNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.blue,
+        duration: Duration(seconds: 30), // Longue durée pour le chargement
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  /// Affiche une notification de succès
+  static void showSuccessNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.primaryColor,
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  /// Affiche une notification d'erreur avec option de réessayer
+  static void showErrorNotification(
+    BuildContext context,
+    String message,
+    VoidCallback? onRetry,
+  ) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.white, size: 20),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        action: onRetry != null
+            ? SnackBarAction(
+                label: 'Réessayer',
+                textColor: Colors.white,
+                onPressed: onRetry,
+              )
+            : null,
+      ),
+    );
+  }
+
+  /// Affiche une notification d'information
+  static void showInfoNotification(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.info_outline, color: Colors.white, size: 20),
+            SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.orange,
+        duration: Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
     );
   }
 }

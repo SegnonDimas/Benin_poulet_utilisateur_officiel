@@ -1,6 +1,9 @@
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
+import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 
 class NavigationService {
@@ -8,7 +11,7 @@ class NavigationService {
   static Future<void> redirectBasedOnRole(BuildContext context) async {
     try {
       final role = await AuthServices.getUserRole();
-      
+
       if (role == null) {
         // Aucun rôle trouvé, rediriger vers la page de sélection de rôle
         Navigator.pushNamedAndRemoveUntil(
@@ -57,11 +60,34 @@ class NavigationService {
   }
 
   /// Redirige vers la page d'inscription
-  static void redirectToSignup(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(
+  static void redirectToSignup(BuildContext context,
+      {String? content, String? title, Color? titleColor}) {
+    //Navigator.pop(context); // fermer le loading de AuthLoading
+    AppUtils.showDialog(
+        context: context,
+        barrierDismissible: false,
+        title: title ?? 'Passez à l\'inscription',
+        titleColor: titleColor ?? AppColors.primaryColor,
+        content: content ??
+            'Si vous n\'avez pas encore de compte, veuillez vous inscrire',
+        cancelText: 'S\'inscrire',
+        confirmText: 'Réessayez',
+        cancelTextColor:
+            Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+        confirmTextColor: AppColors.primaryColor,
+        cancelTextSize: context.smallText,
+        confirmTextSize: context.mediumText * 0.95,
+        onConfirm: () {
+          Navigator.pop(context);
+        },
+        onCancel: () {
+          Navigator.pushNamed(context, AppRoutes.PRESENTATIONPAGE);
+        });
+
+    /*Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.SIGNUPWITHEMAILPAGE,
       (Route<dynamic> route) => false,
-    );
+    );*/
   }
 }

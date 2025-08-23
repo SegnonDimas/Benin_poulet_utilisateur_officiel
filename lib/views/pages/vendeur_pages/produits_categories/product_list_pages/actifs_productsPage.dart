@@ -21,8 +21,41 @@ class ActifsProductsPage extends StatelessWidget {
           return ProductServices.showProducts(
               context, list_produits_actifs_filtre);
         }
+        
         // liste de tous les produits actifs
-        return ProductServices.showProducts(context, list_produits_actifs);
+        if (produitsActifsState is ProductsLoaded) {
+          final list_produits_actifs = produitsActifsState.products
+              .where((p) => p.productStatus == 'actif')
+              .toList();
+          return ProductServices.showProducts(context, list_produits_actifs);
+        }
+        
+        // États de chargement et d'erreur
+        if (produitsActifsState is ProductLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        
+        if (produitsActifsState is ProductError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(
+                  'Erreur: ${produitsActifsState.message}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          );
+        }
+        
+        // État initial ou autres états
+        return const Center(
+          child: Text('Aucun produit actif trouvé'),
+        );
       },
     );
   }

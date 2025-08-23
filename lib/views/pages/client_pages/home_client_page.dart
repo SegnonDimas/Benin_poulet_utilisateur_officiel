@@ -136,20 +136,13 @@ class _HomeClientPageState extends State<HomeClientPage>
         title: _buildSearchBar(),
         leadingWidth: 0,
         //centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Navigation vers les notifications
-            },
-          ),
-          /*IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {
-              // Navigation vers les favoris
-            },
-          ),*/
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.account_box_rounded),
+          onPressed: () {
+            // Navigation vers le profil de l'utilisateur
+            Navigator.pushNamed(context, AppRoutes.PROFILE);
+          },
+        ),
       ),
       body: BlocBuilder<HomeClientBloc, HomeClientState>(
         builder: (context, state) {

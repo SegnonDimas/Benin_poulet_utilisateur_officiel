@@ -78,6 +78,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final email = event.email;
         final password = event.password;
+        final longeurMotDePasse = 6;
         if (email.isEmpty) {
           return emit(EmailLoginRequestFailure(
               errorMessage: 'Veuillez renseigner votre adresse email'));
@@ -85,10 +86,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (password.isEmpty) {
           return emit(EmailLoginRequestFailure(
               errorMessage: 'Veuillez renseigner votre mot de passe'));
-        } else if (password.length < 4) {
+        } else if (password.length < longeurMotDePasse) {
           return emit(EmailLoginRequestFailure(
               errorMessage:
-                  'Le mot de passe doit être d\'au moins 4 caractères'));
+                  'Le mot de passe doit être d\'au moins $longeurMotDePasse caractères'));
         } else {
           emit(AuthAuthenticated(
               successMessage: 'Utilisateur connecté avec succès'));

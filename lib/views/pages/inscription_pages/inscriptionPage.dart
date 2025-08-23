@@ -92,11 +92,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
     getDeviceInfos();
 
-    _passWordController = TextEditingController(text: '12345678');
+    /* _passWordController = TextEditingController(text: '12345678');
     _confirmPassWordController = TextEditingController(text: '12345678');
     _firstNameController = TextEditingController(text: 'John');
     _lastNameController = TextEditingController(text: 'Doe');
-    _phoneNumbercontroller = TextEditingController(text: '0100000000');
+    _phoneNumbercontroller = TextEditingController(text: '0100000000');*/
   }
 
   @override
@@ -974,6 +974,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                     },
                                                     child: AppText(
                                                       text: 'Se connecter',
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                       color: AppColors
                                                           .primaryColor,
                                                       fontSize:
