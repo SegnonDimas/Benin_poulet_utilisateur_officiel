@@ -134,13 +134,15 @@ class _HomeClientPageState extends State<HomeClientPage>
     return Scaffold(
       appBar: AppBar(
         title: _buildSearchBar(),
-        leadingWidth: 0,
+        leadingWidth: context.width * 0.08,
         //centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.account_box_rounded),
           onPressed: () {
             // Navigation vers le profil de l'utilisateur
             Navigator.pushNamed(context, AppRoutes.PROFILE);
+            /* Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => CProfilPage()));*/
           },
         ),
       ),

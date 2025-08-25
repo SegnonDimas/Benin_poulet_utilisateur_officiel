@@ -16,6 +16,8 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
+  late PageController _pageController;
+
   List product_pages = [
     ActifsProductsPage(),
     InactifsProductsPage(),
@@ -26,18 +28,22 @@ class _ProductsListState extends State<ProductsList> {
   int currentIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
         body: PageView.builder(
-          controller: PageController(
-            initialPage: 0,
-          ),
+          controller: _pageController,
           physics: NeverScrollableScrollPhysics(),
           itemCount: product_pages.length,
           itemBuilder: (context, index) {
-            return product_pages[currentIndex];
+            return product_pages[index];
           },
           onPageChanged: (index) {
             setState(() {
@@ -54,6 +60,11 @@ class _ProductsListState extends State<ProductsList> {
             setState(() {
               currentIndex = index;
             });
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
             FocusScope.of(context).unfocus(); //force le clavier à se fermer
           },
           items: [
@@ -63,7 +74,7 @@ class _ProductsListState extends State<ProductsList> {
                 const Icon(Icons.notifications_active_outlined),
                 AppText(
                   text: 'Actifs',
-                  fontSize: smallText() * 0.8,
+                  fontSize: context.smallText * 0.8,
                 )
               ],
             ),
@@ -73,7 +84,7 @@ class _ProductsListState extends State<ProductsList> {
                 Icon(Icons.notifications_off_outlined),
                 AppText(
                   text: 'Inactifs',
-                  fontSize: smallText() * 0.8,
+                  fontSize: context.smallText * 0.8,
                 )
               ],
             ),
@@ -83,7 +94,7 @@ class _ProductsListState extends State<ProductsList> {
                 Icon(Icons.hourglass_top_rounded),
                 AppText(
                   text: 'En attente',
-                  fontSize: smallText() * 0.8,
+                  fontSize: context.smallText * 0.8,
                 )
               ],
             ),
@@ -93,7 +104,7 @@ class _ProductsListState extends State<ProductsList> {
                 Icon(Icons.block),
                 AppText(
                   text: 'Suspendus',
-                  fontSize: smallText() * 0.8,
+                  fontSize: context.smallText * 0.8,
                 ),
               ],
             )
@@ -105,6 +116,7 @@ class _ProductsListState extends State<ProductsList> {
 
   @override
   void dispose() {
+    _pageController.dispose();
     super.dispose();
   }
 }

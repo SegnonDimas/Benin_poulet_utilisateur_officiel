@@ -77,7 +77,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     emit(StoreLoading());
     
     try {
-      final sellerId = event.sellerId ?? AuthServices.userId;
+      final sellerId = event.sellerId ?? AuthServices.auth.currentUser?.uid;
       if (sellerId == null) {
         emit(StoreError('Aucun vendeur connecté'));
         return;
@@ -133,7 +133,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       emit(StoreLoaded(store, isFromCache: false));
     } catch (e) {
       // En cas d'erreur, essayer d'utiliser le cache
-      final sellerId = event.sellerId ?? AuthServices.userId;
+      final sellerId = event.sellerId ?? AuthServices.auth.currentUser?.uid;
       if (sellerId != null) {
         final cachedStores = CacheManager.getCachedStores();
         final cachedStore = cachedStores.where((store) => store.sellerId == sellerId).firstOrNull;

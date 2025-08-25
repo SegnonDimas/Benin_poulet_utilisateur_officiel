@@ -158,7 +158,7 @@ class ModelProduit extends StatelessWidget {
                                     attributIcon: Icons.flash_on_outlined,
                                     attributLabel: 'Promo',
                                     attributValue:
-                                        produit.promotionValue ?? 'NON',
+                                        produit.isInPromotion ? 'OUI' : 'NON',
                                     attributLabelColor: Theme.of(context)
                                         .colorScheme
                                         .inversePrimary,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:benin_poulet/constants/accountStatus.dart';
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/services/user_data_service.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/models_ui/model_ProfilListTile.dart';
@@ -25,6 +26,48 @@ class _VProfilPageState extends State<VProfilPage>
   String accountStatus = AccountStatus.UNVERIFIED;
   String profilPath = 'assets/images/oeuf2.png';
   String shopName = 'Le Poulailler';
+  String userEmail = 'lepoulailler@gmail.com';
+  
+  final UserDataService _userDataService = UserDataService();
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+  
+  Future<void> _loadUserData() async {
+    try {
+      // Récupérer les données du vendeur connecté
+      final seller = await _userDataService.getCurrentSeller();
+      final user = await _userDataService.getCurrentUser();
+      
+      if (mounted) {
+        setState(() {
+          // Mettre à jour le nom de la boutique
+          if (seller?.storeInfos != null && seller!.storeInfos!['name'] != null) {
+            shopName = seller.storeInfos!['name'] as String;
+          }
+          
+          // Mettre à jour l'email
+          if (seller?.storeInfos != null && seller!.storeInfos!['email'] != null) {
+            userEmail = seller.storeInfos!['email'] as String;
+          } else if (user?.authIdentifier != null) {
+            userEmail = user!.authIdentifier!;
+          }
+          
+          // Mettre à jour le statut de vérification
+          if (seller?.documentsVerified != null) {
+            accountStatus = seller!.documentsVerified! 
+                ? AccountStatus.VERIFIED 
+                : AccountStatus.UNVERIFIED;
+          }
+        });
+      }
+    } catch (e) {
+      print('Erreur lors du chargement des données utilisateur: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +231,7 @@ class _VProfilPageState extends State<VProfilPage>
           /// adresse gmail
           Center(
             child: AppText(
-              text: 'lepoulailler@gmail.com',
+              text: userEmail,
               fontSize: context.smallText,
               //fontWeight: FontWeight.w800,
             ),

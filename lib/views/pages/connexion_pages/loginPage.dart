@@ -39,8 +39,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
-  final TextEditingController _passWordController = TextEditingController();
-  final TextEditingController _phoneNumbercontroller = TextEditingController();
+  TextEditingController _passWordController = TextEditingController();
+  TextEditingController _phoneNumbercontroller = TextEditingController();
   String initialCountry = 'BJ';
   PhoneNumber number = PhoneNumber(isoCode: 'BJ', dialCode: "+229");
   bool isLoggedIn = false;
@@ -109,6 +109,9 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       });
     });
 
+    _phoneNumbercontroller = TextEditingController(text: "0152748342");
+    _passWordController = TextEditingController(text: "123457");
+
     se_souvenir.write('se_souvenir', seSouvenir);
   }
 
@@ -135,7 +138,9 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     // Vérifier si la route est active et réactiver si nécessaire
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && ModalRoute.of(context)?.isCurrent == true && !_isPageActive) {
+      if (mounted &&
+          ModalRoute.of(context)?.isCurrent == true &&
+          !_isPageActive) {
         setState(() {
           _isPageActive = true;
         });

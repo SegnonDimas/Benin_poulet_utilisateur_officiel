@@ -1,5 +1,7 @@
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
+import 'package:benin_poulet/bloc/product/product_bloc.dart';
+import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
+import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajoutNouveauProduitPage.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -20,6 +22,13 @@ import '../views/pages/vendeur_pages/produits_categories/productsList.dart';
 import '../widgets/app_text.dart';
 
 class ProductServices {
+  static int _getValidCurrentItem(int currentItem, int count) {
+    if (count == 0) return 0;
+    if (currentItem < 0) return 0;
+    if (currentItem >= count) return count - 1;
+    return currentItem;
+  }
+
   //==============================
   //AFFICHAGE DE PRODUIT DANS L'UI
   //==============================
@@ -282,40 +291,53 @@ class ProductServices {
                                                                     BorderRadius
                                                                         .circular(
                                                                             20)),
-                                                            child:
-                                                                PageViewDotIndicator(
-                                                              currentItem: context
-                                                                  .watch<
-                                                                      ProductImagesPathIndexProvider>()
-                                                                  .indexProductImage,
-                                                              count: list[index]
-                                                                  .productImagesPath!
-                                                                  .length,
-                                                              size: const Size(
-                                                                  10, 10),
-                                                              unselectedSize:
-                                                                  const Size(
-                                                                      7, 7),
-                                                              unselectedColor:
-                                                                  Colors.grey
-                                                                      .shade600,
-                                                              selectedColor:
-                                                                  Colors.grey
-                                                                      .shade100,
-                                                              onItemClicked:
-                                                                  (indexDot) {
-                                                                context
-                                                                    .read<
-                                                                        ProductImagesPathIndexProvider>()
-                                                                    .indexProductImageNewValue(
-                                                                        indexDot);
-                                                                carouselController
-                                                                    .animateToPage(context
-                                                                        .read<
-                                                                            ProductImagesPathIndexProvider>()
-                                                                        .indexProductImage);
+                                                            child: list[index]
+                                                                    .productImagesPath
+                                                                    .isNotEmpty
+                                                                ? PageViewDotIndicator(
+                                                                    currentItem:
+                                                                        _getValidCurrentItem(
+                                                                      context
+                                                                          .watch<
+                                                                              ProductImagesPathIndexProvider>()
+                                                                          .indexProductImage,
+                                                                      list[index]
+                                                                          .productImagesPath
+                                                                          .length,
+                                                                    ),
+                                                                    count: list[
+                                                                            index]
+                                                                        .productImagesPath
+                                                                        .length,
+                                                                    size:
+                                                                        const Size(
+                                                                            10,
+                                                                            10),
+                                                                    unselectedSize:
+                                                                        const Size(
+                                                                            7,
+                                                                            7),
+                                                                    unselectedColor:
+                                                                        Colors
+                                                                            .grey
+                                                                            .shade600,
+                                                                    selectedColor:
+                                                                        Colors
+                                                                            .grey
+                                                                            .shade100,
+                                                                    onItemClicked:
+                                                                        (indexDot) {
+                                                                      context
+                                                                          .read<
+                                                                              ProductImagesPathIndexProvider>()
+                                                                          .indexProductImageNewValue(
+                                                                              indexDot);
+                                                                      carouselController.animateToPage(context
+                                                                          .read<
+                                                                              ProductImagesPathIndexProvider>()
+                                                                          .indexProductImage);
 
-                                                                /*setState(() {
+                                                                      /*setState(() {
 
                                                               carouselCurrentIndex =
                                                                   indexDot;
@@ -323,8 +345,10 @@ class ProductServices {
                                                                   .animateToPage(
                                                                       carouselCurrentIndex);
                                                             });*/
-                                                              },
-                                                            ),
+                                                                    },
+                                                                  )
+                                                                : const SizedBox
+                                                                    .shrink(),
                                                           ),
                                                         )
                                                       ],
@@ -560,10 +584,24 @@ class ProductServices {
                                                                       content: 'Voulez-vous vraiment supprimer ce produit ?',
                                                                       confirmText: 'Oui',
                                                                       cancelText: 'Non',
-                                                                      onConfirm: () {
-                                                                        //TODO : supprimer le produit
-                                                                        Navigator.pop(
-                                                                            context);
+                                                                      onConfirm: () async {
+                                                                        // Supprimer le produit
+                                                                        try {
+                                                                          context.read<ProductBloc>().add(DeleteProduct(list[index].productId!));
+                                                                          Navigator.pop(context);
+                                                                          
+                                                                          showMessage(
+                                                                            context: context,
+                                                                            message: 'Produit supprimé avec succès',
+                                                                            backgroundColor: AppColors.primaryColor,
+                                                                          );
+                                                                        } catch (e) {
+                                                                          showMessage(
+                                                                            context: context,
+                                                                            message: 'Erreur lors de la suppression: $e',
+                                                                            backgroundColor: AppColors.redColor,
+                                                                          );
+                                                                        }
                                                                       });
                                                                 },
                                                                 icon: Icon(
@@ -587,8 +625,17 @@ class ProductServices {
                                                                 .background*/
                                                             ,
                                                             child: IconButton(
-                                                                onPressed:
-                                                                    () {},
+                                                                onPressed: () {
+                                                                  // Rediriger vers la page d'ajout de produit avec les données préremplies
+                                                                  Navigator.pushNamed(
+                                                                    context,
+                                                                    AppRoutes.AJOUTNOUVEAUPRODUITPAGE,
+                                                                    arguments: {
+                                                                      'isEditing': true,
+                                                                      'product': list[index],
+                                                                    },
+                                                                  );
+                                                                },
                                                                 icon: Icon(
                                                                   Icons
                                                                       .edit_calendar,
@@ -639,17 +686,59 @@ class ProductServices {
   static Stream<List<Produit>> getVendorProducts() {
     final currentUserId = AuthServices.userId;
     if (currentUserId == null) {
-      print(":::::::::::::::ERREUR : Aucun utilisateur connecté :::::::::::::::::");
+      print(
+          ":::::::::::::::ERREUR : Aucun utilisateur connecté :::::::::::::::::");
       return Stream.value([]);
     }
 
-    print(":::::::::::::::RÉCUPÉRATION PRODUITS : sellerId=$currentUserId :::::::::::::::::");
+    print(
+        ":::::::::::::::RÉCUPÉRATION PRODUITS : sellerId=$currentUserId :::::::::::::::::");
     return ProductRepository().getProductsBySeller(currentUserId);
   }
+
+  static Future<void> updateProduct(BuildContext context, Produit product) async {
+    try {
+      if (product.productId == null) {
+        showMessage(
+          context: context,
+          message: 'Erreur: ID du produit manquant',
+          backgroundColor: AppColors.redColor,
+        );
+        return;
+      }
+
+      // Utiliser le ProductBloc pour mettre à jour le produit
+      context.read<ProductBloc>().add(UpdateProduct(product.productId!, {
+        'name': product.productName,
+        'description': product.productDescription,
+        'category': product.category,
+        'subCategory': product.subCategory,
+        'price': product.productUnitPrice,
+        'stock': product.stockValue,
+        'isInPromotion': product.isInPromotion,
+        'promoPrice': product.promoPrice,
+        'properties': product.productProperties,
+        'varieties': product.varieties,
+      }));
+
+      showMessage(
+        context: context,
+        message: 'Produit "${product.productName}" mis à jour avec succès.',
+        backgroundColor: AppColors.primaryColor,
+      );
+    } catch (e) {
+      showMessage(
+        context: context,
+        message: 'Erreur lors de la mise à jour du produit: $e',
+        backgroundColor: AppColors.redColor,
+      );
+    }
+  }
+
   static Future<void> addProduct(BuildContext context, Produit product) async {
     try {
       // Vérifications individuelles pour des messages clairs
-      if (product.productName == null || product.productName!.trim().isEmpty) {
+      if (product.productName.trim().isEmpty) {
         showMessage(
           context: context,
           message: 'Veuillez renseigner le nom du produit.',
@@ -658,7 +747,7 @@ class ProductServices {
         return;
       }
 
-      if (product.category == null || product.category!.trim().isEmpty) {
+      if (product.category.trim().isEmpty) {
         showMessage(
           context: context,
           message: 'Veuillez sélectionner une catégorie pour le produit.',
@@ -676,7 +765,7 @@ class ProductServices {
         return;
       }
 
-      if (product.stockValue == null || product.stockValue! <= 0) {
+      if (product.stockValue <= 0) {
         showMessage(
           context: context,
           message: 'La quantité en stock doit être supérieure à 0.',
@@ -709,7 +798,7 @@ class ProductServices {
 
       // Tout est bon → Envoi vers la base de données (désactivé pour l’instant)
       // Vérification du sellerId (CRITIQUE)
-      final currentUserId = AuthServices.userId;
+      final currentUserId = AuthServices.auth.currentUser?.uid;
       if (currentUserId == null) {
         showMessage(
           context: context,
@@ -719,14 +808,8 @@ class ProductServices {
         return;
       }
 
-      // S'assurer que le produit a le bon sellerId
-      final productWithSellerId = product.copyWith(sellerId: currentUserId);
-
-      // Log pour traçabilité
-      print(":::::::::::::::AJOUT PRODUIT : sellerId=$currentUserId, nom=${productWithSellerId.productName} :::::::::::::::::");
-
-      // Tout est bon → Envoi vers la base de données
-      await ProductRepository().createProduct(productWithSellerId);
+      // Utiliser le ProductBloc pour ajouter le produit
+      context.read<ProductBloc>().add(AddProduct(product));
 
       showMessage(
         context: context,

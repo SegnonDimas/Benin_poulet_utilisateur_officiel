@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:benin_poulet/services/user_data_service.dart';
 
 // Modèles temporaires pour les placeholders
 class UserProfile {
@@ -154,6 +155,8 @@ class ProfileClientSaved extends ProfileClientState {
 
 // BLoC
 class ProfileClientBloc extends Bloc<ProfileClientEvent, ProfileClientState> {
+  final UserDataService _userDataService = UserDataService();
+  
   ProfileClientBloc() : super(ProfileClientInitial()) {
     on<LoadProfile>(_onLoadProfile);
     on<SaveProfile>(_onSaveProfile);
@@ -171,29 +174,34 @@ class ProfileClientBloc extends Bloc<ProfileClientEvent, ProfileClientState> {
     emit(ProfileClientLoading());
     
     try {
-      // Simulation d'un délai de chargement
-      await Future.delayed(const Duration(seconds: 1));
+      // Récupérer les vraies données de l'utilisateur connecté
+      final user = await _userDataService.getCurrentUser();
       
-      // Données temporaires du profil
+      if (user == null) {
+        emit(ProfileClientError(message: 'Aucun utilisateur connecté'));
+        return;
+      }
+      
+      // Créer le profil utilisateur avec les vraies données
       _currentProfile = UserProfile(
-        id: 'user123',
-        fullName: 'Jean Dupont',
-        email: 'jean.dupont@email.com',
-        phone: '+229 90 00 00 00',
-        imageUrl: 'https://via.placeholder.com/150',
-        dateOfBirth: '15/03/1990',
-        gender: 'Homme',
-        address: '123 Rue de la Paix',
-        city: 'Cotonou',
-        postalCode: '01 BP 1234',
-        pushNotifications: true,
-        newsletter: false,
-        locationSharing: true,
+        id: user.userId,
+        fullName: user.fullName ?? 'Utilisateur',
+        email: user.authIdentifier ?? 'email@example.com',
+        phone: user.authIdentifier ?? '+229 00 00 00 00', // Utiliser authIdentifier comme téléphone si c'est un numéro
+        imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150',
+        dateOfBirth: '', // Pas de date de naissance dans le modèle AppUser
+        gender: '', // Pas de genre dans le modèle AppUser
+        address: '', // Pas d'adresse dans le modèle AppUser
+        city: '', // Pas de ville dans le modèle AppUser
+        postalCode: '', // Pas de code postal dans le modèle AppUser
+        pushNotifications: true, // Valeur par défaut
+        newsletter: false, // Valeur par défaut
+        locationSharing: true, // Valeur par défaut
       );
       
       emit(ProfileClientLoaded(profile: _currentProfile!));
     } catch (e) {
-      emit(ProfileClientError(message: 'Erreur lors du chargement du profil'));
+      emit(ProfileClientError(message: 'Erreur lors du chargement du profil: $e'));
     }
   }
 

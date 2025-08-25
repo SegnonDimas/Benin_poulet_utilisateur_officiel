@@ -25,7 +25,7 @@ class ProductRepository {
     return null;
   }
 
-  /// Récupère tous les produits d'une boutique
+  /// Récupère tous les produits d'une boutique (pour les clients - actifs uniquement)
   Stream<List<Produit>> getProductsByStore(String storeId) {
     return _firestore
         .collection(FirebaseCollections.productsCollection)
@@ -41,7 +41,47 @@ class ProductRepository {
     return _firestore
         .collection(FirebaseCollections.productsCollection)
         .where('sellerId', isEqualTo: sellerId)
-        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Produit.fromMap(doc.data())).toList());
+  }
+
+  /// Récupère tous les produits d'une boutique (pour les vendeurs - tous statuts)
+  Stream<List<Produit>> getProductsByStoreForVendor(String storeId) {
+    return _firestore
+        .collection(FirebaseCollections.productsCollection)
+        .where('storeId', isEqualTo: storeId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            try {
+              final data = doc.data();
+              return Produit.fromMap(data);
+            } catch (e) {
+              print('Erreur lors du parsing du produit ${doc.id}: $e');
+              rethrow;
+            }
+          }).toList();
+        });
+  }
+
+  /// Récupère les produits d'un vendeur par statut
+  Stream<List<Produit>> getProductsBySellerAndStatus(String sellerId, String status) {
+    return _firestore
+        .collection(FirebaseCollections.productsCollection)
+        .where('sellerId', isEqualTo: sellerId)
+        .where('status', isEqualTo: status)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Produit.fromMap(doc.data())).toList());
+  }
+
+  /// Récupère les produits d'une boutique par statut
+  Stream<List<Produit>> getProductsByStoreAndStatus(String storeId, String status) {
+    return _firestore
+        .collection(FirebaseCollections.productsCollection)
+        .where('storeId', isEqualTo: storeId)
+        .where('status', isEqualTo: status)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Produit.fromMap(doc.data())).toList());
@@ -124,5 +164,23 @@ class ProductRepository {
         .doc(productId)
         .snapshots()
         .map((doc) => doc.exists ? Produit.fromMap(doc.data()!) : null);
+  }
+
+  /// Méthode de débogage - Récupère tous les produits
+  Future<List<Map<String, dynamic>>> getAllProductsForDebug() async {
+    try {
+      final snapshot = await _firestore
+          .collection(FirebaseCollections.productsCollection)
+          .get();
+      
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['documentId'] = doc.id;
+        return data;
+      }).toList();
+    } catch (e) {
+      print('Erreur lors du débogage: $e');
+      return [];
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/client/profile_client_bloc.dart';
+import '../../../services/user_data_service.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text.dart';
 import '../../../widgets/app_textField.dart';
@@ -18,11 +19,36 @@ class ProfileClientPage extends StatefulWidget {
 class _ProfileClientPageState extends State<ProfileClientPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isEditing = false;
+  final UserDataService _userDataService = UserDataService();
+  
+  // Statistiques du client
+  int _ordersCount = 0;
+  int _favoritesCount = 0;
+  int _reviewsCount = 0;
 
   @override
   void initState() {
     super.initState();
     context.read<ProfileClientBloc>().add(LoadProfile());
+    _loadStatistics();
+  }
+  
+  Future<void> _loadStatistics() async {
+    try {
+      final ordersCount = await _userDataService.getCurrentClientOrdersCount();
+      final favoritesCount = await _userDataService.getCurrentClientFavoritesCount();
+      final reviewsCount = await _userDataService.getCurrentClientReviewsCount();
+      
+      if (mounted) {
+        setState(() {
+          _ordersCount = ordersCount;
+          _favoritesCount = favoritesCount;
+          _reviewsCount = reviewsCount;
+        });
+      }
+    } catch (e) {
+      print('Erreur lors du chargement des statistiques: $e');
+    }
   }
 
   @override
@@ -443,21 +469,21 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
                   child: _buildStatItem(
                     icon: Icons.shopping_bag,
                     label: 'Commandes',
-                    value: '12',
+                    value: _ordersCount.toString(),
                   ),
                 ),
                 Expanded(
                   child: _buildStatItem(
                     icon: Icons.favorite,
                     label: 'Favoris',
-                    value: '8',
+                    value: _favoritesCount.toString(),
                   ),
                 ),
                 Expanded(
                   child: _buildStatItem(
                     icon: Icons.star,
                     label: 'Avis',
-                    value: '5',
+                    value: _reviewsCount.toString(),
                   ),
                 ),
               ],

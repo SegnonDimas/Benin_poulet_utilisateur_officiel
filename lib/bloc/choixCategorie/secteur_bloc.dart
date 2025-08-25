@@ -84,7 +84,7 @@ final initialSectors = <SellerSector>[
   ),
   SellerSector(
     id: 3,
-    name: 'Bétail',
+    name: 'Betail',
     isSelected: false,
     categories: [
       Category(name: 'Bœuf', isSelected: false),

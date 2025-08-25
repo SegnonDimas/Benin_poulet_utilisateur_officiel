@@ -21,10 +21,11 @@ class Produit {
   final Map<String, String>
       productProperties; // poids : 25Kg, race : libanais, etc.
   final String productStatus; // ex : actif, inactif, en attente, suspendu
+  final DateTime? createdAt; // Date de création du produit
 
   const Produit({
     this.productId,
-    this.storeId = "1",
+    this.storeId = "unknown",
     this.sellerId = "unknown", // Temporairement optionnel pour compatibilité
     this.productImagesPath = const [],
     required this.productName,
@@ -38,7 +39,8 @@ class Produit {
     this.isInPromotion = false,
     this.promoPrice = 0,
     this.productProperties = const {},
-    this.productStatus = ProductStatus.active,
+    this.productStatus = 'active',
+    this.createdAt,
   });
 
   ///copyWith
@@ -61,6 +63,7 @@ class Produit {
     final Map<String, String>?
         productProperties, // ex : poids : 25Kg, race : libanais, etc.
     final String? productStatus, // ex : actif, inactif, en attente, suspendu
+    final DateTime? createdAt,
   }) {
     return Produit(
       productId: productId ?? this.productId,
@@ -79,6 +82,7 @@ class Produit {
       varieties: varieties ?? this.varieties,
       productProperties: productProperties ?? this.productProperties,
       productStatus: productStatus ?? this.productStatus,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -95,38 +99,106 @@ class Produit {
       'stock': stockValue,
       'price': productUnitPrice,
       'isInPromotion': isInPromotion,
-      'promoPrice': promoPrice,
+      'promoPrice': promoPrice ?? productUnitPrice,
       'varieties': varieties,
       'properties': productProperties,
       'status': productStatus,
+      'createdAt': createdAt?.toIso8601String(),
     };
   }
 
   factory Produit.fromMap(Map<String, dynamic> map) {
-    return Produit(
-      productId: map['productId'] /*as String?*/,
-      storeId: map['storeId'] ?? '1', // Fallback pour compatibilité
-      sellerId: map['sellerId'] ?? 'unknown', // Fallback pour compatibilité
-      productImagesPath: (map['images'] as List<dynamic>).cast<String>(),
-      productName: map['name'] /*as String*/,
-      category: map['category'] /*as String*/,
-      subCategory: map['subCategory'] /*as String*/,
-      productDescription: map['description'] /*as String*/,
-      stockValue: map['stock'] as int,
-      productUnitPrice: (map['price'] as num).toDouble(),
-      isInPromotion: map['isInPromotion'] as bool,
-      promoPrice: (map['promoPrice'] as num).toDouble(),
-      varieties: (map['varieties'] as List<dynamic>).cast<String>(),
-      productProperties: (map['properties'] as Map).map(
-        (key, value) => MapEntry(key.toString(), value.toString()),
-      ),
-      productStatus: map['status'] /*as String*/,
-    );
+    try {
+      return Produit(
+        productId: _safeString(map['productId']),
+        storeId: _safeString(map['storeId']) ?? 'unknown',
+        sellerId: _safeString(map['sellerId']) ?? 'unknown',
+        productImagesPath: _safeStringList(map['images']),
+        productName: _safeString(map['name']) ?? '',
+        category: _safeString(map['category']) ?? '',
+        subCategory: _safeString(map['subCategory']) ?? '',
+        productDescription: _safeString(map['description']) ?? '',
+        stockValue: _safeInt(map['stock']),
+        productUnitPrice: _safeDouble(map['price']),
+        isInPromotion: _safeBool(map['isInPromotion']),
+        promoPrice: _safeDouble(map['promoPrice']),
+        varieties: _safeStringList(map['varieties']),
+        productProperties: _safeStringMap(map['properties']),
+        productStatus: _safeString(map['status']) ?? 'inactive',
+        createdAt: _parseDateTime(map['createdAt']),
+      );
+    } catch (e, stackTrace) {
+      print('DEBUG: Erreur dans Produit.fromMap: $e');
+      print('DEBUG: Map reçu: $map');
+      print('DEBUG: Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 
   factory Produit.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Produit.fromMap(data);
+  }
+
+  /// Méthode utilitaire pour parser les dates depuis Firestore
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    
+    if (value is Timestamp) {
+      return value.toDate();
+    } else if (value is String) {
+      return DateTime.tryParse(value);
+    } else if (value is DateTime) {
+      return value;
+    }
+    
+    return null;
+  }
+
+  /// Méthodes utilitaires pour un parsing sécurisé
+  static String? _safeString(dynamic value) {
+    if (value == null) return null;
+    return value.toString();
+  }
+
+  static List<String> _safeStringList(dynamic value) {
+    if (value == null) return [];
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [];
+  }
+
+  static int _safeInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static double _safeDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  static bool _safeBool(dynamic value) {
+    if (value == null) return false;
+    if (value is bool) return value;
+    if (value is String) return value.toLowerCase() == 'true';
+    if (value is int) return value != 0;
+    return false;
+  }
+
+  static Map<String, String> _safeStringMap(dynamic value) {
+    if (value == null) return {};
+    if (value is Map) {
+      return value.map((key, value) => MapEntry(key.toString(), value.toString()));
+    }
+    return {};
   }
 }
 

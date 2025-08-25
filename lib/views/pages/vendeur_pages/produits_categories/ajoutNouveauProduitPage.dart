@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:benin_poulet/bloc/choixCategorie/secteur_bloc.dart';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:benin_poulet/services/products_services.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
@@ -9,6 +10,7 @@ import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
@@ -27,6 +29,8 @@ class AjoutNouveauProduitPage extends StatefulWidget {
 
 class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   Color color = Colors.white;
+  bool isEditing = false;
+  Produit? productToEdit;
 
   Future<List<ImageFile>> pickImagesUsingImagePicker(int pickCount) async {
     final picker = ImagePicker();
@@ -56,13 +60,6 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
   TextEditingController promoPrixController = TextEditingController();
   TextEditingController varieteController = TextEditingController();
 
-  final List<String> _categories = [
-    'Volaille',
-    'Bétaille',
-    'Restaurant',
-    'Pisciculture'
-  ];
-
   Map<String, String> proprietes = {};
 
   List<String> varietes = [];
@@ -91,25 +88,123 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
     }
   }
 
-  final List<String> _sousCategoriesVolaille = [
-    'Poulet',
-    'Dindon',
-    'Pintage',
-    'Canard'
-  ];
-  final List<String> _sousCategoriesBetaille = ['Mouton', 'Boeuf', 'Porc'];
-  final List<String> _sousCategoriesRestaurant = [
-    'Poulet rôti',
-    'Lapin braisé',
-    'Porc sec',
-    'Schawama'
-  ];
-  final List<String> _sousCategoriesPisciculture = [
-    'Tilapia',
-    'Faux bar',
-    'Vrai bar',
-    'Carpe'
-  ];
+  List<DropdownMenuItem<String>> _getCategoriesFromSecteurBloc() {
+    final secteurState = context.read<SecteurBloc>().state;
+    // S'assurer qu'il n'y a pas de doublons
+    final uniqueSectors = secteurState.sectors.toSet().toList();
+    return uniqueSectors.map((sector) {
+      return DropdownMenuItem<String>(
+        value: sector.name,
+        child: AppText(
+          text: sector.name,
+        ),
+      );
+    }).toList();
+  }
+
+  List<DropdownMenuItem<String>> _getSubCategoriesFromSecteurBloc(
+      String selectedCategory) {
+    final secteurState = context.read<SecteurBloc>().state;
+    final selectedSector = secteurState.sectors.firstWhere(
+      (sector) => sector.name == selectedCategory,
+      orElse: () => secteurState.sectors.first,
+    );
+
+    // S'assurer qu'il n'y a pas de doublons
+    final uniqueCategories = selectedSector.categories.toSet().toList();
+    return uniqueCategories.map((category) {
+      return DropdownMenuItem<String>(
+        value: category.name,
+        child: AppText(
+          text: category.name,
+        ),
+      );
+    }).toList();
+  }
+
+  void _populateFieldsWithProductData() {
+    if (productToEdit == null) return;
+
+    // Récupérer les secteurs disponibles
+    final secteurState = context.read<SecteurBloc>().state;
+    
+    // Trouver la catégorie correspondante ou utiliser la première disponible
+    String categoryToUse = productToEdit!.category;
+    String subCategoryToUse = productToEdit!.subCategory;
+    
+    // Vérifier si la catégorie existe dans les secteurs disponibles
+    final matchingSector = secteurState.sectors.firstWhere(
+      (sector) => sector.name.toLowerCase() == productToEdit!.category.toLowerCase(),
+      orElse: () => secteurState.sectors.first,
+    );
+    
+    categoryToUse = matchingSector.name;
+    
+    // Vérifier si la sous-catégorie existe dans le secteur sélectionné
+    final matchingCategory = matchingSector.categories.firstWhere(
+      (category) => category.name.toLowerCase() == productToEdit!.subCategory.toLowerCase(),
+      orElse: () => matchingSector.categories.first,
+    );
+    
+    subCategoryToUse = matchingCategory.name;
+
+    setState(() {
+      productNameController.text = productToEdit!.productName;
+      productDescriptionController.text = productToEdit!.productDescription;
+      _categorySelected = categoryToUse;
+      _sousCategorySelected = subCategoryToUse;
+      prixUnitaireController.text = productToEdit!.productUnitPrice.toString();
+      quantiteController.text = productToEdit!.stockValue.toString();
+      isProductInPromotion = productToEdit!.isInPromotion;
+      if (productToEdit!.promoPrice != null && productToEdit!.promoPrice! > 0) {
+        promoPrixController.text = productToEdit!.promoPrice.toString();
+      }
+      proprietes = Map<String, String>.from(productToEdit!.productProperties);
+      varietes = List<String>.from(productToEdit!.varieties);
+    });
+  }
+
+  void _validateAndSetDefaultValues() {
+    final secteurState = context.read<SecteurBloc>().state;
+    if (secteurState.sectors.isNotEmpty) {
+      final firstSector = secteurState.sectors.first;
+      if (firstSector.categories.isNotEmpty) {
+        setState(() {
+          _categorySelected = firstSector.name;
+          _sousCategorySelected = firstSector.categories.first.name;
+        });
+      }
+    }
+  }
+
+  String _getValidCategoryValue() {
+    final secteurState = context.read<SecteurBloc>().state;
+    final availableCategories = secteurState.sectors.map((s) => s.name).toList();
+    
+    if (availableCategories.contains(_categorySelected)) {
+      return _categorySelected;
+    } else if (availableCategories.isNotEmpty) {
+      return availableCategories.first;
+    }
+    return 'Volaille'; // Valeur par défaut
+  }
+
+  String _getValidSubCategoryValue() {
+    final secteurState = context.read<SecteurBloc>().state;
+    final selectedSector = secteurState.sectors.firstWhere(
+      (sector) => sector.name == _getValidCategoryValue(),
+      orElse: () => secteurState.sectors.first,
+    );
+    
+    final availableSubCategories = selectedSector.categories.map((c) => c.name).toList();
+    
+    if (availableSubCategories.contains(_sousCategorySelected)) {
+      return _sousCategorySelected;
+    } else if (availableSubCategories.isNotEmpty) {
+      return availableSubCategories.first;
+    }
+    return 'Poulet'; // Valeur par défaut
+  }
 
   String category = '';
 
@@ -134,6 +229,22 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
         });
 
     super.initState();
+
+    // Vérifier si on est en mode édition
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final arguments =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (arguments != null && arguments['isEditing'] == true) {
+        setState(() {
+          isEditing = true;
+          productToEdit = arguments['product'] as Produit;
+        });
+        _populateFieldsWithProductData();
+      } else {
+        // En mode ajout, valider les valeurs par défaut
+        _validateAndSetDefaultValues();
+      }
+    });
   }
 
   @override
@@ -173,7 +284,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
           appBar: AppBar(
             // titre
             title: AppText(
-              text: 'Ajouter Produit',
+              text: isEditing ? 'Modifier Produit' : 'Ajouter Produit',
             ),
             centerTitle: true,
 
@@ -189,14 +300,32 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       bordeurRadius: 25,
                       color: AppColors.primaryColor,
                       child: AppText(
-                        text: 'Ajouter',
+                        text: isEditing ? 'Modifier' : 'Ajouter',
                         fontSize: context.smallText * 1.2,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
                       ),
                       onTap: () async {
-                        // ajout de produit avec tous les contrôles possibles
-                        await ProductServices.addProduct(context, produit);
+                        if (isEditing && productToEdit != null) {
+                          // Mise à jour du produit existant
+                          final updatedProduct = productToEdit!.copyWith(
+                            productName: produit.productName,
+                            productDescription: produit.productDescription,
+                            category: produit.category,
+                            subCategory: produit.subCategory,
+                            productUnitPrice: produit.productUnitPrice,
+                            stockValue: produit.stockValue,
+                            isInPromotion: produit.isInPromotion,
+                            promoPrice: produit.promoPrice,
+                            productProperties: produit.productProperties,
+                            varieties: produit.varieties,
+                          );
+                          await ProductServices.updateProduct(
+                              context, updatedProduct);
+                        } else {
+                          // Ajout de nouveau produit
+                          await ProductServices.addProduct(context, produit);
+                        }
                       }),
                 ),
               )
@@ -325,34 +454,35 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                             Container(
                               alignment: Alignment.bottomRight,
                               height: context.height * 0.05,
-                              width: context.width * 0.4,
+                              width: context.width * 0.6,
                               child: DropdownButton<String>(
-                                icon: Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: context.mediumText,
-                                    )
-                                  ],
+                                icon: Expanded(
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: context.mediumText,
+                                  ),
                                 ),
                                 underline: Container(),
-                                value: _categorySelected,
+                                value: _getValidCategoryValue(),
+                                alignment: AlignmentDirectional.bottomEnd,
                                 //focusColor: AppColors.primaryColor,
-                                items:
-                                    List.generate(_categories.length, (index) {
-                                  return DropdownMenuItem<String>(
-                                    value: _categories[index],
-                                    child: AppText(
-                                      text: _categories[index],
-                                    ),
-                                  );
-                                }),
+                                items: _getCategoriesFromSecteurBloc(),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     _categorySelected = newValue!;
+                                    // Mettre à jour la sous-catégorie sélectionnée
+                                    final secteurState =
+                                        context.read<SecteurBloc>().state;
+                                    final selectedSector =
+                                        secteurState.sectors.firstWhere(
+                                      (sector) =>
+                                          sector.name == _categorySelected,
+                                      orElse: () => secteurState.sectors.first,
+                                    );
+                                    if (selectedSector.categories.isNotEmpty) {
+                                      _sousCategorySelected =
+                                          selectedSector.categories.first.name;
+                                    }
                                   });
                                 },
                               ),
@@ -373,39 +503,32 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               text: 'Sous-catégorie : ',
                               fontWeight: FontWeight.w800,
                             ),
-                            Container(
-                              alignment: Alignment.bottomRight,
-                              height: context.height * 0.05,
-                              width: context.width * 0.4,
-                              child: DropdownButton<String>(
-                                underline: Container(),
-                                icon: Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Icon(
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.bottomRight,
+                                height: context.height * 0.05,
+                                width: context.width * 0.45,
+                                child: DropdownButton<String>(
+                                  //isExpanded: true,
+                                  underline: Container(),
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 8.0, left: 8.0),
+                                    child: Icon(
                                       Icons.arrow_forward_ios,
                                       size: context.mediumText,
-                                    )
-                                  ],
-                                ),
-                                alignment: AlignmentDirectional.bottomEnd,
-                                value: _sousCategorySelected,
-                                items: List.generate(
-                                    _sousCategoriesVolaille.length, (index) {
-                                  return DropdownMenuItem<String>(
-                                    value: _sousCategoriesVolaille[index],
-                                    child: AppText(
-                                      text: _sousCategoriesVolaille[index],
                                     ),
-                                  );
-                                }),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    _sousCategorySelected = newValue!;
-                                  });
-                                },
+                                  ),
+                                  alignment: AlignmentDirectional.bottomEnd,
+                                                                     value: _getValidSubCategoryValue(),
+                                  items: _getSubCategoriesFromSecteurBloc(
+                                      _categorySelected),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _sousCategorySelected = newValue!;
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -1453,12 +1576,32 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                     width: context.width * 0.8,
                     bordeurRadius: 10,
                     onTap: () async {
-                      // ajout de produit avec tous les contrôles possibles
-                      await ProductServices.addProduct(context, produit);
+                      if (isEditing && productToEdit != null) {
+                        // Mise à jour du produit existant
+                        final updatedProduct = productToEdit!.copyWith(
+                          productName: produit.productName,
+                          productDescription: produit.productDescription,
+                          category: produit.category,
+                          subCategory: produit.subCategory,
+                          productUnitPrice: produit.productUnitPrice,
+                          stockValue: produit.stockValue,
+                          isInPromotion: produit.isInPromotion,
+                          promoPrice: produit.promoPrice,
+                          productProperties: produit.productProperties,
+                          varieties: produit.varieties,
+                        );
+                        await ProductServices.updateProduct(
+                            context, updatedProduct);
+                      } else {
+                        // ajout de produit avec tous les contrôles possibles
+                        await ProductServices.addProduct(context, produit);
+                      }
                     },
                     color: Colors.transparent,
                     child: AppText(
-                      text: 'Ajoutez le produit',
+                      text: isEditing
+                          ? 'Modifier le produit'
+                          : 'Ajoutez le produit',
                       color: AppColors.primaryColor,
                     ) //Theme.of(context).colorScheme.surface.w,
                     ),
