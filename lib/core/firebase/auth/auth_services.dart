@@ -1,10 +1,10 @@
 import 'package:benin_poulet/constants/authProviders.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/user.dart';
 import '../firestore/firestore_service.dart';
@@ -57,7 +57,7 @@ class AuthServices {
   //========================================
   // VÉRIFICATION DE L'EXISTENCE DE L'UTILISATEUR
   //========================================
-  
+
   /// Vérifie si un utilisateur existe avec l'email donné
   static Future<bool> userExistsWithEmail(String email) async {
     try {
@@ -65,11 +65,12 @@ class AuthServices {
           .collection('users')
           .where('authIdentifier', isEqualTo: email)
           .get();
-      
+
       return userDoc.docs.isNotEmpty;
     } catch (e) {
       if (kDebugMode) {
-        print('Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
+        print(
+            'Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
       }
       return false;
     }
@@ -82,11 +83,12 @@ class AuthServices {
           .collection('users')
           .where('authIdentifier', isEqualTo: phoneNumber)
           .get();
-      
+
       return userDoc.docs.isNotEmpty;
     } catch (e) {
       if (kDebugMode) {
-        print('Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
+        print(
+            'Erreur lors de la vérification de l\'existence de l\'utilisateur: $e');
       }
       return false;
     }
@@ -209,22 +211,23 @@ class AuthServices {
     try {
       var email = _email.trim();
       var password = _password.trim();
-      
+
       // Vérifier d'abord si l'utilisateur existe
       final userExists = await userExistsWithEmail(email);
       if (!userExists) {
         throw FirebaseAuthException(
           code: 'user-not-found',
-          message: 'Aucun compte trouvé avec cette adresse email. Veuillez vous inscrire.',
+          message:
+              'Aucun compte trouvé avec cette adresse email. Veuillez vous inscrire.',
         );
       }
 
       final emailUser = await auth.signInWithEmailAndPassword(
           email: email, password: password);
-      
+
       // Mettre à jour la dernière connexion
       await updateLastLogin();
-      
+
       emailUser;
     } catch (e) {
       if (kDebugMode) {
@@ -300,22 +303,23 @@ class AuthServices {
     try {
       var email = _formatEmailFromPhone(_phoneNumber).trim();
       var password = _password.trim();
-      
+
       // Vérifier d'abord si l'utilisateur existe
       final userExists = await userExistsWithPhone(_phoneNumber.phoneNumber!);
       if (!userExists) {
         throw FirebaseAuthException(
           code: 'user-not-found',
-          message: 'Aucun compte trouvé avec ce numéro de téléphone. Veuillez vous inscrire.',
+          message:
+              'Aucun compte trouvé avec ce numéro de téléphone. Veuillez vous inscrire.',
         );
       }
 
-      final phoneUser =
-          await auth.signInWithEmailAndPassword(email: email, password: password);
-      
+      final phoneUser = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
       // Mettre à jour la dernière connexion
       await updateLastLogin();
-      
+
       phoneUser;
     } catch (e) {
       if (kDebugMode) {
@@ -373,7 +377,8 @@ class AuthServices {
         await googleSignIn.signOut();
         throw FirebaseAuthException(
           code: 'user-not-found',
-          message: 'Aucun compte n\'est associé à cette adresse Google. Veuillez vous inscrire.',
+          message:
+              'Aucun compte n\'est associé à cette adresse Google. Veuillez vous inscrire.',
         );
       }
 

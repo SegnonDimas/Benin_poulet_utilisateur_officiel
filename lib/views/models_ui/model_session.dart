@@ -1,3 +1,5 @@
+import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/app_text.dart';
@@ -17,6 +19,7 @@ class ModelSession extends StatefulWidget {
   final Color? titleColor;
   final Function()? onTap;
   final Color? backgroundColor;
+  final String? dialogMessage;
 
   const ModelSession({
     super.key,
@@ -31,6 +34,7 @@ class ModelSession extends StatefulWidget {
     this.titleColor,
     this.onTap,
     this.backgroundColor,
+    this.dialogMessage,
   });
 
   @override
@@ -43,8 +47,13 @@ class _ModelSessionState extends State<ModelSession> {
     return GestureDetector(
       onTap: widget.onTap ??
           () {
-            Navigator.pushNamed(
-                context, widget.routeName ?? '/defaultRoutePage');
+            widget.routeName != null
+                ? Navigator.pushNamed(
+                    context, widget.routeName ?? AppRoutes.DEFAULTROUTEPAGE)
+                : AppUtils.showInfoDialog(
+                    context: context,
+                    message: widget.dialogMessage ??
+                        "Cette fonctionnalité arrive bientôt");
           },
       child: SizedBox(
         width: widget.width ?? appWidthSize(context) / 4,

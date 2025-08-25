@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:benin_poulet/constants/accountStatus.dart';
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 import 'package:benin_poulet/services/user_data_service.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
@@ -23,44 +23,46 @@ class VProfilPage extends StatefulWidget {
 
 class _VProfilPageState extends State<VProfilPage>
     with SingleTickerProviderStateMixin {
-  String accountStatus = AccountStatus.UNVERIFIED;
+  String profilStatus = UserProfilStatus.unverified;
   String profilPath = 'assets/images/oeuf2.png';
   String shopName = 'Le Poulailler';
   String userEmail = 'lepoulailler@gmail.com';
-  
+
   final UserDataService _userDataService = UserDataService();
-  
+
   @override
   void initState() {
     super.initState();
     _loadUserData();
   }
-  
+
   Future<void> _loadUserData() async {
     try {
       // Récupérer les données du vendeur connecté
       final seller = await _userDataService.getCurrentSeller();
       final user = await _userDataService.getCurrentUser();
-      
+
       if (mounted) {
         setState(() {
           // Mettre à jour le nom de la boutique
-          if (seller?.storeInfos != null && seller!.storeInfos!['name'] != null) {
+          if (seller?.storeInfos != null &&
+              seller!.storeInfos!['name'] != null) {
             shopName = seller.storeInfos!['name'] as String;
           }
-          
+
           // Mettre à jour l'email
-          if (seller?.storeInfos != null && seller!.storeInfos!['email'] != null) {
+          if (seller?.storeInfos != null &&
+              seller!.storeInfos!['email'] != null) {
             userEmail = seller.storeInfos!['email'] as String;
           } else if (user?.authIdentifier != null) {
             userEmail = user!.authIdentifier!;
           }
-          
+
           // Mettre à jour le statut de vérification
           if (seller?.documentsVerified != null) {
-            accountStatus = seller!.documentsVerified! 
-                ? AccountStatus.VERIFIED 
-                : AccountStatus.UNVERIFIED;
+            profilStatus = seller!.documentsVerified!
+                ? UserProfilStatus.verified
+                : UserProfilStatus.unverified;
           }
         });
       }
@@ -255,7 +257,7 @@ class _VProfilPageState extends State<VProfilPage>
             title: 'Compte vérifié ?',
             leadingIcon: Icons.verified_outlined,
             onTap: () {
-              showAccountState(context, accountStatus: accountStatus);
+              showProfilState(context, profilStatus: profilStatus);
               //Navigator.pushNamed(context, AppRoutes.VENDEURETATCOMPTEPAGE);
             },
           ),
@@ -326,7 +328,7 @@ class _VProfilPageState extends State<VProfilPage>
                     TextButton(
                         onPressed: () {
                           setState(() {
-                            accountStatus = AccountStatus.VERIFIED;
+                            profilStatus = UserProfilStatus.verified;
                           });
                         },
                         child: AppText(
@@ -337,7 +339,7 @@ class _VProfilPageState extends State<VProfilPage>
                     TextButton(
                         onPressed: () {
                           setState(() {
-                            accountStatus = AccountStatus.UNVERIFIED;
+                            profilStatus = UserProfilStatus.unverified;
                           });
                         },
                         child: AppText(
@@ -348,7 +350,7 @@ class _VProfilPageState extends State<VProfilPage>
                     TextButton(
                         onPressed: () {
                           setState(() {
-                            accountStatus = AccountStatus.PENDING;
+                            profilStatus = UserProfilStatus.pending;
                           });
                         },
                         child: AppText(
@@ -367,9 +369,9 @@ class _VProfilPageState extends State<VProfilPage>
   }
 }
 
-Future showAccountState(
+Future showProfilState(
   BuildContext context, {
-  String? accountStatus = AccountStatus.UNVERIFIED,
+  String? profilStatus = UserProfilStatus.unverified,
 }) {
   return showModalBottomSheet(
     context: context,
@@ -386,7 +388,7 @@ Future showAccountState(
             child: Column(
               children: [
                 // lottie indiquant le statut du compte
-                accountStatus!.toLowerCase().trim() == AccountStatus.VERIFIED
+                profilStatus!.toLowerCase().trim() == UserProfilStatus.verified
                     ? Stack(
                         alignment: Alignment.center,
                         children: [
@@ -403,8 +405,8 @@ Future showAccountState(
                               'assets/lotties/accountVerified.json'),
                         ],
                       )
-                    : accountStatus.toLowerCase().trim() ==
-                            AccountStatus.PENDING
+                    : profilStatus.toLowerCase().trim() ==
+                            UserProfilStatus.pending
                         ? Lottie.asset(
                             'assets/lotties/accountAuthentificationPending.json')
                         : Lottie.asset(
@@ -414,11 +416,11 @@ Future showAccountState(
                   height: context.height * 0.02,
                 ),
                 AppText(
-                  text: accountStatus.toLowerCase().trim() ==
-                          AccountStatus.VERIFIED
+                  text: profilStatus.toLowerCase().trim() ==
+                          UserProfilStatus.verified
                       ? 'Votre compte est vérifié'
-                      : accountStatus.toLowerCase().trim() ==
-                              AccountStatus.PENDING
+                      : profilStatus.toLowerCase().trim() ==
+                              UserProfilStatus.pending
                           ? 'Votre compte est en cours de vérification'
                           : 'Votre compte n\'est pas encore vérifié',
                   textAlign: TextAlign.center,
@@ -430,28 +432,28 @@ Future showAccountState(
                   height: context.height * 0.07,
                   width: context.width * 0.9,
                   onTap: () {
-                    accountStatus.toLowerCase().trim() ==
-                            AccountStatus.UNVERIFIED
+                    profilStatus.toLowerCase().trim() ==
+                            UserProfilStatus.unverified
                         ? Navigator.pushReplacementNamed(
                             context, AppRoutes.VENDEURAUTHENTIFICATIONPAGE)
-                        : accountStatus.toLowerCase().trim() ==
-                                AccountStatus.PENDING
+                        : profilStatus.toLowerCase().trim() ==
+                                UserProfilStatus.pending
                             ?
                             //TODO: contact support
                             Navigator.pop(context)
                             : Navigator.pop(context); // Fermer le BottomSheet
                   },
-                  color: accountStatus.toLowerCase().trim() ==
-                          AccountStatus.VERIFIED
+                  color: profilStatus.toLowerCase().trim() ==
+                          UserProfilStatus.verified
                       ? AppColors.primaryColor
-                      : accountStatus.toLowerCase().trim() ==
-                              AccountStatus.PENDING
+                      : profilStatus.toLowerCase().trim() ==
+                              UserProfilStatus.pending
                           ? Colors.orange
                           : AppColors.redColor,
                   child: AppText(
-                    text: accountStatus == AccountStatus.VERIFIED
+                    text: profilStatus == UserProfilStatus.verified
                         ? 'Consulter vos informations'
-                        : accountStatus == AccountStatus.PENDING
+                        : profilStatus == UserProfilStatus.pending
                             ? 'Nous contacter'
                             : 'Commencer la vérification',
                     fontSize: context.mediumText * 0.9,

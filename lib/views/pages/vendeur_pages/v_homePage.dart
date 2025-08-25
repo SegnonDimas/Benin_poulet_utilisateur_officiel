@@ -54,8 +54,8 @@ class _VHomePageState extends State<VHomePage> {
     ),
     ModelSession(
       title: 'Performances',
-      routeName:
-          AppRoutes.VENDEURPERFORMANCESPAGE /*'/vendeurPerformancesPage'*/,
+      /*routeName:
+          AppRoutes.VENDEURPERFORMANCESPAGE,*/
       imgUrl: 'assets/icons/performance.png',
       backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
