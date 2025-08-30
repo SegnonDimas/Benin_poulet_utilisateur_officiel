@@ -2,6 +2,7 @@ import 'package:benin_poulet/constants/accountStatus.dart';
 import 'package:benin_poulet/constants/authProviders.dart';
 import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 
 class AppUser {
   final String userId;
@@ -12,7 +13,13 @@ class AppUser {
   final String accountStatus;
   final String role;
   final bool isAnonymous;
-  final bool profileComplete;
+  final String profilStatus;
+  final DateTime? dateOfBirth;
+  final String? placeOfBirth;
+  final String? currentAddress;
+  final String? idDocumentType;
+  final String? idDocumentCountry;
+  final Map<String, String>? idDocumentPhoto;
   final DateTime? createdAt;
   final DateTime? lastLogin;
   final String? password;
@@ -27,8 +34,14 @@ class AppUser {
     this.photoUrl,
     this.accountStatus = AccountStatus.ACTIVE,
     this.role = UserRoles.VISITOR,
-    this.profileComplete = false,
+    this.profilStatus = UserProfilStatus.unverified,
     this.isAnonymous = true,
+    this.dateOfBirth,
+    this.placeOfBirth,
+    this.currentAddress,
+    this.idDocumentType,
+    this.idDocumentCountry,
+    this.idDocumentPhoto,
     this.createdAt,
     this.lastLogin,
     this.password,
@@ -46,7 +59,13 @@ class AppUser {
       UsersCollection.accountStatus: accountStatus,
       UsersCollection.role: role,
       UsersCollection.isAnonymous: isAnonymous,
-      UsersCollection.profileComplete: profileComplete,
+      UsersCollection.profilStatus: profilStatus,
+      UsersCollection.dateOfBirth: dateOfBirth?.toIso8601String(),
+      UsersCollection.placeOfBirth: placeOfBirth,
+      UsersCollection.currentAddress: currentAddress,
+      UsersCollection.idDocumentType: idDocumentType,
+      UsersCollection.idDocumentCountry: idDocumentCountry,
+      UsersCollection.idDocumentPhoto: idDocumentPhoto,
       UsersCollection.createdAt: createdAt?.toIso8601String(),
       UsersCollection.lastLogin: lastLogin?.toIso8601String(),
       UsersCollection.password: password,
@@ -66,7 +85,15 @@ class AppUser {
       accountStatus: map[UsersCollection.accountStatus] ?? AccountStatus.ACTIVE,
       role: map[UsersCollection.role] ?? UserRoles.VISITOR,
       isAnonymous: map[UsersCollection.isAnonymous] ?? true,
-      profileComplete: map[UsersCollection.profileComplete] ?? false,
+      profilStatus: map[UsersCollection.profilStatus] ?? UserProfilStatus.unverified,
+      dateOfBirth: map[UsersCollection.dateOfBirth] != null
+          ? DateTime.tryParse(map[UsersCollection.dateOfBirth])
+          : null,
+      placeOfBirth: map[UsersCollection.placeOfBirth],
+      currentAddress: map[UsersCollection.currentAddress],
+      idDocumentType: map[UsersCollection.idDocumentType],
+      idDocumentCountry: map[UsersCollection.idDocumentCountry],
+      idDocumentPhoto: _parseDocumentPhoto(map[UsersCollection.idDocumentPhoto]),
       createdAt: map[UsersCollection.createdAt] != null
           ? DateTime.tryParse(map[UsersCollection.createdAt])
           : null,
@@ -74,8 +101,8 @@ class AppUser {
           ? DateTime.tryParse(map[UsersCollection.lastLogin])
           : null,
       password: map[UsersCollection.password],
-      storeIds: map[UsersCollection.storeIds],
-      favoriteStoreIds: map[UsersCollection.favoritesStoreIds] ?? '',
+      storeIds: _parseStringList(map[UsersCollection.storeIds]),
+      favoriteStoreIds: _parseStringList(map[UsersCollection.favoritesStoreIds]),
     );
   }
 
@@ -87,7 +114,13 @@ class AppUser {
     String? photoUrl,
     DateTime? createdAt,
     DateTime? lastLogin,
-    bool? profileComplete,
+    String? profilStatus,
+    DateTime? dateOfBirth,
+    String? placeOfBirth,
+    String? currentAddress,
+    String? idDocumentType,
+    String? idDocumentCountry,
+    Map<String, String>? idDocumentPhoto,
     String? accountStatus,
     String? role,
     bool? isAnonymous,
@@ -103,12 +136,54 @@ class AppUser {
         photoUrl: photoUrl ?? this.photoUrl,
         createdAt: createdAt ?? this.createdAt,
         lastLogin: lastLogin ?? this.lastLogin,
-        profileComplete: profileComplete ?? this.profileComplete,
+        profilStatus: profilStatus ?? this.profilStatus,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        placeOfBirth: placeOfBirth ?? this.placeOfBirth,
+        currentAddress: currentAddress ?? this.currentAddress,
+        idDocumentType: idDocumentType ?? this.idDocumentType,
+        idDocumentCountry: idDocumentCountry ?? this.idDocumentCountry,
+        idDocumentPhoto: idDocumentPhoto ?? this.idDocumentPhoto,
         accountStatus: accountStatus ?? this.accountStatus,
         role: role ?? this.role,
         isAnonymous: isAnonymous ?? this.isAnonymous,
         password: password ?? this.password,
         storeIds: storeIds ?? this.storeIds,
         favoriteStoreIds: favoriteStoreIds ?? this.favoriteStoreIds);
+  }
+
+  /// Méthode utilitaire pour parser une liste de strings depuis Firestore
+  static List<String>? _parseStringList(dynamic value) {
+    if (value == null) return null;
+    if (value is List) {
+      return value.map((item) => item.toString()).toList();
+    }
+    if (value is String) {
+      // Si c'est une string, essayer de la traiter comme une liste JSON
+      try {
+        // Pour les cas où la valeur est stockée comme une string vide ou null
+        if (value.isEmpty) return null;
+        // Si c'est une string simple, la traiter comme un élément unique
+        return [value];
+      } catch (e) {
+        print('Erreur lors du parsing de la liste: $e');
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /// Méthode utilitaire pour parser les photos de documents depuis Firestore
+  static Map<String, String>? _parseDocumentPhoto(dynamic value) {
+    if (value == null) return null;
+    if (value is Map) {
+      return Map<String, String>.from(value);
+    }
+    if (value is String) {
+      // Si c'est une string (ancien format), la traiter comme recto
+      if (value.isNotEmpty) {
+        return {'recto': value};
+      }
+    }
+    return null;
   }
 }

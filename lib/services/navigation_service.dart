@@ -10,9 +10,13 @@ class NavigationService {
   /// Redirige l'utilisateur vers la page appropriée selon son rôle
   static Future<void> redirectBasedOnRole(BuildContext context) async {
     try {
+      print('=== REDIRECTION BASÉE SUR LE RÔLE ===');
+      
       final role = await AuthServices.getUserRole();
+      print('Rôle récupéré: $role');
 
       if (role == null) {
+        print('Aucun rôle trouvé, redirection vers FIRSTPAGE');
         // Aucun rôle trouvé, rediriger vers la page de sélection de rôle
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -26,21 +30,27 @@ class NavigationService {
       switch (role) {
         case UserRoles.SELLER:
           targetRoute = AppRoutes.VENDEURMAINPAGE;
+          print('Redirection vers VENDEURMAINPAGE');
           break;
         case UserRoles.BUYER:
           targetRoute = AppRoutes.CLIENTHOMEPAGE;
+          print('Redirection vers CLIENTHOMEPAGE');
           break;
         default:
           targetRoute = AppRoutes.FIRSTPAGE;
+          print('Redirection vers FIRSTPAGE (rôle par défaut)');
           break;
       }
 
+      print('Route cible: $targetRoute');
       Navigator.pushNamedAndRemoveUntil(
         context,
         targetRoute,
         (Route<dynamic> route) => false,
       );
+      print('=== REDIRECTION TERMINÉE ===');
     } catch (e) {
+      print('Erreur lors de la redirection: $e');
       // En cas d'erreur, rediriger vers la page d'accueil
       Navigator.pushNamedAndRemoveUntil(
         context,

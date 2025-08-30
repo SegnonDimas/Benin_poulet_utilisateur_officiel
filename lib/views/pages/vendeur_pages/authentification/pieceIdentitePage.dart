@@ -1,3 +1,4 @@
+import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -5,6 +6,7 @@ import 'package:benin_poulet/widgets/app_shaderMask.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 import '../../../models_ui/model_pieceIdentite.dart';
@@ -33,7 +35,25 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
 
   // La variable qui stocke le pays sélectionné
   String? _selectedCountry = 'Bénin';
+  String? _selectedDocumentType;
   String initialCountry = 'BJ';
+
+  @override
+  void initState() {
+    super.initState();
+    // Charger les données existantes si disponibles
+    _loadExistingData();
+  }
+
+  void _loadExistingData() {
+    final currentState = context.read<AuthentificationBloc>().state;
+    if (currentState is AuthentificationGlobalState) {
+      setState(() {
+        _selectedDocumentType = currentState.idendityDocument;
+        _selectedCountry = currentState.idDocumentCountry;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +61,6 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             /// sélection pays
             // texte
@@ -89,7 +108,6 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                       child: AppText(text: '$_selectedCountry')),
                   // sélecteur de pays
                   SizedBox(
-                    //width: appWidthSize(context) * 0.25,
                     child: AppShaderMask(
                       child: CountryListPick(
                         appBar: AppBar(
@@ -108,16 +126,11 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
                             lastPickText: 'Sélectionné précédemment  ',
                             initialSelection: '+229'),
                         initialSelection: '+229',
-                        // or
-                        // initialSelection: 'BJ'
                         onChanged: (code) {
                           setState(() {
                             _selectedCountry = code!.name;
                           });
-                          print(code!.name);
-                          print(code.code);
-                          print(code.dialCode);
-                          print(code.flagUri);
+                          _updateAuthentificationState();
                         },
                       ),
                     ),
@@ -131,16 +144,29 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
 
             /// liste des pièces
             SizedBox(
-              //height: appHeightSize(context) * 0.05,
-              //width: appWidthSize(context) * 0.8,
               child: Column(
                 children: List.generate(_titrePiece.length, (index) {
+                  final isSelected = _selectedDocumentType == _titrePiece[index];
                   return Padding(
                     padding:
                         EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
                     child: ModelPieceIdentite(
                       title: _titrePiece[index],
                       description: _descriptionPiece[index],
+                      isSelected: isSelected,
+                      onTap: () {
+                        setState(() {
+                          // Sélection unique : désélectionner tous les autres
+                          _selectedDocumentType = _titrePiece[index];
+                        });
+                        _updateAuthentificationState();
+                      },
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : Theme.of(context)
+                              .colorScheme
+                              .inversePrimary
+                              .withOpacity(0.3),
                     ),
                   );
                 }),
@@ -154,6 +180,33 @@ class PieceIdentitePageState extends State<PieceIdentitePage> {
         ),
       ),
     );
+  }
+
+  void _updateAuthentificationState() {
+    print('=== MISE À JOUR ÉTAT AUTHENTIFICATION ===');
+    print('Pays sélectionné: $_selectedCountry');
+    print('Type de document sélectionné: $_selectedDocumentType');
+    
+    // Récupérer l'état actuel du BLoC
+    final currentState = context.read<AuthentificationBloc>().state;
+    if (currentState is AuthentificationGlobalState) {
+      // Créer un nouvel événement avec les données mises à jour
+      final event = SubmitIdentityDocuments(
+        idDocumentCountry: _selectedCountry ?? '',
+        idendityDocument: _selectedDocumentType ?? '',
+      );
+      context.read<AuthentificationBloc>().add(event);
+      print('✓ Événement SubmitIdentityDocuments envoyé au BLoC');
+    } else {
+      // Si pas d'état global, créer un nouvel état
+      final event = SubmitIdentityDocuments(
+        idDocumentCountry: _selectedCountry ?? '',
+        idendityDocument: _selectedDocumentType ?? '',
+      );
+      context.read<AuthentificationBloc>().add(event);
+      print('✓ Nouvel état AuthentificationGlobalState créé');
+    }
+    print('==========================================');
   }
 
   @override

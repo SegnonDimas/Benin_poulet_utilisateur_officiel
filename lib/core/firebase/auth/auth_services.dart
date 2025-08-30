@@ -100,13 +100,35 @@ class AuthServices {
       final currentUser = auth.currentUser;
       if (currentUser == null) return null;
 
-      final userDoc = await FirebaseFirestore.instance
+      // Essayer d'abord avec l'UID Firebase
+      var userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
           .get();
 
+      // Si pas trouvé avec l'UID Firebase, essayer avec l'email
+      if (!userDoc.exists && currentUser.email != null) {
+        final userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('authIdentifier', isEqualTo: currentUser.email)
+            .limit(1)
+            .get();
+
+        if (userQuery.docs.isNotEmpty) {
+          userDoc = userQuery.docs.first;
+        }
+      }
+
       if (userDoc.exists) {
-        return userDoc.data()?['role'] as String?;
+        final role = userDoc.data()?['role'] as String?;
+        if (kDebugMode) {
+          print('Rôle trouvé: $role pour l\'utilisateur: ${currentUser.uid}');
+        }
+        return role;
+      }
+      
+      if (kDebugMode) {
+        print('Aucun document utilisateur trouvé pour: ${currentUser.uid}');
       }
       return null;
     } catch (e) {
@@ -396,6 +418,14 @@ class AuthServices {
       final UserCredential userCredential =
           await auth.signInWithCredential(credential);
 
+      if (kDebugMode) {
+        print('=== CONNEXION GOOGLE RÉUSSIE ===');
+        print('UID Firebase: ${userCredential.user!.uid}');
+        print('Email: ${userCredential.user!.email}');
+        print('DisplayName: ${userCredential.user!.displayName}');
+        print('================================');
+      }
+
       // Mettre à jour la dernière connexion
       await updateLastLogin();
 
@@ -482,7 +512,7 @@ class AuthServices {
 
       // Création de l'utilisateur avec google dans la collection 'users' sur Firebase
       AppUser user = AppUser(
-        userId: googleUser.id,
+        userId: userCredential.user!.uid, // Utiliser l'UID Firebase au lieu de googleUser.id
         isAnonymous: false,
       );
       user = user.copyWith(
@@ -501,8 +531,8 @@ class AuthServices {
       if (role == UserRoles.SELLER) {
         final firestoreServiceInstance = FirestoreService();
         await firestoreServiceInstance.createCompleteSeller(
-          sellerId: googleUser.id,
-          userId: googleUser.id,
+          sellerId: userCredential.user!.uid, // Utiliser l'UID Firebase
+          userId: userCredential.user!.uid, // Utiliser l'UID Firebase
           createdAt: DateTime.now(),
           documentsVerified: false, // À vérifier par l'admin
           sectors: [], // Sera mis à jour lors de la création de la boutique

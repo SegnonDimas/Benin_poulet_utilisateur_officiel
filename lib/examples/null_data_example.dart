@@ -1,4 +1,5 @@
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
 import 'package:benin_poulet/models/seller.dart';
 import 'package:benin_poulet/models/store.dart';
@@ -20,7 +21,7 @@ class NullDataExample {
       accountStatus: 'active',
       role: UserRoles.VISITOR,
       isAnonymous: false,
-      profileComplete: false,
+      profilStatus: UserProfilStatus.unverified,
       createdAt: DateTime.now(),
       lastLogin: null, // Donnée null
       password: null, // Donnée null

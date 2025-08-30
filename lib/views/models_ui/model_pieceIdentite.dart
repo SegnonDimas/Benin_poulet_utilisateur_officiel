@@ -10,13 +10,16 @@ class ModelPieceIdentite extends StatefulWidget {
   final String? title;
   final String? description;
   final Function()? onTap;
+  final Color? color;
 
-  ModelPieceIdentite(
-      {super.key,
-      this.isSelected = false,
-      this.title = '',
-      this.description = '',
-      this.onTap});
+  ModelPieceIdentite({
+    super.key,
+    this.isSelected = false,
+    this.title = '',
+    this.description = '',
+    this.onTap,
+    this.color,
+  });
 
   @override
   State<ModelPieceIdentite> createState() => _ModelPieceIdentiteState();
@@ -26,11 +29,7 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          widget.isSelected = !widget.isSelected!;
-        });
-      },
+      onTap: widget.onTap,
       child: Container(
         height: appHeightSize(context) * 0.09,
         width: appWidthSize(context) * 0.9,
@@ -38,12 +37,14 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
         decoration: BoxDecoration(
             border: Border(
               top: BorderSide(
-                  color: !widget.isSelected!
+                color: widget
+                    .color!, /*!widget.isSelected!
                       ? Theme.of(context)
                           .colorScheme
                           .inversePrimary
                           .withOpacity(0.3)
-                      : primaryColor),
+                      : primaryColor*/
+              ),
               bottom: BorderSide(
                   color: !widget.isSelected!
                       ? Theme.of(context)
@@ -74,29 +75,16 @@ class _ModelPieceIdentiteState extends State<ModelPieceIdentite> {
             //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               !widget.isSelected!
-                  ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          widget.isSelected = !widget.isSelected!;
-                        });
-                      },
-                      child: Icon(
-                        Icons.circle_outlined,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .inversePrimary
-                            .withOpacity(0.3),
-                      ))
-                  : GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          widget.isSelected = !widget.isSelected!;
-                        });
-                      },
-                      child: Icon(
-                        Icons.circle,
-                        color: primaryColor,
-                      ),
+                  ? Icon(
+                      Icons.circle_outlined,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inversePrimary
+                          .withOpacity(0.3),
+                    )
+                  : Icon(
+                      Icons.circle,
+                      color: primaryColor,
                     ),
               SizedBox(
                 width: appWidthSize(context) * 0.05,

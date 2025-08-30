@@ -3,6 +3,7 @@ import 'package:benin_poulet/constants/firebase_collections/sellersCollection.da
 import 'package:benin_poulet/constants/firebase_collections/storesCollection.dart';
 import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 import 'package:benin_poulet/models/seller.dart';
 import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/models/user.dart';
@@ -73,7 +74,7 @@ class FirestoreService {
       role: UserRoles.SELLER,
       fullName: fullName,
       authIdentifier: email ?? phoneNumber,
-      profileComplete: true,
+      profilStatus: UserProfilStatus.verified,
       createdAt: DateTime.now(),
       lastLogin: DateTime.now(),
     );
@@ -165,7 +166,7 @@ class FirestoreService {
       accountStatus: accountStatus ?? 'active',
       role: role ?? UserRoles.VISITOR,
       isAnonymous: isAnonymous ?? false,
-      profileComplete: profileComplete ?? false,
+      profilStatus: profileComplete == true ? UserProfilStatus.verified : UserProfilStatus.unverified,
       createdAt: createdAt ?? DateTime.now(),
       lastLogin: lastLogin ?? DateTime.now(),
       password: password,
@@ -539,5 +540,86 @@ class FirestoreService {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Store.fromMap(doc.data())).toList());
+  }
+
+  /// Met à jour les informations d'authentification d'un utilisateur
+  Future<void> updateUserAuthenticationInfo({
+    required String userId,
+    String? fullName,
+    DateTime? dateOfBirth,
+    String? placeOfBirth,
+    String? currentAddress,
+    String? idDocumentType,
+    String? idDocumentCountry,
+    Map<String, String>? idDocumentPhoto,
+  }) async {
+    print('=== DÉBUT updateUserAuthenticationInfo ===');
+    print('userId: $userId');
+    print('fullName: $fullName');
+    print('dateOfBirth: $dateOfBirth');
+    print('placeOfBirth: $placeOfBirth');
+    print('currentAddress: $currentAddress');
+    print('idDocumentType: $idDocumentType');
+    print('idDocumentCountry: $idDocumentCountry');
+    print('idDocumentPhoto: $idDocumentPhoto');
+    
+    final updates = <String, dynamic>{};
+    
+    // Mettre à jour seulement les champs non vides
+    if (fullName != null && fullName.isNotEmpty) {
+      updates[UsersCollection.fullName] = fullName;
+      print('✓ fullName ajouté: $fullName');
+    }
+    if (dateOfBirth != null) {
+      updates[UsersCollection.dateOfBirth] = dateOfBirth.toIso8601String();
+      print('✓ dateOfBirth ajouté: ${dateOfBirth.toIso8601String()}');
+    }
+    if (placeOfBirth != null && placeOfBirth.isNotEmpty) {
+      updates[UsersCollection.placeOfBirth] = placeOfBirth;
+      print('✓ placeOfBirth ajouté: $placeOfBirth');
+    }
+    if (currentAddress != null && currentAddress.isNotEmpty) {
+      updates[UsersCollection.currentAddress] = currentAddress;
+      print('✓ currentAddress ajouté: $currentAddress');
+    }
+    if (idDocumentType != null && idDocumentType.isNotEmpty) {
+      updates[UsersCollection.idDocumentType] = idDocumentType;
+      print('✓ idDocumentType ajouté: $idDocumentType');
+    }
+    if (idDocumentCountry != null && idDocumentCountry.isNotEmpty) {
+      updates[UsersCollection.idDocumentCountry] = idDocumentCountry;
+      print('✓ idDocumentCountry ajouté: $idDocumentCountry');
+    }
+    if (idDocumentPhoto != null && idDocumentPhoto.isNotEmpty) {
+      updates[UsersCollection.idDocumentPhoto] = idDocumentPhoto;
+      print('✓ idDocumentPhoto ajouté: $idDocumentPhoto');
+    }
+    
+    // Mettre à jour le statut du profil seulement si des informations ont été fournies
+    if (updates.isNotEmpty) {
+      updates[UsersCollection.profilStatus] = UserProfilStatus.pending;
+      print('✓ profilStatus mis à jour: ${UserProfilStatus.pending}');
+    }
+    
+    print('Nombre de champs à mettre à jour: ${updates.length}');
+    print('Champs à mettre à jour: $updates');
+    
+    // Effectuer la mise à jour seulement s'il y a des données à mettre à jour
+    if (updates.isNotEmpty) {
+      try {
+        await _firestore
+            .collection(FirebaseCollections.usersCollection)
+            .doc(userId)
+            .update(updates);
+        print('✓ Mise à jour Firebase réussie');
+      } catch (e) {
+        print('❌ Erreur lors de la mise à jour Firebase: $e');
+        rethrow;
+      }
+    } else {
+      print('⚠️ Aucun champ à mettre à jour');
+    }
+    
+    print('=== FIN updateUserAuthenticationInfo ===');
   }
 }

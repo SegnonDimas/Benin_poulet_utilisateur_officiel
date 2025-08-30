@@ -6,15 +6,13 @@ final class AuthentificationInitial extends AuthentificationState {}
 
 // info vendeur
 class SellerInfoSubmitted extends AuthentificationState {
-  final String lastName;
-  final String firstName;
+  final String fullName;
   final String birthday;
   final String birthLocation;
   final String currentLocation;
 
   SellerInfoSubmitted(
-      {required this.lastName,
-      required this.firstName,
+      {required this.fullName,
       required this.birthday,
       required this.birthLocation,
       required this.currentLocation});
@@ -22,78 +20,59 @@ class SellerInfoSubmitted extends AuthentificationState {
 
 // pièces d'identité
 class IdentityDocumentsSubmitted extends AuthentificationState {
-  final String country;
+  final String idDocumentCountry;
   final String idendityDocument;
 
   IdentityDocumentsSubmitted(
-      {required this.country, required this.idendityDocument});
+      {required this.idDocumentCountry, required this.idendityDocument});
 }
 
 // photo pièce d'identité
 class PhotoDocumentsSubmitted extends AuthentificationState {
-  final String photoRectoIdendityDocument;
-  final String photoVersoIdendityDocument;
-  final String fullPhoto;
+  final Map<String, String> idDocumentPhoto;
 
-  PhotoDocumentsSubmitted(
-      {required this.photoRectoIdendityDocument,
-      required this.photoVersoIdendityDocument,
-      required this.fullPhoto});
+  PhotoDocumentsSubmitted({required this.idDocumentPhoto});
 }
 
 // pour le suivi de l'état global
 class AuthentificationGlobalState extends AuthentificationState {
-  final String? sellerFirstName;
-  final String? sellerLastName;
+  final String? sellerFullName;
   final String? sellerBirthDate;
   final String? sellerBirthPlace;
   final String? sellerCurrentLocation;
-  final String? country;
+  final String? idDocumentCountry;
   final String? idendityDocument;
-  final String? photoRectoIdendityDocument;
-  final String? photoVersoIdendityDocument;
-  final String? fullPhoto;
+  final Map<String, String>? idDocumentPhoto;
 
   // Constructeur avec des valeurs par défaut.
   AuthentificationGlobalState({
-    this.country = '',
+    this.idDocumentCountry = '',
     this.idendityDocument = '',
-    this.photoRectoIdendityDocument = '',
-    this.photoVersoIdendityDocument = '',
-    this.fullPhoto = '',
-    this.sellerFirstName = '',
-    this.sellerLastName = '',
+    this.idDocumentPhoto,
+    this.sellerFullName = '',
     this.sellerBirthDate = '',
     this.sellerBirthPlace = '',
     this.sellerCurrentLocation = '',
   });
 
   // Copie de l'état avec des mises à jour.
-  AuthentificationState copyWith({
-    String? sellerFirstName,
-    String? sellerLastName,
+  AuthentificationGlobalState copyWith({
+    String? sellerFullName,
     String? sellerBirthDate,
     String? sellerBirthPlace,
     String? sellerCurrentLocation,
-    String? country,
+    String? idDocumentCountry,
     String? idendityDocument,
-    String? photoRectoIdendityDocument,
-    String? photoVersoIdendityDocument,
-    String? fullPhoto,
+    Map<String, String>? idDocumentPhoto,
   }) {
     return AuthentificationGlobalState(
-        country: country ?? this.country,
+        idDocumentCountry: idDocumentCountry ?? this.idDocumentCountry,
         idendityDocument: idendityDocument ?? this.idendityDocument,
-        photoRectoIdendityDocument:
-            photoRectoIdendityDocument ?? this.photoRectoIdendityDocument,
-        photoVersoIdendityDocument:
-            photoVersoIdendityDocument ?? this.photoVersoIdendityDocument,
-        sellerFirstName: sellerFirstName ?? this.sellerFirstName,
-        sellerLastName: sellerLastName ?? this.sellerLastName,
+        idDocumentPhoto: idDocumentPhoto ?? this.idDocumentPhoto,
+        sellerFullName: sellerFullName ?? this.sellerFullName,
         sellerBirthDate: sellerBirthDate ?? this.sellerBirthDate,
         sellerCurrentLocation:
             sellerCurrentLocation ?? this.sellerCurrentLocation,
-        sellerBirthPlace: sellerBirthPlace ?? this.sellerBirthPlace,
-        fullPhoto: fullPhoto ?? this.fullPhoto);
+        sellerBirthPlace: sellerBirthPlace ?? this.sellerBirthPlace);
   }
 }

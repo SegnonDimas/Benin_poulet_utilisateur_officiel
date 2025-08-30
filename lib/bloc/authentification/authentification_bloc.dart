@@ -9,48 +9,81 @@ class AuthentificationBloc
     // infos vendeur
     on<SubmitSellerInfo>((event, emit) {
       try {
-        final String? lastName = event.lastName;
-        final String? firstName = event.firstName;
+        final String? fullName = event.fullName;
         final String? birthDate = event.birthday;
         final String? birthLocation = event.birthLocation;
         final String? currentLocation = event.currentLocation;
-        return emit(AuthentificationGlobalState(
-            sellerLastName: lastName,
-            sellerFirstName: firstName,
+        
+        // Récupérer l'état actuel pour préserver les données existantes
+        if (state is AuthentificationGlobalState) {
+          final currentState = state as AuthentificationGlobalState;
+          // Préserver l'état existant et mettre à jour seulement les nouvelles données
+          return emit(currentState.copyWith(
+            sellerFullName: fullName,
             sellerBirthDate: birthDate,
             sellerBirthPlace: birthLocation,
-            sellerCurrentLocation: currentLocation));
+            sellerCurrentLocation: currentLocation,
+          ));
+        } else {
+          // Créer un nouvel état si c'est le premier événement
+          return emit(AuthentificationGlobalState(
+            sellerFullName: fullName,
+            sellerBirthDate: birthDate,
+            sellerBirthPlace: birthLocation,
+            sellerCurrentLocation: currentLocation,
+          ));
+        }
       } catch (e) {
-        // Todo: implement
+        print('Erreur dans SubmitSellerInfo: $e');
       }
     });
 
     // pièces d'identité
     on<SubmitIdentityDocuments>((event, emit) {
       try {
-        final String country = event.country;
+        final String idDocumentCountry = event.idDocumentCountry;
         final String idendityDocument = event.idendityDocument;
-        return emit(AuthentificationGlobalState(
-            country: country, idendityDocument: idendityDocument));
+        
+        // Récupérer l'état actuel pour préserver les données existantes
+        if (state is AuthentificationGlobalState) {
+          final currentState = state as AuthentificationGlobalState;
+          // Préserver l'état existant et mettre à jour seulement les nouvelles données
+          return emit(currentState.copyWith(
+            idDocumentCountry: idDocumentCountry,
+            idendityDocument: idendityDocument,
+          ));
+        } else {
+          // Créer un nouvel état si c'est le premier événement
+          return emit(AuthentificationGlobalState(
+            idDocumentCountry: idDocumentCountry,
+            idendityDocument: idendityDocument,
+          ));
+        }
       } catch (e) {
-        // Todo: implement
+        print('Erreur dans SubmitIdentityDocuments: $e');
       }
     });
 
     // photo pièce d'identité
     on<SubmitPhotoDocuments>((event, emit) {
       try {
-        final String photoRectoIdendityDocument =
-            event.photoRectoIdendityDocument;
-        final String photoVersoIdendityDocument =
-            event.photoVersoIdendityDocument;
-        final String fullPhoto = event.fullPhoto;
-        return emit(AuthentificationGlobalState(
-            photoRectoIdendityDocument: photoRectoIdendityDocument,
-            photoVersoIdendityDocument: photoVersoIdendityDocument,
-            fullPhoto: fullPhoto));
+        final Map<String, String> idDocumentPhoto = event.idDocumentPhoto;
+        
+        // Récupérer l'état actuel pour préserver les données existantes
+        if (state is AuthentificationGlobalState) {
+          final currentState = state as AuthentificationGlobalState;
+          // Préserver l'état existant et mettre à jour seulement les nouvelles données
+          return emit(currentState.copyWith(
+            idDocumentPhoto: idDocumentPhoto,
+          ));
+        } else {
+          // Créer un nouvel état si c'est le premier événement
+          return emit(AuthentificationGlobalState(
+            idDocumentPhoto: idDocumentPhoto,
+          ));
+        }
       } catch (e) {
-        // Todo: implement
+        print('Erreur dans SubmitPhotoDocuments: $e');
       }
     });
   }

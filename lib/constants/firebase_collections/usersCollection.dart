@@ -8,7 +8,13 @@ class UsersCollection {
   static const lastLogin = 'lastLogin';
   static const password = 'password';
   static const photoUrl = 'photoUrl';
-  static const profileComplete = 'profileComplete';
+  static const profilStatus = 'profilStatus';
+  static const dateOfBirth = 'dateOfBirth';
+  static const placeOfBirth = 'placeOfBirth';
+  static const currentAddress = 'currentAddress';
+  static const idDocumentType = 'idDocumentType';
+  static const idDocumentCountry = 'idDocumentCountry';
+  static const idDocumentPhoto = 'idDocumentPhoto';
   static const role = 'role';
   @Deprecated('Déplacé vers StoreCollection')
   static const storeIds = 'storeIds';

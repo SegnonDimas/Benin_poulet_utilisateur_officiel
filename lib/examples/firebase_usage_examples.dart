@@ -1,4 +1,5 @@
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
 import 'package:benin_poulet/models/user.dart';
 
@@ -14,7 +15,7 @@ class FirebaseUsageExamples {
       authIdentifier: 'user@example.com',
       fullName: 'John Doe',
       role: UserRoles.VISITOR,
-      profileComplete: true,
+      profilStatus: UserProfilStatus.verified,
       createdAt: DateTime.now(),
     );
 
@@ -31,7 +32,7 @@ class FirebaseUsageExamples {
       authIdentifier: '+22912345678',
       fullName: 'Marie Dupont',
       role: UserRoles.SELLER,
-      profileComplete: true,
+      profilStatus: UserProfilStatus.verified,
       createdAt: DateTime.now(),
     );
 

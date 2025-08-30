@@ -19,16 +19,44 @@ class UserDataService {
   /// Récupère l'utilisateur connecté avec ses informations complètes
   Future<AppUser?> getCurrentUser() async {
     try {
-      // Récupérer l'ID utilisateur de manière dynamique
-      final currentUserId = AuthServices.auth.currentUser?.uid;
-      if (currentUserId == null) {
+      // Récupérer l'utilisateur Firebase Auth
+      final currentUser = AuthServices.auth.currentUser;
+      if (currentUser == null) {
         print('Aucun utilisateur connecté dans Firebase Auth');
         return null;
       }
 
-      return await _userService.getUserById(currentUserId);
+      print('=== RECHERCHE UTILISATEUR ===');
+      print('UID Firebase: ${currentUser.uid}');
+      print('Email: ${currentUser.email}');
+
+      // Essayer d'abord avec l'UID Firebase
+      var user = await _userService.getUserById(currentUser.uid);
+      
+      if (user != null) {
+        print('✓ Utilisateur trouvé avec UID: ${user.fullName}');
+        return user;
+      }
+      
+      // Si pas trouvé avec l'UID Firebase, essayer avec l'email
+      if (currentUser.email != null) {
+        print('Utilisateur non trouvé avec UID, recherche par email: ${currentUser.email}');
+        try {
+          user = await _userService.getUserByEmail(currentUser.email!);
+          if (user != null) {
+            print('✓ Utilisateur trouvé avec email: ${user.fullName}');
+            return user;
+          }
+        } catch (e) {
+          print('❌ Erreur lors de la recherche par email: $e');
+        }
+      }
+
+      print('❌ Aucun utilisateur trouvé dans Firestore');
+      return null;
     } catch (e) {
-      print('Erreur lors de la récupération de l\'utilisateur: $e');
+      print('❌ Erreur lors de la récupération de l\'utilisateur: $e');
+      print('Stack trace: ${StackTrace.current}');
       return null;
     }
   }

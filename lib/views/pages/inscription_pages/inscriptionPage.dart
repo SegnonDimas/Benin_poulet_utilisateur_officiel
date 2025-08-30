@@ -262,13 +262,23 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 // Lorsque l'inscription est effectuée par compte Google
                 if (authState is GoogleSignUpRequestSuccess) {
                   try {
-                    await AuthServices.signUpWithGoogle(
+                    final user = await AuthServices.signUpWithGoogle(
                       role: userRoleState.role!,
                     );
+                    
+                    // Si l'utilisateur a annulé la sélection Google
+                    if (user == null) {
+                      Navigator.pop(context); // Fermer le dialogue de chargement
+                      return;
+                    }
+                    
+                    // Fermer le dialogue de chargement
+                    Navigator.pop(context);
+                    
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
                       context.mounted
-                          ? {Navigator.pop(context), _showBottomSheet(context)}
+                          ? _showBottomSheet(context)
                           : null;
                     } else if (userRoleState.role == UserRoles.BUYER) {
                       // rediredction vers la page de destination
@@ -897,7 +907,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   child: ModelOptionDeConnexion(
                                                     onTap: () async {
                                                       context.read<AuthBloc>().add(
-                                                          GoogleLoginRequested());
+                                                          GoogleSignUpRequested());
                                                     },
                                                     child: Image.asset(
                                                       'assets/logos/google.png',

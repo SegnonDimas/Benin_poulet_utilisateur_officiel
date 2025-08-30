@@ -30,6 +30,7 @@ import 'package:flutter/cupertino.dart';
 // Import des modèles depuis les BLoCs client
 import '../bloc/client/home_client_bloc.dart';
 import '../views/pages/vendeur_pages/creation_boutique/authentificationPage.dart';
+import '../views/pages/vendeur_pages/authentification/infoPersonnellePage.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   //======================
@@ -60,6 +61,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurHistoriqueTranslations': (context) =>
       const VHistoriqueTranslations(),
   '/vendeurAuthentificationPage': (centext) => AuthentificationVendeurPage(),
+  '/infoPersonnellePage': (context) => InfoPersonnellePage(),
 
   //======================
   // ROUTES CLIENT
@@ -122,6 +124,7 @@ class AppRoutes {
   static String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
   static String VENDEURHISTORIQUEPAGE = '/vendeurHistoriqueTranslations';
   static String VENDEURAUTHENTIFICATIONPAGE = '/vendeurAuthentificationPage';
+  static String INFOPERSONNELLEPAGE = '/infoPersonnellePage';
 
   //======================
   // ROUTES CLIENT

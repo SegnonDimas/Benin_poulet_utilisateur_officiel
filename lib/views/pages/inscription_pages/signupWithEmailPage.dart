@@ -107,9 +107,19 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                 // Lorsque l'inscription est effectuée par compte Google
                 if (authState is GoogleSignUpRequestSuccess) {
                   try {
-                    await AuthServices.signUpWithGoogle(
+                    final user = await AuthServices.signUpWithGoogle(
                       role: userRoleState.role!,
                     );
+                    
+                    // Si l'utilisateur a annulé la sélection Google
+                    if (user == null) {
+                      Navigator.pop(context); // Fermer le dialogue de chargement
+                      return;
+                    }
+                    
+                    // Fermer le dialogue de chargement
+                    Navigator.pop(context);
+                    
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
                       context.mounted ? _showBottomSheet(context) : null;
@@ -130,6 +140,9 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                       date: DateTime.now(),
                     );
                     if (context.mounted) {
+                      // Fermer le dialogue de chargement
+                      Navigator.pop(context);
+                      
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
                           context,
@@ -137,7 +150,6 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                           backgroundColor: AppColors.redColor,
                         );
                       } else {
-                        Navigator.pop(context);
                         AppUtils.showDialog(
                           context: context,
                           title: 'Rapport d\'erreur',
@@ -543,7 +555,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                                                   child: ModelOptionDeConnexion(
                                                     onTap: () async {
                                                       context.read<AuthBloc>().add(
-                                                          GoogleLoginRequested());
+                                                          GoogleSignUpRequested());
                                                     },
                                                     child: Image.asset(
                                                       'assets/logos/google.png',

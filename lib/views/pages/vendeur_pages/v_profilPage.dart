@@ -27,6 +27,13 @@ class _VProfilPageState extends State<VProfilPage>
   String profilPath = 'assets/images/oeuf2.png';
   String shopName = 'Le Poulailler';
   String userEmail = 'lepoulailler@gmail.com';
+  String fullName = 'Nom et prénom';
+  String dateOfBirth = 'Non renseigné';
+  String placeOfBirth = 'Non renseigné';
+  String currentAddress = 'Non renseigné';
+  String idDocumentType = 'Non renseigné';
+  String countryOfOrigin = 'Non renseigné';
+  String? idDocumentPhoto;
 
   final UserDataService _userDataService = UserDataService();
 
@@ -58,8 +65,45 @@ class _VProfilPageState extends State<VProfilPage>
             userEmail = user!.authIdentifier!;
           }
 
+          // Mettre à jour les informations personnelles
+          if (user?.fullName != null && user!.fullName!.isNotEmpty) {
+            fullName = user.fullName!;
+          }
+
+          if (user?.dateOfBirth != null) {
+            dateOfBirth =
+                '${user!.dateOfBirth!.day}/${user.dateOfBirth!.month}/${user.dateOfBirth!.year}';
+          }
+
+          if (user?.placeOfBirth != null && user!.placeOfBirth!.isNotEmpty) {
+            placeOfBirth = user.placeOfBirth!;
+          }
+
+          if (user?.currentAddress != null &&
+              user!.currentAddress!.isNotEmpty) {
+            currentAddress = user.currentAddress!;
+          }
+
+          if (user?.idDocumentType != null &&
+              user!.idDocumentType!.isNotEmpty) {
+            idDocumentType = user.idDocumentType!;
+          }
+
+          if (user?.idDocumentCountry != null &&
+              user!.idDocumentCountry!.isNotEmpty) {
+            countryOfOrigin = user.idDocumentCountry!;
+          }
+
+          if (user?.idDocumentPhoto != null &&
+              user!.idDocumentPhoto!.isNotEmpty) {
+            // idDocumentPhoto est maintenant une Map, on peut l'afficher différemment
+            idDocumentPhoto = user.idDocumentPhoto?.values.firstOrNull;
+          }
+
           // Mettre à jour le statut de vérification
-          if (seller?.documentsVerified != null) {
+          if (user?.profilStatus != null) {
+            profilStatus = user!.profilStatus;
+          } else if (seller?.documentsVerified != null) {
             profilStatus = seller!.documentsVerified!
                 ? UserProfilStatus.verified
                 : UserProfilStatus.unverified;
@@ -250,9 +294,12 @@ class _VProfilPageState extends State<VProfilPage>
 
           /// liste des items de profil
 
-          const ProfilListTile(
+          ProfilListTile(
               title: 'Informations personnelles',
-              leadingIcon: Icons.account_circle),
+              leadingIcon: Icons.account_circle,
+              onTap: () {
+                _showPersonalInfoBottomSheet(context);
+              }),
           ProfilListTile(
             title: 'Compte vérifié ?',
             leadingIcon: Icons.verified_outlined,
@@ -365,6 +412,130 @@ class _VProfilPageState extends State<VProfilPage>
           ),
         ],
       )),
+    );
+  }
+
+  void _showPersonalInfoBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: context.height * 0.8,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.inverseSurface,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            // Title
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: AppText(
+                text: 'Informations personnelles',
+                fontSize: context.largeText,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInfoRow('Nom et prénom', fullName),
+                    _buildInfoRow('Date de naissance', dateOfBirth),
+                    _buildInfoRow('Lieu de naissance', placeOfBirth),
+                    _buildInfoRow('Adresse actuelle', currentAddress),
+                    _buildInfoRow('Type de pièce d\'identité', idDocumentType),
+                    _buildInfoRow('Pays d\'origine', countryOfOrigin),
+                    if (idDocumentPhoto != null) ...[
+                      const SizedBox(height: 20),
+                      AppText(
+                        text: 'Photo de la pièce d\'identité',
+                        fontSize: context.mediumText,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface!),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            idDocumentPhoto!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface,
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(
+            text: label,
+            fontSize: context.smallText,
+            fontWeight: FontWeight.bold,
+            color:
+                Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+          ),
+          const SizedBox(height: 5),
+          AppText(
+            text: value,
+            fontSize: context.mediumText,
+          ),
+          const Divider(),
+        ],
+      ),
     );
   }
 }

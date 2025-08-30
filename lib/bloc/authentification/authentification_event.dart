@@ -4,15 +4,13 @@ sealed class AuthentificationEvent {}
 
 // info vendeur
 class SubmitSellerInfo extends AuthentificationEvent {
-  final String? lastName;
-  final String? firstName;
+  final String? fullName;
   final String? birthday;
   final String? birthLocation;
   final String? currentLocation;
 
   SubmitSellerInfo(
-      {this.lastName,
-      this.firstName,
+      {this.fullName,
       this.birthday,
       this.birthLocation,
       this.currentLocation});
@@ -20,21 +18,16 @@ class SubmitSellerInfo extends AuthentificationEvent {
 
 // pièces d'identité
 class SubmitIdentityDocuments extends AuthentificationEvent {
-  final String country;
+  final String idDocumentCountry;
   final String idendityDocument;
 
   SubmitIdentityDocuments(
-      {required this.country, required this.idendityDocument});
+      {required this.idDocumentCountry, required this.idendityDocument});
 }
 
 // photo pièce d'identité
 class SubmitPhotoDocuments extends AuthentificationEvent {
-  final String photoRectoIdendityDocument;
-  final String photoVersoIdendityDocument;
-  final String fullPhoto;
+  final Map<String, String> idDocumentPhoto;
 
-  SubmitPhotoDocuments(
-      {required this.photoRectoIdendityDocument,
-      required this.photoVersoIdendityDocument,
-      required this.fullPhoto});
+  SubmitPhotoDocuments({required this.idDocumentPhoto});
 }

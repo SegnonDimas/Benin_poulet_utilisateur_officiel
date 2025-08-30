@@ -1,6 +1,7 @@
 import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
 import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
+import 'package:benin_poulet/constants/user_profilStatus.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -60,6 +61,44 @@ class FirestoreUserServices {
       return AppUser.fromMap(doc.data()!);
     } else {
       return null;
+    }
+  }
+
+  /// Récupère un utilisateur à partir de son email.
+  /// Retourne `null` si aucun utilisateur n'existe avec cet email.
+  Future<AppUser?> getUserByEmail(String email) async {
+    try {
+      print('=== RECHERCHE PAR EMAIL ===');
+      print('Email recherché: $email');
+      
+      final querySnapshot = await firebaseInstance
+          .collection(FirebaseCollections.usersCollection)
+          .where(UsersCollection.authIdentifier, isEqualTo: email)
+          .limit(1)
+          .get();
+      
+      print('Nombre de documents trouvés: ${querySnapshot.docs.length}');
+      
+      if (querySnapshot.docs.isNotEmpty) {
+        final docData = querySnapshot.docs.first.data();
+        print('Données du document: $docData');
+        
+        try {
+          final user = AppUser.fromMap(docData);
+          print('✓ Utilisateur parsé avec succès: ${user.fullName}');
+          return user;
+        } catch (e) {
+          print('❌ Erreur lors du parsing de l\'utilisateur: $e');
+          print('Données problématiques: $docData');
+          rethrow;
+        }
+      } else {
+        print('Aucun document trouvé avec cet email');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Erreur dans getUserByEmail: $e');
+      rethrow;
     }
   }
 
@@ -134,7 +173,7 @@ class FirestoreUserServices {
         .collection(FirebaseCollections.usersCollection)
         .doc(userId)
         .update({
-      UsersCollection.profileComplete: isComplete,
+      UsersCollection.profilStatus: isComplete ? UserProfilStatus.verified : UserProfilStatus.unverified,
     });
   }
 }

@@ -6,26 +6,46 @@ import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../../bloc/authentification/authentification_bloc.dart';
+import '../../../../services/user_data_service.dart';
 import '../../../../widgets/app_textField.dart';
 
-class InfoPersonnellePage extends StatelessWidget {
-  //final _formKey = GlobalKey<FormState>();
+class InfoPersonnellePage extends StatefulWidget {
+  @override
+  State<InfoPersonnellePage> createState() => _InfoPersonnellePageState();
+}
 
-  final _nomController = TextEditingController();
-
-  final _prenomController = TextEditingController();
-
+class _InfoPersonnellePageState extends State<InfoPersonnellePage> {
+  final _fullNameController = TextEditingController();
   final _adresseController = TextEditingController();
-
   final _dateNaissanceController = TextEditingController();
-
   final _lieuNaissanceController = TextEditingController();
 
   final String initialCountry = 'BJ';
-
   final PhoneNumber number = PhoneNumber(isoCode: 'BJ');
-
   late DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final userDataService = UserDataService();
+      final user = await userDataService.getCurrentUser();
+      if (user != null) {
+        setState(() {
+          _fullNameController.text = user.fullName ?? '';
+          _dateNaissanceController.text = user.dateOfBirth?.toString().split(' ')[0] ?? '';
+          _lieuNaissanceController.text = user.placeOfBirth ?? '';
+          _adresseController.text = user.currentAddress ?? '';
+        });
+      }
+    } catch (e) {
+      print('Erreur lors du chargement des données utilisateur: $e');
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -59,38 +79,19 @@ class InfoPersonnellePage extends StatelessWidget {
           },
           builder: (context, state) {
             final sellerInfo = SubmitSellerInfo(
-                lastName: _nomController.value.text,
-                firstName: _prenomController.value.text,
+                fullName: _fullNameController.value.text,
                 birthday: _dateNaissanceController.value.text,
                 birthLocation: _lieuNaissanceController.value.text,
                 currentLocation: _adresseController.value.text);
             return Form(
-              //key: _formKey,
               child: ListView(
                 children: <Widget>[
-                  // nom
+                  // nom et prénoms
                   AppTextField(
-                    label: 'Nom',
+                    label: 'Nom et prénoms',
                     height: appHeightSize(context) * 0.08,
                     width: appWidthSize(context) * 0.8,
-                    controller: _nomController,
-                    color: Theme.of(context).colorScheme.background,
-                    prefixIcon: Icons.account_circle,
-                    fontColor: Theme.of(context).colorScheme.inversePrimary,
-                    onChanged: (string) {
-                      context.read<AuthentificationBloc>().add(sellerInfo);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-
-                  // prenom
-                  AppTextField(
-                    label: 'Prénom',
-                    height: appHeightSize(context) * 0.08,
-                    width: appWidthSize(context) * 0.8,
-                    controller: _prenomController,
+                    controller: _fullNameController,
                     color: Theme.of(context).colorScheme.background,
                     prefixIcon: Icons.account_circle,
                     fontColor: Theme.of(context).colorScheme.inversePrimary,
@@ -107,7 +108,6 @@ class InfoPersonnellePage extends StatelessWidget {
                     height: appHeightSize(context) * 0.09,
                     width: appWidthSize(context),
                     child: ListView(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       scrollDirection: Axis.horizontal,
                       children: [
                         //date de naissance
@@ -122,7 +122,6 @@ class InfoPersonnellePage extends StatelessWidget {
                           fontColor:
                               Theme.of(context).colorScheme.inversePrimary,
                           fontSize: mediumText() * 0.8,
-                          //readOnly: true,
                           onTap: () {
                             _selectDate(context);
                           },
@@ -185,5 +184,14 @@ class InfoPersonnellePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _adresseController.dispose();
+    _dateNaissanceController.dispose();
+    _lieuNaissanceController.dispose();
+    super.dispose();
   }
 }

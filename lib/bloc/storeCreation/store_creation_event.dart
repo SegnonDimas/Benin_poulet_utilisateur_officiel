@@ -162,22 +162,22 @@ class StoreCreationGlobalEvent extends StoreCreationEvent {
         sellerOwnDeliver: sellerOwnDeliver ?? this.sellerOwnDeliver,
         location: location ?? this.location,
         locationDescription: locationDescription ?? this.locationDescription,
-        country: country ?? sellerGlobalState?.country,
+        country: country ?? sellerGlobalState?.idDocumentCountry,
         idendityDocument:
             idendityDocument ?? sellerGlobalState?.idendityDocument,
         photoRectoIdendityDocument: photoRectoIdendityDocument ??
-            sellerGlobalState?.photoRectoIdendityDocument,
+            sellerGlobalState?.idDocumentPhoto?['recto'],
         photoVersoIdendityDocument: photoVersoIdendityDocument ??
-            sellerGlobalState?.photoVersoIdendityDocument,
-        sellerFirstName: sellerFirstName ?? sellerGlobalState?.sellerFirstName,
-        sellerLastName: sellerLastName ?? sellerGlobalState?.sellerLastName,
+            sellerGlobalState?.idDocumentPhoto?['verso'],
+        sellerFirstName: sellerFirstName ?? sellerGlobalState?.sellerFullName?.split(' ').first,
+        sellerLastName: sellerLastName ?? sellerGlobalState?.sellerFullName?.split(' ').skip(1).join(' '),
         sellerBirthDate: sellerBirthDate ?? sellerGlobalState?.sellerBirthDate,
         sellerCurrentLocation:
             sellerCurrentLocation ?? sellerGlobalState?.sellerCurrentLocation,
         sellerBirthPlace:
             sellerBirthPlace ?? sellerGlobalState?.sellerBirthPlace,
         storeLocation: storeLocation ?? this.storeLocation,
-        fullPhoto: fullPhoto ?? sellerGlobalState?.fullPhoto,
+        fullPhoto: fullPhoto ?? sellerGlobalState?.idDocumentPhoto?['selfie'],
         description: description ?? this.description,
         zoneLivraison: zoneLivraison ?? this.zoneLivraison,
         joursOuverture: joursOuverture ?? this.joursOuverture,
