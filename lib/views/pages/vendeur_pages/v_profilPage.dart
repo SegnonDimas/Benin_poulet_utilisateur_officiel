@@ -481,25 +481,35 @@ class _VProfilPageState extends State<VProfilPage>
                           border: Border.all(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .inverseSurface!),
+                                  .inverseSurface
+                                  .withOpacity(0.3)),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            idDocumentPhoto!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inverseSurface,
-                                child: const Icon(
-                                  Icons.image_not_supported,
-                                  size: 50,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Image.network(
+                              //TODO:
+                              // idDocumentPhoto ??
+                              "https://www.shutterstock.com/image-vector/idea-personal-identity-id-card-600nw-1182870613.jpg",
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    size: 50,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface
+                                        .withOpacity(0.3),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
