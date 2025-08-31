@@ -129,7 +129,8 @@ class _CHomePageState extends State<CHomePage>
     data = 'authIdentifier';
     print(":::::::::${userData["$data"]}");
     return userData['$data'];
-  }*/ /*
+  }*/
+/*
 
 
   bool _shouldInterceptBack = true;
@@ -176,7 +177,8 @@ class _CHomePageState extends State<CHomePage>
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state */
-/*as AuthAuthenticated*/ /*
+/*as AuthAuthenticated*/
+/*
 ;
     final user = FirebaseAuth.instance.currentUser;
 
@@ -331,7 +333,8 @@ class _CHomePageState extends State<CHomePage>
                                 child: _listRecommandations[index],
                               );
                             }),
-                      )*/ /*
+                      )*/
+/*
 
                           ],
                         ),

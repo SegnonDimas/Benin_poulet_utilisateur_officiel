@@ -279,11 +279,14 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                 }),
                 const Spacer(),
                 // Date
-                Text(
-                  DateFormat('dd/MM/yyyy').format(review.date),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+                Flexible(
+                  child: Text(
+                    DateFormat('dd/MM/yyyy').format(review.date),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -292,6 +295,8 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
             Text(
               review.message,
               style: const TextStyle(fontSize: 14),
+              maxLines: 10, // Limiter le nombre de lignes
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

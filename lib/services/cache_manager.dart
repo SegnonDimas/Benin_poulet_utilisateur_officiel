@@ -106,7 +106,16 @@ class CacheManager {
     if (productsData == null) return [];
     
     return productsData
-        .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
+        .map((data) {
+          try {
+            return Produit.fromMap(Map<String, dynamic>.from(data));
+          } catch (e) {
+            print('Erreur lors du parsing d\'un produit en cache: $e');
+            return null;
+          }
+        })
+        .where((product) => product != null && product!.productStatus == 'active') // Filtrer seulement les produits actifs et valides
+        .map((product) => product!)
         .toList();
   }
 
@@ -133,15 +142,50 @@ class CacheManager {
                 updateLastSync();
               }
 
-              /// Récupère les produits d'un vendeur depuis le cache
-              static List<Produit> getCachedVendorProducts(String sellerId) {
-                final productsData = _productsBox.read('vendor_products_$sellerId') as List<dynamic>?;
-                if (productsData == null) return [];
+                /// Récupère les produits d'un vendeur depuis le cache
+  static List<Produit> getCachedVendorProducts(String sellerId) {
+    final productsData = _productsBox.read('vendor_products_$sellerId') as List<dynamic>?;
+    if (productsData == null) return [];
 
-                return productsData
-                    .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
-                    .toList();
-              }
+    return productsData
+        .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
+        .where((product) => product.productStatus != 'deleted') // Exclure les produits supprimés
+        .toList();
+  }
+
+  /// Nettoie le cache en supprimant les produits avec statut 'deleted'
+  static Future<void> cleanDeletedProducts() async {
+    // Nettoyer le cache général des produits
+    final allProductsData = _productsBox.read('all_products') as List<dynamic>?;
+    if (allProductsData != null) {
+      final activeProducts = allProductsData
+          .map((data) => Produit.fromMap(Map<String, dynamic>.from(data)))
+          .where((product) => product.productStatus != 'deleted')
+          .map((product) => product.toMap())
+          .toList();
+      await _productsBox.write('all_products', activeProducts);
+    }
+
+    // Nettoyer le cache des vendeurs (méthode simplifiée)
+    // Note: GetStorage ne permet pas de lister les clés facilement
+    // On nettoiera lors du prochain chargement
+  }
+
+  /// Force le nettoyage complet du cache des produits
+  static Future<void> clearAllProductCache() async {
+    await _productsBox.erase();
+    updateLastSync();
+  }
+
+  /// Vérifie et nettoie le cache si nécessaire
+  static Future<void> validateAndCleanCache() async {
+    // Vérifier si le cache est valide
+    if (!isCacheValid()) {
+      await clearAllProductCache();
+    } else {
+      await cleanDeletedProducts();
+    }
+  }
 
   // ===== GESTION DES COMMANDES =====
 

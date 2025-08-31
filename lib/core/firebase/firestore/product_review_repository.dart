@@ -48,10 +48,14 @@ class FirestoreProductReviewService {
     return _firestore
         .collection(FirebaseCollections.productReviewsCollection)
         .where('productId', isEqualTo: productId)
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList())
+        .map((reviews) {
+          // Trier localement pour éviter les problèmes d'index
+          reviews.sort((a, b) => b.date.compareTo(a.date));
+          return reviews;
+        });
   }
 
   /// Récupère tous les avis d'un utilisateur
@@ -59,10 +63,14 @@ class FirestoreProductReviewService {
     return _firestore
         .collection(FirebaseCollections.productReviewsCollection)
         .where('userId', isEqualTo: userId)
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList())
+        .map((reviews) {
+          // Trier localement pour éviter les problèmes d'index
+          reviews.sort((a, b) => b.date.compareTo(a.date));
+          return reviews;
+        });
   }
 
   /// Récupère tous les avis d'une boutique
@@ -70,20 +78,28 @@ class FirestoreProductReviewService {
     return _firestore
         .collection(FirebaseCollections.productReviewsCollection)
         .where('storeId', isEqualTo: storeId)
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList())
+        .map((reviews) {
+          // Trier localement pour éviter les problèmes d'index
+          reviews.sort((a, b) => b.date.compareTo(a.date));
+          return reviews;
+        });
   }
 
   /// Récupère tous les avis
   Stream<List<ProductReview>> getAllProductReviews() {
     return _firestore
         .collection(FirebaseCollections.productReviewsCollection)
-        .orderBy('date', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => ProductReview.fromDocument(doc)).toList())
+        .map((reviews) {
+          // Trier localement pour éviter les problèmes d'index
+          reviews.sort((a, b) => b.date.compareTo(a.date));
+          return reviews;
+        });
   }
 
   /// Vérifie si un utilisateur a déjà laissé un avis pour un produit

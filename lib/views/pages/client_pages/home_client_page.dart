@@ -350,19 +350,32 @@ class _HomeClientPageState extends State<HomeClientPage>
             return Padding(
               padding: const EdgeInsets.only(right: 8, left: 8),
               child: FilterChip(
-                checkmarkColor: Colors.white,
+                checkmarkColor: Theme.of(context).colorScheme.surface,
                 label: AppText(
                   text: category,
                   color: isSelected
-                      ? Colors.white
-                      : AppColors.blueColor.withOpacity(0.6),
+                      ? Theme.of(context).colorScheme.surface
+                      : Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.6),
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   fontSize: context.smallText * 1.1,
                 ),
-                side: BorderSide(color: AppColors.blueColor.withOpacity(0.0)),
+                side: BorderSide(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .inverseSurface
+                        .withOpacity(0.0)),
                 selected: isSelected,
-                selectedColor: AppColors.blueColor,
-                backgroundColor: AppColors.blueColor.withOpacity(0.1),
+                selectedColor: Theme.of(context)
+                    .colorScheme
+                    .inverseSurface
+                    .withOpacity(0.6),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .inverseSurface
+                    .withOpacity(0.1),
                 onSelected: (selected) {
                   setState(() {
                     _selectedCategory = category;

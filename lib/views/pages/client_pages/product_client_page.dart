@@ -1,3 +1,5 @@
+import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -246,7 +248,7 @@ class _ProductClientPageState extends State<ProductClientPage>
                 ),
                 const SizedBox(width: 12),
                 AppText(
-                  text: 'Vendu par: Le Poulailler',
+                  text: 'Vendu par: ${widget.product.storeName}',
                   color: Colors.grey,
                   fontSize: 14,
                 ),
@@ -270,61 +272,61 @@ class _ProductClientPageState extends State<ProductClientPage>
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                  text: 'Quantité :',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(width: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove),
+                        onPressed: () {
+                          if (_selectedQuantity > 1) {
+                            setState(() {
+                              _selectedQuantity--;
+                            });
+                          }
+                        },
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: AppText(
+                          text: '$_selectedQuantity',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          setState(() {
+                            _selectedQuantity++;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             AppText(
-              text: 'Quantité :',
+              text:
+                  'Total: ${(widget.product.price * _selectedQuantity).toStringAsFixed(0)} FCFA',
               fontSize: 16,
               fontWeight: FontWeight.bold,
-            ),
-            const SizedBox(width: 16),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      if (_selectedQuantity > 1) {
-                        setState(() {
-                          _selectedQuantity--;
-                        });
-                      }
-                    },
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: AppText(
-                      text: '$_selectedQuantity',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        _selectedQuantity++;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            //const Spacer(),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: AppText(
-                text:
-                    'Total: ${(widget.product.price * _selectedQuantity).toStringAsFixed(0)} FCFA',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
+              color: AppColors.primaryColor,
             ),
           ],
         ),
@@ -421,8 +423,9 @@ class _ProductClientPageState extends State<ProductClientPage>
       padding: const EdgeInsets.all(16),
       child: ProductReviewWidget(
         productId: widget.product.id,
-        storeId: widget.product.storeId ?? 'store_id_example', // À remplacer par l'ID réel de la boutique
-        userId: 'user_id_example', // À remplacer par l'ID réel de l'utilisateur
+        storeId: widget.product.storeId,
+        userId: FirebaseAuth.instance.currentUser?.uid ??
+            'unknow', // À remplacer par l'ID réel de l'utilisateur
       ),
     );
   }
@@ -445,17 +448,31 @@ class _ProductClientPageState extends State<ProductClientPage>
             '500 FCFA',
             true,
           ),
-          _buildDeliveryOption(
-            'Livraison express',
-            '1 jour ouvrable',
-            '1000 FCFA',
-            false,
+          GestureDetector(
+            onTap: () {
+              AppUtils.showInfoDialog(
+                  context: context,
+                  message: "Cette fonctionnalité arrive bientôt");
+            },
+            child: _buildDeliveryOption(
+              'Livraison express',
+              '1 jour ouvrable',
+              '1000 FCFA',
+              false,
+            ),
           ),
-          _buildDeliveryOption(
-            'Point relais',
-            '3-5 jours ouvrables',
-            '300 FCFA',
-            false,
+          GestureDetector(
+            onTap: () {
+              AppUtils.showInfoDialog(
+                  context: context,
+                  message: "Cette fonctionnalité arrive bientôt");
+            },
+            child: _buildDeliveryOption(
+              'Point relais',
+              '3-5 jours ouvrables',
+              '300 FCFA',
+              false,
+            ),
           ),
           const SizedBox(height: 24),
           AppText(
@@ -533,21 +550,19 @@ class _ProductClientPageState extends State<ProductClientPage>
   }
 
   Widget _buildBottomBar() {
-    return Expanded(
-      child: AppButton(
-        height: context.height * 0.065,
-        onTap: () {
-          // Navigation vers la page de commande
-          Navigator.pushNamed(context, AppRoutes.CHECKOUT, arguments: {
-            'product': widget.product,
-            'quantity': _selectedQuantity,
-          });
-        },
-        color: AppColors.secondaryColor,
-        child: AppText(
-          text: 'Acheter maintenant',
-          color: Colors.white,
-        ),
+    return AppButton(
+      height: context.height * 0.065,
+      onTap: () {
+        // Navigation vers la page de commande
+        Navigator.pushNamed(context, AppRoutes.CHECKOUT, arguments: {
+          'product': widget.product,
+          'quantity': _selectedQuantity,
+        });
+      },
+      color: AppColors.secondaryColor,
+      child: AppText(
+        text: 'Acheter maintenant',
+        color: Colors.white,
       ),
     );
   }

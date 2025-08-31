@@ -15,6 +15,8 @@ class Product {
   final double price;
   final String description;
   final String category;
+  final String storeId; // Ajout du storeId pour les avis
+  final String storeName; // Ajout du nom de la boutique
 
   Product({
     required this.id,
@@ -23,9 +25,11 @@ class Product {
     required this.price,
     required this.description,
     required this.category,
+    required this.storeId,
+    required this.storeName,
   });
 
-  factory Product.fromProduit(Produit produit) {
+  factory Product.fromProduit(Produit produit, {String? storeName}) {
     return Product(
       id: produit.productId ?? '',
       name: produit.productName,
@@ -33,6 +37,8 @@ class Product {
       price: produit.isInPromotion && produit.promoPrice != null ? produit.promoPrice! : produit.productUnitPrice,
       description: produit.productDescription,
       category: produit.category,
+      storeId: produit.storeId,
+      storeName: storeName ?? 'Boutique',
     );
   }
 }
@@ -230,12 +236,18 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     emit(HomeClientLoading());
 
     try {
+      // Valider et nettoyer le cache si nécessaire
+      await CacheManager.validateAndCleanCache();
+      
       // Vérifier d'abord le cache
       final cachedProducts = CacheManager.getCachedProducts();
       final cachedStores = CacheManager.getCachedStores();
       
       if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
-        final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+        // Créer un map des noms de boutiques pour les produits en cache
+        final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
+        
+        final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
         final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
         
         emit(HomeClientLoaded(
@@ -251,7 +263,10 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       final isOnline = await CacheManager.isOnline();
       if (!isOnline) {
         if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
-          final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+          // Créer un map des noms de boutiques pour les produits en cache
+          final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
+          
+          final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
           final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
           
           emit(HomeClientOffline(
@@ -273,11 +288,15 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       // Récupérer les données depuis Firestore
       final productsStream = _productRepository.getAllActiveProducts();
       final products = await productsStream.first;
-      final productList = products.map((p) => Product.fromProduit(p)).toList();
-
+      
       final storesStream = _firestoreService.getAllStores();
       final stores = await storesStream.first;
       final storeList = stores.map((s) => StoreClient.fromStoreModel(s)).toList();
+      
+      // Créer un map des noms de boutiques pour les produits
+      final storeMap = {for (var store in stores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
+      
+      final productList = products.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
 
       // Mettre en cache les données
       await CacheManager.cacheProducts(products);
@@ -296,7 +315,10 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       final cachedStores = CacheManager.getCachedStores();
       
       if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
-        final productList = cachedProducts.map((p) => Product.fromProduit(p)).toList();
+        // Créer un map des noms de boutiques pour les produits en cache
+        final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
+        
+        final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
         final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
         
         emit(HomeClientOffline(
@@ -470,7 +492,8 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     RefreshHomeData event,
     Emitter<HomeClientState> emit,
   ) async {
-    // Forcer le rechargement depuis Firestore
+    // Nettoyer le cache et forcer le rechargement depuis Firestore
+    await CacheManager.clearAllProductCache();
     add(LoadHomeData());
   }
 }
