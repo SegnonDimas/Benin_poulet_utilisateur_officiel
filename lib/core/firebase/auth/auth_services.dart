@@ -572,7 +572,56 @@ class AuthServices {
     return '${phoneNumber.phoneNumber}@phone.beninpoulet.com';
   }
 
-  static void signOut() {
-    auth.signOut();
+  /// Méthode de déconnexion complète qui gère tous les types d'authentification
+  static Future<void> signOut() async {
+    try {
+      final currentUser = auth.currentUser;
+      if (currentUser == null) {
+        if (kDebugMode) {
+          print('Aucun utilisateur connecté à déconnecter');
+        }
+        return;
+      }
+
+      // Vérifier si l'utilisateur est connecté via Google
+      final isGoogleUser = currentUser.providerData.any(
+        (userInfo) => userInfo.providerId == GoogleAuthProvider.PROVIDER_ID,
+      );
+
+      // Déconnecter de Google si nécessaire
+      if (isGoogleUser) {
+        try {
+          final GoogleSignIn googleSignIn = GoogleSignIn();
+          if (await googleSignIn.isSignedIn()) {
+            await googleSignIn.signOut();
+            if (kDebugMode) {
+              print('Déconnexion Google réussie');
+            }
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('Erreur lors de la déconnexion Google: $e');
+          }
+          // Continuer même si la déconnexion Google échoue
+        }
+      }
+
+      // Déconnecter de Firebase Auth
+      await auth.signOut();
+      
+      if (kDebugMode) {
+        print('Déconnexion Firebase Auth réussie');
+      }
+
+      // Réinitialiser les variables statiques
+      userId = null;
+      _isGoogleSignInInProgress = false;
+
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erreur lors de la déconnexion: $e');
+      }
+      rethrow;
+    }
   }
 }

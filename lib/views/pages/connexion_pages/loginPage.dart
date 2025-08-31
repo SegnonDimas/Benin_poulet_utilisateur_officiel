@@ -274,7 +274,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                 context); // fermer le loading de AuthLoading
 
                             e.toString().contains('network') ||
-                                    e.toString().contains('internal')
+                                    e.toString().contains('internal') ||
+                                    e.toString().contains('connect') ||
+                                    errorMessage
+                                        .toString()
+                                        .contains('Erreur de connexion')
                                 ? AppUtils.showInfoDialog(
                                     context: context,
                                     message:
@@ -400,18 +404,80 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                 break;
                             }
 
-                            AppUtils.showInfoDialog(
+                            e.toString().contains('network') ||
+                                    e.toString().contains('internal') ||
+                                    e.toString().contains('connect') ||
+                                    errorMessage
+                                        .toString()
+                                        .contains('Erreur de connexion')
+                                ? AppUtils.showInfoDialog(
+                                    context: context,
+                                    message:
+                                        "Veuillez verifier votre connexion internet et reessayer",
+                                    type: InfoType.networkError)
+                                : AppUtils.showInfoDialog(
+                                    context: context,
+                                    message: errorMessage,
+                                    type: InfoType.error,
+                                    barrierDismissible: false
+                                    //onTitleIconTap: () => Navigator.pop(context)
+                                    );
+
+                            /*AppUtils.showInfoDialog(
                               context: context,
                               message: errorMessage,
                               type: InfoType.error,
-                            );
+                            );*/
                           } catch (e) {
+                            // Enregistrer le rapport d'erreur
+                            ErrorReport errorReport = ErrorReport(
+                              errorMessage: e.toString(),
+                              errorPage: AppPagesName.loginPage,
+                              date: DateTime.now(),
+                            );
+
+                            Navigator.pop(
+                                context); // fermer le loading de AuthLoading
                             AppUtils.showInfoDialog(
+                                context: context,
+                                message:
+                                    'Une erreur inattendue s\'est produite. Veuillez réessayer.',
+                                type: InfoType.error,
+                                duration: Duration(seconds: 6),
+                                barrierDismissible: false
+                                //onTitleIconTap: () => Navigator.pop(context)
+                                );
+
+                            // temps d'attente avant le dialogue d'envoi du rapport d'erreur
+                            Future.delayed(Duration(seconds: 2));
+
+                            // affichier le dialogue d'envoi du rapport d'erreur
+                            Navigator.pop(context);
+                            AppUtils.showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              hideContent: true,
+                              title: 'Rapport d\'erreur',
+                              content: e.toString(),
+                              cancelText: 'Fermer',
+                              confirmText: 'Envoyer le rapport',
+                              cancelTextColor: AppColors.primaryColor,
+                              confirmTextColor: AppColors.redColor,
+                              onConfirm: () async {
+                                await FirebaseErrorReportRepository()
+                                    .sendErrorReport(errorReport);
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                            );
+
+                            /*AppUtils.showInfoDialog(
                               context: context,
                               message:
                                   'Une erreur inattendue s\'est produite lors de la connexion Google. Veuillez réessayer.',
                               type: InfoType.error,
-                            );
+                            );*/
                           }
                         }
                       },

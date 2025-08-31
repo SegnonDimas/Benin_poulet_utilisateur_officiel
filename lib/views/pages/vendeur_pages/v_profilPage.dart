@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/constants/user_profilStatus.dart';
+import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/services/user_data_service.dart';
-import 'package:benin_poulet/utils/dialog.dart';
+import 'package:benin_poulet/utils/app_utils.dart' show AppUtils, InfoType;
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/models_ui/model_ProfilListTile.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -41,6 +42,57 @@ class _VProfilPageState extends State<VProfilPage>
   void initState() {
     super.initState();
     _loadUserData();
+  }
+
+  /// Méthode pour gérer la déconnexion complète
+  Future<void> _handleSignOut() async {
+    final navigator = Navigator.of(context);
+    final currentContext = context;
+    
+    try {
+      // Afficher un indicateur de chargement
+      AppUtils.showInfoDialog(
+        context: currentContext,
+        message: 'Déconnexion en cours...',
+        type: InfoType.loading,
+        barrierDismissible: false,
+      );
+      
+      // Effectuer la déconnexion
+      await AuthServices.signOut();
+      
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+      
+      // Fermer l'indicateur de chargement
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+      
+      // Rediriger vers la page de connexion
+      navigator.pushNamedAndRemoveUntil(
+        AppRoutes.LOGINPAGE, 
+        (route) => false
+      );
+      
+    } catch (e) {
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+      
+      // Fermer l'indicateur de chargement en cas d'erreur
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+      
+      // Afficher un message d'erreur
+      if (mounted) {
+        AppUtils.showErrorNotification(
+          currentContext, 
+          'Erreur lors de la déconnexion: ${e.toString()}',
+          null
+        );
+      }
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -332,15 +384,14 @@ class _VProfilPageState extends State<VProfilPage>
               child: AppButton(
                 height: context.height * 0.07,
                 onTap: () {
-                  AppDialog.showDialog(
+                  AppUtils.showDialog(
                     context: context,
-                    title: "Deconnexion",
+                    title: "Déconnexion",
                     content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                    confirmText: 'Deconnexion',
+                    confirmText: 'Déconnexion',
                     cancelText: 'Annuler',
                     onConfirm: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, AppRoutes.LOGINPAGE, (route) => false);
+                      _handleSignOut();
                     },
                   );
                 },
