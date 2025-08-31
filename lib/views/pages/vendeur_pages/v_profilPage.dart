@@ -358,7 +358,7 @@ class _VProfilPageState extends State<VProfilPage>
           ),
 
           /// POUR LES TESTS
-          SizedBox(
+          /*SizedBox(
             height: context.height * 0.02,
           ),
           SizedBox(
@@ -409,9 +409,141 @@ class _VProfilPageState extends State<VProfilPage>
                 )
               ],
             ),
-          ),
+          ),*/
         ],
       )),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(
+            text: label,
+            fontSize: context.smallText,
+            fontWeight: FontWeight.bold,
+            color:
+                Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+          ),
+          const SizedBox(height: 5),
+          AppText(
+            text: value,
+            fontSize: context.mediumText,
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.inverseSurface.withOpacity(0.05),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future showProfilState(
+    BuildContext context, {
+    String? profilStatus = UserProfilStatus.unverified,
+  }) async {
+    final user = await _userDataService.getCurrentUser();
+    profilStatus = user!.profilStatus;
+    return showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: context.height * 0.02,
+          ),
+          child: SizedBox(
+              height: context.height * 0.4,
+              width: context.width,
+              child: Column(
+                children: [
+                  // lottie indiquant le statut du compte
+                  profilStatus!.toLowerCase().trim() ==
+                          UserProfilStatus.verified
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              height: context.height * 0.13,
+                              width: context.height * 0.13,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor,
+                                borderRadius: BorderRadius.circular(10000),
+                              ),
+                            ),
+                            Lottie.asset(
+                                height: context.height * 0.2,
+                                'assets/lotties/accountVerified.json'),
+                          ],
+                        )
+                      : profilStatus.toLowerCase().trim() ==
+                              UserProfilStatus.pending
+                          ? Lottie.asset(
+                              'assets/lotties/accountAuthentificationPending.json')
+                          : Lottie.asset(
+                              height: context.height * 0.2,
+                              'assets/lotties/accountNotVerified.json'),
+                  SizedBox(
+                    height: context.height * 0.02,
+                  ),
+                  AppText(
+                    text: profilStatus.toLowerCase().trim() ==
+                            UserProfilStatus.verified
+                        ? 'Votre compte est vérifié'
+                        : profilStatus.toLowerCase().trim() ==
+                                UserProfilStatus.pending
+                            ? 'Votre compte est en cours de vérification'
+                            : 'Votre compte n\'est pas encore vérifié',
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: context.height * 0.07,
+                  ),
+                  AppButton(
+                    height: context.height * 0.07,
+                    width: context.width * 0.9,
+                    onTap: () {
+                      profilStatus?.toLowerCase().trim() ==
+                              UserProfilStatus.unverified
+                          ? Navigator.pushReplacementNamed(
+                              context, AppRoutes.VENDEURAUTHENTIFICATIONPAGE)
+                          : profilStatus?.toLowerCase().trim() ==
+                                  UserProfilStatus.pending
+                              ?
+                              //TODO: contact support
+                              Navigator.pop(context)
+                              : {
+                                  Navigator.pop(context),
+                                  _showPersonalInfoBottomSheet(context)
+                                }; // Fermer le BottomSheet
+                    },
+                    color: profilStatus.toLowerCase().trim() ==
+                            UserProfilStatus.verified
+                        ? AppColors.primaryColor
+                        : profilStatus.toLowerCase().trim() ==
+                                UserProfilStatus.pending
+                            ? Colors.orange
+                            : AppColors.redColor,
+                    child: AppText(
+                      text: profilStatus == UserProfilStatus.verified
+                          ? 'Consulter vos informations'
+                          : profilStatus == UserProfilStatus.pending
+                              ? 'Nous contacter'
+                              : 'Commencer la vérification',
+                      fontSize: context.mediumText * 0.9,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              )),
+        );
+      },
     );
   }
 
@@ -524,127 +656,4 @@ class _VProfilPageState extends State<VProfilPage>
       ),
     );
   }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText(
-            text: label,
-            fontSize: context.smallText,
-            fontWeight: FontWeight.bold,
-            color:
-                Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
-          ),
-          const SizedBox(height: 5),
-          AppText(
-            text: value,
-            fontSize: context.mediumText,
-          ),
-          const Divider(),
-        ],
-      ),
-    );
-  }
-}
-
-Future showProfilState(
-  BuildContext context, {
-  String? profilStatus = UserProfilStatus.unverified,
-}) {
-  return showModalBottomSheet(
-    context: context,
-    showDragHandle: true,
-    useSafeArea: true,
-    builder: (BuildContext context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: context.height * 0.05,
-        ),
-        child: SizedBox(
-            height: context.height * 0.4,
-            width: context.width,
-            child: Column(
-              children: [
-                // lottie indiquant le statut du compte
-                profilStatus!.toLowerCase().trim() == UserProfilStatus.verified
-                    ? Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            height: context.height * 0.13,
-                            width: context.height * 0.13,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(10000),
-                            ),
-                          ),
-                          Lottie.asset(
-                              height: context.height * 0.2,
-                              'assets/lotties/accountVerified.json'),
-                        ],
-                      )
-                    : profilStatus.toLowerCase().trim() ==
-                            UserProfilStatus.pending
-                        ? Lottie.asset(
-                            'assets/lotties/accountAuthentificationPending.json')
-                        : Lottie.asset(
-                            height: context.height * 0.2,
-                            'assets/lotties/accountNotVerified.json'),
-                SizedBox(
-                  height: context.height * 0.02,
-                ),
-                AppText(
-                  text: profilStatus.toLowerCase().trim() ==
-                          UserProfilStatus.verified
-                      ? 'Votre compte est vérifié'
-                      : profilStatus.toLowerCase().trim() ==
-                              UserProfilStatus.pending
-                          ? 'Votre compte est en cours de vérification'
-                          : 'Votre compte n\'est pas encore vérifié',
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: context.height * 0.07,
-                ),
-                AppButton(
-                  height: context.height * 0.07,
-                  width: context.width * 0.9,
-                  onTap: () {
-                    profilStatus.toLowerCase().trim() ==
-                            UserProfilStatus.unverified
-                        ? Navigator.pushReplacementNamed(
-                            context, AppRoutes.VENDEURAUTHENTIFICATIONPAGE)
-                        : profilStatus.toLowerCase().trim() ==
-                                UserProfilStatus.pending
-                            ?
-                            //TODO: contact support
-                            Navigator.pop(context)
-                            : Navigator.pop(context); // Fermer le BottomSheet
-                  },
-                  color: profilStatus.toLowerCase().trim() ==
-                          UserProfilStatus.verified
-                      ? AppColors.primaryColor
-                      : profilStatus.toLowerCase().trim() ==
-                              UserProfilStatus.pending
-                          ? Colors.orange
-                          : AppColors.redColor,
-                  child: AppText(
-                    text: profilStatus == UserProfilStatus.verified
-                        ? 'Consulter vos informations'
-                        : profilStatus == UserProfilStatus.pending
-                            ? 'Nous contacter'
-                            : 'Commencer la vérification',
-                    fontSize: context.mediumText * 0.9,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            )),
-      );
-    },
-  );
 }

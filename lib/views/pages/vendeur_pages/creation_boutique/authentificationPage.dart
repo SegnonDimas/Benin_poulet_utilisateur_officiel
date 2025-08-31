@@ -1,5 +1,6 @@
 import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
+import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/infoPersonnellePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/authentification/photoPage.dart';
@@ -77,275 +78,300 @@ class _AuthentificationVendeurPageState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: AppBar(
-          title: AppText(
-            text: 'Vérification de votre identité',
-          ),
-          centerTitle: true,
-        ),
-        body: BlocConsumer<AuthentificationBloc, AuthentificationState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
-          builder: (context, state) {
-            return SizedBox(
-              child: Stack(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                alignment: AlignmentDirectional.bottomCenter,
-                children: [
-                  /// l'en-tête de la page
-                  Positioned(
-                    top: context.height * 0.0,
-                    child: SizedBox(
-                      height: context.height * 0.2,
-                      child: Column(
-                        children: [
-                          // timeline_tile
-                          SizedBox(
-                            height: context.height * 0.06,
-                            width: context.width * 0.75,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(_pages.length, (index) {
-                                /* ValueListenableBuilder : J'ai utilisé ValueListenableBuilder<int> autour de chaque AppTimelineTile pour reconstruire ces tuiles lorsque la valeur de _pageIndexNotifier change.*/
-                                return ValueListenableBuilder<int>(
-                                  valueListenable: _pageIndexNotifier,
-                                  builder: (context, value, child) {
-                                    Color tileColor = (value >= index)
-                                        ? primaryColor.withAlpha(100)
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .background;
-                                    Color iconColor = (value >= index)
-                                        ? primaryColor //Colors.grey.shade200
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .inverseSurface
-                                            .withAlpha(
-                                                60); //Colors.grey.shade600;
-                                    Color lineColor = (value > index - 1)
-                                        ? primaryColor.withAlpha(100)
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .background;
+    return WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await AppUtils.showExitConfirmationDialog(context);
+          return shouldPop; // true = autorise le pop, false = bloque
+        },
+        child: SafeArea(
+          top: false,
+          child: Scaffold(
+            appBar: AppBar(
+              title: AppText(
+                text: 'Vérification de votre identité',
+              ),
+              centerTitle: true,
+            ),
+            body: BlocConsumer<AuthentificationBloc, AuthentificationState>(
+              listener: (context, state) {
+                // TODO: implement listener
+              },
+              builder: (context, state) {
+                return SizedBox(
+                  child: Stack(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      /// l'en-tête de la page
+                      Positioned(
+                        top: context.height * 0.0,
+                        child: SizedBox(
+                          height: context.height * 0.2,
+                          child: Column(
+                            children: [
+                              // timeline_tile
+                              SizedBox(
+                                height: context.height * 0.06,
+                                width: context.width * 0.75,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children:
+                                      List.generate(_pages.length, (index) {
+                                    /* ValueListenableBuilder : J'ai utilisé ValueListenableBuilder<int> autour de chaque AppTimelineTile pour reconstruire ces tuiles lorsque la valeur de _pageIndexNotifier change.*/
+                                    return ValueListenableBuilder<int>(
+                                      valueListenable: _pageIndexNotifier,
+                                      builder: (context, value, child) {
+                                        Color tileColor = (value >= index)
+                                            ? primaryColor.withAlpha(100)
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .background;
+                                        Color iconColor = (value >= index)
+                                            ? primaryColor //Colors.grey.shade200
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface
+                                                .withAlpha(
+                                                    60); //Colors.grey.shade600;
+                                        Color lineColor = (value > index - 1)
+                                            ? primaryColor.withAlpha(100)
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .background;
 
-                                    return AppTimelineTile(
-                                      axis: TimelineAxis.horizontal,
-                                      isFirst: index == 0,
-                                      isLast: index == _pages.length - 1,
-                                      index: index + 1,
-                                      icon: _getIconForIndex(index),
-                                      iconSize: 15,
-                                      //mediumText() * 1.5,
-                                      iconColor: iconColor,
-                                      color: tileColor,
-                                      afterLineColor: lineColor,
-                                      beforeLineColor: lineColor,
-                                      afterLineWeight: 2,
-                                      beforeLineWeight: 2,
-                                      height: 25,
-                                      onTap: () {
-                                        print('''
+                                        return AppTimelineTile(
+                                          axis: TimelineAxis.horizontal,
+                                          isFirst: index == 0,
+                                          isLast: index == _pages.length - 1,
+                                          index: index + 1,
+                                          icon: _getIconForIndex(index),
+                                          iconSize: 15,
+                                          //mediumText() * 1.5,
+                                          iconColor: iconColor,
+                                          color: tileColor,
+                                          afterLineColor: lineColor,
+                                          beforeLineColor: lineColor,
+                                          afterLineWeight: 2,
+                                          beforeLineWeight: 2,
+                                          height: 25,
+                                          onTap: () {
+                                            print('''
                                      indexed ==> $index
                                     ''');
-                                        setState(() {
-                                          position = index;
-                                          _pageViewController.jumpToPage(index);
-                                          _pageIndexNotifier.value = position;
-                                        });
+                                            setState(() {
+                                              position = index;
+                                              _pageViewController
+                                                  .jumpToPage(index);
+                                              _pageIndexNotifier.value =
+                                                  position;
+                                            });
+                                          },
+                                        );
                                       },
-                                    );
-                                  },
-                                );
-                              }),
-                            ),
-                          ),
-
-                          // titre et description
-                          SizedBox(
-                            height: context.height * 0.11,
-                            width: context.width,
-                            child: Wrap(
-                                //mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(1, (index) {
-                              return ValueListenableBuilder<int>(
-                                valueListenable: _pageIndexNotifier,
-                                builder: (context, value, child) {
-                                  String title = _title[value];
-                                  String description = _description[value];
-
-                                  return SizedBox(
-                                      height: context.height * 0.12,
-                                      width: context.width,
-                                      child: Column(
-                                        children: [
-                                          // Étape n/N
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: context.height * 0.02),
-                                            child: SizedBox(
-                                              height: context.height * 0.02,
-                                              width: context.width,
-                                              child: AppText(
-                                                  text:
-                                                      'Étape ${value + 1}/${_pages.length}'),
-                                            ),
-                                          ),
-
-                                          // titre et description
-                                          SizedBox(
-                                            height: context.height * 0.09,
-                                            width: context.width,
-                                            child: ListTile(
-                                              //titre
-                                              title: AppText(
-                                                text: title,
-                                                fontSize: mediumText(),
-                                                fontWeight: FontWeight.bold,
-                                              ),
-
-                                              //description
-                                              subtitle: AppText(
-                                                text: description,
-                                                fontSize: smallText() * 1.2,
-                                                overflow: TextOverflow.visible,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .inversePrimary
-                                                    .withAlpha(200),
-                                                maxLine: 2,
-                                              ),
-                                            ),
-                                          ),
-
-                                          // divider
-                                          SizedBox(
-                                            height: context.height * 0.008,
-                                            child: Divider(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .background,
-                                            ),
-                                          ),
-                                        ],
-                                      ));
-                                },
-                              );
-                            })),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  /// le corps de la page
-                  Positioned(
-                    bottom: context.height * 0.01,
-                    top: context.height * 0.17,
-                    child: SizedBox(
-                        height: context.height * 0.75,
-                        width: context.width,
-                        child: Stack(
-                          children: [
-                            /// les sous-pages
-                            SizedBox(
-                              height: context.height * 0.68,
-                              width: context.width,
-                              child: PageView.builder(
-                                  itemCount: _pages.length,
-                                  controller: _pageViewController,
-                                  allowImplicitScrolling: true,
-                                  onPageChanged: (index) {
-                                    position = index;
-                                    setState(() {
-                                      _pageIndexNotifier.value = index;
-                                    });
-                                  },
-                                  itemBuilder: (BuildContext context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SizedBox(
-                                          height: 400,
-                                          //width: 100,
-                                          child:
-                                              _pages[_pageIndexNotifier.value]),
                                     );
                                   }),
-                            ),
-
-                            /// bouton Suivant/précédent
-                            Positioned(
-                              bottom: context.height * 0.0,
-                              child: SizedBox(
-                                height: context.height * 0.07,
-                                width: context.width,
-                                child: Row(
-                                  mainAxisAlignment: position == 0
-                                      ? MainAxisAlignment.center
-                                      : MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    //bouton suivant
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (position == _pages.length - 1) {
-                                          //TODO : logique de soumission
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            AppRoutes.VALIDATIONPAGE,
-                                          );
-                                        } else {
-                                          //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
-                                          _pageViewController.nextPage(
-                                              duration: const Duration(
-                                                  milliseconds: 1000),
-                                              curve: Curves.linear);
-                                          //position = state.sousPosition!;
-                                        }
-                                      },
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 0,
-                                            //context.width * 0.03,
-                                            right: 0,
-                                          ),
-                                          //context.width * 0.03),
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              height: context.height * 0.07,
-                                              width: position == 0
-                                                  ? context.width * 0.9
-                                                  : context.width * 0.9,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: primaryColor),
-                                              child: Text(
-                                                position != _pages.length - 1
-                                                    ? 'Suivant'
-                                                    : "Soumettre",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize:
-                                                        mediumText() * 1.2),
-                                              ))),
-                                    ),
-                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        )),
+
+                              // titre et description
+                              SizedBox(
+                                height: context.height * 0.11,
+                                width: context.width,
+                                child: Wrap(
+                                    //mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(1, (index) {
+                                  return ValueListenableBuilder<int>(
+                                    valueListenable: _pageIndexNotifier,
+                                    builder: (context, value, child) {
+                                      String title = _title[value];
+                                      String description = _description[value];
+
+                                      return SizedBox(
+                                          height: context.height * 0.12,
+                                          width: context.width,
+                                          child: Column(
+                                            children: [
+                                              // Étape n/N
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left:
+                                                        context.height * 0.02),
+                                                child: SizedBox(
+                                                  height: context.height * 0.02,
+                                                  width: context.width,
+                                                  child: AppText(
+                                                      text:
+                                                          'Étape ${value + 1}/${_pages.length}'),
+                                                ),
+                                              ),
+
+                                              // titre et description
+                                              SizedBox(
+                                                height: context.height * 0.09,
+                                                width: context.width,
+                                                child: ListTile(
+                                                  //titre
+                                                  title: AppText(
+                                                    text: title,
+                                                    fontSize: mediumText(),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+
+                                                  //description
+                                                  subtitle: AppText(
+                                                    text: description,
+                                                    fontSize: smallText() * 1.2,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .inversePrimary
+                                                        .withAlpha(200),
+                                                    maxLine: 2,
+                                                  ),
+                                                ),
+                                              ),
+
+                                              // divider
+                                              SizedBox(
+                                                height: context.height * 0.008,
+                                                child: Divider(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .background,
+                                                ),
+                                              ),
+                                            ],
+                                          ));
+                                    },
+                                  );
+                                })),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      /// le corps de la page
+                      Positioned(
+                        bottom: context.height * 0.01,
+                        top: context.height * 0.17,
+                        child: SizedBox(
+                            height: context.height * 0.75,
+                            width: context.width,
+                            child: Stack(
+                              children: [
+                                /// les sous-pages
+                                SizedBox(
+                                  height: context.height * 0.68,
+                                  width: context.width,
+                                  child: PageView.builder(
+                                      itemCount: _pages.length,
+                                      controller: _pageViewController,
+                                      allowImplicitScrolling: true,
+                                      onPageChanged: (index) {
+                                        position = index;
+                                        setState(() {
+                                          _pageIndexNotifier.value = index;
+                                        });
+                                      },
+                                      itemBuilder:
+                                          (BuildContext context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: SizedBox(
+                                              height: 400,
+                                              //width: 100,
+                                              child: _pages[
+                                                  _pageIndexNotifier.value]),
+                                        );
+                                      }),
+                                ),
+
+                                /// bouton Suivant/précédent
+                                position != _pages.length - 1
+                                    ? Positioned(
+                                        bottom: context.height * 0.0,
+                                        child: SizedBox(
+                                          height: context.height * 0.07,
+                                          width: context.width,
+                                          child: Row(
+                                            mainAxisAlignment: position == 0
+                                                ? MainAxisAlignment.center
+                                                : MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              //bouton suivant
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (position ==
+                                                      _pages.length - 1) {
+                                                    //TODO : logique de soumission
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      AppRoutes.VALIDATIONPAGE,
+                                                    );
+                                                  } else {
+                                                    //_pageController.nextPage(duration: const Duration(microseconds: 3500), curve: Curves.easeIn);
+                                                    _pageViewController.nextPage(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    1000),
+                                                        curve: Curves.linear);
+                                                    //position = state.sousPosition!;
+                                                  }
+                                                },
+                                                child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      left: 0,
+                                                      //context.width * 0.03,
+                                                      right: 0,
+                                                    ),
+                                                    //context.width * 0.03),
+                                                    child: Container(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        height: context.height *
+                                                            0.07,
+                                                        width: position == 0
+                                                            ? context.width *
+                                                                0.9
+                                                            : context.width *
+                                                                0.9,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            color:
+                                                                primaryColor),
+                                                        child: Text(
+                                                          'Suivant',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize:
+                                                                  mediumText() *
+                                                                      1.2),
+                                                        ))),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
+                            )),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-    );
+                );
+              },
+            ),
+          ),
+        ));
   }
 
   /*Retourne l'icône correspondant à l'index passé en paramètre.*/

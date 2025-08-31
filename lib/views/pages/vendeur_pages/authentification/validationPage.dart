@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,9 +71,9 @@ class _ValidationPageState extends State<ValidationPage>
                 width: 23,
               ),
               AppText(
-                text: 'Bénin Poulet',
+                text: AppAttributes.appName,
                 color: AppColors.primaryColor,
-                fontSize: context.largeText * 1.5,
+                fontSize: context.largeText * 1.2,
                 fontWeight: FontWeight.w900,
               ),
               Padding(
