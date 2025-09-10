@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1095274966890-29j39vr0uve515tcfo3fk3iv9vu70o9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codeurplus.benin_poulet",
+            "certificate_hash": "7c1f3784a26d2dba7d14d4f1df8187654df88176"
+          }
+        },
+        {
           "client_id": "1095274966890-tt6mh1vt1qb1qnig3nr2p7rrt3ljlhc6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

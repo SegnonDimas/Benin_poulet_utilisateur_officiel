@@ -3,6 +3,7 @@ import 'package:benin_poulet/constants/authProviders.dart';
 import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/constants/user_profilStatus.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {
   final String userId;
@@ -86,20 +87,14 @@ class AppUser {
       role: map[UsersCollection.role] ?? UserRoles.VISITOR,
       isAnonymous: map[UsersCollection.isAnonymous] ?? true,
       profilStatus: map[UsersCollection.profilStatus] ?? UserProfilStatus.unverified,
-      dateOfBirth: map[UsersCollection.dateOfBirth] != null
-          ? DateTime.tryParse(map[UsersCollection.dateOfBirth])
-          : null,
+      dateOfBirth: _parseDateTime(map[UsersCollection.dateOfBirth]),
       placeOfBirth: map[UsersCollection.placeOfBirth],
       currentAddress: map[UsersCollection.currentAddress],
       idDocumentType: map[UsersCollection.idDocumentType],
       idDocumentCountry: map[UsersCollection.idDocumentCountry],
       idDocumentPhoto: _parseDocumentPhoto(map[UsersCollection.idDocumentPhoto]),
-      createdAt: map[UsersCollection.createdAt] != null
-          ? DateTime.tryParse(map[UsersCollection.createdAt])
-          : null,
-      lastLogin: map[UsersCollection.lastLogin] != null
-          ? DateTime.tryParse(map[UsersCollection.lastLogin])
-          : null,
+      createdAt: _parseDateTime(map[UsersCollection.createdAt]),
+      lastLogin: _parseDateTime(map[UsersCollection.lastLogin]),
       password: map[UsersCollection.password],
       storeIds: _parseStringList(map[UsersCollection.storeIds]),
       favoriteStoreIds: _parseStringList(map[UsersCollection.favoritesStoreIds]),
@@ -184,6 +179,29 @@ class AppUser {
         return {'recto': value};
       }
     }
+    return null;
+  }
+
+  /// Méthode utilitaire pour parser les dates depuis Firestore
+  /// Gère les Timestamp Firestore et les strings ISO8601
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    
+    // Si c'est un Timestamp Firestore
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+    
+    // Si c'est une string ISO8601
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+    
+    // Si c'est déjà un DateTime
+    if (value is DateTime) {
+      return value;
+    }
+    
     return null;
   }
 }

@@ -48,7 +48,7 @@ class _VProfilPageState extends State<VProfilPage>
   Future<void> _handleSignOut() async {
     final navigator = Navigator.of(context);
     final currentContext = context;
-    
+
     try {
       // Afficher un indicateur de chargement
       AppUtils.showInfoDialog(
@@ -57,40 +57,33 @@ class _VProfilPageState extends State<VProfilPage>
         type: InfoType.loading,
         barrierDismissible: false,
       );
-      
+
       // Effectuer la déconnexion
       await AuthServices.signOut();
-      
+
       // Vérifier si le widget est toujours monté
       if (!mounted) return;
-      
+
       // Fermer l'indicateur de chargement
       if (navigator.canPop()) {
         navigator.pop();
       }
-      
+
       // Rediriger vers la page de connexion
-      navigator.pushNamedAndRemoveUntil(
-        AppRoutes.LOGINPAGE, 
-        (route) => false
-      );
-      
+      navigator.pushNamedAndRemoveUntil(AppRoutes.LOGINPAGE, (route) => false);
     } catch (e) {
       // Vérifier si le widget est toujours monté
       if (!mounted) return;
-      
+
       // Fermer l'indicateur de chargement en cas d'erreur
       if (navigator.canPop()) {
         navigator.pop();
       }
-      
+
       // Afficher un message d'erreur
       if (mounted) {
-        AppUtils.showErrorNotification(
-          currentContext, 
-          'Erreur lors de la déconnexion: ${e.toString()}',
-          null
-        );
+        AppUtils.showErrorNotification(currentContext,
+            'Erreur lors de la déconnexion: ${e.toString()}', null);
       }
     }
   }
@@ -123,8 +116,10 @@ class _VProfilPageState extends State<VProfilPage>
           }
 
           if (user?.dateOfBirth != null) {
-            dateOfBirth =
-                '${user!.dateOfBirth!.day}/${user.dateOfBirth!.month}/${user.dateOfBirth!.year}';
+            final day = user!.dateOfBirth!.day;
+            final month = user.dateOfBirth!.month;
+            final year = user.dateOfBirth!.year;
+            dateOfBirth = '${day / month / year}';
           }
 
           if (user?.placeOfBirth != null && user!.placeOfBirth!.isNotEmpty) {
@@ -295,13 +290,21 @@ class _VProfilPageState extends State<VProfilPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Hero(
+              Hero(
                 tag: 'nomBoutique',
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Icon(
-                    Icons.verified_rounded,
-                    color: Colors.transparent,
+                    profilStatus == UserProfilStatus.verified
+                        ? Icons.verified_rounded
+                        : profilStatus == UserProfilStatus.pending
+                            ? Icons.hourglass_top_rounded
+                            : Icons.error_outlined,
+                    color: profilStatus == UserProfilStatus.verified
+                        ? Colors.transparent
+                        : profilStatus == UserProfilStatus.pending
+                            ? Colors.transparent
+                            : Colors.transparent,
                   ),
                 ),
               ),
@@ -319,8 +322,17 @@ class _VProfilPageState extends State<VProfilPage>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(
-                  Icons.verified_rounded,
-                  color: AppColors.primaryColor,
+                  profilStatus == UserProfilStatus.verified
+                      ? Icons.verified_rounded
+                      : profilStatus == UserProfilStatus.pending
+                          ? Icons.hourglass_top_rounded
+                          : Icons.error_outlined,
+                  color: profilStatus == UserProfilStatus.verified
+                      ? AppColors.primaryColor
+                      : profilStatus == UserProfilStatus.pending
+                          ? AppColors.orangeColor
+                          : AppColors.redColor,
+                  //Colors.transparent,
                 ),
               )
             ],
