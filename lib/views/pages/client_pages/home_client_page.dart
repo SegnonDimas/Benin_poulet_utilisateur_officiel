@@ -1,18 +1,20 @@
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
+// import 'package:benin_poulet/widgets/app_button.dart'; // Non utilisé - remplacé par GestureDetector
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
+import '../../../bloc/choixCategorie/secteur_bloc.dart';
 import '../../../bloc/client/home_client_bloc.dart';
 import '../../../constants/routes.dart';
+import '../../../utils/app_utils.dart';
 import '../../../widgets/app_text.dart';
 import '../../../widgets/app_textField.dart';
 import '../../colors/app_colors.dart';
 import '../../models_ui/model_carouselItem.dart';
-import '../../models_ui/model_recommandation.dart';
+// import '../../models_ui/model_recommandation.dart'; // Non utilisé pour l'instant
 
 class HomeClientPage extends StatefulWidget {
   const HomeClientPage({super.key});
@@ -26,6 +28,7 @@ class _HomeClientPageState extends State<HomeClientPage>
   // carouselSliderController
   CarouselSliderController controller = CarouselSliderController();
 
+  bool _shouldInterceptBack = true;
   final List<Widget> _carouselList = const [
     ModelCarouselItem(
       imgPath: 'assets/images/pouletCouveuse.png',
@@ -35,92 +38,36 @@ class _HomeClientPageState extends State<HomeClientPage>
     ModelCarouselItem(),
   ];
 
-  final List<Widget> _populaireList = [
-    Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  border: BoxBorder.all(color: AppColors.blueColor),
-                  borderRadius: BorderRadius.circular(15)),
-              child: ListTile(
-                //contentPadding: EdgeInsets.zero,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    "assets/images/pouletCouveuse.png",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      flex: 6,
-                      child: AppText(
-                        text: 'Poule couveuse',
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: AppButton(
-                          height: 30,
-                          bordeurRadius: 10,
-                          color: AppColors.deepOrangeColor.withOpacity(0.1),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 6.0, right: 6.0),
-                            child: AppText(
-                              text: 'Voir',
-                              color: AppColors.deepOrangeColor,
-                              fontSize: 12,
-                            ),
-                          )),
-                    )
-                  ],
-                ),
-                subtitle: AppText(
-                  text: 'Ne manquez pas',
-                  fontSize: 10,
-                ),
-              ))),
-    ),
-  ];
-
-  final List<ModelRecomandation> _listRecommandations = const [
-    ModelRecomandation(
-      shopName: 'Le Poulailler',
-      backgroundImage: 'assets/images/pouletCouveuse.png',
-    ),
-    ModelRecomandation(
-      shopName: 'Mike Store',
-    ),
-    ModelRecomandation(
-      shopName: 'Le gros',
-      backgroundImage: 'assets/images/pouletCouveuse.png',
-    ),
-  ];
-
   int carouselCurrentIndex = 0;
   late TabController _tabController;
-  String _selectedCategory = 'Tous';
-  String _searchQuery = '';
+  String _selectedCategory = 'Tout';
 
-  final List<String> _categories = [
-    'Tous',
-    'Poulets',
-    'Œufs',
-    'Aliments',
-    'Équipements',
-  ];
+  // String _searchQuery = ''; // Utilisé dans la barre de recherche
+
+  // Liste des secteurs pour le filtrage
+  List<String> _categories = ['Tout'];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    _initializeCategories();
     context.read<HomeClientBloc>().add(LoadHomeData());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _shouldInterceptBack = true;
+      });
+    });
+  }
+
+  /// Initialise la liste des secteurs pour le filtrage
+  void _initializeCategories() {
+    // Extraire tous les secteurs et les trier par ordre alphabétique
+    final allSectors = initialSectors.map((sector) => sector.name).toList()
+      ..sort();
+
+    // Mettre "Tout" au début de la liste
+    _categories = ['Tout'] + allSectors;
   }
 
   @override
@@ -131,56 +78,62 @@ class _HomeClientPageState extends State<HomeClientPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _buildSearchBar(),
-        leadingWidth: context.width * 0.15,
-        //centerTitle: true,
-        leading: IconButton(
-          icon: CircleAvatar(radius: 30, child: const Icon(Icons.person)),
-          onPressed: () {
-            // Navigation vers le profil de l'utilisateur
-            Navigator.pushNamed(context, AppRoutes.PROFILE);
-            /* Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => CProfilPage()));*/
-          },
-        ),
-      ),
-      body: BlocBuilder<HomeClientBloc, HomeClientState>(
-        builder: (context, state) {
-          if (state is HomeClientLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // CarouselSlier
-                _buildPubCarouselSlider(),
-
-                // Onglets Produits/Boutiques
-                _buildTabBar(),
-
-                _buildPopulaireCarouselSlider(),
-
-                // Filtres par catégorie
-                _buildCategoryFilters(),
-
-                // Contenu des onglets
-                _buildTabContent(state),
-              ],
-            ),
-          );
+    return WillPopScope(
+        onWillPop: () async {
+          final shouldPop = await AppUtils.showExitConfirmationDialog(context,
+              message: 'Voulez-vous vraiment quitter l\'application ?');
+          return shouldPop; // true = autorise le pop, false = bloque
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        foregroundColor: Colors.white,
-        backgroundColor: AppColors.primaryColor,
-        child: Icon(Icons.shopping_cart),
-      ),
-    );
+        child: Scaffold(
+          appBar: AppBar(
+            title: _buildSearchBar(),
+            leadingWidth: context.width * 0.15,
+            //centerTitle: true,
+            leading: IconButton(
+              icon: CircleAvatar(radius: 30, child: const Icon(Icons.person)),
+              onPressed: () {
+                // Navigation vers le profil de l'utilisateur
+                Navigator.pushNamed(context, AppRoutes.PROFILE);
+                /* Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => CProfilPage()));*/
+              },
+            ),
+          ),
+          body: BlocBuilder<HomeClientBloc, HomeClientState>(
+            builder: (context, state) {
+              if (state is HomeClientLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // CarouselSlier
+                    _buildPubCarouselSlider(),
+
+                    // Onglets Produits/Boutiques
+                    _buildTabBar(),
+
+                    _buildPromotionCarouselSlider(),
+
+                    // Filtres par secteur
+                    _buildCategoryFilters(),
+
+                    // Contenu des onglets
+                    _buildTabContent(state),
+                  ],
+                ),
+              );
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            foregroundColor: Colors.white,
+            backgroundColor: AppColors.primaryColor,
+            child: Icon(Icons.shopping_cart),
+          ),
+        ));
   }
 
   Widget _buildPubCarouselSlider() {
@@ -238,73 +191,170 @@ class _HomeClientPageState extends State<HomeClientPage>
     );
   }
 
-  Widget _buildPopulaireCarouselSlider() {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: CarouselSlider(
-          items: _populaireList,
-          carouselController: controller,
-          options: CarouselOptions(
-              autoPlay: true,
-              autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
-              aspectRatio: 13 / 3,
-              enlargeFactor: 0.2,
-              enlargeCenterPage: true,
-              //autoPlayAnimationDuration: Duration(milliseconds: 500),
-              autoPlayInterval: Duration(milliseconds: 2000),
-              viewportFraction: 0.98,
-              onPageChanged: (index, CarouselPageChangedReason c) {
-                //return index;
-                setState(() {
-                  carouselCurrentIndex = index;
-                });
-              })),
+  Widget _buildPromotionCarouselSlider() {
+    return BlocBuilder<HomeClientBloc, HomeClientState>(
+      builder: (context, state) {
+        if (state is HomeClientLoaded) {
+          // Filtrer les produits en promotion
+          final promotionProducts = state.products
+              .where((product) => product.isInPromotion)
+              .take(5) // Limiter à 5 produits pour le carousel
+              .toList();
+
+          if (promotionProducts.isEmpty) {
+            return const SizedBox
+                .shrink(); // Ne rien afficher s'il n'y a pas de promotions
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Banner(
+              message: 'Promo',
+              color: AppColors.blueColor,
+              location: BannerLocation.topEnd,
+              child: CarouselSlider(
+                  items: promotionProducts
+                      .map((product) => _buildPromotionItem(product))
+                      .toList(),
+                  carouselController: controller,
+                  options: CarouselOptions(
+                      autoPlay: true,
+                      autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
+                      aspectRatio: 13 / 3,
+                      enlargeFactor: 0.2,
+                      enlargeCenterPage: true,
+                      autoPlayInterval: Duration(milliseconds: 3000),
+                      viewportFraction: 0.98,
+                      onPageChanged: (index, CarouselPageChangedReason c) {
+                        setState(() {
+                          carouselCurrentIndex = index;
+                        });
+                      })),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
-  Widget _buildCarousel() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SizedBox(
-          height: context.height * 0.2,
-          child: PageView.builder(
-            itemCount: _carouselList.length,
-            allowImplicitScrolling: true,
-            onPageChanged: (index) {
-              setState(() {
-                carouselCurrentIndex = index;
-              });
-            },
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _carouselList[index],
-              );
-            },
+  /// Construit un élément de promotion pour le carousel
+  Widget _buildPromotionItem(Product product) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: BoxBorder.all(color: AppColors.blueColor),
+            borderRadius: BorderRadius.circular(15),
           ),
-        ),
-        Positioned(
-          bottom: 10,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              _carouselList.length,
-              (index) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: carouselCurrentIndex == index
-                      ? AppColors.primaryColor
-                      : Colors.grey.shade400,
+            children: [
+              // Image du produit
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: product.imageUrl.isNotEmpty
+                    ? Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.cover,
+                        width: 60,
+                        height: 60,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 60,
+                            height: 60,
+                            color: Theme.of(context).colorScheme.background,
+                            child: Icon(Icons.image_not_supported,
+                                color: Theme.of(context).colorScheme.error),
+                          );
+                        },
+                      )
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: Theme.of(context).colorScheme.background,
+                        child: Icon(Icons.image_not_supported,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withOpacity(0.3)),
+                      ),
+              ),
+              const SizedBox(width: 12),
+              // Informations du produit
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Nom du produit
+                    AppText(
+                      text: product.name,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    const SizedBox(height: 4),
+                    // Prix normal barré et prix promotionnel
+                    if (product.originalPrice != null)
+                      Row(
+                        children: [
+                          // Prix normal barré
+                          AppText(
+                            text: '${product.originalPrice!.toInt()} FCFA',
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                          const SizedBox(width: 8),
+                          // Prix promotionnel
+                          AppText(
+                            text: '${product.price.toInt()} FCFA',
+                            fontSize: 12,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      )
+                    else
+                      // Prix normal (pas de promotion)
+                      AppText(
+                        text: '${product.price.toInt()} FCFA',
+                        fontSize: 12,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  ],
                 ),
               ),
-            ),
+              const SizedBox(width: 8),
+              // Bouton Voir
+              GestureDetector(
+                onTap: () {
+                  // Navigation vers la page produit
+                  Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+                      arguments: product);
+                },
+                child: Container(
+                  height: 30,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.deepOrangeColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: AppText(
+                      text: 'Voir',
+                      color: AppColors.deepOrangeColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -322,9 +372,9 @@ class _HomeClientPageState extends State<HomeClientPage>
       hintText: "Rechercher . . .",
       borderRadius: BorderRadius.circular(15),
       onChanged: (value) {
-        setState(() {
-          _searchQuery = value;
-        });
+        // setState(() {
+        //   _searchQuery = value;
+        // });
         context.read<HomeClientBloc>().add(SearchProducts(query: value));
       },
     );
@@ -377,6 +427,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                   setState(() {
                     _selectedCategory = category;
                   });
+                  // Déclencher un rebuild du contenu des onglets
                   context.read<HomeClientBloc>().add(
                         FilterByCategory(category: category),
                       );
@@ -440,11 +491,18 @@ class _HomeClientPageState extends State<HomeClientPage>
 
   Widget _buildProductsList(HomeClientState state) {
     if (state is HomeClientLoaded) {
+      // Filtrer les produits selon le secteur sélectionné
+      final filteredProducts = _selectedCategory == 'Tout'
+          ? state.products
+          : state.products
+              .where((product) => product.category == _selectedCategory)
+              .toList();
+
       return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: state.products.length,
+        itemCount: filteredProducts.length,
         itemBuilder: (context, index) {
-          final product = state.products[index];
+          final product = filteredProducts[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
@@ -484,11 +542,18 @@ class _HomeClientPageState extends State<HomeClientPage>
 
   Widget _buildStoresList(HomeClientState state) {
     if (state is HomeClientLoaded) {
+      // Filtrer les boutiques selon le secteur sélectionné
+      // Note: StoreClient n'a pas de propriété secteur, donc on affiche toutes les boutiques pour l'instant
+      // TODO: Ajouter la propriété secteur au modèle StoreClient si nécessaire
+      final filteredStores = _selectedCategory == 'Tout'
+          ? state.stores
+          : state.stores; // Pour l'instant, pas de filtrage par secteur
+
       return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: state.stores.length,
+        itemCount: filteredStores.length,
         itemBuilder: (context, index) {
-          final store = state.stores[index];
+          final store = filteredStores[index];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(

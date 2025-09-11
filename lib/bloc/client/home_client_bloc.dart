@@ -13,20 +13,24 @@ class Product {
   final String name;
   final String imageUrl;
   final double price;
+  final double? originalPrice; // Prix original (pour les promotions)
   final String description;
   final String category;
   final String storeId; // Ajout du storeId pour les avis
   final String storeName; // Ajout du nom de la boutique
+  final bool isInPromotion; // Ajout de la propriété promotion
 
   Product({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.price,
+    this.originalPrice,
     required this.description,
     required this.category,
     required this.storeId,
     required this.storeName,
+    this.isInPromotion = false,
   });
 
   factory Product.fromProduit(Produit produit, {String? storeName}) {
@@ -35,10 +39,12 @@ class Product {
       name: produit.productName,
       imageUrl: produit.productImagesPath.isNotEmpty ? produit.productImagesPath.first : '',
       price: produit.isInPromotion && produit.promoPrice != null ? produit.promoPrice! : produit.productUnitPrice,
+      originalPrice: produit.isInPromotion ? produit.productUnitPrice : null,
       description: produit.productDescription,
       category: produit.category,
       storeId: produit.storeId,
       storeName: storeName ?? 'Boutique',
+      isInPromotion: produit.isInPromotion,
     );
   }
 }
