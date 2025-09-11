@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../../../bloc/choixCategorie/secteur_bloc.dart';
+import '../../../bloc/client/cart_client_bloc.dart' as cart_bloc;
 import '../../../bloc/client/home_client_bloc.dart';
 import '../../../constants/routes.dart';
 import '../../../utils/app_utils.dart';
@@ -28,7 +29,6 @@ class _HomeClientPageState extends State<HomeClientPage>
   // carouselSliderController
   CarouselSliderController controller = CarouselSliderController();
 
-  bool _shouldInterceptBack = true;
   final List<Widget> _carouselList = const [
     ModelCarouselItem(
       imgPath: 'assets/images/pouletCouveuse.png',
@@ -53,11 +53,6 @@ class _HomeClientPageState extends State<HomeClientPage>
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
     _initializeCategories();
     context.read<HomeClientBloc>().add(LoadHomeData());
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _shouldInterceptBack = true;
-      });
-    });
   }
 
   /// Initialise la liste des secteurs pour le filtrage
@@ -99,36 +94,48 @@ class _HomeClientPageState extends State<HomeClientPage>
               },
             ),
           ),
-          body: BlocBuilder<HomeClientBloc, HomeClientState>(
-            builder: (context, state) {
-              if (state is HomeClientLoading) {
-                return const Center(child: CircularProgressIndicator());
+          body:
+              BlocListener<cart_bloc.CartClientBloc, cart_bloc.CartClientState>(
+            listener: (context, cartState) {
+              if (cartState is cart_bloc.CartClientLoaded) {
+                // Mettre à jour le HomeClientBloc avec les nouveaux IDs du panier
+                context.read<HomeClientBloc>().add(LoadCartStatus());
               }
-
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // CarouselSlier
-                    _buildPubCarouselSlider(),
-
-                    // Onglets Produits/Boutiques
-                    _buildTabBar(),
-
-                    _buildPromotionCarouselSlider(),
-
-                    // Filtres par secteur
-                    _buildCategoryFilters(),
-
-                    // Contenu des onglets
-                    _buildTabContent(state),
-                  ],
-                ),
-              );
             },
+            child: BlocBuilder<HomeClientBloc, HomeClientState>(
+              builder: (context, state) {
+                if (state is HomeClientLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // CarouselSlier
+                      _buildPubCarouselSlider(),
+
+                      // Onglets Produits/Boutiques
+                      _buildTabBar(),
+
+                      _buildPromotionCarouselSlider(),
+
+                      // Filtres par secteur
+                      _buildCategoryFilters(),
+
+                      // Contenu des onglets
+                      _buildTabContent(state),
+                      //SizedBox(height: context.height * 0.2),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.CART);
+            },
             foregroundColor: Colors.white,
             backgroundColor: AppColors.primaryColor,
             child: Icon(Icons.shopping_cart),
@@ -208,29 +215,24 @@ class _HomeClientPageState extends State<HomeClientPage>
 
           return Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Banner(
-              message: 'Promo',
-              color: AppColors.blueColor,
-              location: BannerLocation.topEnd,
-              child: CarouselSlider(
-                  items: promotionProducts
-                      .map((product) => _buildPromotionItem(product))
-                      .toList(),
-                  carouselController: controller,
-                  options: CarouselOptions(
-                      autoPlay: true,
-                      autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
-                      aspectRatio: 13 / 3,
-                      enlargeFactor: 0.2,
-                      enlargeCenterPage: true,
-                      autoPlayInterval: Duration(milliseconds: 3000),
-                      viewportFraction: 0.98,
-                      onPageChanged: (index, CarouselPageChangedReason c) {
-                        setState(() {
-                          carouselCurrentIndex = index;
-                        });
-                      })),
-            ),
+            child: CarouselSlider(
+                items: promotionProducts
+                    .map((product) => _buildPromotionItem(product))
+                    .toList(),
+                carouselController: controller,
+                options: CarouselOptions(
+                    autoPlay: true,
+                    autoPlayCurve: Curves.fastEaseInToSlowEaseOut,
+                    aspectRatio: 13 / 3,
+                    enlargeFactor: 0.2,
+                    enlargeCenterPage: true,
+                    autoPlayInterval: Duration(milliseconds: 3000),
+                    viewportFraction: 0.98,
+                    onPageChanged: (index, CarouselPageChangedReason c) {
+                      setState(() {
+                        carouselCurrentIndex = index;
+                      });
+                    })),
           );
         }
         return const SizedBox.shrink();
@@ -244,115 +246,171 @@ class _HomeClientPageState extends State<HomeClientPage>
       padding: const EdgeInsets.only(bottom: 8),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: BoxBorder.all(color: AppColors.blueColor),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Row(
-            children: [
-              // Image du produit
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: product.imageUrl.isNotEmpty
-                    ? Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.cover,
-                        width: 60,
-                        height: 60,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+        child: Banner(
+          message: 'Promo',
+          color: AppColors.blueColor,
+          location: BannerLocation.topEnd,
+          child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                border: BoxBorder.all(color: AppColors.blueColor),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                children: [
+                  // Image du produit
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: product.imageUrl.isNotEmpty
+                        ? Image.network(
+                            product.imageUrl,
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 60,
+                                height: 60,
+                                color: Theme.of(context).colorScheme.background,
+                                child: Icon(Icons.image_not_supported,
+                                    color: Theme.of(context).colorScheme.error),
+                              );
+                            },
+                          )
+                        : Container(
                             width: 60,
                             height: 60,
                             color: Theme.of(context).colorScheme.background,
                             child: Icon(Icons.image_not_supported,
-                                color: Theme.of(context).colorScheme.error),
-                          );
-                        },
-                      )
-                    : Container(
-                        width: 60,
-                        height: 60,
-                        color: Theme.of(context).colorScheme.background,
-                        child: Icon(Icons.image_not_supported,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .inverseSurface
-                                .withOpacity(0.3)),
-                      ),
-              ),
-              const SizedBox(width: 12),
-              // Informations du produit
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Nom du produit
-                    AppText(
-                      text: product.name,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    const SizedBox(height: 4),
-                    // Prix normal barré et prix promotionnel
-                    if (product.originalPrice != null)
-                      Row(
-                        children: [
-                          // Prix normal barré
-                          AppText(
-                            text: '${product.originalPrice!.toInt()} FCFA',
-                            fontSize: 10,
-                            color: Colors.grey[600],
-                            decoration: TextDecoration.lineThrough,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface
+                                    .withOpacity(0.3)),
                           ),
-                          const SizedBox(width: 8),
-                          // Prix promotionnel
+                  ),
+                  const SizedBox(width: 12),
+                  // Informations du produit
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Nom du produit
+                        AppText(
+                          text: product.name,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(height: 4),
+                        // Prix normal barré et prix promotionnel
+                        if (product.originalPrice != null)
+                          Row(
+                            children: [
+                              // Prix normal barré
+                              AppText(
+                                text: '${product.originalPrice!.toInt()} FCFA',
+                                fontSize: 10,
+                                color: Colors.grey[600],
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                              const SizedBox(width: 8),
+                              // Prix promotionnel
+                              AppText(
+                                text: '${product.price.toInt()} FCFA',
+                                fontSize: 12,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
+                          )
+                        else
+                          // Prix normal (pas de promotion)
                           AppText(
                             text: '${product.price.toInt()} FCFA',
                             fontSize: 12,
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      )
-                    else
-                      // Prix normal (pas de promotion)
-                      AppText(
-                        text: '${product.price.toInt()} FCFA',
-                        fontSize: 12,
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Bouton Voir
-              GestureDetector(
-                onTap: () {
-                  // Navigation vers la page produit
-                  Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
-                      arguments: product);
-                },
-                child: Container(
-                  height: 30,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: AppColors.deepOrangeColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: AppText(
-                      text: 'Voir',
-                      color: AppColors.deepOrangeColor,
-                      fontSize: 12,
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
+                  const SizedBox(width: 8),
+                  // Bouton ajouter au panier
+                  BlocBuilder<HomeClientBloc, HomeClientState>(
+                    builder: (context, homeState) {
+                      final isInCart = homeState is HomeClientLoaded &&
+                          homeState.cartProductIds.contains(product.id);
+
+                      return GestureDetector(
+                        onTap: () {
+                          if (isInCart) {
+                            // Si déjà dans le panier, retirer
+                            context.read<cart_bloc.CartClientBloc>().add(
+                                cart_bloc.RemoveFromCart(
+                                    productId: product.id));
+                            AppUtils.showSuccessNotification(
+                                context, '${product.name} retiré du panier');
+                          } else {
+                            // Si pas dans le panier, ajouter
+                            context.read<cart_bloc.CartClientBloc>().add(
+                                cart_bloc.AddToCart(productId: product.id));
+                            AppUtils.showSuccessNotification(
+                                context, '${product.name} ajouté au panier');
+                          }
+                        },
+                        child: Container(
+                          height: 30,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          decoration: BoxDecoration(
+                            color: isInCart
+                                ? AppColors.primaryColor.withOpacity(0.1)
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface
+                                    .withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.add_shopping_cart,
+                              color: isInCart
+                                  ? AppColors.primaryColor
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.3),
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 4),
+                  // Bouton voir détails
+                  GestureDetector(
+                    onTap: () {
+                      // Navigation vers la page produit
+                      Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+                          arguments: product);
+                    },
+                    child: Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.deepOrangeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: AppText(
+                          text: 'Voir',
+                          color: AppColors.deepOrangeColor,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
         ),
       ),
     );
@@ -498,40 +556,79 @@ class _HomeClientPageState extends State<HomeClientPage>
               .where((product) => product.category == _selectedCategory)
               .toList();
 
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: filteredProducts.length,
-        itemBuilder: (context, index) {
-          final product = filteredProducts[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(product.imageUrl),
-                radius: 25,
-              ),
-              title: AppText(text: product.name),
-              subtitle: AppText(
-                text: '${product.price} FCFA',
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              trailing: IconButton(
-                icon: const Icon(Icons.add_shopping_cart),
-                onPressed: () {
-                  context.read<HomeClientBloc>().add(
-                        AddToCart(product: product),
-                      );
+      return NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is OverscrollNotification) {
+            // Transfère le scroll vers le parent à la fin du scroll
+            PrimaryScrollController.of(context).jumpTo(
+              PrimaryScrollController.of(context).offset +
+                  notification.overscroll / 2,
+            );
+          }
+          return false;
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: filteredProducts.length,
+          itemBuilder: (context, index) {
+            final product = filteredProducts[index];
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(product.imageUrl),
+                  radius: 25,
+                ),
+                title: AppText(text: product.name),
+                subtitle: AppText(
+                  text: '${product.price} FCFA',
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+                trailing: BlocBuilder<HomeClientBloc, HomeClientState>(
+                  builder: (context, homeState) {
+                    final isInCart = homeState is HomeClientLoaded &&
+                        homeState.cartProductIds.contains(product.id);
+
+                    return IconButton(
+                      icon: Icon(
+                        Icons.add_shopping_cart,
+                        color: isInCart
+                            ? AppColors.primaryColor
+                            : Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        if (isInCart) {
+                          // Si déjà dans le panier, retirer
+                          context.read<cart_bloc.CartClientBloc>().add(
+                                cart_bloc.RemoveFromCart(productId: product.id),
+                              );
+                          AppUtils.showInfoNotification(
+                              context, '${product.name} retiré du panier');
+                        } else {
+                          // Si pas dans le panier, ajouter
+                          context.read<cart_bloc.CartClientBloc>().add(
+                                cart_bloc.AddToCart(productId: product.id),
+                              );
+                          AppUtils.showSuccessNotification(
+                              context, '${product.name} ajouté au panier');
+                        }
+                      },
+                    );
+                  },
+                ),
+                onTap: () {
+                  // Navigation vers la page produit
+                  Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+                      arguments: product);
                 },
               ),
-              onTap: () {
-                // Navigation vers la page produit
-                Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
-                    arguments: product);
-              },
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     }
 
@@ -549,42 +646,54 @@ class _HomeClientPageState extends State<HomeClientPage>
           ? state.stores
           : state.stores; // Pour l'instant, pas de filtrage par secteur
 
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: filteredStores.length,
-        itemBuilder: (context, index) {
-          final store = filteredStores[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(store.imageUrl),
-                radius: 25,
-              ),
-              title: AppText(text: store.name),
-              subtitle: AppText(text: store.location),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: AppColors.orangeColor,
-                    size: 16,
-                  ),
-                  AppText(
-                    text: ' ${store.rating}',
-                    fontSize: 12,
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Navigation vers la page boutique
-                Navigator.pushNamed(context, AppRoutes.STOREDETAILS,
-                    arguments: store);
-              },
-            ),
-          );
+      return NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is OverscrollNotification) {
+            // Transfère le scroll vers le parent à la fin du scroll
+            PrimaryScrollController.of(context).jumpTo(
+              PrimaryScrollController.of(context).offset +
+                  notification.overscroll / 2,
+            );
+          }
+          return false;
         },
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: filteredStores.length,
+          itemBuilder: (context, index) {
+            final store = filteredStores[index];
+            return Card(
+              margin: const EdgeInsets.only(bottom: 12),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(store.imageUrl),
+                  radius: 25,
+                ),
+                title: AppText(text: store.name),
+                subtitle: AppText(text: store.location),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: AppColors.orangeColor,
+                      size: 16,
+                    ),
+                    AppText(
+                      text: ' ${store.rating}',
+                      fontSize: 12,
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  // Navigation vers la page boutique
+                  Navigator.pushNamed(context, AppRoutes.STOREDETAILS,
+                      arguments: store);
+                },
+              ),
+            );
+          },
+        ),
       );
     }
 

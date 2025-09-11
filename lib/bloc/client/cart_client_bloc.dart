@@ -1,24 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-
-// Modèles temporaires pour les placeholders
-class Product {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final double price;
-  final String description;
-  final String category;
-
-  Product({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.price,
-    required this.description,
-    required this.category,
-  });
-}
+import 'package:benin_poulet/services/cart_service.dart';
+import 'package:benin_poulet/bloc/client/home_client_bloc.dart';
 
 class CartItem {
   final Product product;
@@ -43,13 +26,13 @@ abstract class CartClientEvent extends Equatable {
 class LoadCart extends CartClientEvent {}
 
 class AddToCart extends CartClientEvent {
-  final Product product;
+  final String productId;
   final int quantity;
 
-  const AddToCart({required this.product, required this.quantity});
+  const AddToCart({required this.productId, this.quantity = 1});
 
   @override
-  List<Object?> get props => [product, quantity];
+  List<Object?> get props => [productId, quantity];
 }
 
 class RemoveFromCart extends CartClientEvent {
@@ -59,6 +42,15 @@ class RemoveFromCart extends CartClientEvent {
 
   @override
   List<Object?> get props => [productId];
+}
+
+class LoadCartProducts extends CartClientEvent {
+  final List<Product> allProducts;
+
+  const LoadCartProducts({required this.allProducts});
+
+  @override
+  List<Object?> get props => [allProducts];
 }
 
 class UpdateQuantity extends CartClientEvent {
@@ -86,6 +78,8 @@ class CartClientInitial extends CartClientState {}
 class CartClientLoading extends CartClientState {}
 
 class CartClientLoaded extends CartClientState {
+  final List<String> cartProductIds;
+  final List<Product> cartProducts;
   final List<CartItem> cartItems;
   final double subtotal;
   final double shippingCost;
@@ -93,6 +87,8 @@ class CartClientLoaded extends CartClientState {
   final double total;
 
   const CartClientLoaded({
+    required this.cartProductIds,
+    required this.cartProducts,
     required this.cartItems,
     required this.subtotal,
     required this.shippingCost,
@@ -101,6 +97,8 @@ class CartClientLoaded extends CartClientState {
 
   @override
   List<Object?> get props => [
+    cartProductIds,
+    cartProducts,
     cartItems,
     subtotal,
     shippingCost,
@@ -109,12 +107,16 @@ class CartClientLoaded extends CartClientState {
   ];
 
   CartClientLoaded copyWith({
+    List<String>? cartProductIds,
+    List<Product>? cartProducts,
     List<CartItem>? cartItems,
     double? subtotal,
     double? shippingCost,
     double? discount,
   }) {
     return CartClientLoaded(
+      cartProductIds: cartProductIds ?? this.cartProductIds,
+      cartProducts: cartProducts ?? this.cartProducts,
       cartItems: cartItems ?? this.cartItems,
       subtotal: subtotal ?? this.subtotal,
       shippingCost: shippingCost ?? this.shippingCost,
@@ -134,43 +136,16 @@ class CartClientError extends CartClientState {
 
 // BLoC
 class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
+  final CartService _cartService = CartService();
+
   CartClientBloc() : super(CartClientInitial()) {
     on<LoadCart>(_onLoadCart);
     on<AddToCart>(_onAddToCart);
     on<RemoveFromCart>(_onRemoveFromCart);
     on<UpdateQuantity>(_onUpdateQuantity);
+    on<LoadCartProducts>(_onLoadCartProducts);
     on<ClearCart>(_onClearCart);
   }
-
-  // Données temporaires pour les placeholders
-  final List<Product> _mockProducts = [
-    Product(
-      id: '1',
-      name: 'Poulet de chair',
-      imageUrl: 'https://via.placeholder.com/150',
-      price: 2500.0,
-      description: 'Poulet de chair frais et de qualité',
-      category: 'Poulets',
-    ),
-    Product(
-      id: '2',
-      name: 'Œufs frais',
-      imageUrl: 'https://via.placeholder.com/150',
-      price: 500.0,
-      description: 'Œufs frais du jour',
-      category: 'Œufs',
-    ),
-    Product(
-      id: '3',
-      name: 'Aliment pour volaille',
-      imageUrl: 'https://via.placeholder.com/150',
-      price: 15000.0,
-      description: 'Aliment complet pour volaille',
-      category: 'Aliments',
-    ),
-  ];
-
-  List<CartItem> _cartItems = [];
 
   Future<void> _onLoadCart(
     LoadCart event,
@@ -179,25 +154,18 @@ class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
     emit(CartClientLoading());
     
     try {
-      // Simulation d'un délai de chargement
-      await Future.delayed(const Duration(seconds: 1));
+      final cartProductIds = await _cartService.getCartProductIds();
       
-      // Données temporaires du panier
-      _cartItems = [
-        CartItem(product: _mockProducts[0], quantity: 2),
-        CartItem(product: _mockProducts[1], quantity: 1),
-      ];
-      
-      final subtotal = _cartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
-      final shippingCost = subtotal > 10000 ? 0.0 : 500.0; // Livraison gratuite au-dessus de 10k
       
       emit(CartClientLoaded(
-        cartItems: _cartItems,
-        subtotal: subtotal,
-        shippingCost: shippingCost,
+        cartProductIds: cartProductIds,
+        cartProducts: [], // Sera rempli par LoadCartProducts
+        cartItems: [], // Sera rempli par LoadCartProducts
+        subtotal: 0.0,
+        shippingCost: 0.0,
       ));
     } catch (e) {
-      emit(CartClientError(message: 'Erreur lors du chargement du panier'));
+      emit(CartClientError(message: 'Erreur lors du chargement du panier: $e'));
     }
   }
 
@@ -205,36 +173,26 @@ class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
     AddToCart event,
     Emitter<CartClientState> emit,
   ) async {
-    if (state is CartClientLoaded) {
-      final currentState = state as CartClientLoaded;
-      
-      // Vérifier si le produit est déjà dans le panier
-      final existingIndex = _cartItems.indexWhere(
-        (item) => item.product.id == event.product.id,
-      );
-      
-      if (existingIndex >= 0) {
-        // Mettre à jour la quantité
-        _cartItems[existingIndex] = CartItem(
-          product: _cartItems[existingIndex].product,
-          quantity: _cartItems[existingIndex].quantity + event.quantity,
-        );
+    try {
+      final success = await _cartService.addProductToCart(event.productId);
+      if (success) {
+        // Mettre à jour l'état immédiatement
+        if (state is CartClientLoaded) {
+          final currentState = state as CartClientLoaded;
+          final updatedCartIds = Set<String>.from(currentState.cartProductIds);
+          updatedCartIds.add(event.productId);
+          
+          emit(currentState.copyWith(
+            cartProductIds: updatedCartIds.toList(),
+          ));
+        }
+        // Recharger le panier complet
+        add(LoadCart());
       } else {
-        // Ajouter un nouvel article
-        _cartItems.add(CartItem(
-          product: event.product,
-          quantity: event.quantity,
-        ));
+        emit(CartClientError(message: 'Erreur lors de l\'ajout au panier'));
       }
-      
-      final subtotal = _cartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
-      final shippingCost = subtotal > 10000 ? 0.0 : 500.0;
-      
-      emit(CartClientLoaded(
-        cartItems: _cartItems,
-        subtotal: subtotal,
-        shippingCost: shippingCost,
-      ));
+    } catch (e) {
+      emit(CartClientError(message: 'Erreur lors de l\'ajout au panier: $e'));
     }
   }
 
@@ -242,17 +200,26 @@ class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
     RemoveFromCart event,
     Emitter<CartClientState> emit,
   ) async {
-    if (state is CartClientLoaded) {
-      _cartItems.removeWhere((item) => item.product.id == event.productId);
-      
-      final subtotal = _cartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
-      final shippingCost = subtotal > 10000 ? 0.0 : 500.0;
-      
-      emit(CartClientLoaded(
-        cartItems: _cartItems,
-        subtotal: subtotal,
-        shippingCost: shippingCost,
-      ));
+    try {
+      final success = await _cartService.removeProductFromCart(event.productId);
+      if (success) {
+        // Mettre à jour l'état immédiatement
+        if (state is CartClientLoaded) {
+          final currentState = state as CartClientLoaded;
+          final updatedCartIds = List<String>.from(currentState.cartProductIds);
+          updatedCartIds.remove(event.productId);
+          
+          emit(currentState.copyWith(
+            cartProductIds: updatedCartIds,
+          ));
+        }
+        // Recharger le panier complet
+        add(LoadCart());
+      } else {
+        emit(CartClientError(message: 'Erreur lors de la suppression du panier'));
+      }
+    } catch (e) {
+      emit(CartClientError(message: 'Erreur lors de la suppression du panier: $e'));
     }
   }
 
@@ -261,29 +228,58 @@ class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
     Emitter<CartClientState> emit,
   ) async {
     if (state is CartClientLoaded) {
-      final index = _cartItems.indexWhere(
-        (item) => item.product.id == event.productId,
-      );
+      final currentState = state as CartClientLoaded;
       
-      if (index >= 0) {
-        if (event.quantity <= 0) {
-          _cartItems.removeAt(index);
-        } else {
-          _cartItems[index] = CartItem(
-            product: _cartItems[index].product,
+      // Mettre à jour la quantité dans cartItems
+      final updatedCartItems = currentState.cartItems.map((item) {
+        if (item.product.id == event.productId) {
+          return CartItem(
+            product: item.product,
             quantity: event.quantity,
           );
         }
-        
-        final subtotal = _cartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
-        final shippingCost = subtotal > 10000 ? 0.0 : 500.0;
-        
-        emit(CartClientLoaded(
-          cartItems: _cartItems,
-          subtotal: subtotal,
-          shippingCost: shippingCost,
-        ));
-      }
+        return item;
+      }).toList();
+      
+      // Recalculer les totaux
+      final subtotal = updatedCartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
+      final shippingCost = subtotal > 10000 ? 0.0 : 500.0;
+      
+      emit(currentState.copyWith(
+        cartItems: updatedCartItems,
+        subtotal: subtotal,
+        shippingCost: shippingCost,
+      ));
+    }
+  }
+
+  Future<void> _onLoadCartProducts(
+    LoadCartProducts event,
+    Emitter<CartClientState> emit,
+  ) async {
+    if (state is CartClientLoaded) {
+      final currentState = state as CartClientLoaded;
+      
+      // Filtrer les produits qui sont dans le panier
+      final cartProducts = event.allProducts
+          .where((product) => currentState.cartProductIds.contains(product.id))
+          .toList();
+      
+      // Créer les CartItems avec quantité par défaut de 1
+      final cartItems = cartProducts
+          .map((product) => CartItem(product: product, quantity: 1))
+          .toList();
+      
+      // Calculer les totaux
+      final subtotal = cartItems.fold<double>(0.0, (sum, item) => sum + item.totalPrice);
+      final shippingCost = subtotal > 10000 ? 0.0 : 500.0; // Livraison gratuite au-dessus de 10k
+      
+      emit(currentState.copyWith(
+        cartProducts: cartProducts,
+        cartItems: cartItems,
+        subtotal: subtotal,
+        shippingCost: shippingCost,
+      ));
     }
   }
 
@@ -291,12 +287,21 @@ class CartClientBloc extends Bloc<CartClientEvent, CartClientState> {
     ClearCart event,
     Emitter<CartClientState> emit,
   ) async {
-    _cartItems.clear();
-    
-    emit(CartClientLoaded(
-      cartItems: _cartItems,
-      subtotal: 0,
-      shippingCost: 0,
-    ));
+    try {
+      final success = await _cartService.clearCart();
+      if (success) {
+        emit(CartClientLoaded(
+          cartProductIds: [],
+          cartProducts: [],
+          cartItems: [],
+          subtotal: 0.0,
+          shippingCost: 0.0,
+        ));
+      } else {
+        emit(CartClientError(message: 'Erreur lors du vidage du panier'));
+      }
+    } catch (e) {
+      emit(CartClientError(message: 'Erreur lors du vidage du panier: $e'));
+    }
   }
 }

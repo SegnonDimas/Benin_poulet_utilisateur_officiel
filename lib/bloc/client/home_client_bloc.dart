@@ -6,6 +6,7 @@ import 'package:benin_poulet/models/produit.dart';
 import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/services/cache_manager.dart';
 import 'package:benin_poulet/services/sync_service.dart';
+import 'package:benin_poulet/services/cart_service.dart';
 
 // Modèles adaptés pour l'interface client
 class Product {
@@ -90,6 +91,8 @@ abstract class HomeClientEvent extends Equatable {
 
 class LoadHomeData extends HomeClientEvent {}
 
+class LoadCartStatus extends HomeClientEvent {}
+
 class SearchProducts extends HomeClientEvent {
   final String query;
 
@@ -149,6 +152,7 @@ class HomeClientLoaded extends HomeClientState {
   final String? searchQuery;
   final String? selectedCategory;
   final bool isFromCache;
+  final Set<String> cartProductIds; // IDs des produits dans le panier
 
   const HomeClientLoaded({
     required this.products,
@@ -158,6 +162,7 @@ class HomeClientLoaded extends HomeClientState {
     this.searchQuery,
     this.selectedCategory,
     this.isFromCache = false,
+    this.cartProductIds = const {},
   });
 
   @override
@@ -169,6 +174,7 @@ class HomeClientLoaded extends HomeClientState {
         searchQuery,
         selectedCategory,
         isFromCache,
+        cartProductIds,
       ];
 
   HomeClientLoaded copyWith({
@@ -179,6 +185,7 @@ class HomeClientLoaded extends HomeClientState {
     String? searchQuery,
     String? selectedCategory,
     bool? isFromCache,
+    Set<String>? cartProductIds,
   }) {
     return HomeClientLoaded(
       products: products ?? this.products,
@@ -188,6 +195,7 @@ class HomeClientLoaded extends HomeClientState {
       searchQuery: searchQuery ?? this.searchQuery,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       isFromCache: isFromCache ?? this.isFromCache,
+      cartProductIds: cartProductIds ?? this.cartProductIds,
     );
   }
 }
@@ -225,9 +233,11 @@ class HomeClientOffline extends HomeClientState {
 class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   final FirestoreService _firestoreService = FirestoreService();
   final ProductRepository _productRepository = ProductRepository();
+  final CartService _cartService = CartService();
 
   HomeClientBloc() : super(HomeClientInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
+    on<LoadCartStatus>(_onLoadCartStatus);
     on<SearchProducts>(_onSearchProducts);
     on<FilterByCategory>(_onFilterByCategory);
     on<AddToCart>(_onAddToCart);
@@ -263,6 +273,9 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
           filteredStores: storeList,
           isFromCache: true,
         ));
+        
+        // Charger l'état du panier après l'émission des données
+        add(LoadCartStatus());
       }
 
       // Vérifier la connectivité
@@ -315,6 +328,9 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
         filteredStores: storeList,
         isFromCache: false,
       ));
+      
+      // Charger l'état du panier après l'émission des données
+      add(LoadCartStatus());
     } catch (e) {
       // En cas d'erreur, essayer d'utiliser le cache
       final cachedProducts = CacheManager.getCachedProducts();
@@ -492,6 +508,22 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     // TODO: Implémenter l'ajout aux favoris
     // Pour l'instant, on ne fait rien
     print('Ajouté aux favoris: ${event.type}');
+  }
+
+  Future<void> _onLoadCartStatus(
+    LoadCartStatus event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    if (state is HomeClientLoaded) {
+      final currentState = state as HomeClientLoaded;
+      try {
+        final cartProductIds = await _cartService.getCartProductIds();
+        emit(currentState.copyWith(cartProductIds: cartProductIds.toSet()));
+      } catch (e) {
+        print('Erreur lors du chargement de l\'état du panier: $e');
+        // En cas d'erreur, on garde l'état actuel
+      }
+    }
   }
 
   Future<void> _onRefreshHomeData(

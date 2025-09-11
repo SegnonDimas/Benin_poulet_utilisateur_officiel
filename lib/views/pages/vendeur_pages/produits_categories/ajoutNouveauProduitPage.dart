@@ -127,25 +127,28 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
     // Récupérer les secteurs disponibles
     final secteurState = context.read<SecteurBloc>().state;
-    
+
     // Trouver la catégorie correspondante ou utiliser la première disponible
     String categoryToUse = productToEdit!.category;
     String subCategoryToUse = productToEdit!.subCategory;
-    
+
     // Vérifier si la catégorie existe dans les secteurs disponibles
     final matchingSector = secteurState.sectors.firstWhere(
-      (sector) => sector.name.toLowerCase() == productToEdit!.category.toLowerCase(),
+      (sector) =>
+          sector.name.toLowerCase() == productToEdit!.category.toLowerCase(),
       orElse: () => secteurState.sectors.first,
     );
-    
+
     categoryToUse = matchingSector.name;
-    
+
     // Vérifier si la sous-catégorie existe dans le secteur sélectionné
     final matchingCategory = matchingSector.categories.firstWhere(
-      (category) => category.name.toLowerCase() == productToEdit!.subCategory.toLowerCase(),
+      (category) =>
+          category.name.toLowerCase() ==
+          productToEdit!.subCategory.toLowerCase(),
       orElse: () => matchingSector.categories.first,
     );
-    
+
     subCategoryToUse = matchingCategory.name;
 
     setState(() {
@@ -179,8 +182,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
 
   String _getValidCategoryValue() {
     final secteurState = context.read<SecteurBloc>().state;
-    final availableCategories = secteurState.sectors.map((s) => s.name).toList();
-    
+    final availableCategories =
+        secteurState.sectors.map((s) => s.name).toList();
+
     if (availableCategories.contains(_categorySelected)) {
       return _categorySelected;
     } else if (availableCategories.isNotEmpty) {
@@ -195,9 +199,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
       (sector) => sector.name == _getValidCategoryValue(),
       orElse: () => secteurState.sectors.first,
     );
-    
-    final availableSubCategories = selectedSector.categories.map((c) => c.name).toList();
-    
+
+    final availableSubCategories =
+        selectedSector.categories.map((c) => c.name).toList();
+
     if (availableSubCategories.contains(_sousCategorySelected)) {
       return _sousCategorySelected;
     } else if (availableSubCategories.isNotEmpty) {
@@ -520,7 +525,7 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                     ),
                                   ),
                                   alignment: AlignmentDirectional.bottomEnd,
-                                                                     value: _getValidSubCategoryValue(),
+                                  value: _getValidSubCategoryValue(),
                                   items: _getSubCategoriesFromSecteurBloc(
                                       _categorySelected),
                                   onChanged: (String? newValue) {
@@ -953,12 +958,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               valeurProprieteController.text.trim();
 
                           if (key.isEmpty || value.isEmpty) {
-                            showMessage(
-                              context: context,
-                              message:
-                                  'Veuillez remplir tous les champs : la propriété et sa valeur',
-                              backgroundColor: AppColors.redColor,
-                            );
+                            AppUtils.showErrorNotification(
+                                context,
+                                'Veuillez remplir tous les champs : la propriété et sa valeur',
+                                null);
                             Navigator.pop(context);
                             return;
                           }
@@ -970,12 +973,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           );
 
                           if (alreadyExists) {
-                            showMessage(
-                              context: context,
-                              message:
-                                  'Cette propriété existe déjà, veuillez en ajouter une autre',
-                              backgroundColor: AppColors.redColor,
-                            );
+                            AppUtils.showErrorNotification(
+                                context,
+                                'Cette propriété existe déjà, veuillez en ajouter une autre',
+                                null);
                           } else {
                             proprietes[key] = value;
                           }
@@ -989,12 +990,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                           print(
                               ':::::::::::::::::Erreur : $e ::::::::::::::::::::');
                         }
-                        showMessage(
-                          context: context,
-                          message:
-                              'Une erreur s\'est produite lors de l\'ajout de la propriété. Veuillez réessayer.',
-                          backgroundColor: AppColors.redColor,
-                        );
+                        AppUtils.showErrorNotification(
+                            context,
+                            'Une erreur s\'est produite lors de l\'ajout de la propriété. Veuillez réessayer.',
+                            null);
                       }
                     },
                   );
@@ -1222,13 +1221,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                                         print(
                                                             '::::::::::::::::::: ERREUR $e :::::::::::::::::::');
                                                       }
-                                                      showMessage(
-                                                        context: context,
-                                                        message:
-                                                            'Erreur lors de la mise à jour de la propriété. Veuillez réessayer.',
-                                                        backgroundColor:
-                                                            AppColors.redColor,
-                                                      );
+                                                      AppUtils.showErrorNotification(
+                                                          context,
+                                                          'Une erreur s\'est produite lors de la modification de la propriété. Veuillez réessayer.',
+                                                          null);
                                                     }
 
                                                     Navigator.pop(context);
@@ -1363,45 +1359,17 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                       });
                       Navigator.pop(context);
                     } else if (varieteController.text.trim().isEmpty) {
-                      showMessage(
-                          context: context,
-                          message:
-                              'Veuillez remplir le champs pour ajouter une variété');
-                      /*ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: AppText(
-                            text:
-                                'Veuillez remplir le champs pour ajouter une variété',
-                            color: Colors.white,
-                            overflow: TextOverflow.visible,
-                          ),
-                          duration: Duration(seconds: 6),
-                          width: context.width * 0.8,
-                          behavior: SnackBarBehavior.floating,
-                          showCloseIcon: true,
-                          backgroundColor: AppColors.redColor,
-                        ),
-                      );*/
+                      AppUtils.showErrorNotification(
+                          context,
+                          'Veuillez remplir le champs pour ajouter une variété',
+                          null);
                       Navigator.pop(context);
                     } else {
-                      showMessage(
-                        context: context,
-                        message:
-                            'Cette variété existe déjà, veuillez en ajouter une autre',
-                      );
-                      /*ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: AppText(
-                            text:
-                                'Cette variété existe déjà, veuillez en ajouter une autre',
-                            color: Colors.white,
-                            overflow: TextOverflow.visible,
-                          ),
-                          duration: Duration(seconds: 6),
-                          showCloseIcon: true,
-                          backgroundColor: AppColors.redColor,
-                        ),
-                      );*/
+                      AppUtils.showErrorNotification(
+                          context,
+                          'Cette variété existe déjà, veuillez en ajouter une autre',
+                          null);
+
                       setState(() {
                         varieteController.clear();
                       });
@@ -1444,9 +1412,9 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                               child: Container(
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .background, //Colors.grey.shade700.withOpacity(0.2),
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  //Colors.grey.shade700.withOpacity(0.2),
                                   //AppColors.primaryColor.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -1523,25 +1491,10 @@ class _AjoutNouveauProduitPageState extends State<AjoutNouveauProduitPage> {
                                         varieteController.clear();
                                       });
                                     } else {
-                                      showMessage(
-                                        context: context,
-                                        message:
-                                            'Cette variété existe déjà, veuillez en ajouter une autre',
-                                      );
-                                      /*ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: AppText(
-                                            text:
-                                                'Cette variété existe déjà, veuillez en ajouter une autre',
-                                            color: Colors.white,
-                                            overflow: TextOverflow.visible,
-                                          ),
-                                          duration: Duration(seconds: 6),
-                                          showCloseIcon: true,
-                                          backgroundColor: AppColors.redColor,
-                                        ),
-                                      );*/
+                                      AppUtils.showErrorNotification(
+                                          context,
+                                          'Cette variété existe déjà, veuillez en ajouter une autre',
+                                          null);
                                     }
                                     varieteController.clear();
                                     Navigator.pop(context);

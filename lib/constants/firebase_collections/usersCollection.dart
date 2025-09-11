@@ -19,5 +19,6 @@ class UsersCollection {
   @Deprecated('Déplacé vers StoreCollection')
   static const storeIds = 'storeIds';
   static const favoritesStoreIds = 'favoritesStoreIds';
+  static const favoritesProductIds = 'favoritesProductIds';
   static const userId = 'userId';
 }

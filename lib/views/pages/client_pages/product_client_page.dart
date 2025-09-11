@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
+import '../../../bloc/client/cart_client_bloc.dart' as cart_bloc;
+import '../../../bloc/client/home_client_bloc.dart';
 import '../../../bloc/client/product_client_bloc.dart';
 import '../../../constants/routes.dart';
 import '../../../widgets/app_button.dart';
@@ -24,7 +26,6 @@ class _ProductClientPageState extends State<ProductClientPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedQuantity = 1;
-  bool _isFavorite = false;
   final PageController _imageController = PageController();
 
   @override
@@ -136,32 +137,54 @@ class _ProductClientPageState extends State<ProductClientPage>
         ),
       ),
       actions: [
-        IconButton(
-          icon: CircleAvatar(
-            child: Icon(
-              _isFavorite ? Icons.shopping_cart : Icons.shopping_cart_outlined,
-              color: _isFavorite ? AppColors.primaryColor : Colors.white,
-            ),
-          ),
-          onPressed: () {
-            setState(() {
-              _isFavorite = !_isFavorite;
-            });
-            /*context.read<ProductClientBloc>().add(
-                    ToggleFavorite(productId: widget.product.id),
-                  );*/
+        BlocBuilder<HomeClientBloc, HomeClientState>(
+          builder: (context, homeState) {
+            final isInCart = homeState is HomeClientLoaded &&
+                homeState.cartProductIds.contains(widget.product.id);
 
-            context.read<ProductClientBloc>().add(
-                  AddToCart(
-                    product: widget.product,
-                    quantity: _selectedQuantity,
-                  ),
-                );
+            return IconButton(
+              icon: CircleAvatar(
+                backgroundColor: isInCart
+                    ? Theme.of(context).colorScheme.inverseSurface
+                    : Theme.of(context).colorScheme.background.withOpacity(0.5),
+                child: Icon(
+                  isInCart
+                      ? Icons.add_shopping_cart
+                      : Icons.shopping_cart_outlined,
+                  color: isInCart
+                      ? AppColors.primaryColor
+                      : Theme.of(context).colorScheme.surface,
+                ),
+              ),
+              onPressed: () {
+                if (isInCart) {
+                  // Si déjà dans le panier, retirer
+                  context.read<cart_bloc.CartClientBloc>().add(
+                        cart_bloc.RemoveFromCart(productId: widget.product.id),
+                      );
+                  AppUtils.showInfoNotification(
+                      context, '${widget.product.name} retiré du panier');
+                } else {
+                  // Si pas dans le panier, ajouter
+                  context.read<cart_bloc.CartClientBloc>().add(
+                        cart_bloc.AddToCart(
+                          productId: widget.product.id,
+                          quantity: _selectedQuantity,
+                        ),
+                      );
+                  AppUtils.showSuccessNotification(
+                      context, '${widget.product.name} ajouté au panier');
+                }
+                // Recharger l'état du panier dans HomeClientBloc
+                context.read<HomeClientBloc>().add(LoadCartStatus());
+              },
+            );
           },
         ),
         IconButton(
-          icon:
-              const CircleAvatar(child: Icon(Icons.share, color: Colors.white)),
+          icon: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.background,
+              child: Icon(Icons.share, color: Colors.white)),
           onPressed: () {
             // TODO: Implémenter le partage
           },
@@ -247,10 +270,14 @@ class _ProductClientPageState extends State<ProductClientPage>
                   ),
                 ),
                 const SizedBox(width: 12),
-                AppText(
-                  text: 'Vendu par: ${widget.product.storeName}',
-                  color: Colors.grey,
-                  fontSize: 14,
+                Expanded(
+                  child: AppText(
+                    text: 'Vendu par : ${widget.product.storeName}',
+                    color: Colors.grey,
+                    fontSize: 14,
+                    overflow: TextOverflow.visible,
+                    maxLines: 2,
+                  ),
                 ),
               ],
             ),

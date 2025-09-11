@@ -2,6 +2,7 @@ import 'package:benin_poulet/bloc/product/product_bloc.dart';
 import 'package:benin_poulet/constants/routes.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
+import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/utils/dialog.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/ajoutNouveauProduitPage.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
@@ -587,19 +588,28 @@ class ProductServices {
                                                                       onConfirm: () async {
                                                                         // Supprimer le produit
                                                                         try {
-                                                                          context.read<ProductBloc>().add(DeleteProduct(list[index].productId!));
-                                                                          Navigator.pop(context);
-                                                                          
+                                                                          context
+                                                                              .read<ProductBloc>()
+                                                                              .add(DeleteProduct(list[index].productId!));
+                                                                          Navigator.pop(
+                                                                              context);
+
                                                                           showMessage(
-                                                                            context: context,
-                                                                            message: 'Produit supprimé avec succès',
-                                                                            backgroundColor: AppColors.primaryColor,
+                                                                            context:
+                                                                                context,
+                                                                            message:
+                                                                                'Produit supprimé avec succès',
+                                                                            backgroundColor:
+                                                                                AppColors.primaryColor,
                                                                           );
                                                                         } catch (e) {
                                                                           showMessage(
-                                                                            context: context,
-                                                                            message: 'Erreur lors de la suppression: $e',
-                                                                            backgroundColor: AppColors.redColor,
+                                                                            context:
+                                                                                context,
+                                                                            message:
+                                                                                'Erreur lors de la suppression: $e',
+                                                                            backgroundColor:
+                                                                                AppColors.redColor,
                                                                           );
                                                                         }
                                                                       });
@@ -627,12 +637,17 @@ class ProductServices {
                                                             child: IconButton(
                                                                 onPressed: () {
                                                                   // Rediriger vers la page d'ajout de produit avec les données préremplies
-                                                                  Navigator.pushNamed(
+                                                                  Navigator
+                                                                      .pushNamed(
                                                                     context,
-                                                                    AppRoutes.AJOUTNOUVEAUPRODUITPAGE,
+                                                                    AppRoutes
+                                                                        .AJOUTNOUVEAUPRODUITPAGE,
                                                                     arguments: {
-                                                                      'isEditing': true,
-                                                                      'product': list[index],
+                                                                      'isEditing':
+                                                                          true,
+                                                                      'product':
+                                                                          list[
+                                                                              index],
                                                                     },
                                                                   );
                                                                 },
@@ -696,42 +711,35 @@ class ProductServices {
     return ProductRepository().getProductsBySeller(currentUserId);
   }
 
-  static Future<void> updateProduct(BuildContext context, Produit product) async {
+  static Future<void> updateProduct(
+      BuildContext context, Produit product) async {
     try {
       if (product.productId == null) {
-        showMessage(
-          context: context,
-          message: 'Erreur: ID du produit manquant',
-          backgroundColor: AppColors.redColor,
-        );
+        AppUtils.showErrorNotification(
+            context, 'Erreur: ID du produit manquant', null);
         return;
       }
 
       // Utiliser le ProductBloc pour mettre à jour le produit
       context.read<ProductBloc>().add(UpdateProduct(product.productId!, {
-        'name': product.productName,
-        'description': product.productDescription,
-        'category': product.category,
-        'subCategory': product.subCategory,
-        'price': product.productUnitPrice,
-        'stock': product.stockValue,
-        'isInPromotion': product.isInPromotion,
-        'promoPrice': product.promoPrice,
-        'properties': product.productProperties,
-        'varieties': product.varieties,
-      }));
-
-      showMessage(
-        context: context,
-        message: 'Produit "${product.productName}" mis à jour avec succès.',
-        backgroundColor: AppColors.primaryColor,
+            'name': product.productName,
+            'description': product.productDescription,
+            'category': product.category,
+            'subCategory': product.subCategory,
+            'price': product.productUnitPrice,
+            'stock': product.stockValue,
+            'isInPromotion': product.isInPromotion,
+            'promoPrice': product.promoPrice,
+            'properties': product.productProperties,
+            'varieties': product.varieties,
+          }));
+      AppUtils.showSuccessNotification(
+        context,
+        'Produit "${product.productName}" mis à jour avec succès.',
       );
     } catch (e) {
-      showMessage(
-        context: context,
-        message: 'Erreur lors de la mise à jour du produit: $e',
-        backgroundColor: AppColors.redColor,
-      );
+      AppUtils.showErrorNotification(
+          context, 'Erreur lors de la mise à jour du produit: $e', null);
     }
   }
 
@@ -739,37 +747,31 @@ class ProductServices {
     try {
       // Vérifications individuelles pour des messages clairs
       if (product.productName.trim().isEmpty) {
-        showMessage(
-          context: context,
-          message: 'Veuillez renseigner le nom du produit.',
-          backgroundColor: AppColors.redColor,
-        );
+        AppUtils.showErrorNotification(
+            context, 'Veuillez renseigner le nom du produit.', null);
+
         return;
       }
 
       if (product.category.trim().isEmpty) {
-        showMessage(
-          context: context,
-          message: 'Veuillez sélectionner une catégorie pour le produit.',
-          backgroundColor: AppColors.redColor,
-        );
+        AppUtils.showErrorNotification(context,
+            'Veuillez sélectionner une catégorie pour le produit.', null);
         return;
       }
 
       if (product.productUnitPrice <= 0) {
-        showMessage(
-          context: context,
-          message: 'Le prix unitaire doit être supérieur à 0.',
-          backgroundColor: AppColors.redColor,
+        AppUtils.showInfoNotification(
+          context,
+          'Le prix unitaire doit être supérieur à 0.',
         );
+
         return;
       }
 
       if (product.stockValue <= 0) {
-        showMessage(
-          context: context,
-          message: 'La quantité en stock doit être supérieure à 0.',
-          backgroundColor: AppColors.redColor,
+        AppUtils.showInfoNotification(
+          context,
+          'La quantité en stock doit être supérieure à 0.',
         );
         return;
       }
@@ -777,21 +779,17 @@ class ProductServices {
       // Gestion des cas de promotion
       if (product.isInPromotion == true) {
         if (product.promoPrice == null || product.promoPrice! <= 0) {
-          showMessage(
-            context: context,
-            message: 'Veuillez définir un prix promotionnel valide.',
-            backgroundColor: AppColors.redColor,
-          );
+          AppUtils.showErrorNotification(
+              context, 'Veuillez définir un prix promotionnel valide.', null);
+
           return;
         }
 
         if (product.promoPrice! >= product.productUnitPrice) {
-          showMessage(
-            context: context,
-            message:
-                'Le prix promotionnel doit être inférieur au prix unitaire.',
-            backgroundColor: AppColors.redColor,
-          );
+          AppUtils.showErrorNotification(
+              context,
+              'Le prix promotionnel doit être inférieur au prix unitaire.',
+              null);
           return;
         }
       }
@@ -800,30 +798,22 @@ class ProductServices {
       // Vérification du sellerId (CRITIQUE)
       final currentUserId = AuthServices.auth.currentUser?.uid;
       if (currentUserId == null) {
-        showMessage(
-          context: context,
-          message: 'Erreur d\'authentification. Veuillez vous reconnecter.',
-          backgroundColor: AppColors.redColor,
-        );
+        AppUtils.showErrorNotification(
+            context, 'Erreur: Aucun utilisateur connecté', null);
         return;
       }
 
       // Utiliser le ProductBloc pour ajouter le produit
       context.read<ProductBloc>().add(AddProduct(product));
 
-      showMessage(
-        context: context,
-        message: 'Produit "${product.productName}" ajouté avec succès.',
-        backgroundColor: AppColors.primaryColor,
+      AppUtils.showSuccessNotification(
+        context,
+        'Produit "${product.productName}" ajouté avec succès.',
       );
     } catch (e) {
       print(":::::::::::::::ERREUR : $e :::::::::::::::::");
-      showMessage(
-        context: context,
-        message:
-            'Une erreur est survenue lors de l’ajout du produit. Veuillez réessayer.',
-        backgroundColor: AppColors.redColor,
-      );
+      AppUtils.showErrorNotification(
+          context, 'Erreur lors de l\'ajout du produit: $e', null);
     }
   }
 }

@@ -26,6 +26,7 @@ class AppUser {
   final String? password;
   final List<String>? storeIds;
   final List<String>? favoriteStoreIds;
+  final List<String>? favoriteProductIds;
 
   const AppUser({
     required this.userId,
@@ -48,6 +49,7 @@ class AppUser {
     this.password,
     this.storeIds,
     this.favoriteStoreIds,
+    this.favoriteProductIds,
   });
 
   Map<String, dynamic> toMap() {
@@ -71,7 +73,8 @@ class AppUser {
       UsersCollection.lastLogin: lastLogin?.toIso8601String(),
       UsersCollection.password: password,
       UsersCollection.storeIds: storeIds,
-      UsersCollection.favoritesStoreIds: favoriteStoreIds
+      UsersCollection.favoritesStoreIds: favoriteStoreIds,
+      UsersCollection.favoritesProductIds: favoriteProductIds
     };
   }
 
@@ -98,6 +101,7 @@ class AppUser {
       password: map[UsersCollection.password],
       storeIds: _parseStringList(map[UsersCollection.storeIds]),
       favoriteStoreIds: _parseStringList(map[UsersCollection.favoritesStoreIds]),
+      favoriteProductIds: _parseStringList(map[UsersCollection.favoritesProductIds]),
     );
   }
 
@@ -122,6 +126,7 @@ class AppUser {
     String? password,
     List<String>? storeIds,
     List<String>? favoriteStoreIds,
+    List<String>? favoriteProductIds,
   }) {
     return AppUser(
         userId: userId ?? this.userId,
@@ -143,7 +148,8 @@ class AppUser {
         isAnonymous: isAnonymous ?? this.isAnonymous,
         password: password ?? this.password,
         storeIds: storeIds ?? this.storeIds,
-        favoriteStoreIds: favoriteStoreIds ?? this.favoriteStoreIds);
+        favoriteStoreIds: favoriteStoreIds ?? this.favoriteStoreIds,
+        favoriteProductIds: favoriteProductIds ?? this.favoriteProductIds);
   }
 
   /// Méthode utilitaire pour parser une liste de strings depuis Firestore
