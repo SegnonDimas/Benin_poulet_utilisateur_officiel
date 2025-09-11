@@ -134,10 +134,10 @@ class _HomeClientPageState extends State<HomeClientPage>
     return Scaffold(
       appBar: AppBar(
         title: _buildSearchBar(),
-        leadingWidth: context.width * 0.08,
+        leadingWidth: context.width * 0.15,
         //centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.account_box_rounded),
+          icon: CircleAvatar(radius: 30, child: const Icon(Icons.person)),
           onPressed: () {
             // Navigation vers le profil de l'utilisateur
             Navigator.pushNamed(context, AppRoutes.PROFILE);
@@ -309,27 +309,24 @@ class _HomeClientPageState extends State<HomeClientPage>
   }
 
   Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 0),
-      child: AppTextField(
-        height: 50,
-        width: context.width * 0.8,
-        color: Theme.of(context).colorScheme.background,
-        prefixIcon: Icons.search,
-        /*suffixIcon: Icon(
-          Icons.filter_list,
-          color: AppColors.primaryColor,
-        ),*/
-        showFloatingLabel: false,
-        label: "Rechercher . . .",
-        borderRadius: BorderRadius.circular(15),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-          context.read<HomeClientBloc>().add(SearchProducts(query: value));
-        },
-      ),
+    return AppTextField(
+      height: 50,
+      width: context.width * 0.85,
+      color: Theme.of(context).colorScheme.background,
+      prefixIcon: Icons.search,
+      /*suffixIcon: Icon(
+        Icons.filter_list,
+        color: AppColors.primaryColor,
+      ),*/
+      showFloatingLabel: false,
+      hintText: "Rechercher . . .",
+      borderRadius: BorderRadius.circular(15),
+      onChanged: (value) {
+        setState(() {
+          _searchQuery = value;
+        });
+        context.read<HomeClientBloc>().add(SearchProducts(query: value));
+      },
     );
   }
 
@@ -350,11 +347,11 @@ class _HomeClientPageState extends State<HomeClientPage>
             return Padding(
               padding: const EdgeInsets.only(right: 8, left: 8),
               child: FilterChip(
-                checkmarkColor: Theme.of(context).colorScheme.surface,
+                checkmarkColor: Theme.of(context).colorScheme.inverseSurface,
                 label: AppText(
                   text: category,
                   color: isSelected
-                      ? Theme.of(context).colorScheme.surface
+                      ? Theme.of(context).colorScheme.inverseSurface
                       : Theme.of(context)
                           .colorScheme
                           .inverseSurface
@@ -371,7 +368,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                 selectedColor: Theme.of(context)
                     .colorScheme
                     .inverseSurface
-                    .withOpacity(0.6),
+                    .withOpacity(0.3),
                 backgroundColor: Theme.of(context)
                     .colorScheme
                     .inverseSurface
@@ -403,7 +400,7 @@ class _HomeClientPageState extends State<HomeClientPage>
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
-          color: AppColors.deepOrangeColor,
+          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.3),
           borderRadius: BorderRadius.circular(10),
         ),
         indicatorSize: TabBarIndicatorSize.tab,

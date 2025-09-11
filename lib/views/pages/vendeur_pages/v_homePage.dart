@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 import '../../../bloc/storeCreation/store_creation_bloc.dart';
+import '../../../services/user_data_service.dart';
 import '../../models_ui/model_portefeuille.dart';
 import '../../models_ui/model_session.dart';
 
@@ -79,6 +80,30 @@ class _VHomePageState extends State<VHomePage> {
   ];
 
   bool _shouldInterceptBack = true;
+  String shopName = '';
+
+  final UserDataService _userDataService = UserDataService();
+
+  loadSellerData() async {
+    final seller = await _userDataService.getCurrentSeller();
+    if (seller != null) {
+      // Traitez les données du vendeur ici
+      print('Vendeur connecté: ${seller.storeInfos}');
+
+      setState(() {
+        shopName = seller.storeInfos?['name'] ?? 'Le Poulailler';
+      });
+    } else {
+      print('Aucun vendeur connecté.');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadSellerData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,44 +133,25 @@ class _VHomePageState extends State<VHomePage> {
                         title: RichText(
                             text: TextSpan(children: [
                           TextSpan(
-                            text: 'S',
+                            text: 'salut ,  ',
                             style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
                                     .inversePrimary,
-                                fontSize: context.mediumText * 1.3,
-                                fontFamily: AppAttributes.appDefaultFontFamily,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          TextSpan(
-                            text: 'alut, ',
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
-                                fontSize: context.mediumText,
+                                fontSize: context.mediumText * 1.1,
                                 fontFamily: AppAttributes.appDefaultFontFamily,
                                 fontWeight: FontWeight.bold),
                           ),
                           TextSpan(
-                            text: storeInfoState.storeName,
+                            //text: storeInfoState.storeName,
+                            text: shopName,
                             style: TextStyle(
                                 color: AppColors.primaryColor,
-                                fontSize: context.mediumText * 1.2,
+                                fontSize: context.mediumText * 1.5,
                                 fontFamily: AppAttributes.appDefaultFontFamily,
                                 fontWeight: FontWeight.w900),
                           )
                         ])),
-
-                        /*
-                  AppText(
-                    text: 'Salut, ${storeInfoState.storeName} service de Dieu!',
-                    fontWeight: FontWeight.bold,
-                    fontSize: context.mediumText * 1.1,
-                    overflow: TextOverflow.visible,
-                  )
-                  */
-
                         subtitle: AppText(
                           text: 'Votre boutique est maintenant en ligne',
                           fontSize: smallText(),

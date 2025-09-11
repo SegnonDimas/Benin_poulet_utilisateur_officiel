@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/client/profile_client_bloc.dart';
+import '../../../constants/routes.dart';
+import '../../../core/firebase/auth/auth_services.dart';
 import '../../../services/user_data_service.dart';
+import '../../../utils/app_utils.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text.dart';
 import '../../../widgets/app_textField.dart';
 import '../../colors/app_colors.dart';
-import '../../../constants/routes.dart';
 
 class ProfileClientPage extends StatefulWidget {
   const ProfileClientPage({super.key});
@@ -20,7 +22,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isEditing = false;
   final UserDataService _userDataService = UserDataService();
-  
+
   // Statistiques du client
   int _ordersCount = 0;
   int _favoritesCount = 0;
@@ -32,13 +34,15 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
     context.read<ProfileClientBloc>().add(LoadProfile());
     _loadStatistics();
   }
-  
+
   Future<void> _loadStatistics() async {
     try {
       final ordersCount = await _userDataService.getCurrentClientOrdersCount();
-      final favoritesCount = await _userDataService.getCurrentClientFavoritesCount();
-      final reviewsCount = await _userDataService.getCurrentClientReviewsCount();
-      
+      final favoritesCount =
+          await _userDataService.getCurrentClientFavoritesCount();
+      final reviewsCount =
+          await _userDataService.getCurrentClientReviewsCount();
+
       if (mounted) {
         setState(() {
           _ordersCount = ordersCount;
@@ -51,6 +55,50 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
     }
   }
 
+  /// Méthode pour gérer la déconnexion complète
+  Future<void> _handleSignOut() async {
+    final navigator = Navigator.of(context);
+    final currentContext = context;
+
+    try {
+      // Afficher un indicateur de chargement
+      AppUtils.showInfoDialog(
+        context: currentContext,
+        message: 'Déconnexion en cours...',
+        type: InfoType.loading,
+        barrierDismissible: false,
+      );
+
+      // Effectuer la déconnexion
+      await AuthServices.signOut();
+
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+
+      // Fermer l'indicateur de chargement
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+
+      // Rediriger vers la page de connexion
+      navigator.pushNamedAndRemoveUntil(AppRoutes.LOGINPAGE, (route) => false);
+    } catch (e) {
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+
+      // Fermer l'indicateur de chargement en cas d'erreur
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+
+      // Afficher un message d'erreur
+      if (mounted) {
+        AppUtils.showErrorNotification(currentContext,
+            'Erreur lors de la déconnexion: ${e.toString()}', null);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +107,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit),
+            icon: Icon(_isEditing ? Icons.done : Icons.edit),
             onPressed: () {
               if (_isEditing) {
                 _saveProfile();
@@ -111,7 +159,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
                     const SizedBox(height: 24),
 
                     // Actions
-                    _buildActions(),
+                    //_buildActions(),
                   ],
                 ),
               ),
@@ -153,6 +201,23 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             child: AppText(text: 'Chargement...'),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
+        backgroundColor: AppColors.redColor,
+        onPressed: () {
+          AppUtils.showDialog(
+            context: context,
+            title: "Déconnexion",
+            content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+            confirmText: 'Déconnexion',
+            cancelText: 'Annuler',
+            onConfirm: () {
+              _handleSignOut();
+            },
+          );
+        },
+        child: Icon(Icons.logout),
       ),
     );
   }
@@ -204,6 +269,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             ),
             const SizedBox(height: 16),
             AppTextField(
+              prefixIcon: Icons.person,
               label: 'Nom complet',
               initialValue: state.profile.fullName,
               enabled: _isEditing,
@@ -216,13 +282,15 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             ),
             const SizedBox(height: 12),
             AppTextField(
+              prefixIcon: Icons.date_range,
               label: 'Date de naissance',
               initialValue: state.profile.dateOfBirth,
               enabled: _isEditing,
-              suffixIcon: Icon(Icons.calendar_today),
+              suffixIcon: Icon(Icons.edit_calendar_outlined),
             ),
             const SizedBox(height: 12),
             AppTextField(
+              prefixIcon: Icons.transgender,
               label: 'Genre',
               initialValue: state.profile.gender,
               enabled: _isEditing,
@@ -248,6 +316,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             ),
             const SizedBox(height: 16),
             AppTextField(
+              prefixIcon: Icons.email,
               label: 'Email',
               initialValue: state.profile.email,
               enabled: _isEditing,
@@ -265,6 +334,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             ),
             const SizedBox(height: 12),
             AppTextField(
+              prefixIcon: Icons.phone,
               label: 'Téléphone',
               initialValue: state.profile.phone,
               enabled: _isEditing,
@@ -296,6 +366,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
             ),
             const SizedBox(height: 16),
             AppTextField(
+              prefixIcon: Icons.location_history,
               label: 'Adresse',
               initialValue: state.profile.address,
               enabled: _isEditing,
@@ -306,6 +377,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
               children: [
                 Expanded(
                   child: AppTextField(
+                    prefixIcon: Icons.location_city,
                     label: 'Ville',
                     initialValue: state.profile.city,
                     enabled: _isEditing,
@@ -314,6 +386,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: AppTextField(
+                    prefixIcon: Icons.markunread_mailbox,
                     label: 'Code postal',
                     initialValue: state.profile.postalCode,
                     enabled: _isEditing,
@@ -419,7 +492,7 @@ class _ProfileClientPageState extends State<ProfileClientPage> {
               color: Colors.black87,
             ),
             onTap: () {
-                              Navigator.pushNamed(context, AppRoutes.CHANGEPASSWORD);
+              Navigator.pushNamed(context, AppRoutes.CHANGEPASSWORD);
             },
             color: Colors.grey.shade200,
           ),

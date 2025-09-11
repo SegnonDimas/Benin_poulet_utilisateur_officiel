@@ -167,132 +167,155 @@ class _VProfilPageState extends State<VProfilPage>
     return SafeArea(
       top: false,
       child: Scaffold(
-          /*appBar: AppBar(
-            title: AppText(text: 'Mon profil'),
-            centerTitle: true,
-          ),*/
-          body: ListView(
-        padding: EdgeInsets.only(top: 0),
-        children: [
-          /// image photo de prfil
-          SizedBox(
-            height: context.height * 0.3,
-            width: context.width,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                /// image d'arrière-plan floutée
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: Hero(
-                    tag: '2',
-                    child: Container(
-                      height: context.height * 0.2,
-                      width: context.width,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(profilPath))),
-                    ),
-                  ),
-                ),
-
-                /// BlurryContainer qui a flouté l'image
-                Positioned(
+        body: ListView(
+          padding: EdgeInsets.only(top: 0),
+          children: [
+            /// image photo de prfil
+            SizedBox(
+              height: context.height * 0.3,
+              width: context.width,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  /// image d'arrière-plan floutée
+                  Positioned(
                     top: 0,
                     right: 0,
                     left: 0,
-                    child: BlurryContainer(
-                      height: context.height * 0.2 + 12,
-                      width: context.width,
-                      borderRadius: BorderRadius.circular(0),
-                      blur: 5,
-
-                      /// le trait en bas de l'image floutée
+                    child: Hero(
+                      tag: '2',
                       child: Container(
-                        height: context.height * 0.15,
+                        height: context.height * 0.2,
                         width: context.width,
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inversePrimary,
-                                width: 4,
-                                strokeAlign: BorderSide.strokeAlignInside),
-                          ),
-                        ),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(profilPath))),
                       ),
-                    )),
+                    ),
+                  ),
 
-                /// image du profil (en rond)
-                Positioned(
-                    top: context.height * 0.12,
-                    right: context.width * 0.1,
-                    left: context.width * 0.1,
-                    child: Hero(
-                      tag: 'imageProfil',
-                      child: Container(
-                        alignment: Alignment.bottomRight,
-                        height: context.height * 0.17,
-                        decoration: BoxDecoration(
+                  /// BlurryContainer qui a flouté l'image
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      child: BlurryContainer(
+                        height: context.height * 0.2 + 12,
+                        width: context.width,
+                        borderRadius: BorderRadius.circular(0),
+                        blur: 5,
+
+                        /// le trait en bas de l'image floutée
+                        child: Container(
+                          height: context.height * 0.15,
+                          width: context.width,
+                          decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .inversePrimary,
                                   width: 4,
-                                  strokeAlign: BorderSide.strokeAlignOutside),
+                                  strokeAlign: BorderSide.strokeAlignInside),
                             ),
-                            image:
-                                DecorationImage(image: AssetImage(profilPath)),
-                            shape: BoxShape.circle),
-                      ),
-                    )),
+                          ),
+                        ),
+                      )),
 
-                Positioned(
-                  top: context.height * 0.05,
-                  left: 10,
-                  child: //bouton retour
-                      GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: context.height * 0.06,
-                      width: context.height * 0.06,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .surface
-                            .withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(
-                          10,
+                  /// image du profil (en rond)
+                  Positioned(
+                      top: context.height * 0.12,
+                      right: context.width * 0.1,
+                      left: context.width * 0.1,
+                      child: Hero(
+                        tag: 'imageProfil',
+                        child: Container(
+                          alignment: Alignment.bottomRight,
+                          height: context.height * 0.17,
+                          decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary,
+                                    width: 4,
+                                    strokeAlign: BorderSide.strokeAlignOutside),
+                              ),
+                              image: DecorationImage(
+                                  image: AssetImage(profilPath)),
+                              shape: BoxShape.circle),
+                        ),
+                      )),
+
+                  Positioned(
+                    top: context.height * 0.05,
+                    left: 10,
+                    child: //bouton retour
+                        GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: context.height * 0.06,
+                        width: context.height * 0.06,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(
+                            10,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_outlined,
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                          size: context.mediumText * 1.5,
+                          weight: 100,
                         ),
                       ),
-                      child: Icon(
-                        Icons.arrow_back_outlined,
-                        color: Theme.of(context).colorScheme.inversePrimary,
-                        size: context.mediumText * 1.5,
-                        weight: 100,
-                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            /// nom de la boutique + l'icône de vérification
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Hero(
+                  tag: 'nomBoutique',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      profilStatus == UserProfilStatus.verified
+                          ? Icons.verified_rounded
+                          : profilStatus == UserProfilStatus.pending
+                              ? Icons.hourglass_top_rounded
+                              : Icons.error_outlined,
+                      color: profilStatus == UserProfilStatus.verified
+                          ? Colors.transparent
+                          : profilStatus == UserProfilStatus.pending
+                              ? Colors.transparent
+                              : Colors.transparent,
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
+                ),
 
-          /// nom de la boutique + l'icône de vérification
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Hero(
-                tag: 'nomBoutique',
-                child: Padding(
+                /// nom boutique
+                Center(
+                  child: AppText(
+                    text: shopName,
+                    fontSize: context.largeText,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+
+                /// icone
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(
                     profilStatus == UserProfilStatus.verified
@@ -301,180 +324,120 @@ class _VProfilPageState extends State<VProfilPage>
                             ? Icons.hourglass_top_rounded
                             : Icons.error_outlined,
                     color: profilStatus == UserProfilStatus.verified
-                        ? Colors.transparent
+                        ? AppColors.primaryColor
                         : profilStatus == UserProfilStatus.pending
-                            ? Colors.transparent
-                            : Colors.transparent,
+                            ? AppColors.orangeColor
+                            : AppColors.redColor,
+                    //Colors.transparent,
                   ),
-                ),
-              ),
-
-              /// nom boutique
-              Center(
-                child: AppText(
-                  text: shopName,
-                  fontSize: context.largeText,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-
-              /// icone
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  profilStatus == UserProfilStatus.verified
-                      ? Icons.verified_rounded
-                      : profilStatus == UserProfilStatus.pending
-                          ? Icons.hourglass_top_rounded
-                          : Icons.error_outlined,
-                  color: profilStatus == UserProfilStatus.verified
-                      ? AppColors.primaryColor
-                      : profilStatus == UserProfilStatus.pending
-                          ? AppColors.orangeColor
-                          : AppColors.redColor,
-                  //Colors.transparent,
-                ),
-              )
-            ],
-          ),
-
-          /// adresse gmail
-          Center(
-            child: AppText(
-              text: userEmail,
-              fontSize: context.smallText,
-              //fontWeight: FontWeight.w800,
-            ),
-          ),
-
-          /// divider
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              color:
-                  Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-            ),
-          ),
-
-          /// liste des items de profil
-
-          ProfilListTile(
-              title: 'Informations personnelles',
-              leadingIcon: Icons.account_circle,
-              onTap: () {
-                _showPersonalInfoBottomSheet(context);
-              }),
-          ProfilListTile(
-            title: 'Compte vérifié ?',
-            leadingIcon: Icons.verified_outlined,
-            onTap: () {
-              showProfilState(context, profilStatus: profilStatus);
-              //Navigator.pushNamed(context, AppRoutes.VENDEURETATCOMPTEPAGE);
-            },
-          ),
-          const ProfilListTile(
-              title: 'Autorisations', leadingIcon: Icons.verified_user_rounded),
-          ProfilListTile(
-            title: 'Portefeuille',
-            leadingIcon: Icons.payment_rounded,
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.VENDEURPORTEFEUILLEPAGE);
-            },
-          ),
-          const ProfilListTile(
-              title: 'Paramètres', leadingIcon: Icons.settings),
-
-          SizedBox(
-            height: context.height * 0.05,
-          ),
-
-          /// bouton de déconnexion
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Hero(
-              tag: '1',
-              child: AppButton(
-                height: context.height * 0.07,
-                onTap: () {
-                  AppUtils.showDialog(
-                    context: context,
-                    title: "Déconnexion",
-                    content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                    confirmText: 'Déconnexion',
-                    cancelText: 'Annuler',
-                    onConfirm: () {
-                      _handleSignOut();
-                    },
-                  );
-                },
-                borderColor: AppColors.redColor,
-                color: Colors.transparent,
-                child: AppText(
-                  textAlign: TextAlign.center,
-                  text: 'Se déconnecter',
-                  fontSize: context.mediumText,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.redColor,
-                ),
-              ),
-            ),
-          ),
-
-          /// POUR LES TESTS
-          /*SizedBox(
-            height: context.height * 0.02,
-          ),
-          SizedBox(
-            height: context.height * 0.1,
-            child: Column(
-              children: [
-                AppText(
-                  text: 'Juste pour les tests',
-                  color: Colors.grey.withOpacity(0.6),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            profilStatus = UserProfilStatus.verified;
-                          });
-                        },
-                        child: AppText(
-                          text: 'Verifié',
-                          fontSize: context.smallText,
-                          color: Colors.green,
-                        )),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            profilStatus = UserProfilStatus.unverified;
-                          });
-                        },
-                        child: AppText(
-                          text: 'Non verifié',
-                          fontSize: context.smallText,
-                          color: Colors.red,
-                        )),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            profilStatus = UserProfilStatus.pending;
-                          });
-                        },
-                        child: AppText(
-                          text: 'En Cours',
-                          fontSize: context.smallText,
-                          color: Colors.amber,
-                        )),
-                  ],
                 )
               ],
             ),
-          ),*/
-        ],
-      )),
+
+            /// adresse gmail
+            Center(
+              child: AppText(
+                text: userEmail,
+                fontSize: context.smallText,
+                //fontWeight: FontWeight.w800,
+              ),
+            ),
+
+            /// divider
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Divider(
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.1),
+              ),
+            ),
+
+            /// liste des items de profil
+
+            ProfilListTile(
+                title: 'Informations personnelles',
+                leadingIcon: Icons.account_circle,
+                onTap: () {
+                  _showPersonalInfoBottomSheet(context);
+                }),
+            ProfilListTile(
+              title: 'Compte vérifié ?',
+              leadingIcon: Icons.verified_outlined,
+              onTap: () {
+                showProfilState(context, profilStatus: profilStatus);
+                //Navigator.pushNamed(context, AppRoutes.VENDEURETATCOMPTEPAGE);
+              },
+            ),
+            const ProfilListTile(
+                title: 'Autorisations',
+                leadingIcon: Icons.verified_user_rounded),
+            ProfilListTile(
+              title: 'Portefeuille',
+              leadingIcon: Icons.payment_rounded,
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.VENDEURPORTEFEUILLEPAGE);
+              },
+            ),
+            const ProfilListTile(
+                title: 'Paramètres', leadingIcon: Icons.settings),
+
+            SizedBox(
+              height: context.height * 0.05,
+            ),
+
+            /// bouton de déconnexion
+            /*Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Hero(
+                tag: '1',
+                child: AppButton(
+                  height: context.height * 0.07,
+                  onTap: () {
+                    AppUtils.showDialog(
+                      context: context,
+                      title: "Déconnexion",
+                      content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                      confirmText: 'Déconnexion',
+                      cancelText: 'Annuler',
+                      onConfirm: () {
+                        _handleSignOut();
+                      },
+                    );
+                  },
+                  borderColor: AppColors.redColor,
+                  color: Colors.transparent,
+                  child: AppText(
+                    textAlign: TextAlign.center,
+                    text: 'Se déconnecter',
+                    fontSize: context.mediumText,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.redColor,
+                  ),
+                ),
+              ),
+            ),*/
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.redColor,
+          onPressed: () {
+            AppUtils.showDialog(
+              context: context,
+              title: "Déconnexion",
+              content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+              confirmText: 'Déconnexion',
+              cancelText: 'Annuler',
+              onConfirm: () {
+                _handleSignOut();
+              },
+            );
+          },
+          child: Icon(Icons.logout),
+        ),
+      ),
     );
   }
 

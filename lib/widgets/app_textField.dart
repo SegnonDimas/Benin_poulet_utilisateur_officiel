@@ -43,6 +43,7 @@ class AppTextField extends StatefulWidget {
   TextInputAction? textInputAction;
   TextCapitalization? textCapitalization; // Default capitalization
   final String? Function(String?)? validator;
+
   //bool? isLabelDefined;
 
   AppTextField({
@@ -181,7 +182,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   ),
                   floatingLabelStyle: TextStyle(
                       fontSize:
-                          widget.showFloatingLabel! ? context.mediumText : 0),
+                          widget.showFloatingLabel! ? context.smallText : 0),
                 ),
                 textCapitalization:
                     widget.textCapitalization ?? TextCapitalization.none,
