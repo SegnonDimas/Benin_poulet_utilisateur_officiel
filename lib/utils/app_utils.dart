@@ -60,8 +60,8 @@ class AppUtils {
     required BuildContext context,
     String? title,
     String? content,
-    String? confirmText,
-    String? cancelText,
+    String? confirmText = '',
+    String? cancelText = '',
     void Function()? onConfirm,
     void Function()? onCancel,
     bool? barrierDismissible,
@@ -421,7 +421,8 @@ class AppUtils {
           ],
         ),
         backgroundColor: Colors.blue,
-        duration: Duration(seconds: 30), // Longue durée pour le chargement
+        duration: Duration(seconds: 30),
+        // Longue durée pour le chargement
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.all(16),
         shape: RoundedRectangleBorder(

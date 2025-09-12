@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
@@ -5,7 +6,6 @@ import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
 import 'package:benin_poulet/models/produit.dart';
 import 'package:benin_poulet/models/store.dart';
 import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/services/sync_service.dart';
 import 'package:benin_poulet/services/cart_service.dart';
 
 // Modèles adaptés pour l'interface client
@@ -20,6 +20,8 @@ class Product {
   final String storeId; // Ajout du storeId pour les avis
   final String storeName; // Ajout du nom de la boutique
   final bool isInPromotion; // Ajout de la propriété promotion
+  final Map<String, String> productProperties; // Propriétés du produit
+  final List<String> varieties; // Variétés du produit
 
   Product({
     required this.id,
@@ -32,6 +34,8 @@ class Product {
     required this.storeId,
     required this.storeName,
     this.isInPromotion = false,
+    this.productProperties = const {},
+    this.varieties = const [],
   });
 
   factory Product.fromProduit(Produit produit, {String? storeName}) {
@@ -46,6 +50,8 @@ class Product {
       storeId: produit.storeId,
       storeName: storeName ?? 'Boutique',
       isInPromotion: produit.isInPromotion,
+      productProperties: produit.productProperties,
+      varieties: produit.varieties,
     );
   }
 }
@@ -131,6 +137,30 @@ class AddToFavorites extends HomeClientEvent {
 }
 
 class RefreshHomeData extends HomeClientEvent {}
+
+class StartRealtimeSync extends HomeClientEvent {}
+
+class StopRealtimeSync extends HomeClientEvent {}
+
+class UpdateProductsEvent extends HomeClientEvent {
+  final List<Product> products;
+  final List<Product> filteredProducts;
+
+  UpdateProductsEvent({required this.products, required this.filteredProducts});
+
+  @override
+  List<Object?> get props => [products, filteredProducts];
+}
+
+class UpdateStoresEvent extends HomeClientEvent {
+  final List<StoreClient> stores;
+  final List<StoreClient> filteredStores;
+
+  UpdateStoresEvent({required this.stores, required this.filteredStores});
+
+  @override
+  List<Object?> get props => [stores, filteredStores];
+}
 
 // États
 abstract class HomeClientState extends Equatable {
@@ -234,6 +264,11 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   final FirestoreService _firestoreService = FirestoreService();
   final ProductRepository _productRepository = ProductRepository();
   final CartService _cartService = CartService();
+  
+  // Streams pour la synchronisation en temps réel
+  StreamSubscription<List<Produit>>? _productsSubscription;
+  StreamSubscription<List<Store>>? _storesSubscription;
+  bool _isInitialized = false;
 
   HomeClientBloc() : super(HomeClientInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
@@ -243,6 +278,17 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     on<AddToCart>(_onAddToCart);
     on<AddToFavorites>(_onAddToFavorites);
     on<RefreshHomeData>(_onRefreshHomeData);
+    on<StartRealtimeSync>(_onStartRealtimeSync);
+    on<StopRealtimeSync>(_onStopRealtimeSync);
+    on<UpdateProductsEvent>(_onUpdateProductsEvent);
+    on<UpdateStoresEvent>(_onUpdateStoresEvent);
+  }
+
+  @override
+  Future<void> close() {
+    _productsSubscription?.cancel();
+    _storesSubscription?.cancel();
+    return super.close();
   }
 
   Future<void> _onLoadHomeData(
@@ -331,6 +377,12 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       
       // Charger l'état du panier après l'émission des données
       add(LoadCartStatus());
+      
+      // Démarrer la synchronisation en temps réel
+      if (!_isInitialized) {
+        add(StartRealtimeSync());
+        _isInitialized = true;
+      }
     } catch (e) {
       // En cas d'erreur, essayer d'utiliser le cache
       final cachedProducts = CacheManager.getCachedProducts();
@@ -533,6 +585,158 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     // Nettoyer le cache et forcer le rechargement depuis Firestore
     await CacheManager.clearAllProductCache();
     add(LoadHomeData());
+  }
+
+  /// Démarre la synchronisation en temps réel avec Firestore
+  Future<void> _onStartRealtimeSync(
+    StartRealtimeSync event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    try {
+      // Vérifier la connectivité
+      final isOnline = await CacheManager.isOnline();
+      if (!isOnline) {
+        print('Pas de connexion internet, synchronisation en temps réel impossible');
+        return;
+      }
+
+      print('Démarrage de la synchronisation en temps réel...');
+
+      // Stream des produits en temps réel
+      _productsSubscription = _productRepository.getAllActiveProducts().listen(
+        (products) {
+          print('Mise à jour des produits reçue: ${products.length} produits');
+          _updateProductsInState(products);
+        },
+        onError: (error) {
+          print('Erreur dans le stream des produits: $error');
+        },
+      );
+
+      // Stream des boutiques en temps réel
+      _storesSubscription = _firestoreService.getAllStores().listen(
+        (stores) {
+          print('Mise à jour des boutiques reçue: ${stores.length} boutiques');
+          _updateStoresInState(stores);
+        },
+        onError: (error) {
+          print('Erreur dans le stream des boutiques: $error');
+        },
+      );
+
+      print('Synchronisation en temps réel démarrée avec succès');
+    } catch (e) {
+      print('Erreur lors du démarrage de la synchronisation en temps réel: $e');
+    }
+  }
+
+  /// Arrête la synchronisation en temps réel
+  Future<void> _onStopRealtimeSync(
+    StopRealtimeSync event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    print('Arrêt de la synchronisation en temps réel...');
+    await _productsSubscription?.cancel();
+    await _storesSubscription?.cancel();
+    _productsSubscription = null;
+    _storesSubscription = null;
+    _isInitialized = false;
+    print('Synchronisation en temps réel arrêtée');
+  }
+
+  /// Met à jour les produits dans l'état actuel
+  void _updateProductsInState(List<Produit> products) {
+    if (state is HomeClientLoaded) {
+      final currentState = state as HomeClientLoaded;
+      
+      // Créer un map des noms de boutiques pour les produits
+      _firestoreService.getAllStores().first.then((stores) async {
+        final storeMap = {for (var store in stores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
+        
+        final productList = products.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
+        
+        // Mettre en cache les nouvelles données
+        await CacheManager.cacheProducts(products);
+        
+        // Appliquer les filtres actuels
+        final filteredProducts = _applyCurrentFilters(productList, currentState);
+        
+        // Utiliser add() pour déclencher un nouvel événement
+        add(UpdateProductsEvent(
+          products: productList,
+          filteredProducts: filteredProducts,
+        ));
+      }).catchError((error) {
+        print('Erreur lors de la mise à jour des produits: $error');
+      });
+    }
+  }
+
+  /// Met à jour les boutiques dans l'état actuel
+  void _updateStoresInState(List<Store> stores) {
+    if (state is HomeClientLoaded) {
+      final currentState = state as HomeClientLoaded;
+      
+      final storeList = stores.map((s) => StoreClient.fromStoreModel(s)).toList();
+      
+      // Mettre en cache les nouvelles données
+      CacheManager.cacheStores(stores).then((_) {
+        // Appliquer les filtres actuels
+        final filteredStores = _applyCurrentFiltersToStores(storeList, currentState);
+        
+        // Utiliser add() pour déclencher un nouvel événement
+        add(UpdateStoresEvent(
+          stores: storeList,
+          filteredStores: filteredStores,
+        ));
+      }).catchError((error) {
+        print('Erreur lors de la mise à jour des boutiques: $error');
+      });
+    }
+  }
+
+  /// Applique les filtres actuels aux produits
+  List<Product> _applyCurrentFilters(List<Product> products, HomeClientLoaded currentState) {
+    // Ici on pourrait appliquer les filtres de recherche et de catégorie actuels
+    // Pour l'instant, on retourne tous les produits
+    return products;
+  }
+
+  /// Applique les filtres actuels aux boutiques
+  List<StoreClient> _applyCurrentFiltersToStores(List<StoreClient> stores, HomeClientLoaded currentState) {
+    // Ici on pourrait appliquer les filtres de recherche actuels
+    // Pour l'instant, on retourne toutes les boutiques
+    return stores;
+  }
+
+  /// Gère la mise à jour des produits depuis les streams
+  Future<void> _onUpdateProductsEvent(
+    UpdateProductsEvent event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    if (state is HomeClientLoaded) {
+      final currentState = state as HomeClientLoaded;
+      emit(currentState.copyWith(
+        products: event.products,
+        filteredProducts: event.filteredProducts,
+        isFromCache: false,
+      ));
+    }
+  }
+
+  /// Gère la mise à jour des boutiques depuis les streams
+  Future<void> _onUpdateStoresEvent(
+    UpdateStoresEvent event,
+    Emitter<HomeClientState> emit,
+  ) async {
+    if (state is HomeClientLoaded) {
+      final currentState = state as HomeClientLoaded;
+      emit(currentState.copyWith(
+        stores: event.stores,
+        filteredStores: event.filteredStores,
+        isFromCache: false,
+      ));
+    }
   }
 
 }

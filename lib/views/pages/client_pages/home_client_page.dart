@@ -1,5 +1,6 @@
 // import 'package:benin_poulet/widgets/app_button.dart'; // Non utilisé - remplacé par GestureDetector
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +9,11 @@ import 'package:get/get.dart';
 import '../../../bloc/choixCategorie/secteur_bloc.dart';
 import '../../../bloc/client/cart_client_bloc.dart' as cart_bloc;
 import '../../../bloc/client/home_client_bloc.dart';
+import '../../../constants/app_attributs.dart';
 import '../../../constants/routes.dart';
+import '../../../core/firebase/auth/auth_services.dart';
 import '../../../models/sellerSector.dart';
+import '../../../services/user_data_service.dart';
 import '../../../utils/app_utils.dart';
 import '../../../widgets/app_text.dart';
 import '../../../widgets/app_textField.dart';
@@ -59,6 +63,50 @@ class _HomeClientPageState extends State<HomeClientPage>
     super.dispose();
   }
 
+  /// Méthode pour gérer la déconnexion complète
+  Future<void> _handleSignOut() async {
+    final navigator = Navigator.of(context);
+    final currentContext = context;
+
+    try {
+      // Afficher un indicateur de chargement
+      AppUtils.showInfoDialog(
+        context: currentContext,
+        message: 'Déconnexion en cours...',
+        type: InfoType.loading,
+        barrierDismissible: false,
+      );
+
+      // Effectuer la déconnexion
+      await AuthServices.signOut();
+
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+
+      // Fermer l'indicateur de chargement
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+
+      // Rediriger vers la page de connexion
+      navigator.pushNamedAndRemoveUntil(AppRoutes.LOGINPAGE, (route) => false);
+    } catch (e) {
+      // Vérifier si le widget est toujours monté
+      if (!mounted) return;
+
+      // Fermer l'indicateur de chargement en cas d'erreur
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+
+      // Afficher un message d'erreur
+      if (mounted) {
+        AppUtils.showErrorNotification(currentContext,
+            'Erreur lors de la déconnexion: ${e.toString()}', null);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -69,19 +117,16 @@ class _HomeClientPageState extends State<HomeClientPage>
         },
         child: Scaffold(
           appBar: AppBar(
-            title: _buildSearchBar(),
-            leadingWidth: context.width * 0.15,
-            //centerTitle: true,
-            leading: IconButton(
-              icon: CircleAvatar(radius: 30, child: const Icon(Icons.person)),
-              onPressed: () {
-                // Navigation vers le profil de l'utilisateur
-                Navigator.pushNamed(context, AppRoutes.PROFILE);
-                /* Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => CProfilPage()));*/
-              },
-            ),
+            title: AppText(
+                text: AppAttributes.appName,
+                fontSize: context.mediumText * 1.2,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor),
+            centerTitle: true,
+            elevation: 0,
+            iconTheme: IconThemeData(color: AppColors.primaryColor),
           ),
+          drawer: _buildDrawer(),
           body:
               BlocListener<cart_bloc.CartClientBloc, cart_bloc.CartClientState>(
             listener: (context, cartState) {
@@ -96,25 +141,38 @@ class _HomeClientPageState extends State<HomeClientPage>
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                return SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // CarouselSlier
-                      _buildPubCarouselSlider(),
+                return NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (notification is OverscrollNotification) {
+                      PrimaryScrollController.of(context).jumpTo(
+                        PrimaryScrollController.of(context).offset +
+                            notification.overscroll / 2,
+                      );
+                    }
+                    return false;
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Barre de recherche
+                        _buildSearchBar(),
+                        // CarouselSlier
+                        _buildPubCarouselSlider(),
 
-                      // Onglets Produits/Boutiques
-                      _buildTabBar(),
+                        // Onglets Produits/Boutiques
+                        _buildTabBar(),
 
-                      _buildPromotionCarouselSlider(),
+                        _buildPromotionCarouselSlider(),
 
-                      // Filtres par secteur
-                      _buildCategoryFilters(),
+                        // Filtres par secteur
+                        _buildCategoryFilters(),
 
-                      // Contenu des onglets
-                      _buildTabContent(state),
-                      //SizedBox(height: context.height * 0.2),
-                    ],
+                        // Contenu des onglets
+                        _buildTabContent(state),
+                        //SizedBox(height: context.height * 0.2),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -405,24 +463,41 @@ class _HomeClientPageState extends State<HomeClientPage>
   }
 
   Widget _buildSearchBar() {
-    return AppTextField(
-      height: 50,
-      width: context.width * 0.85,
-      color: Theme.of(context).colorScheme.background,
-      prefixIcon: Icons.search,
-      /*suffixIcon: Icon(
-        Icons.filter_list,
-        color: AppColors.primaryColor,
-      ),*/
-      showFloatingLabel: false,
-      hintText: "Rechercher . . .",
-      borderRadius: BorderRadius.circular(15),
-      onChanged: (value) {
-        // setState(() {
-        //   _searchQuery = value;
-        // });
-        context.read<HomeClientBloc>().add(SearchProducts(query: value));
-      },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AppTextField(
+        height: context.height * 0.07,
+        width: context.width * 0.95,
+        color: Theme.of(context).colorScheme.background,
+        //prefixIcon: Icons.search,
+        isPrefixIconWidget: true,
+        preficIconWidget: Padding(
+          padding: const EdgeInsets.only(right: 6.0),
+          child: AppButton(
+              width: context.width * 0.08,
+              height: 45,
+              bordeurRadius: 10,
+              color: AppColors.primaryColor.withOpacity(0.5),
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+              )),
+        ),
+        /*suffixIcon: Icon(
+          Icons.filter_list,
+          color: AppColors.primaryColor,
+        ),*/
+        showFloatingLabel: false,
+        //label: "Rechercher . . .",
+        borderRadius: BorderRadius.circular(15),
+
+        onChanged: (value) {
+          // setState(() {
+          //   _searchQuery = value;
+          // });
+          context.read<HomeClientBloc>().add(SearchProducts(query: value));
+        },
+      ),
     );
   }
 
@@ -697,10 +772,6 @@ class _HomeClientPageState extends State<HomeClientPage>
     // Prendre au maximum 4 produits pour la grille
     final displayProducts = products.take(4).toList();
     final hasMoreProducts = products.length > 4;
-
-    // Debug: afficher le nombre de produits par secteur
-    print(
-        'Secteur "$sectorName": ${products.length} produits (hasMoreProducts: $hasMoreProducts)');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
@@ -1081,6 +1152,498 @@ class _HomeClientPageState extends State<HomeClientPage>
 
     return const Center(
       child: AppText(text: 'Aucune boutique trouvée'),
+    );
+  }
+
+  /// Construit le Drawer avec les ressources essentielles
+  Widget _buildDrawer() {
+    return Drawer(
+      child: Column(
+        children: [
+          // En-tête du Drawer
+          Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.primaryColor,
+                  AppColors.primaryColor.withOpacity(0.8),
+                ],
+              ),
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      size: 50,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  AppText(
+                    text: 'Bienvenue',
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  FutureBuilder<String?>(
+                    future: _getUserName(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        return AppText(
+                          text: snapshot.data!,
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        );
+                      }
+                      return AppText(
+                        text: 'Client',
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Menu du Drawer
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                // Profil
+                _buildDrawerItem(
+                  icon: Icons.person,
+                  title: 'Mon Profil',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AppRoutes.PROFILE);
+                  },
+                ),
+
+                // Panier
+                _buildDrawerItem(
+                  icon: Icons.shopping_cart,
+                  title: 'Mon Panier',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AppRoutes.CART);
+                  },
+                ),
+
+                // Favoris
+                /*_buildDrawerItem(
+                  icon: Icons.favorite,
+                  title: 'Mes Favoris',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AppRoutes.FAVORITES);
+                  },
+                ),*/
+
+                // Commandes
+                _buildDrawerItem(
+                  icon: Icons.shopping_bag,
+                  title: 'Mes Commandes',
+                  onTap: () {
+                    AppUtils.showInfoDialog(
+                        context: context,
+                        message: 'Cette fonctionnalité arrive bientôt');
+                  },
+                ),
+
+                // Divider
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inverseSurface
+                      .withOpacity(0.3),
+                ),
+
+                // Aide et Support
+                _buildDrawerItem(
+                  icon: Icons.help,
+                  title: 'Aide & Support',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showHelpDialog();
+                  },
+                ),
+
+                // À propos
+                _buildDrawerItem(
+                  icon: Icons.info,
+                  title: 'À propos',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showAboutDialog();
+                  },
+                ),
+
+                // Paramètres
+                _buildDrawerItem(
+                  icon: Icons.settings,
+                  title: 'Paramètres',
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AppRoutes.PROFILE);
+                  },
+                ),
+
+                Divider(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inverseSurface
+                      .withOpacity(0.3),
+                ),
+
+                // Déconnexion
+                _buildDrawerItem(
+                  icon: Icons.logout,
+                  title: 'Déconnexion',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showLogoutDialog();
+                  },
+                  textColor: AppColors.redColor,
+                  iconColor: AppColors.redColor,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Construit un élément du menu du Drawer
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? textColor,
+    Color? iconColor,
+  }) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: iconColor ?? AppColors.primaryColor,
+        size: 24,
+      ),
+      title: AppText(
+        text: title,
+        color: textColor ??
+            Theme.of(context).colorScheme.inverseSurface.withOpacity(0.8),
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+      onTap: onTap,
+      hoverColor: AppColors.primaryColor.withOpacity(0.1),
+    );
+  }
+
+  /// Récupère le nom de l'utilisateur connecté
+  Future<String?> _getUserName() async {
+    try {
+      final userDataService = UserDataService();
+      final user = await userDataService.getCurrentUser();
+      return user?.fullName;
+    } catch (e) {
+      print('Erreur lors de la récupération du nom utilisateur: $e');
+      return null;
+    }
+  }
+
+  /// Affiche la BottomSheet d'aide
+  void _showHelpDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      //showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inverseSurface
+                      .withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.help_outline,
+                      color: AppColors.primaryColor,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 12),
+                    AppText(
+                      text: 'Aide & Support',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                      overflow: TextOverflow.visible,
+                      maxLine: 2,
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inverseSurface
+                            .withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          text: 'Comment pouvons-nous vous aider ?',
+                          fontSize: 16,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Contact items
+                        _buildContactItem(
+                          icon: Icons.phone,
+                          title: 'Téléphone',
+                          subtitle: '+229 01 52 74 83 42',
+                          onTap: () {
+                            // TODO: Implémenter l'appel téléphonique
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _buildContactItem(
+                          icon: Icons.email,
+                          title: 'Email',
+                          subtitle: 'codeurplus10@gmail.com',
+                          onTap: () {
+                            // TODO: Implémenter l'envoi d'email
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _buildContactItem(
+                          icon: Icons.access_time,
+                          title: 'Horaires de support',
+                          subtitle: 'Lun - Ven: 8h - 18h\nSam: 9h - 15h',
+                          onTap: null,
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // FAQ section
+                        AppText(
+                          text: 'Questions fréquentes',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor,
+                        ),
+                        const SizedBox(height: 12),
+
+                        _buildFAQItem(
+                          question: 'Comment passer une commande ?',
+                          answer:
+                              'Sélectionnez vos produits, ajoutez-les au panier et procédez au paiement.',
+                        ),
+
+                        _buildFAQItem(
+                          question: 'Comment suivre ma commande ?',
+                          answer:
+                              'Vous recevrez des notifications par email et SMS sur l\'état de votre commande.',
+                        ),
+
+                        _buildFAQItem(
+                          question: 'Quels sont les modes de paiement ?',
+                          answer:
+                              'Nous acceptons les paiements par mobile money, carte bancaire et paiement à la livraison.',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// Construit un élément de contact
+  Widget _buildContactItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: onTap != null
+              ? AppColors.primaryColor.withOpacity(0.05)
+              : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: onTap != null
+                ? AppColors.primaryColor.withOpacity(0.2)
+                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    text: title,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    // color: Colors.black87,
+                  ),
+                  const SizedBox(height: 4),
+                  AppText(
+                    text: subtitle,
+                    fontSize: 12,
+                  ),
+                ],
+              ),
+            ),
+            if (onTap != null)
+              Icon(
+                Icons.arrow_forward_ios,
+                color: AppColors.primaryColor,
+                size: 16,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Construit un élément de FAQ
+  Widget _buildFAQItem({
+    required String question,
+    required String answer,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(
+            text: question,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryColor,
+            maxLine: 2,
+          ),
+          const SizedBox(height: 8),
+          AppText(
+            text: answer,
+            fontSize: 12,
+            //color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+            overflow: TextOverflow.visible,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Affiche la boîte de dialogue À propos
+  void _showAboutDialog() {
+    AppUtils.showDialog(
+        context: context,
+        titleColor: AppColors.primaryColor,
+        title: AppAttributes.appName,
+        content:
+            '${AppAttributes.appVersion}\n\n ${AppAttributes.appDescription}',
+        cancelText: "OK",
+        onConfirm: () {});
+  }
+
+  /// Affiche la boîte de dialogue de déconnexion
+  void _showLogoutDialog() {
+    AppUtils.showDialog(
+      context: context,
+      title: "Déconnexion",
+      content: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+      confirmText: 'Déconnexion',
+      cancelText: 'Annuler',
+      onConfirm: () {
+        _handleSignOut();
+      },
     );
   }
 }

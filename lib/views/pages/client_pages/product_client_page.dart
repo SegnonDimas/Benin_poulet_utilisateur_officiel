@@ -1,4 +1,5 @@
 import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,7 +86,18 @@ class _ProductClientPageState extends State<ProductClientPage>
     if (widget.product.runtimeType.toString() == 'Produit') {
       return widget.product.productProperties ?? {};
     } else {
-      return {}; // Le modèle Product (mock) n'a pas de propriétés
+      return widget.product.productProperties ??
+          {}; // Le modèle Product a maintenant des propriétés
+    }
+  }
+
+  // Variétés du produit
+  List<String> get _productVarieties {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.varieties ?? [];
+    } else {
+      return widget.product.varieties ??
+          []; // Le modèle Product a maintenant des variétés
     }
   }
 
@@ -316,8 +328,40 @@ class _ProductClientPageState extends State<ProductClientPage>
 
             const SizedBox(height: 16),
 
+            if (_productVarieties.isNotEmpty) ...[
+              AppText(
+                text: 'Variétés disponibles',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _productVarieties
+                    .map((variety) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: AppColors.primaryColor.withOpacity(0.3)),
+                          ),
+                          child: AppText(
+                            text: variety,
+                            color: AppColors.primaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 24),
+            ],
+
             // Catégorie et boutique
-            Row(
+            /*Row(
               children: [
                 Container(
                   padding:
@@ -342,7 +386,8 @@ class _ProductClientPageState extends State<ProductClientPage>
                       // TODO: Récupérer les informations complètes de la boutique
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Navigation vers la boutique en cours de développement'),
+                          content: Text(
+                              'Navigation vers la boutique en cours de développement'),
                           backgroundColor: AppColors.orangeColor,
                         ),
                       );
@@ -370,7 +415,7 @@ class _ProductClientPageState extends State<ProductClientPage>
                   ),
                 ),
               ],
-            ),
+            ),*/
 
             const SizedBox(height: 16),
 
@@ -378,6 +423,9 @@ class _ProductClientPageState extends State<ProductClientPage>
             AppText(
               text: _productDescription,
               color: Colors.grey.shade600,
+              fontSize: context.smallText * 1.3,
+              //overflow: TextOverflow.visible,
+              maxLine: 5,
             ),
           ],
         ),
@@ -486,6 +534,15 @@ class _ProductClientPageState extends State<ProductClientPage>
   }
 
   Widget _buildDescriptionTab() {
+    // Debug: afficher les propriétés disponibles
+    print('=== DEBUG PRODUIT ===');
+    print('Type de produit: ${widget.product.runtimeType}');
+    print('Propriétés du produit: $_productProperties');
+    print('Nombre de propriétés: ${_productProperties.length}');
+    print('Variétés du produit: $_productVarieties');
+    print('Nombre de variétés: ${_productVarieties.length}');
+    print('====================');
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ListView(
@@ -500,8 +557,44 @@ class _ProductClientPageState extends State<ProductClientPage>
           AppText(
             text: _productDescription,
             color: Colors.grey.shade600,
+            overflow: TextOverflow.visible,
           ),
           const SizedBox(height: 24),
+
+          // Variétés disponibles
+          if (_productVarieties.isNotEmpty) ...[
+            AppText(
+              text: 'Variétés disponibles',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _productVarieties
+                  .map((variety) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: AppColors.primaryColor.withOpacity(0.3)),
+                        ),
+                        child: AppText(
+                          text: variety,
+                          color: AppColors.primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ))
+                  .toList(),
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // Caractéristiques
           AppText(
             text: 'Caractéristiques',
             fontSize: 16,
@@ -510,9 +603,16 @@ class _ProductClientPageState extends State<ProductClientPage>
           const SizedBox(height: 12),
           _buildCharacteristic('Type', _productCategory),
           // Afficher les propriétés dynamiques du produit si disponibles
-          ..._productProperties.entries.map((entry) => 
-            _buildCharacteristic(entry.key, entry.value)
-          ),
+          if (_productProperties.isNotEmpty)
+            ..._productProperties.entries
+                .map((entry) => _buildCharacteristic(entry.key, entry.value))
+          else
+            AppText(
+              text: 'Aucune caractéristique supplémentaire disponible',
+              color: Colors.grey.shade500,
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+            ),
         ],
       ),
     );
