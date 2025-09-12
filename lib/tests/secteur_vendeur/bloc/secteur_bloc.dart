@@ -63,6 +63,7 @@ final initialSectors = <SellerSector>[
     id: 1,
     name: 'Volaille',
     isSelected: false,
+    image: 'assets/images/sectors/volaille.png',
     categories: [
       Category(name: 'Poulet', isSelected: false),
       Category(name: 'Pigeon', isSelected: false),
@@ -76,6 +77,7 @@ final initialSectors = <SellerSector>[
     id: 2,
     name: 'Pisciculture',
     isSelected: false,
+    image: 'assets/images/sectors/pisciculture.png',
     categories: [
       Category(name: 'Tilapia', isSelected: false),
       Category(name: 'Carpe', isSelected: false),

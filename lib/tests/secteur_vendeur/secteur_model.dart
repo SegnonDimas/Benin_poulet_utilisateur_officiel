@@ -8,6 +8,7 @@ class SellerSector {
   final String? description;
   final bool isSelected;
   final List<Category> categories;
+  final String image; // Image représentative du secteur
 
   const SellerSector({
     required this.id,
@@ -15,6 +16,7 @@ class SellerSector {
     this.description,
     required this.isSelected,
     required this.categories,
+    required this.image,
   });
 
   SellerSector copyWith({
@@ -23,6 +25,7 @@ class SellerSector {
     String? description,
     bool? isSelected,
     List<Category>? categories,
+    String? image,
   }) {
     return SellerSector(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class SellerSector {
       description: description ?? this.description,
       isSelected: isSelected ?? this.isSelected,
       categories: categories ?? this.categories,
+      image: image ?? this.image,
     );
   }
 }

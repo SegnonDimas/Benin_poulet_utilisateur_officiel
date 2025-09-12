@@ -1,15 +1,15 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
 // import 'package:benin_poulet/widgets/app_button.dart'; // Non utilisé - remplacé par GestureDetector
+import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../../../bloc/choixCategorie/secteur_bloc.dart';
 import '../../../bloc/client/cart_client_bloc.dart' as cart_bloc;
 import '../../../bloc/client/home_client_bloc.dart';
 import '../../../constants/routes.dart';
+import '../../../models/sellerSector.dart';
 import '../../../utils/app_utils.dart';
 import '../../../widgets/app_text.dart';
 import '../../../widgets/app_textField.dart';
@@ -45,24 +45,12 @@ class _HomeClientPageState extends State<HomeClientPage>
   // String _searchQuery = ''; // Utilisé dans la barre de recherche
 
   // Liste des secteurs pour le filtrage
-  List<String> _categories = ['Tout'];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
-    _initializeCategories();
     context.read<HomeClientBloc>().add(LoadHomeData());
-  }
-
-  /// Initialise la liste des secteurs pour le filtrage
-  void _initializeCategories() {
-    // Extraire tous les secteurs et les trier par ordre alphabétique
-    final allSectors = initialSectors.map((sector) => sector.name).toList()
-      ..sort();
-
-    // Mettre "Tout" au début de la liste
-    _categories = ['Tout'] + allSectors;
   }
 
   @override
@@ -167,7 +155,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                 })),
 
         //dots indicator
-        Positioned(
+        /* Positioned(
           bottom: 10,
           left: context.width * 0.35,
           right: context.width * 0.35,
@@ -193,7 +181,7 @@ class _HomeClientPageState extends State<HomeClientPage>
               },
             ),
           ),
-        )
+        )*/
       ],
     );
   }
@@ -439,59 +427,158 @@ class _HomeClientPageState extends State<HomeClientPage>
   }
 
   Widget _buildCategoryFilters() {
+    // Créer une liste avec "Tout" en premier, suivi des secteurs triés
+    final allSectors = List<SellerSector>.from(initialSectors)
+      ..sort((a, b) => a.name.compareTo(b.name));
+
     return Padding(
       padding: const EdgeInsets.only(left: 4.0, right: 4, bottom: 8, top: 8),
       child: SizedBox(
-        height: context.height * 0.045,
-        //width: context.width * 0.98,
+        height: context.height * 0.12, // Augmenter la hauteur pour les images
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          //padding: const EdgeInsets.only(left: 8, right: 8),
-          itemCount: _categories.length,
+          itemCount: allSectors.length + 1, // +1 pour "Tout"
           itemBuilder: (context, index) {
-            final category = _categories[index];
-            final isSelected = _selectedCategory == category;
-
-            return Padding(
-              padding: const EdgeInsets.only(right: 8, left: 8),
-              child: FilterChip(
-                checkmarkColor: Theme.of(context).colorScheme.inverseSurface,
-                label: AppText(
-                  text: category,
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.inverseSurface
-                      : Theme.of(context)
-                          .colorScheme
-                          .inverseSurface
-                          .withOpacity(0.6),
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  fontSize: context.smallText * 1.1,
+            if (index == 0) {
+              // Premier élément : "Tout"
+              final isSelected = _selectedCategory == 'Tout';
+              return Padding(
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedCategory = 'Tout';
+                    });
+                    context.read<HomeClientBloc>().add(
+                          FilterByCategory(category: 'Tout'),
+                        );
+                  },
+                  child: Container(
+                    width: context.width * 0.15,
+                    //height: context.height * 0.1,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primaryColor.withOpacity(0.5)
+                          : Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primaryColor.withOpacity(0.7)
+                            : Theme.of(context).colorScheme.background,
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.all_inclusive,
+                          color: isSelected
+                              ? Colors.white
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withOpacity(0.5),
+                          size: 20,
+                        ),
+                        const SizedBox(height: 4),
+                        AppText(
+                          text: 'Tout',
+                          color:
+                              isSelected ? Colors.white : Colors.grey.shade700,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 10,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                side: BorderSide(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .inverseSurface
-                        .withOpacity(0.0)),
-                selected: isSelected,
-                selectedColor: Theme.of(context)
-                    .colorScheme
-                    .inverseSurface
-                    .withOpacity(0.3),
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .inverseSurface
-                    .withOpacity(0.1),
-                onSelected: (selected) {
-                  setState(() {
-                    _selectedCategory = category;
-                  });
-                  // Déclencher un rebuild du contenu des onglets
-                  context.read<HomeClientBloc>().add(
-                        FilterByCategory(category: category),
-                      );
-                },
-              ),
-            );
+              );
+            } else {
+              // Autres éléments : secteurs avec images
+              final sector = allSectors[index - 1];
+              final isSelected = _selectedCategory == sector.name;
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 8, left: 8),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedCategory = sector.name;
+                    });
+                    context.read<HomeClientBloc>().add(
+                          FilterByCategory(category: sector.name),
+                        );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Image du secteur
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: Container(
+                          width: context.width * 0.17,
+                          height: context.width * 0.17,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Theme.of(context).colorScheme.surface,
+                              width: 3,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.asset(
+                              sector.image,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Fallback si l'image n'existe pas
+                                return Icon(
+                                  Icons.category,
+                                  color: isSelected
+                                      ? AppColors.primaryColor
+                                      : Colors.grey.shade600,
+                                  size: 16,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Nom du secteur
+                      Expanded(
+                        child: SizedBox(
+                          width: context.width * 0.17,
+                          child: AppText(
+                            text: sector.name,
+                            maxLine: 2,
+                            color: isSelected
+                                ? AppColors.primaryColor
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface
+                                    .withOpacity(0.5),
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            fontSize: context.smallText * 0.9,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
           },
         ),
       ),
@@ -549,91 +636,386 @@ class _HomeClientPageState extends State<HomeClientPage>
 
   Widget _buildProductsList(HomeClientState state) {
     if (state is HomeClientLoaded) {
-      // Filtrer les produits selon le secteur sélectionné
-      final filteredProducts = _selectedCategory == 'Tout'
-          ? state.products
-          : state.products
-              .where((product) => product.category == _selectedCategory)
-              .toList();
-
-      return NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is OverscrollNotification) {
-            // Transfère le scroll vers le parent à la fin du scroll
-            PrimaryScrollController.of(context).jumpTo(
-              PrimaryScrollController.of(context).offset +
-                  notification.overscroll / 2,
-            );
-          }
-          return false;
-        },
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: filteredProducts.length,
-          itemBuilder: (context, index) {
-            final product = filteredProducts[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(product.imageUrl),
-                  radius: 25,
-                ),
-                title: AppText(text: product.name),
-                subtitle: AppText(
-                  text: '${product.price} FCFA',
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                trailing: BlocBuilder<HomeClientBloc, HomeClientState>(
-                  builder: (context, homeState) {
-                    final isInCart = homeState is HomeClientLoaded &&
-                        homeState.cartProductIds.contains(product.id);
-
-                    return IconButton(
-                      icon: Icon(
-                        Icons.add_shopping_cart,
-                        color: isInCart
-                            ? AppColors.primaryColor
-                            : Theme.of(context)
-                                .colorScheme
-                                .inverseSurface
-                                .withOpacity(0.3),
-                      ),
-                      onPressed: () {
-                        if (isInCart) {
-                          // Si déjà dans le panier, retirer
-                          context.read<cart_bloc.CartClientBloc>().add(
-                                cart_bloc.RemoveFromCart(productId: product.id),
-                              );
-                          AppUtils.showInfoNotification(
-                              context, '${product.name} retiré du panier');
-                        } else {
-                          // Si pas dans le panier, ajouter
-                          context.read<cart_bloc.CartClientBloc>().add(
-                                cart_bloc.AddToCart(productId: product.id),
-                              );
-                          AppUtils.showSuccessNotification(
-                              context, '${product.name} ajouté au panier');
-                        }
-                      },
-                    );
-                  },
-                ),
-                onTap: () {
-                  // Navigation vers la page produit
-                  Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
-                      arguments: product);
-                },
-              ),
-            );
-          },
-        ),
-      );
+      // Si "Tout" est sélectionné, regrouper par secteur
+      if (_selectedCategory == 'Tout') {
+        return _buildProductsGroupedBySector(state);
+      } else {
+        // Sinon, afficher la liste normale filtrée
+        return _buildFilteredProductsList(state);
+      }
     }
 
     return const Center(
       child: AppText(text: 'Aucun produit trouvé'),
+    );
+  }
+
+  /// Construit la liste des produits regroupés par secteur
+  Widget _buildProductsGroupedBySector(HomeClientLoaded state) {
+    // Grouper les produits par secteur
+    final Map<String, List<Product>> productsBySector = {};
+
+    for (final product in state.products) {
+      final sector = product.category;
+      if (!productsBySector.containsKey(sector)) {
+        productsBySector[sector] = [];
+      }
+      productsBySector[sector]!.add(product);
+    }
+
+    // Créer la liste des secteurs avec des produits
+    final sectorsWithProducts = productsBySector.entries
+        .where((entry) => entry.value.isNotEmpty)
+        .toList();
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        if (notification is OverscrollNotification) {
+          PrimaryScrollController.of(context).jumpTo(
+            PrimaryScrollController.of(context).offset +
+                notification.overscroll / 2,
+          );
+        }
+        return false;
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: sectorsWithProducts.length,
+        itemBuilder: (context, index) {
+          final sectorEntry = sectorsWithProducts[index];
+          final sectorName = sectorEntry.key;
+          final sectorProducts = sectorEntry.value;
+
+          return _buildSectorProductGroup(sectorName, sectorProducts);
+        },
+      ),
+    );
+  }
+
+  /// Construit un groupe de produits pour un secteur
+  Widget _buildSectorProductGroup(String sectorName, List<Product> products) {
+    // Prendre au maximum 4 produits pour la grille
+    final displayProducts = products.take(4).toList();
+    final hasMoreProducts = products.length > 4;
+
+    // Debug: afficher le nombre de produits par secteur
+    print(
+        'Secteur "$sectorName": ${products.length} produits (hasMoreProducts: $hasMoreProducts)');
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // En-tête du secteur
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                  text: sectorName,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
+                if (hasMoreProducts)
+                  GestureDetector(
+                    onTap: () {
+                      // Sélectionner le secteur et déclencher le filtre
+                      setState(() {
+                        _selectedCategory = sectorName;
+                      });
+                      context.read<HomeClientBloc>().add(
+                            FilterByCategory(category: sectorName),
+                          );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(15),
+                        border:
+                            Border.all(color: AppColors.primaryColor, width: 1),
+                      ),
+                      child: AppText(
+                        text: 'Voir tout',
+                        color: AppColors.primaryColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          // Grille 2x2 des produits
+          _buildProductGrid(displayProducts),
+        ],
+      ),
+    );
+  }
+
+  /// Construit une grille 2x2 de produits
+  Widget _buildProductGrid(List<Product> products) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.8, // Ajuster selon vos besoins
+      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        final product = products[index];
+        return _buildProductCard(product);
+      },
+    );
+  }
+
+  /// Construit une carte de produit pour la grille
+  Widget _buildProductCard(Product product) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+              arguments: product);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image du produit
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: product.imageUrl.isNotEmpty
+                      ? Image.network(
+                          product.imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: double.infinity,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withOpacity(0.4),
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface
+                                    .withOpacity(0.6),
+                                size: 40,
+                              ),
+                            );
+                          },
+                        )
+                      : Container(
+                          width: double.infinity,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withOpacity(0.4),
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withOpacity(0.6),
+                            size: 40,
+                          ),
+                        ),
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              // Nom du produit
+              Expanded(
+                flex: 1,
+                child: AppText(
+                  text: product.name,
+                  fontSize: context.mediumText * 0.8,
+                  fontWeight: FontWeight.w600,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // Descriotion du produit
+              Expanded(
+                flex: 1,
+                child: AppText(
+                  text: product.description,
+                  fontSize: context.smallText * 0.8,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inverseSurface
+                      .withOpacity(0.6),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+
+              // Prix et bouton panier
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: AppText(
+                        text: '${product.price.toInt()} FCFA',
+                        fontSize: 11,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    BlocBuilder<HomeClientBloc, HomeClientState>(
+                      builder: (context, homeState) {
+                        final isInCart = homeState is HomeClientLoaded &&
+                            homeState.cartProductIds.contains(product.id);
+
+                        return GestureDetector(
+                          onTap: () {
+                            if (isInCart) {
+                              context.read<cart_bloc.CartClientBloc>().add(
+                                    cart_bloc.RemoveFromCart(
+                                        productId: product.id),
+                                  );
+                              AppUtils.showInfoNotification(
+                                  context, '${product.name} retiré du panier');
+                            } else {
+                              context.read<cart_bloc.CartClientBloc>().add(
+                                    cart_bloc.AddToCart(productId: product.id),
+                                  );
+                              AppUtils.showSuccessNotification(
+                                  context, '${product.name} ajouté au panier');
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: isInCart
+                                  ? AppColors.primaryColor.withOpacity(0.1)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Icon(
+                              Icons.add_shopping_cart,
+                              color: isInCart
+                                  ? AppColors.primaryColor
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.6),
+                              size: 16,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Construit la liste filtrée des produits (vue normale)
+  Widget _buildFilteredProductsList(HomeClientLoaded state) {
+    final filteredProducts = state.products
+        .where((product) => product.category == _selectedCategory)
+        .toList();
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        if (notification is OverscrollNotification) {
+          PrimaryScrollController.of(context).jumpTo(
+            PrimaryScrollController.of(context).offset +
+                notification.overscroll / 2,
+          );
+        }
+        return false;
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: filteredProducts.length,
+        itemBuilder: (context, index) {
+          final product = filteredProducts[index];
+          return Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(product.imageUrl),
+                radius: 25,
+              ),
+              title: AppText(text: product.name),
+              subtitle: AppText(
+                text: '${product.price} FCFA',
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+              trailing: BlocBuilder<HomeClientBloc, HomeClientState>(
+                builder: (context, homeState) {
+                  final isInCart = homeState is HomeClientLoaded &&
+                      homeState.cartProductIds.contains(product.id);
+
+                  return IconButton(
+                    icon: Icon(
+                      Icons.add_shopping_cart,
+                      color: isInCart
+                          ? AppColors.primaryColor
+                          : Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withOpacity(0.3),
+                    ),
+                    onPressed: () {
+                      if (isInCart) {
+                        context.read<cart_bloc.CartClientBloc>().add(
+                              cart_bloc.RemoveFromCart(productId: product.id),
+                            );
+                        AppUtils.showInfoNotification(
+                            context, '${product.name} retiré du panier');
+                      } else {
+                        context.read<cart_bloc.CartClientBloc>().add(
+                              cart_bloc.AddToCart(productId: product.id),
+                            );
+                        AppUtils.showSuccessNotification(
+                            context, '${product.name} ajouté au panier');
+                      }
+                    },
+                  );
+                },
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+                    arguments: product);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

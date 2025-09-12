@@ -2,7 +2,7 @@
 // bloc/secteur_state.dart
 // =========================
 
-import 'package:benin_poulet/tests/secteur_vendeur/secteur_model.dart';
+import 'package:benin_poulet/models/sellerSector.dart';
 
 class SecteurState {
   final List<SellerSector> sectors;

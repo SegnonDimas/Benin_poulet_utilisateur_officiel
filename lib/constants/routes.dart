@@ -73,7 +73,7 @@ Map<String, Widget Function(BuildContext)> routes = {
         store: ModalRoute.of(context)!.settings.arguments as StoreClient,
       ),
   '/product-details': (context) => ProductClientPage(
-        product: ModalRoute.of(context)!.settings.arguments as Product,
+        product: ModalRoute.of(context)!.settings.arguments as dynamic,
       ),
   '/cart': (context) => const CartClientPage(),
   '/orders': (context) => const OrdersClientPage(),

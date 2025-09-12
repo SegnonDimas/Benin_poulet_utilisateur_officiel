@@ -1,5 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:benin_poulet/models/store.dart';
+import 'package:benin_poulet/models/seller.dart';
+import 'package:benin_poulet/models/user.dart';
+import 'package:benin_poulet/models/produit.dart';
+import 'package:benin_poulet/services/store_details_service.dart';
 
 // Modèles temporaires pour les placeholders
 class Product {
@@ -106,6 +111,11 @@ class StoreClientLoading extends StoreClientState {}
 class StoreClientLoaded extends StoreClientState {
   final List<Product> products;
   final List<Review> reviews;
+  final List<Produit> realProducts;
+  final Store? store;
+  final Seller? seller;
+  final AppUser? sellerUser;
+  final double averageRating;
   final int productCount;
   final int reviewCount;
   final bool isFavorite;
@@ -113,6 +123,11 @@ class StoreClientLoaded extends StoreClientState {
   const StoreClientLoaded({
     required this.products,
     required this.reviews,
+    required this.realProducts,
+    this.store,
+    this.seller,
+    this.sellerUser,
+    required this.averageRating,
     required this.productCount,
     required this.reviewCount,
     this.isFavorite = false,
@@ -122,6 +137,11 @@ class StoreClientLoaded extends StoreClientState {
   List<Object?> get props => [
         products,
         reviews,
+        realProducts,
+        store,
+        seller,
+        sellerUser,
+        averageRating,
         productCount,
         reviewCount,
         isFavorite,
@@ -130,6 +150,11 @@ class StoreClientLoaded extends StoreClientState {
   StoreClientLoaded copyWith({
     List<Product>? products,
     List<Review>? reviews,
+    List<Produit>? realProducts,
+    Store? store,
+    Seller? seller,
+    AppUser? sellerUser,
+    double? averageRating,
     int? productCount,
     int? reviewCount,
     bool? isFavorite,
@@ -137,6 +162,11 @@ class StoreClientLoaded extends StoreClientState {
     return StoreClientLoaded(
       products: products ?? this.products,
       reviews: reviews ?? this.reviews,
+      realProducts: realProducts ?? this.realProducts,
+      store: store ?? this.store,
+      seller: seller ?? this.seller,
+      sellerUser: sellerUser ?? this.sellerUser,
+      averageRating: averageRating ?? this.averageRating,
       productCount: productCount ?? this.productCount,
       reviewCount: reviewCount ?? this.reviewCount,
       isFavorite: isFavorite ?? this.isFavorite,
@@ -155,6 +185,8 @@ class StoreClientError extends StoreClientState {
 
 // BLoC
 class StoreClientBloc extends Bloc<StoreClientEvent, StoreClientState> {
+  final StoreDetailsService _storeDetailsService = StoreDetailsService();
+
   StoreClientBloc() : super(StoreClientInitial()) {
     on<LoadStoreDetails>(_onLoadStoreDetails);
     on<ToggleFavorite>(_onToggleFavorite);
@@ -241,17 +273,35 @@ class StoreClientBloc extends Bloc<StoreClientEvent, StoreClientState> {
     emit(StoreClientLoading());
 
     try {
-      // Simulation d'un délai de chargement
-      await Future.delayed(const Duration(seconds: 1));
+      // Récupérer les vraies données de la boutique
+      final storeDetails = await _storeDetailsService.getStoreDetails(event.storeId);
+      
+      if (storeDetails == null) {
+        emit(StoreClientError(message: 'Boutique introuvable'));
+        return;
+      }
+
+      final Store store = storeDetails['store'];
+      final Seller seller = storeDetails['seller'];
+      final AppUser sellerUser = storeDetails['sellerUser'];
+      final List<Produit> realProducts = storeDetails['realProducts'];
+      final double averageRating = storeDetails['averageRating'];
+      final int productCount = storeDetails['productCount'];
+      final int reviewCount = storeDetails['reviewCount'];
 
       emit(StoreClientLoaded(
-        products: _mockProducts,
-        reviews: _mockReviews,
-        productCount: _mockProducts.length,
-        reviewCount: _mockReviews.length,
+        products: _mockProducts, // Garder pour compatibilité avec l'UI existante
+        reviews: _mockReviews, // Garder pour compatibilité avec l'UI existante
+        realProducts: realProducts,
+        store: store,
+        seller: seller,
+        sellerUser: sellerUser,
+        averageRating: averageRating,
+        productCount: productCount,
+        reviewCount: reviewCount,
       ));
     } catch (e) {
-      emit(StoreClientError(message: 'Erreur lors du chargement des détails'));
+      emit(StoreClientError(message: 'Erreur lors du chargement des détails: $e'));
     }
   }
 

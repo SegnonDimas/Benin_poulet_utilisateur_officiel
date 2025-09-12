@@ -183,7 +183,9 @@ class _StoreClientPageState extends State<StoreClientPage>
                 ),
                 SizedBox(width: 4),
                 AppText(
-                  text: '${widget.store.rating}',
+                  text: state is StoreClientLoaded ? 
+                      '${state.averageRating.toStringAsFixed(1)}' : 
+                      '${widget.store.rating ?? 0.0}',
                   fontSize: context.mediumText,
                   fontWeight: FontWeight.bold,
                 ),
@@ -213,7 +215,9 @@ class _StoreClientPageState extends State<StoreClientPage>
             ),
             SizedBox(height: 8),
             AppText(
-              text: widget.store.description,
+              text: state is StoreClientLoaded && state.store?.storeDescription != null
+                  ? state.store!.storeDescription!
+                  : widget.store.description ?? 'Aucune description disponible',
               color:
                   Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
             ),
@@ -249,50 +253,95 @@ class _StoreClientPageState extends State<StoreClientPage>
   }
 
   Widget _buildContactInfo() {
-    return Container(
-      padding: EdgeInsets.all(context.mediumText),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText(
-            text: 'Informations de contact',
-            fontSize: context.mediumText,
-            fontWeight: FontWeight.bold,
+    return BlocBuilder<StoreClientBloc, StoreClientState>(
+      builder: (context, state) {
+        String? phone = '';
+        String? email = '';
+        String? address = '';
+        String? workingHours = '';
+
+        if (state is StoreClientLoaded) {
+          // Récupérer le téléphone depuis mobileMoney ou sellerUser
+          if (state.sellerUser?.authIdentifier != null && 
+              !state.sellerUser!.authIdentifier!.contains('@')) {
+            phone = state.sellerUser!.authIdentifier!;
+          }
+          
+          // Récupérer l'email depuis authIdentifier si c'est un email
+          if (state.sellerUser?.authIdentifier != null && 
+              state.sellerUser!.authIdentifier!.contains('@')) {
+            email = state.sellerUser!.authIdentifier!;
+          }
+          
+          // Récupérer l'adresse
+          address = state.store?.storeAddress ?? 
+                    state.sellerUser?.currentAddress ?? 
+                    'Adresse non disponible';
+          
+          // Récupérer les heures d'ouverture
+          if (state.store?.joursOuverture != null && 
+              state.store!.joursOuverture!.isNotEmpty) {
+            workingHours = state.store!.joursOuverture!.entries
+                .map((e) => '${e.key}: ${e.value}')
+                .join(', ');
+          } else {
+            workingHours = 'Horaires non disponibles';
+          }
+        }
+
+        return Container(
+          padding: EdgeInsets.all(context.mediumText),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: BorderRadius.circular(12),
           ),
-          SizedBox(height: 12),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.phone, color: AppColors.primaryColor, size: 20),
-              SizedBox(width: 8),
-              Expanded(child: AppText(text: '+229 90 00 00 00')),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.email, color: AppColors.primaryColor, size: 20),
-              SizedBox(width: 8),
-              Expanded(
-                child: AppText(
-                    text:
-                        'contact@${widget.store.name.toLowerCase().replaceAll(' ', '')}.com'),
+              AppText(
+                text: 'Informations de contact',
+                fontSize: context.mediumText,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(height: 12),
+              if (phone.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.phone, color: AppColors.primaryColor, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(child: AppText(text: phone)),
+                  ],
+                ),
+              if (phone.isNotEmpty) SizedBox(height: 8),
+              if (email.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.email, color: AppColors.primaryColor, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(child: AppText(text: email)),
+                  ],
+                ),
+              if (email.isNotEmpty) SizedBox(height: 8),
+              if (address.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(Icons.location_on, color: AppColors.primaryColor, size: 20),
+                    SizedBox(width: 8),
+                    Expanded(child: AppText(text: address)),
+                  ],
+                ),
+              if (address.isNotEmpty) SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.access_time, color: AppColors.primaryColor, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(child: AppText(text: workingHours)),
+                ],
               ),
             ],
           ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.access_time, color: AppColors.primaryColor, size: 20),
-              SizedBox(width: 8),
-              Expanded(child: AppText(text: 'Lun-Sam: 8h-16h')),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -332,9 +381,33 @@ class _StoreClientPageState extends State<StoreClientPage>
 
   Widget _buildProductsTab(StoreClientState state) {
     if (state is StoreClientLoaded) {
-      if (state.products.isEmpty) {
+      // Utiliser les vrais produits de la boutique
+      final productsToShow = state.realProducts.isNotEmpty ? 
+          state.realProducts : state.products;
+      
+      if (productsToShow.isEmpty) {
         return Center(
-          child: AppText(text: 'Aucun produit disponible'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.inventory_2_outlined,
+                size: 64,
+                color: Colors.grey.shade400,
+              ),
+              SizedBox(height: 16),
+              AppText(
+                text: 'Aucun produit disponible',
+                color: Colors.grey.shade600,
+              ),
+              SizedBox(height: 8),
+              AppText(
+                text: 'Cette boutique n\'a pas encore de produits',
+                color: Colors.grey.shade500,
+                fontSize: 14,
+              ),
+            ],
+          ),
         );
       }
 
@@ -346,20 +419,44 @@ class _StoreClientPageState extends State<StoreClientPage>
           crossAxisSpacing: 4,
           mainAxisSpacing: 0,
         ),
-        itemCount: state.products.length,
+        itemCount: productsToShow.length,
         itemBuilder: (context, index) {
-          final product = state.products[index];
+          final product = productsToShow[index];
           return _buildProductCard(product);
         },
       );
     }
 
     return Center(
-      child: AppText(text: 'Chargement des produits...'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          AppText(text: 'Chargement des produits...'),
+        ],
+      ),
     );
   }
 
   Widget _buildProductCard(dynamic product) {
+    // Gérer les deux types de produits (Produit réel ou Product mocké)
+    String productName = '';
+    String productImage = '';
+    double productPrice = 0.0;
+    
+    if (product.runtimeType.toString() == 'Produit') {
+      // Produit réel
+      productName = product.productName ?? 'Produit sans nom';
+      productImage = product.productImagesPath.isNotEmpty ? product.productImagesPath.first : '';
+      productPrice = product.promoPrice ?? product.productUnitPrice ?? 0.0;
+    } else {
+      // Product mocké
+      productName = product.name ?? 'Produit sans nom';
+      productImage = product.imageUrl ?? '';
+      productPrice = product.price ?? 0.0;
+    }
+
     return Card(
       elevation: 10,
       shape: RoundedRectangleBorder(
@@ -373,15 +470,18 @@ class _StoreClientPageState extends State<StoreClientPage>
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                //color: Colors.red,
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(12),
                 ),
-                image: DecorationImage(
-                  image: NetworkImage(product.imageUrl),
+                image: productImage.isNotEmpty ? DecorationImage(
+                  image: NetworkImage(productImage),
                   fit: BoxFit.cover,
-                ),
+                ) : null,
+                color: productImage.isEmpty ? Colors.grey.shade200 : null,
               ),
+              child: productImage.isEmpty ? 
+                Icon(Icons.image_not_supported, size: 50, color: Colors.grey) : 
+                null,
             ),
           ),
           Expanded(
@@ -392,15 +492,15 @@ class _StoreClientPageState extends State<StoreClientPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    text: product.name,
+                    text: productName,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    //maxLines: 2,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
                   AppText(
-                    text: '${product.price} FCFA',
+                    text: '${productPrice.toInt()} FCFA',
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -409,14 +509,17 @@ class _StoreClientPageState extends State<StoreClientPage>
                     width: double.infinity,
                     child: AppButton(
                       onTap: () {
-                        context.read<StoreClientBloc>().add(
-                              AddToCart(product: product),
-                            );
+                        // Navigation vers les détails du produit
+                        Navigator.pushNamed(
+                          context, 
+                          AppRoutes.PRODUCTDETAILS, 
+                          arguments: product,
+                        );
                       },
                       color: AppColors.primaryColor,
                       height: context.height * 0.042,
                       child: AppText(
-                        text: 'Ajouter',
+                        text: 'Voir détails',
                         color: Colors.white,
                       ),
                     ),
@@ -505,7 +608,6 @@ class _StoreClientPageState extends State<StoreClientPage>
     return Padding(
       padding: EdgeInsets.all(context.mediumText),
       child: ListView(
-        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText(
             text: 'À propos de ${widget.store.name}',
@@ -513,11 +615,19 @@ class _StoreClientPageState extends State<StoreClientPage>
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: context.mediumText),
-          AppText(
-            text: widget.store.description,
-            color:
-                Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
-          ),
+          
+          // Description de la boutique
+          if (state is StoreClientLoaded && state.store?.storeDescription != null)
+            AppText(
+              text: state.store!.storeDescription!,
+              color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+            )
+          else
+            AppText(
+              text: widget.store.description ?? 'Aucune description disponible',
+              color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5),
+            ),
+          
           SizedBox(height: 24),
           AppText(
             text: 'Informations supplémentaires',
@@ -525,10 +635,30 @@ class _StoreClientPageState extends State<StoreClientPage>
             fontWeight: FontWeight.bold,
           ),
           SizedBox(height: 12),
-          _buildInfoRow('Date de création', '2020'),
-          _buildInfoRow('Type de boutique', 'Spécialisée'),
-          _buildInfoRow('Zone de livraison', 'Tout le Bénin'),
-          _buildInfoRow('Moyens de paiement', 'Espèces, Mobile Money'),
+          
+          // Informations dynamiques basées sur les vraies données
+          if (state is StoreClientLoaded) ...[
+            if (state.store?.storeSectors != null && state.store!.storeSectors!.isNotEmpty)
+              _buildInfoRow('Secteurs', state.store!.storeSectors!.join(', ')),
+            if (state.store?.ville != null)
+              _buildInfoRow('Ville', state.store!.ville!),
+            if (state.store?.pays != null)
+              _buildInfoRow('Pays', state.store!.pays!),
+            if (state.store?.zoneLivraison != null)
+              _buildInfoRow('Zone de livraison', state.store!.zoneLivraison!),
+            if (state.store?.tempsLivraison != null)
+              _buildInfoRow('Temps de livraison', state.store!.tempsLivraison!),
+            if (state.seller?.documentsVerified != null)
+              _buildInfoRow('Documents vérifiés', state.seller!.documentsVerified! ? 'Oui' : 'Non'),
+            if (state.sellerUser?.createdAt != null)
+              _buildInfoRow('Membre depuis', 
+                  '${state.sellerUser!.createdAt!.year}-${state.sellerUser!.createdAt!.month.toString().padLeft(2, '0')}'),
+          ] else ...[
+            // Informations par défaut si pas de données
+            _buildInfoRow('Statut', 'Boutique active'),
+            _buildInfoRow('Zone de livraison', 'Information non disponible'),
+            _buildInfoRow('Moyens de paiement', 'Espèces, Mobile Money'),
+          ],
         ],
       ),
     );

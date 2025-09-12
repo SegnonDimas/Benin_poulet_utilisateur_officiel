@@ -4,7 +4,7 @@
 
 import 'package:benin_poulet/bloc/choixCategorie/secteur_event.dart';
 import 'package:benin_poulet/bloc/choixCategorie/secteur_state.dart';
-import 'package:benin_poulet/tests/secteur_vendeur/secteur_model.dart';
+import 'package:benin_poulet/models/sellerSector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SecteurBloc extends Bloc<SecteurEvent, SecteurState> {
@@ -62,6 +62,7 @@ final initialSectors = <SellerSector>[
     id: 1,
     name: 'Volaille',
     isSelected: false,
+    image: 'assets/images/sectors/volaille.png',
     categories: [
       Category(name: 'Poulet', isSelected: false),
       Category(name: 'Pigeon', isSelected: false),
@@ -75,6 +76,7 @@ final initialSectors = <SellerSector>[
     id: 2,
     name: 'Pisciculture',
     isSelected: false,
+    image: 'assets/images/sectors/pisciculture.png',
     categories: [
       Category(name: 'Tilapia', isSelected: false),
       Category(name: 'Carpe', isSelected: false),
@@ -86,6 +88,7 @@ final initialSectors = <SellerSector>[
     id: 3,
     name: 'Betail',
     isSelected: false,
+    image: 'assets/images/sectors/betail.png',
     categories: [
       Category(name: 'Bœuf', isSelected: false),
       Category(name: 'Mouton', isSelected: false),
@@ -99,6 +102,7 @@ final initialSectors = <SellerSector>[
     id: 4,
     name: 'Porciculture',
     isSelected: false,
+    image: 'assets/images/sectors/porciculture.png',
     categories: [
       Category(name: 'Porcelet', isSelected: false),
       Category(name: 'Porc Adulte', isSelected: false),
@@ -110,6 +114,7 @@ final initialSectors = <SellerSector>[
     id: 5,
     name: 'Cuniculture',
     isSelected: false,
+    image: 'assets/images/sectors/cuniculture.png',
     categories: [
       Category(name: 'Lapin', isSelected: false),
       Category(name: 'Accessoires', isSelected: false),
@@ -120,6 +125,7 @@ final initialSectors = <SellerSector>[
     id: 6,
     name: 'Apiculture',
     isSelected: false,
+    image: 'assets/images/sectors/apiculture.png',
     categories: [
       Category(name: 'Miel', isSelected: false),
       Category(name: 'Essaims', isSelected: false),
@@ -129,21 +135,23 @@ final initialSectors = <SellerSector>[
   ),
   SellerSector(
     id: 7,
-    name: 'Élevage d’Escargots',
+    name: 'Elevage d\'Escargots',
     isSelected: false,
+    image: 'assets/images/sectors/escargots.png',
     categories: [
       Category(name: 'Escargots Vivants', isSelected: false),
-      Category(name: 'Œufs d’Escargots', isSelected: false),
+      Category(name: 'Oeufs d\'Escargots', isSelected: false),
       Category(name: 'Accessoires', isSelected: false),
     ],
   ),
   SellerSector(
     id: 8,
-    name: 'Élevage de Vers de Terre',
+    name: 'Elevage de Vers de Terre',
     isSelected: false,
+    image: 'assets/images/sectors/vers_terre.png',
     categories: [
       Category(name: 'Vers pour compost', isSelected: false),
-      Category(name: 'Thé de compost', isSelected: false),
+      Category(name: 'The de compost', isSelected: false),
       Category(name: 'Accessoires', isSelected: false),
     ],
   ),

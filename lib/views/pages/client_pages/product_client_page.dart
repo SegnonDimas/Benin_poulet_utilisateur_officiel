@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import '../../../bloc/client/cart_client_bloc.dart' as cart_bloc;
 import '../../../bloc/client/home_client_bloc.dart';
-import '../../../bloc/client/product_client_bloc.dart';
 import '../../../constants/routes.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text.dart';
@@ -28,13 +27,87 @@ class _ProductClientPageState extends State<ProductClientPage>
   int _selectedQuantity = 1;
   final PageController _imageController = PageController();
 
+  // Propriétés communes pour gérer les deux types de produits
+  String get _productId {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.productId ?? '';
+    } else {
+      return widget.product.id ?? '';
+    }
+  }
+
+  String get _productName {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.productName ?? 'Produit sans nom';
+    } else {
+      return widget.product.name ?? 'Produit sans nom';
+    }
+  }
+
+  String get _productImage {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.productImagesPath.isNotEmpty
+          ? widget.product.productImagesPath.first
+          : '';
+    } else {
+      return widget.product.imageUrl ?? '';
+    }
+  }
+
+  double get _productPrice {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.promoPrice ??
+          widget.product.productUnitPrice ??
+          0.0;
+    } else {
+      return widget.product.price ?? 0.0;
+    }
+  }
+
+  String get _productDescription {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.productDescription ?? '';
+    } else {
+      return widget.product.description ?? '';
+    }
+  }
+
+  String get _productCategory {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.category ?? '';
+    } else {
+      return widget.product.category ?? '';
+    }
+  }
+
+  // Propriétés pour les caractéristiques du produit
+  Map<String, String> get _productProperties {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return widget.product.productProperties ?? {};
+    } else {
+      return {}; // Le modèle Product (mock) n'a pas de propriétés
+    }
+  }
+
+  // Propriétés pour la boutique
+  String get _storeName {
+    if (widget.product.runtimeType.toString() == 'Produit') {
+      return 'Boutique'; // Nous devrons récupérer le nom depuis la base de données
+    } else {
+      return widget.product.storeName ?? 'Boutique';
+    }
+  }
+
+  // Propriétés pour les avis (temporairement statiques)
+  double get _productRating => 4.5; // TODO: Récupérer depuis la base de données
+  int get _reviewCount => 0; // TODO: Récupérer depuis la base de données
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-    context
-        .read<ProductClientBloc>()
-        .add(LoadProductDetails(productId: widget.product.id));
+    // Plus besoin de charger les détails via ProductClientBloc
+    // car nous avons déjà toutes les informations du produit
   }
 
   @override
@@ -49,31 +122,23 @@ class _ProductClientPageState extends State<ProductClientPage>
     return SafeArea(
       top: false,
       child: Scaffold(
-        body: BlocBuilder<ProductClientBloc, ProductClientState>(
-          builder: (context, state) {
-            if (state is ProductClientLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: CustomScrollView(
+          slivers: [
+            // AppBar avec images du produit
+            _buildSliverAppBar(),
 
-            return CustomScrollView(
-              slivers: [
-                // AppBar avec images du produit
-                _buildSliverAppBar(),
+            // Informations du produit
+            _buildProductInfo(),
 
-                // Informations du produit
-                _buildProductInfo(state),
+            // Sélecteur de quantité
+            _buildQuantitySelector(),
 
-                // Sélecteur de quantité
-                _buildQuantitySelector(),
+            // Onglets
+            _buildTabBar(),
 
-                // Onglets
-                _buildTabBar(),
-
-                // Contenu des onglets
-                _buildTabContent(state),
-              ],
-            );
-          },
+            // Contenu des onglets
+            _buildTabContent(),
+          ],
         ),
         bottomNavigationBar: _buildBottomBar(),
       ),
@@ -84,7 +149,7 @@ class _ProductClientPageState extends State<ProductClientPage>
     return SliverAppBar(
       expandedHeight: context.height * 0.35,
       title: AppText(
-        text: widget.product.name,
+        text: _productName,
       ),
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
@@ -96,7 +161,7 @@ class _ProductClientPageState extends State<ProductClientPage>
               itemCount: 3, // Nombre d'images du produit
               itemBuilder: (context, index) {
                 return Image.network(
-                  widget.product.imageUrl,
+                  _productImage,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -140,7 +205,7 @@ class _ProductClientPageState extends State<ProductClientPage>
         BlocBuilder<HomeClientBloc, HomeClientState>(
           builder: (context, homeState) {
             final isInCart = homeState is HomeClientLoaded &&
-                homeState.cartProductIds.contains(widget.product.id);
+                homeState.cartProductIds.contains(_productId);
 
             return IconButton(
               icon: CircleAvatar(
@@ -160,20 +225,20 @@ class _ProductClientPageState extends State<ProductClientPage>
                 if (isInCart) {
                   // Si déjà dans le panier, retirer
                   context.read<cart_bloc.CartClientBloc>().add(
-                        cart_bloc.RemoveFromCart(productId: widget.product.id),
+                        cart_bloc.RemoveFromCart(productId: _productId),
                       );
                   AppUtils.showInfoNotification(
-                      context, '${widget.product.name} retiré du panier');
+                      context, '${_productName} retiré du panier');
                 } else {
                   // Si pas dans le panier, ajouter
                   context.read<cart_bloc.CartClientBloc>().add(
                         cart_bloc.AddToCart(
-                          productId: widget.product.id,
+                          productId: _productId,
                           quantity: _selectedQuantity,
                         ),
                       );
                   AppUtils.showSuccessNotification(
-                      context, '${widget.product.name} ajouté au panier');
+                      context, '${_productName} ajouté au panier');
                 }
                 // Recharger l'état du panier dans HomeClientBloc
                 context.read<HomeClientBloc>().add(LoadCartStatus());
@@ -193,7 +258,7 @@ class _ProductClientPageState extends State<ProductClientPage>
     );
   }
 
-  Widget _buildProductInfo(ProductClientState state) {
+  Widget _buildProductInfo() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -205,13 +270,13 @@ class _ProductClientPageState extends State<ProductClientPage>
               children: [
                 Expanded(
                   child: AppText(
-                    text: widget.product.name,
+                    text: _productName,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 AppText(
-                  text: '${widget.product.price} FCFA',
+                  text: '${_productPrice.toInt()} FCFA',
                   fontSize: 20,
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.bold,
@@ -231,14 +296,13 @@ class _ProductClientPageState extends State<ProductClientPage>
                 ),
                 const SizedBox(width: 4),
                 AppText(
-                  text: '4.5',
+                  text: _productRating.toString(),
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(width: 8),
                 AppText(
-                  text:
-                      '(${state is ProductClientLoaded ? state.reviewCount : 0} avis)',
+                  text: '($_reviewCount avis)',
                   color: Colors.grey,
                 ),
                 const Spacer(),
@@ -263,7 +327,7 @@ class _ProductClientPageState extends State<ProductClientPage>
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: AppText(
-                    text: widget.product.category,
+                    text: _productCategory,
                     color: AppColors.primaryColor,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -271,12 +335,38 @@ class _ProductClientPageState extends State<ProductClientPage>
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: AppText(
-                    text: 'Vendu par : ${widget.product.storeName}',
-                    color: Colors.grey,
-                    fontSize: 14,
-                    overflow: TextOverflow.visible,
-                    maxLines: 2,
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigation vers la page de la boutique
+                      // Pour l'instant, on ne peut pas naviguer car nous n'avons pas l'objet Store complet
+                      // TODO: Récupérer les informations complètes de la boutique
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Navigation vers la boutique en cours de développement'),
+                          backgroundColor: AppColors.orangeColor,
+                        ),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Vendu par: ',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontFamily: "PoppinsMedium",
+                          fontSize: 14,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: _storeName,
+                            style: TextStyle(
+                              color: AppColors.orangeColor,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'PoppinsMedium',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -286,7 +376,7 @@ class _ProductClientPageState extends State<ProductClientPage>
 
             // Description courte
             AppText(
-              text: widget.product.description,
+              text: _productDescription,
               color: Colors.grey.shade600,
             ),
           ],
@@ -350,7 +440,7 @@ class _ProductClientPageState extends State<ProductClientPage>
             ),
             AppText(
               text:
-                  'Total: ${(widget.product.price * _selectedQuantity).toStringAsFixed(0)} FCFA',
+                  'Total: ${(_productPrice * _selectedQuantity).toStringAsFixed(0)} FCFA',
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryColor,
@@ -382,13 +472,13 @@ class _ProductClientPageState extends State<ProductClientPage>
     );
   }
 
-  Widget _buildTabContent(ProductClientState state) {
+  Widget _buildTabContent() {
     return SliverFillRemaining(
       child: TabBarView(
         controller: _tabController,
         children: [
           _buildDescriptionTab(),
-          _buildReviewsTab(state),
+          _buildReviewsTab(),
           _buildDeliveryTab(),
         ],
       ),
@@ -408,7 +498,7 @@ class _ProductClientPageState extends State<ProductClientPage>
           ),
           const SizedBox(height: 16),
           AppText(
-            text: widget.product.description,
+            text: _productDescription,
             color: Colors.grey.shade600,
           ),
           const SizedBox(height: 24),
@@ -418,10 +508,11 @@ class _ProductClientPageState extends State<ProductClientPage>
             fontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 12),
-          _buildCharacteristic('Type', widget.product.category),
-          _buildCharacteristic('Poids', '1.5 kg'),
-          _buildCharacteristic('Conservation', 'Réfrigéré'),
-          _buildCharacteristic('Origine', 'Bénin'),
+          _buildCharacteristic('Type', _productCategory),
+          // Afficher les propriétés dynamiques du produit si disponibles
+          ..._productProperties.entries.map((entry) => 
+            _buildCharacteristic(entry.key, entry.value)
+          ),
         ],
       ),
     );
@@ -445,12 +536,14 @@ class _ProductClientPageState extends State<ProductClientPage>
     );
   }
 
-  Widget _buildReviewsTab(ProductClientState state) {
+  Widget _buildReviewsTab() {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ProductReviewWidget(
-        productId: widget.product.id,
-        storeId: widget.product.storeId,
+        productId: _productId,
+        storeId: widget.product.runtimeType.toString() == 'Produit'
+            ? widget.product.storeId
+            : 'unknown',
         userId: FirebaseAuth.instance.currentUser?.uid ??
             'unknow', // À remplacer par l'ID réel de l'utilisateur
       ),

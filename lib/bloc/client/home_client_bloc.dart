@@ -534,4 +534,5 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     await CacheManager.clearAllProductCache();
     add(LoadHomeData());
   }
+
 }
