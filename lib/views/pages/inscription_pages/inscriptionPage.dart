@@ -4,6 +4,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:benin_poulet/bloc/auth/auth_bloc.dart';
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
+import 'package:benin_poulet/constants/imagesPaths.dart';
 import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/firestore/error_report_repository.dart';
 import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
@@ -15,7 +16,6 @@ import 'package:benin_poulet/widgets/app_button.dart';
 import 'package:benin_poulet/widgets/app_phone_textField.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
-import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -65,7 +65,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
           PhoneSignUpRequested(
             firstName: _firstNameController.text.trim(),
             lastName: _lastNameController.text.trim(),
-            phoneNumber: phoneNumber, // déjà formaté
+            phoneNumber: phoneNumber,
+            // déjà formaté
             password: password,
             confirmPassword: _confirmPassWordController.text.trim(),
           ),
@@ -265,21 +266,20 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     final user = await AuthServices.signUpWithGoogle(
                       role: userRoleState.role!,
                     );
-                    
+
                     // Si l'utilisateur a annulé la sélection Google
                     if (user == null) {
-                      Navigator.pop(context); // Fermer le dialogue de chargement
+                      Navigator.pop(
+                          context); // Fermer le dialogue de chargement
                       return;
                     }
-                    
+
                     // Fermer le dialogue de chargement
                     Navigator.pop(context);
-                    
+
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
-                      context.mounted
-                          ? _showBottomSheet(context)
-                          : null;
+                      context.mounted ? _showBottomSheet(context) : null;
                     } else if (userRoleState.role == UserRoles.BUYER) {
                       // rediredction vers la page de destination
                       context.mounted
@@ -748,7 +748,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   // Choix de modification du numéro
                                                   onConfirm: () {
                                                     Navigator.pop(context);
-                                                  }, // Modifier le numéro
+                                                  },
+                                                  // Modifier le numéro
 
                                                   // Confirmer et lancer inscription
                                                   onCancel: () async {
@@ -1063,163 +1064,75 @@ Future<void> _showBottomSheet(BuildContext context) async {
   context.mounted
       ? showModalBottomSheet(
           context: context,
-          // TODO : enableDrag: false,
-          // TODO : isDismissible: false,
+          enableDrag: false,
+          isDismissible: false,
           //showDragHandle: true,
           builder: (context) {
             return Column(
               children: [
-                //SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 1.0, bottom: 8.0, left: 1.0, right: 1.0),
-                  child: SizedBox(
-                    height: 180,
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.asset(
-                            'assets/images/img_1.png',
-                            height: 200,
-                            width: context.width,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          height: 180,
-                          width: context.width,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(35),
-                              topRight: Radius.circular(35),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            //color: Colors.black87,
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.95),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.95),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.9),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.8),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.6),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.5),
-                                Colors.transparent,
-                                Colors.transparent,
-                                Colors.transparent,
-                              ],
-                            ),
-                            /* color: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.7),*/
-                          ),
-                        ),
-                        BlurryContainer(
-                            height: 180,
-                            width: context.width,
-                            blur: 2,
-                            borderRadius: const BorderRadius.only(
-                              // topLeft: Radius.circular(35),
-                              // topRight: Radius.circular(35),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            child: SizedBox()),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          left: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                ),
-                                AppText(
-                                  text: 'Créer boutique',
-                                  color: AppColors.primaryColor,
-                                  fontSize: context.largeText,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pushNamedAndRemoveUntil(
-                                          context,
-                                          AppRoutes.VENDEURMAINPAGE,
-                                          (Route<dynamic> route) => false);
-                                    },
-                                    icon: Icon(
-                                      Icons.cancel,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary
-                                          .withOpacity(0.6),
-                                      size: 30,
-                                    ))
-                              ],
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AppText(
-                                  textAlign: TextAlign.center,
-                                  text:
-                                      'Bienvenue sur ${AppAttributes.appName}, $name\n',
-                                  color: Colors.white,
-                                  fontSize: context.largeText * 0.8,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.visible,
-                                ),
-                                AppText(
-                                  textAlign: TextAlign.center,
-                                  text: 'Commençons à créer votre boutique...',
-                                  color: Colors.white,
-                                  fontSize: context.largeText * 0.7,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: SizedBox(
+                        width: context.width * 0.15,
+                      ),
                     ),
-                  ),
+                    Flexible(
+                      flex: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: Image.asset(
+                          ImagesPaths.logoLanhi,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                AppRoutes.VENDEURMAINPAGE,
+                                (Route<dynamic> route) => false);
+                          },
+                          icon: Icon(
+                            Icons.cancel,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.6),
+                            size: 30,
+                          )),
+                    )
+                  ],
+                ),
+                AppText(
+                  text: 'Créer boutique',
+                  color: AppColors.primaryColor,
+                  fontSize: context.largeText,
+                  fontWeight: FontWeight.bold,
+                ),
+                AppText(
+                  textAlign: TextAlign.center,
+                  text: 'Bienvenue sur ${AppAttributes.appName}, $name\n',
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                  fontSize: context.largeText * 0.8,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.visible,
+                ),
+                AppText(
+                  textAlign: TextAlign.center,
+                  text: 'Commençons à créer votre boutique...',
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                  fontSize: context.largeText * 0.7,
+                  fontWeight: FontWeight.bold,
+                  //overflow: TextOverflow.visible,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

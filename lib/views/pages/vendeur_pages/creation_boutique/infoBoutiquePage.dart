@@ -1,4 +1,5 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,7 @@ class InfoBoutiquePage extends StatelessWidget {
 
                   AppText(
                     text:
-                        'Voici comment votre boutique apparaitra aux clients dans l\'application Bénin Poulet ',
+                        'Voici comment votre boutique apparaitra aux clients dans l\'application ${AppAttributes.appName} ',
                     fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
@@ -165,7 +166,8 @@ class InfoBoutiquePage extends StatelessWidget {
                     height: 10,
                   ),
                   AppText(
-                    text: 'Décrivez votre boutique, vos spécialités et ce qui vous rend unique',
+                    text:
+                        'Décrivez votre boutique, vos spécialités et ce qui vous rend unique',
                     fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
@@ -222,7 +224,8 @@ class InfoBoutiquePage extends StatelessWidget {
                     height: 10,
                   ),
                   AppText(
-                    text: 'Précisez les quartiers ou zones où vous livrez vos produits',
+                    text:
+                        'Précisez les quartiers ou zones où vous livrez vos produits',
                     fontSize: context.smallText * 1.2,
                     color: Theme.of(context)
                         .colorScheme
@@ -248,22 +251,33 @@ class InfoBoutiquePage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.background,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.3),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText(
-                          text: 'Horaires par défaut : Tous les jours de 08:00 à 18:00',
+                          text:
+                              'Horaires par défaut : Tous les jours de 08:00 à 18:00',
                           fontSize: context.smallText,
-                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inversePrimary
+                              .withOpacity(0.7),
                         ),
                         const SizedBox(height: 8),
                         AppText(
-                          text: 'Vous pourrez modifier ces horaires plus tard dans les paramètres de votre boutique',
+                          text:
+                              'Vous pourrez modifier ces horaires plus tard dans les paramètres de votre boutique',
                           fontSize: context.smallText * 0.9,
-                          color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inversePrimary
+                              .withOpacity(0.5),
                           fontStyle: FontStyle.italic,
                         ),
                       ],

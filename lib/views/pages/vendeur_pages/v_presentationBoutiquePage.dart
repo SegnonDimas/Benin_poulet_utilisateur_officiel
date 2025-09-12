@@ -104,20 +104,34 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                     ),
                     child: Row(
                       children: [
-                        AppButton(
-                          onTap: () {
-                            context.read<StoreBloc>().add(LoadVendorStore());
-                          },
-                          child: AppText(
-                            text: 'Réessayer',
-                            fontSize: context.smallText,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .inverseSurface
-                                .withOpacity(0.5),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppButton(
+                              height: context.height * 0.06,
+                              bordeurRadius: 12,
+                              onTap: () {
+                                context
+                                    .read<StoreBloc>()
+                                    .add(LoadVendorStore());
+                              },
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withOpacity(0.1),
+                              child: AppText(
+                                text: 'Réessayer',
+                                fontSize: context.smallText,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface
+                                    .withOpacity(0.5),
+                              ),
+                            ),
                           ),
                         ),
                         Expanded(
+                          flex: 2,
                           child: FloatingActionButton.extended(
                             onPressed: () {
                               Navigator.pushNamed(
@@ -126,9 +140,11 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                             label: AppText(
                               text: 'Créez une boutique',
                               overflow: TextOverflow.ellipsis,
+                              color: Colors.white,
                             ),
                             icon: Icon(Icons.add),
                             backgroundColor: AppColors.primaryColor,
+                            foregroundColor: Colors.white,
                           ),
                         )
                       ],

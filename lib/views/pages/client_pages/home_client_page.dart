@@ -157,6 +157,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                       children: [
                         // Barre de recherche
                         _buildSearchBar(),
+
                         // CarouselSlier
                         _buildPubCarouselSlider(),
 
@@ -484,9 +485,9 @@ class _HomeClientPageState extends State<HomeClientPage>
               )),
         ),
         /*suffixIcon: Icon(
-          Icons.filter_list,
-          color: AppColors.primaryColor,
-        ),*/
+        Icons.filter_list,
+        color: AppColors.primaryColor,
+      ),*/
         showFloatingLabel: false,
         //label: "Rechercher . . .",
         borderRadius: BorderRadius.circular(15),
@@ -1450,7 +1451,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                         _buildContactItem(
                           icon: Icons.phone,
                           title: 'Téléphone',
-                          subtitle: '+229 01 52 74 83 42',
+                          subtitle: AppAttributes.appAuthorPhone,
                           onTap: () {
                             // TODO: Implémenter l'appel téléphonique
                           },
@@ -1461,7 +1462,7 @@ class _HomeClientPageState extends State<HomeClientPage>
                         _buildContactItem(
                           icon: Icons.email,
                           title: 'Email',
-                          subtitle: 'codeurplus10@gmail.com',
+                          subtitle: AppAttributes.appAuthorEmail,
                           onTap: () {
                             // TODO: Implémenter l'envoi d'email
                           },

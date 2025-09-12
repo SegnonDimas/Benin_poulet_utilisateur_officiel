@@ -379,6 +379,12 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage>
                                             TextButton(
                                               onPressed: () {
                                                 // Ajouter une action pour mot de passe oublié
+                                                AppUtils.showInfoDialog(
+                                                  context: context,
+                                                  message:
+                                                      'Cette fonctionnalité arrive bientôt',
+                                                  type: InfoType.info,
+                                                );
                                               },
                                               child: AppText(
                                                 text: 'Mot de passe oublié ?',

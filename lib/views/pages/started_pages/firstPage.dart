@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:benin_poulet/constants/imagesPaths.dart';
 import 'package:benin_poulet/tests/blurryContainer.dart';
+import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -63,8 +64,13 @@ class _FirstPageState extends State<FirstPage> {
               child: Hero(
                 tag: '2',
                 child: GradientBall(
-                    size: Size.square(context.height * 0.25),
-                    colors: const [Colors.deepOrange, Colors.orange]),
+                  size: Size.square(context.height * 0.25),
+                  //       colors: const [Colors.deepOrange, Colors.orange],
+                  colors: [
+                    AppColors.primaryColor,
+                    AppColors.secondaryColor.withOpacity(0.5)
+                  ],
+                ),
               ),
             ).animate(delay: 1000.ms).fadeIn(duration: 2000.ms),
             Positioned(
@@ -94,8 +100,8 @@ class _FirstPageState extends State<FirstPage> {
                               bottom:
                                   MediaQuery.of(context).size.height * 0.05),
                           child: Image.asset(
-                            height: context.screenHeight * 0.1,
-                            width: context.screenHeight * 0.15,
+                            height: context.screenHeight * 0.2,
+                            width: context.screenHeight * 0.2,
                             ImagesPaths.LOGOBLANC,
                             fit: BoxFit.contain,
                           )

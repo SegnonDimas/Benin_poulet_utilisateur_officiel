@@ -35,7 +35,7 @@ class _PresentationPageState extends State<PresentationPage> {
     ModelPresentationPage(
         title: AppAttributes.appName,
         description:
-            "Bienvenue sur notre application ${AppAttributes.appName} ...",
+            "Bienvenue sur notre application ${AppAttributes.appName.replaceAll(" ", "")}",
         image: "assets/images/welcome.png",
         nextMsg: 'Next',
         descriptionTitle: 'Bienvenue'),
@@ -317,10 +317,12 @@ class _PresentationPageState extends State<PresentationPage> {
                               tag: 'logoTag',
                               child: CircleAvatar(
                                 radius: context.height * 0.03,
+                                backgroundColor:
+                                    AppColors.primaryColor.withOpacity(0.6),
                                 child: Image.asset(
-                                  'assets/logos/logoBlanc.png',
+                                  AppAttributes.appIcon,
                                   fit: BoxFit.fill,
-                                  height: context.height * 0.03,
+                                  height: context.height * 0.06,
                                 ),
                               ),
                             ),

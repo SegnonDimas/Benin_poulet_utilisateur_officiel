@@ -1,11 +1,6 @@
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/constants/app_attributs.dart';
-import 'package:benin_poulet/constants/firebase_collections/sellersCollection.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/constants/storeState.dart';
-import 'package:benin_poulet/constants/storeStatus.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
 import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
@@ -15,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-import '../../../../constants/firebase_collections/storesCollection.dart';
 import '../../../../widgets/app_timeline_tile.dart';
 import '../../../colors/app_colors.dart';
 import 'choixCategoriePage.dart';
@@ -121,10 +115,14 @@ class _CreationBoutiquePageState extends State<CreationBoutiquePage> {
           NotificationWidgets.showErrorNotification(
             context,
             state.erroMessage ?? 'Erreur lors de la création de la boutique',
-            () {
-              // Réessayer la création
-              context.read<StoreCreationBloc>().add(StoreCreationSubmit());
-            },
+            state.erroMessage != null
+                ? null
+                : () {
+                    // Réessayer la création
+                    context
+                        .read<StoreCreationBloc>()
+                        .add(StoreCreationSubmit());
+                  },
           );
         }
       },
@@ -325,12 +323,8 @@ class _CreationBoutiquePageState extends State<CreationBoutiquePage> {
                                 //bouton Passer
                                 GestureDetector(
                                   onTap: () {
-                                    _pageViewController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 10),
-                                        curve: Curves.linear);
-                                    position =
-                                        _pageViewController.page!.toInt();
+                                    _pageViewController
+                                        .jumpToPage(_pages.length - 1);
                                   },
                                   child: Container(
                                       alignment: Alignment.center,

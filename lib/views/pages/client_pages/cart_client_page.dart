@@ -54,7 +54,6 @@ class _CartClientPageState extends State<CartClientPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -175,20 +174,23 @@ class _CartClientPageState extends State<CartClientPage> {
           Icon(
             Icons.shopping_cart_outlined,
             size: 100,
-            color: Colors.grey.shade400,
+            color:
+                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4),
           ),
           const SizedBox(height: 24),
           AppText(
             text: 'Votre panier est vide',
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade600,
+            color:
+                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.6),
           ),
           const SizedBox(height: 12),
           AppText(
             textAlign: TextAlign.center,
             text: 'Ajoutez des produits pour commencer vos achats',
-            color: Colors.grey.shade500,
+            color:
+                Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
             maxLine: 2,
           ),
           const SizedBox(height: 100),
@@ -227,7 +229,8 @@ class _CartClientPageState extends State<CartClientPage> {
       child: InkWell(
         onTap: () {
           // Navigation vers la page des détails du produit
-          Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS, arguments: cartItem.product);
+          Navigator.pushNamed(context, AppRoutes.PRODUCTDETAILS,
+              arguments: cartItem.product);
         },
         borderRadius: BorderRadius.circular(8),
         child: Padding(
@@ -247,16 +250,30 @@ class _CartClientPageState extends State<CartClientPage> {
                           return Container(
                             width: 80,
                             height: 80,
-                            color: Colors.grey.shade300,
-                            child: const Icon(Icons.image, color: Colors.grey),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.1),
+                            child: Icon(Icons.image,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary
+                                    .withOpacity(0.3)),
                           );
                         },
                       )
                     : Container(
                         width: 80,
                         height: 80,
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.image, color: Colors.grey),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inversePrimary
+                            .withOpacity(0.1),
+                        child: Icon(Icons.image,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.3)),
                       ),
               ),
 
@@ -279,7 +296,8 @@ class _CartClientPageState extends State<CartClientPage> {
                       Row(
                         children: [
                           AppText(
-                            text: '${cartItem.product.originalPrice!.toInt()} FCFA',
+                            text:
+                                '${cartItem.product.originalPrice!.toInt()} FCFA',
                             fontSize: 12,
                             color: Colors.grey[600],
                             decoration: TextDecoration.lineThrough,
@@ -307,18 +325,18 @@ class _CartClientPageState extends State<CartClientPage> {
                           onTap: () {
                             if (cartItem.quantity > 1) {
                               context.read<CartClientBloc>().add(
-                                UpdateQuantity(
-                                  productId: cartItem.product.id,
-                                  quantity: cartItem.quantity - 1,
-                                ),
-                              );
+                                    UpdateQuantity(
+                                      productId: cartItem.product.id,
+                                      quantity: cartItem.quantity - 1,
+                                    ),
+                                  );
                             }
                           },
                           child: Container(
                             width: 30,
                             height: 30,
                             decoration: BoxDecoration(
-                              color: cartItem.quantity > 1 
+                              color: cartItem.quantity > 1
                                   ? AppColors.primaryColor.withOpacity(0.1)
                                   : Colors.grey.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(15),
@@ -326,7 +344,7 @@ class _CartClientPageState extends State<CartClientPage> {
                             child: Icon(
                               Icons.remove,
                               size: 16,
-                              color: cartItem.quantity > 1 
+                              color: cartItem.quantity > 1
                                   ? AppColors.primaryColor
                                   : Colors.grey,
                             ),
@@ -344,11 +362,11 @@ class _CartClientPageState extends State<CartClientPage> {
                         GestureDetector(
                           onTap: () {
                             context.read<CartClientBloc>().add(
-                              UpdateQuantity(
-                                productId: cartItem.product.id,
-                                quantity: cartItem.quantity + 1,
-                              ),
-                            );
+                                  UpdateQuantity(
+                                    productId: cartItem.product.id,
+                                    quantity: cartItem.quantity + 1,
+                                  ),
+                                );
                           },
                           child: Container(
                             width: 30,
@@ -458,18 +476,18 @@ class _CartClientPageState extends State<CartClientPage> {
           // Bouton passer commande
           SizedBox(
             width: double.infinity,
-              child: AppButton(
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.CHECKOUT);
-                },
-                color: AppColors.primaryColor,
-                height: 50,
-                child: AppText(
-                  text:
-                      'Passer la commande (${state.cartItems.length} article${state.cartItems.length > 1 ? 's' : ''})',
-                  color: Colors.white,
-                ),
+            child: AppButton(
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.CHECKOUT);
+              },
+              color: AppColors.primaryColor,
+              height: 50,
+              child: AppText(
+                text:
+                    'Passer la commande (${state.cartItems.length} article${state.cartItems.length > 1 ? 's' : ''})',
+                color: Colors.white,
               ),
+            ),
           ),
 
           const SizedBox(height: 8),

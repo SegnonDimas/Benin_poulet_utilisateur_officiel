@@ -14,8 +14,6 @@ import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:benin_poulet/widgets/app_textField.dart';
 import 'package:benin_poulet/widgets/notification_widgets.dart';
-import 'package:blurrycontainer/blurrycontainer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +22,8 @@ import 'package:get/get.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../bloc/auth/auth_bloc.dart';
+import '../../../constants/imagesPaths.dart';
+import '../../../core/firebase/firestore/user_repository.dart';
 import '../../../tests/blurryContainer.dart';
 import '../../../utils/app_utils.dart';
 import '../../../utils/wave_painter.dart';
@@ -110,16 +110,17 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     final user = await AuthServices.signUpWithGoogle(
                       role: userRoleState.role!,
                     );
-                    
+
                     // Si l'utilisateur a annulé la sélection Google
                     if (user == null) {
-                      Navigator.pop(context); // Fermer le dialogue de chargement
+                      Navigator.pop(
+                          context); // Fermer le dialogue de chargement
                       return;
                     }
-                    
+
                     // Fermer le dialogue de chargement
                     Navigator.pop(context);
-                    
+
                     if (userRoleState.role == UserRoles.SELLER) {
                       // proposition de crétation de boutique
                       context.mounted ? _showBottomSheet(context) : null;
@@ -142,7 +143,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                     if (context.mounted) {
                       // Fermer le dialogue de chargement
                       Navigator.pop(context);
-                      
+
                       if (e.toString().contains('already')) {
                         AppUtils.showSnackBar(
                           context,
@@ -725,10 +726,8 @@ void _showAwesomeSnackBar(BuildContext context, String title, String message,
 /// bottom sheet
 
 Future<void> _showBottomSheet(BuildContext context) async {
-  DocumentSnapshot doc = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(AuthServices.userId)
-      .get();
+  final doc = await FirestoreUserServices.currentUser;
+
   var name = '';
   if (doc.exists) {
     name = doc['fullName'] ?? '';
@@ -736,153 +735,75 @@ Future<void> _showBottomSheet(BuildContext context) async {
   context.mounted
       ? showModalBottomSheet(
           context: context,
-          // TODO : enableDrag: false,
-          // TODO : isDismissible: false,
+          enableDrag: false,
+          isDismissible: false,
           //showDragHandle: true,
           builder: (context) {
             return Column(
               children: [
-                //SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 1.0, bottom: 8.0, left: 1.0, right: 1.0),
-                  child: SizedBox(
-                    height: 180,
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.asset(
-                            'assets/images/img_1.png',
-                            height: 200,
-                            width: context.width,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          height: 180,
-                          width: context.width,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(35),
-                              topRight: Radius.circular(35),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.95),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.95),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.9),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.8),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.6),
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.5),
-                                Colors.transparent,
-                                Colors.transparent,
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                        BlurryContainer(
-                            height: 180,
-                            width: context.width,
-                            blur: 2,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                            child: SizedBox()),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  text: 'Créer boutique',
-                                  color: AppColors.primaryColor,
-                                  fontSize: context.largeText,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pushNamedAndRemoveUntil(
-                                          context,
-                                          AppRoutes.VENDEURMAINPAGE,
-                                          (Route<dynamic> route) => false);
-                                    },
-                                    icon: Icon(
-                                      Icons.cancel,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary
-                                          .withOpacity(0.6),
-                                      size: 30,
-                                    ))
-                              ],
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AppText(
-                                  textAlign: TextAlign.center,
-                                  text:
-                                      'Bienvenue sur ${AppAttributes.appName}, $name\n',
-                                  color: Colors.white,
-                                  fontSize: context.largeText * 0.8,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.visible,
-                                ),
-                                AppText(
-                                  textAlign: TextAlign.center,
-                                  text: 'Commençons à créer votre boutique...',
-                                  color: Colors.white,
-                                  fontSize: context.largeText * 0.7,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: SizedBox(
+                        width: context.width * 0.15,
+                      ),
                     ),
-                  ),
+                    Flexible(
+                      flex: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: Image.asset(
+                          ImagesPaths.logoLanhi,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                AppRoutes.VENDEURMAINPAGE,
+                                (Route<dynamic> route) => false);
+                          },
+                          icon: Icon(
+                            Icons.cancel,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inversePrimary
+                                .withOpacity(0.6),
+                            size: 30,
+                          )),
+                    )
+                  ],
+                ),
+                AppText(
+                  text: 'Créer boutique',
+                  color: AppColors.primaryColor,
+                  fontSize: context.largeText,
+                  fontWeight: FontWeight.bold,
+                ),
+                AppText(
+                  textAlign: TextAlign.center,
+                  text: 'Bienvenue sur ${AppAttributes.appName}, $name\n',
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                  fontSize: context.largeText * 0.8,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.visible,
+                ),
+                AppText(
+                  textAlign: TextAlign.center,
+                  text: 'Commençons à créer votre boutique...',
+                  color: Theme.of(context).colorScheme.inverseSurface,
+                  fontSize: context.largeText * 0.7,
+                  fontWeight: FontWeight.bold,
+                  //overflow: TextOverflow.visible,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -915,6 +836,7 @@ Future<void> _showBottomSheet(BuildContext context) async {
                     },
                     child: AppText(
                       text: 'Commencer',
+                      //fontWeight: FontWeight.w900,
                       color: Colors.white,
                       fontSize: 20,
                     ),

@@ -148,7 +148,10 @@ class _ValidationPageState extends State<ValidationPage>
           Hero(
             tag: 'imageProfil',
             child: AppButton(
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+                _showHelpDialog();
+              },
               height: context.height * 0.065,
               width: context.width * 0.9,
               color: Theme.of(context).colorScheme.background,
@@ -172,5 +175,196 @@ class _ValidationPageState extends State<ValidationPage>
         ],
       ),
     ));
+  }
+
+  void _showHelpDialog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      //showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inverseSurface
+                      .withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.help_outline,
+                      color: AppColors.primaryColor,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 12),
+                    AppText(
+                      text: 'Aide & Support',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                      overflow: TextOverflow.visible,
+                      maxLine: 2,
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .inverseSurface
+                            .withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          text: 'Comment pouvons-nous vous aider ?',
+                          fontSize: 16,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Contact items
+                        _buildContactItem(
+                          icon: Icons.phone,
+                          title: 'Téléphone',
+                          subtitle: AppAttributes.appAuthorPhone,
+                          onTap: () {
+                            // TODO: Implémenter l'appel téléphonique
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _buildContactItem(
+                          icon: Icons.email,
+                          title: 'Email',
+                          subtitle: AppAttributes.appAuthorEmail,
+                          onTap: () {
+                            // TODO: Implémenter l'envoi d'email
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _buildContactItem(
+                          icon: Icons.access_time,
+                          title: 'Horaires de support',
+                          subtitle: 'Lun - Ven: 8h - 18h\nSam: 9h - 15h',
+                          onTap: null,
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// Construit un élément de contact
+  Widget _buildContactItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: onTap != null
+              ? AppColors.primaryColor.withOpacity(0.05)
+              : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: onTap != null
+                ? AppColors.primaryColor.withOpacity(0.2)
+                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    text: title,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    // color: Colors.black87,
+                  ),
+                  const SizedBox(height: 4),
+                  AppText(
+                    text: subtitle,
+                    fontSize: 12,
+                  ),
+                ],
+              ),
+            ),
+            if (onTap != null)
+              Icon(
+                Icons.arrow_forward_ios,
+                color: AppColors.primaryColor,
+                size: 16,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }

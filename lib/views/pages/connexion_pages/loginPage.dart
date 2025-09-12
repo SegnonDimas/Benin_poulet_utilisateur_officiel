@@ -69,6 +69,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   User? _user;
   Map<String, dynamic>? _userData;
+
   Future<void> _loadUserData() async {
     _user = FirebaseAuth.instance.currentUser;
 
@@ -109,8 +110,8 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       });
     });
 
-    _phoneNumbercontroller = TextEditingController(text: "0152748342");
-    _passWordController = TextEditingController(text: "123457");
+    //_phoneNumbercontroller = TextEditingController(text: "0152748342");
+    //_passWordController = TextEditingController(text: "123457");
 
     se_souvenir.write('se_souvenir', seSouvenir);
   }
@@ -589,10 +590,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                                 initialCountry: number.isoCode,
                                                 fontSize:
                                                     context.mediumText * 0.9,
-                                                maxLength: number.dialCode ==
-                                                        "+229"
-                                                    ? 10
-                                                    : 15, // 10 pour le Bénin, 15 pour les autres pays
+                                                maxLength:
+                                                    number.dialCode == "+229"
+                                                        ? 10
+                                                        : 15,
+                                                // 10 pour le Bénin, 15 pour les autres pays
                                                 fontColor: Theme.of(context)
                                                     .colorScheme
                                                     .inversePrimary,
@@ -682,6 +684,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                                   TextButton(
                                                     onPressed: () {
                                                       // Ajouter une action pour mot de passe oublié
+                                                      AppUtils.showInfoDialog(
+                                                        context: context,
+                                                        message:
+                                                            'Cette fonctionnalité arrive bientôt',
+                                                        type: InfoType.info,
+                                                      );
                                                     },
                                                     child: AppText(
                                                       text:
