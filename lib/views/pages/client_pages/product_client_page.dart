@@ -101,15 +101,6 @@ class _ProductClientPageState extends State<ProductClientPage>
     }
   }
 
-  // Propriétés pour la boutique
-  String get _storeName {
-    if (widget.product.runtimeType.toString() == 'Produit') {
-      return 'Boutique'; // Nous devrons récupérer le nom depuis la base de données
-    } else {
-      return widget.product.storeName ?? 'Boutique';
-    }
-  }
-
   // Propriétés pour les avis (temporairement statiques)
   double get _productRating => 4.5; // TODO: Récupérer depuis la base de données
   int get _reviewCount => 0; // TODO: Récupérer depuis la base de données
@@ -359,63 +350,6 @@ class _ProductClientPageState extends State<ProductClientPage>
               ),
               const SizedBox(height: 24),
             ],
-
-            // Catégorie et boutique
-            /*Row(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: AppText(
-                    text: _productCategory,
-                    color: AppColors.primaryColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigation vers la page de la boutique
-                      // Pour l'instant, on ne peut pas naviguer car nous n'avons pas l'objet Store complet
-                      // TODO: Récupérer les informations complètes de la boutique
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              'Navigation vers la boutique en cours de développement'),
-                          backgroundColor: AppColors.orangeColor,
-                        ),
-                      );
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Vendu par: ',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontFamily: "PoppinsMedium",
-                          fontSize: 14,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: _storeName,
-                            style: TextStyle(
-                              color: AppColors.orangeColor,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'PoppinsMedium',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),*/
 
             const SizedBox(height: 16),
 
@@ -772,16 +706,33 @@ class _ProductClientPageState extends State<ProductClientPage>
   Widget _buildBottomBar() {
     return AppButton(
       height: context.height * 0.065,
-      onTap: () {
-        // Navigation vers la page de commande
-        Navigator.pushNamed(context, AppRoutes.CHECKOUT, arguments: {
-          'product': widget.product,
-          'quantity': _selectedQuantity,
-        });
+      onTap: () async {
+        // Ajouter au panier
+        context.read<cart_bloc.CartClientBloc>().add(
+              cart_bloc.AddToCart(
+                  productId: widget.product.id, quantity: _selectedQuantity),
+            );
+
+        // Afficher la notification
+        AppUtils.showSuccessNotification(
+          context,
+          'Produit ajouté au panier',
+        );
+
+        // Attendre un court instant pour que le BLoC traite l'événement
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // Recharger le panier avant de naviguer
+        if (mounted) {
+          context.read<cart_bloc.CartClientBloc>().add(cart_bloc.LoadCart());
+
+          // Naviguer vers le panier
+          Navigator.pushNamed(context, AppRoutes.CART);
+        }
       },
       color: AppColors.secondaryColor,
       child: AppText(
-        text: 'Acheter maintenant',
+        text: 'Ajouter au panier',
         color: Colors.white,
       ),
     );

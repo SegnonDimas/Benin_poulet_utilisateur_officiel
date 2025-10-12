@@ -1,0 +1,92 @@
+// ============================================
+// RÈGLES DE SÉCURITÉ FIRESTORE POUR ORDERS
+// ============================================
+// À copier dans Firebase Console > Firestore Database > Règles
+// ============================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Collection ORDERS
+    match /orders/{orderId} {
+      
+      // Fonction helper pour vérifier si l'utilisateur est authentifié
+      function isAuthenticated() {
+        return request.auth != null;
+      }
+      
+      // Fonction helper pour vérifier si c'est le client de la commande
+      function isOrderClient() {
+        return isAuthenticated() && 
+               resource.data.clientId == request.auth.uid;
+      }
+      
+      // Fonction helper pour vérifier si c'est le vendeur de la commande
+      function isOrderSeller() {
+        return isAuthenticated() && 
+               resource.data.sellerId == request.auth.uid;
+      }
+      
+      // LECTURE: Client OU Vendeur concerné par la commande
+      allow read: if isAuthenticated() && 
+                     (resource.data.clientId == request.auth.uid || 
+                      resource.data.sellerId == request.auth.uid);
+      
+      // CRÉATION: Utilisateur authentifié ET c'est son propre ID client
+      allow create: if isAuthenticated() && 
+                       request.resource.data.clientId == request.auth.uid &&
+                       request.resource.data.currentStatus == 'pendingValidation';
+      
+      // MISE À JOUR: 
+      // - Vendeur peut modifier (validation, statuts, etc.)
+      // - Client peut annuler ou confirmer réception
+      allow update: if isAuthenticated() && (
+        // Vendeur modifie
+        (resource.data.sellerId == request.auth.uid) ||
+        // Client annule sa propre commande
+        (resource.data.clientId == request.auth.uid && 
+         request.resource.data.currentStatus == 'cancelled') ||
+        // Client confirme la réception
+        (resource.data.clientId == request.auth.uid && 
+         resource.data.currentStatus == 'delivered' &&
+         request.resource.data.currentStatus == 'completed')
+      );
+      
+      // SUPPRESSION: Admin seulement (ou jamais)
+      allow delete: if false; // Désactivé pour l'instant
+    }
+    
+    // ============================================
+    // AUTRES COLLECTIONS (à adapter selon votre app)
+    // ============================================
+    
+    // Collection USERS
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Collection PRODUCTS
+    match /products/{productId} {
+      allow read: if true; // Public
+      allow write: if isAuthenticated(); // Vendeurs seulement
+    }
+    
+    // Collection STORES
+    match /stores/{storeId} {
+      allow read: if true; // Public
+      allow write: if isAuthenticated(); // Propriétaire seulement
+    }
+  }
+}
+
+// ============================================
+// NOTES IMPORTANTES
+// ============================================
+// 1. Adaptez ces règles selon vos besoins de sécurité
+// 2. Testez avec l'émulateur Firestore avant déploiement
+// 3. Ajoutez des logs pour débugger les accès refusés
+// 4. Considérez des règles plus strictes en production
+// ============================================
+

@@ -25,6 +25,21 @@ import 'package:benin_poulet/views/pages/vendeur_pages/v_performancesPage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_portefeuillePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_presentationBoutiquePage.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/v_profilPage.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performances_main_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performance_commercial_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performance_client_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performance_produit_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performance_production_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/indice_performance_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/performances/performance_marketing_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/order/delivery_info_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/order/payment_method_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/order/order_confirmation_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/order/order_tracking_page.dart';
+import 'package:benin_poulet/views/pages/client_pages/order/client_orders_list_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/orders/vendor_orders_page.dart';
+import 'package:benin_poulet/views/pages/vendeur_pages/orders/vendor_order_details_page.dart';
+import 'package:benin_poulet/models/order_model.dart';
 import 'package:flutter/cupertino.dart';
 
 // Import des modèles depuis les BLoCs client
@@ -56,6 +71,13 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/vendeurProduitsListPage': (context) => const VProduitsListPage(),
   '/ajoutNouveauProduitPage': (context) => const AjoutNouveauProduitPage(),
   '/vendeurPerformancesPage': (context) => const VPerformancesPage(),
+  '/performancesMainPage': (context) => const PerformancesMainPage(),
+  '/performanceCommercialPage': (context) => const PerformanceCommercialPage(),
+  '/performanceClientPage': (context) => const PerformanceClientPage(),
+  '/performanceProduitPage': (context) => const PerformanceProduitPage(),
+  '/performanceProductionPage': (context) => const PerformanceProductionPage(),
+  '/indicePerformancePage': (context) => const IndicePerformancePage(),
+  '/performanceMarketingPage': (context) => const PerformanceMarketingPage(),
   '/vendeurProfilPage': (context) => const VProfilPage(),
   '/vendeurPortefeuillePage': (context) => const VPortefeuillePage(),
   '/vendeurHistoriqueTranslations': (context) =>
@@ -88,10 +110,25 @@ Map<String, Widget Function(BuildContext)> routes = {
             ? 'product'
             : 'store',
       ),
-  '/checkout': (context) =>
-      const DefaultRoutePage(), // TODO: Créer CheckoutClientPage
-  '/order-details': (context) =>
-      const DefaultRoutePage(), // TODO: Créer OrderDetailsClientPage
+
+  // Routes de commande
+  '/deliveryInfoPage': (context) => const DeliveryInfoPage(),
+  '/paymentMethodPage': (context) => const PaymentMethodPage(),
+  '/orderConfirmationPage': (context) => OrderConfirmationPage(
+        orderId: ModalRoute.of(context)!.settings.arguments as String,
+      ),
+  '/orderTrackingPage': (context) => OrderTrackingPage(
+        orderId: ModalRoute.of(context)!.settings.arguments as String,
+      ),
+  '/clientOrdersListPage': (context) =>
+      const ClientOrdersListPage(), // Version StreamBuilder direct
+
+  // Routes vendeur commandes
+  '/vendorOrdersPage': (context) => const VendorOrdersPage(),
+  '/vendorOrderDetailsPage': (context) => VendorOrderDetailsPage(
+        order: ModalRoute.of(context)!.settings.arguments as OrderModel,
+      ),
+
   '/change-password': (context) =>
       const DefaultRoutePage(), // TODO: Créer ChangePasswordClientPage
 };
@@ -120,6 +157,13 @@ class AppRoutes {
   static String VENDEURPRODUITSLISTPAGE = '/vendeurProduitsListPage';
   static String AJOUTNOUVEAUPRODUITPAGE = '/ajoutNouveauProduitPage';
   static String VENDEURPERFORMANCESPAGE = '/vendeurPerformancesPage';
+  static String PERFORMANCES_MAIN = '/performancesMainPage';
+  static String PERFORMANCE_COMMERCIAL = '/performanceCommercialPage';
+  static String PERFORMANCE_CLIENT = '/performanceClientPage';
+  static String PERFORMANCE_PRODUIT = '/performanceProduitPage';
+  static String PERFORMANCE_PRODUCTION = '/performanceProductionPage';
+  static String INDICE_PERFORMANCE = '/indicePerformancePage';
+  static String PERFORMANCE_MARKETING = '/performanceMarketingPage';
   static String VENDEURPROFILPAGE = '/vendeurProfilPage';
   static String VENDEURPORTEFEUILLEPAGE = '/vendeurPortefeuillePage';
   static String VENDEURHISTORIQUEPAGE = '/vendeurHistoriqueTranslations';
@@ -139,8 +183,13 @@ class AppRoutes {
   static String PROFILE = '/profile';
   static String FAVORITES = '/favorites';
   static String REVIEW = '/review';
-  static String CHECKOUT = '/checkout';
-  static String ORDERDETAILS = '/order-details';
+  static String DELIVERY_INFO = '/deliveryInfoPage';
+  static String PAYMENT_METHOD = '/paymentMethodPage';
+  static String ORDER_CONFIRMATION = '/orderConfirmationPage';
+  static String ORDER_TRACKING = '/orderTrackingPage';
+  static String CLIENT_ORDERS_LIST = '/clientOrdersListPage';
+  static String VENDOR_ORDERS = '/vendorOrdersPage';
+  static String VENDOR_ORDER_DETAILS = '/vendorOrderDetailsPage';
   static String CHANGEPASSWORD = '/change-password';
 }
 

@@ -1,0 +1,16 @@
+# 📝 Note sur la Documentation
+
+Ce projet utilise un fichier de documentation unique : **HISTORIQUE_DEVELOPPEMENT.md**
+
+## Structure
+
+- **README.md** : Présentation du projet
+- **firestore_indexes.md** : Configuration des index Firestore
+- **HISTORIQUE_DEVELOPPEMENT.md** : Documentation technique complète et historique des développements
+
+## Mise à jour
+
+Pour ajouter une nouvelle fonctionnalité, modifier directement **HISTORIQUE_DEVELOPPEMENT.md** en ajoutant une entrée dans la section "Prochaines Mises à Jour".
+
+Ne pas créer de nouveaux fichiers .md à la racine.
+

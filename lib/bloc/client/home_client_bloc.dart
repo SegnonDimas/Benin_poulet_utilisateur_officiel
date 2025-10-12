@@ -17,9 +17,10 @@ class Product {
   final double? originalPrice; // Prix original (pour les promotions)
   final String description;
   final String category;
-  final String storeId; // Ajout du storeId pour les avis
-  final String storeName; // Ajout du nom de la boutique
-  final bool isInPromotion; // Ajout de la propriété promotion
+  final String sellerId; // ID du vendeur propriétaire ✅ AJOUTÉ
+  final String storeId; // ID de la boutique
+  final String storeName; // Nom de la boutique
+  final bool isInPromotion; // Promotion active
   final Map<String, String> productProperties; // Propriétés du produit
   final List<String> varieties; // Variétés du produit
 
@@ -31,6 +32,7 @@ class Product {
     this.originalPrice,
     required this.description,
     required this.category,
+    required this.sellerId, // ✅ AJOUTÉ
     required this.storeId,
     required this.storeName,
     this.isInPromotion = false,
@@ -42,11 +44,16 @@ class Product {
     return Product(
       id: produit.productId ?? '',
       name: produit.productName,
-      imageUrl: produit.productImagesPath.isNotEmpty ? produit.productImagesPath.first : '',
-      price: produit.isInPromotion && produit.promoPrice != null ? produit.promoPrice! : produit.productUnitPrice,
+      imageUrl: produit.productImagesPath.isNotEmpty
+          ? produit.productImagesPath.first
+          : '',
+      price: produit.isInPromotion && produit.promoPrice != null
+          ? produit.promoPrice!
+          : produit.productUnitPrice,
       originalPrice: produit.isInPromotion ? produit.productUnitPrice : null,
       description: produit.productDescription,
       category: produit.category,
+      sellerId: produit.sellerId, // ✅ AJOUTÉ
       storeId: produit.storeId,
       storeName: storeName ?? 'Boutique',
       isInPromotion: produit.isInPromotion,
@@ -78,11 +85,16 @@ class StoreClient {
       id: storeModel.storeId,
       name: storeModel.storeInfos?['name'] ?? 'Boutique',
       imageUrl: storeModel.storeLogoPath ?? '',
-      location: storeModel.ville ?? storeModel.storeAddress ?? 'Localisation non définie',
-      rating: storeModel.storeRatings?.isNotEmpty == true 
-          ? storeModel.storeRatings!.reduce((a, b) => a + b) / storeModel.storeRatings!.length
+      location: storeModel.ville ??
+          storeModel.storeAddress ??
+          'Localisation non définie',
+      rating: storeModel.storeRatings?.isNotEmpty == true
+          ? storeModel.storeRatings!.reduce((a, b) => a + b) /
+              storeModel.storeRatings!.length
           : 0.0,
-      description: storeModel.description ?? storeModel.storeDescription ?? 'Aucune description',
+      description: storeModel.description ??
+          storeModel.storeDescription ??
+          'Aucune description',
     );
   }
 }
@@ -256,7 +268,8 @@ class HomeClientOffline extends HomeClientState {
   });
 
   @override
-  List<Object?> get props => [products, stores, filteredProducts, filteredStores, message];
+  List<Object?> get props =>
+      [products, stores, filteredProducts, filteredStores, message];
 }
 
 // BLoC
@@ -264,7 +277,7 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   final FirestoreService _firestoreService = FirestoreService();
   final ProductRepository _productRepository = ProductRepository();
   final CartService _cartService = CartService();
-  
+
   // Streams pour la synchronisation en temps réel
   StreamSubscription<List<Produit>>? _productsSubscription;
   StreamSubscription<List<Store>>? _storesSubscription;
@@ -300,18 +313,24 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
     try {
       // Valider et nettoyer le cache si nécessaire
       await CacheManager.validateAndCleanCache();
-      
+
       // Vérifier d'abord le cache
       final cachedProducts = CacheManager.getCachedProducts();
       final cachedStores = CacheManager.getCachedStores();
-      
+
       if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
         // Créer un map des noms de boutiques pour les produits en cache
-        final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
-        
-        final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
-        final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
-        
+        final storeMap = {
+          for (var store in cachedStores)
+            store.storeId: store.storeInfos?['name'] ?? 'Boutique'
+        };
+
+        final productList = cachedProducts
+            .map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId]))
+            .toList();
+        final storeList =
+            cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
         emit(HomeClientLoaded(
           products: productList,
           stores: storeList,
@@ -319,7 +338,7 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
           filteredStores: storeList,
           isFromCache: true,
         ));
-        
+
         // Charger l'état du panier après l'émission des données
         add(LoadCartStatus());
       }
@@ -329,11 +348,18 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       if (!isOnline) {
         if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
           // Créer un map des noms de boutiques pour les produits en cache
-          final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
-          
-          final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
-          final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
-          
+          final storeMap = {
+            for (var store in cachedStores)
+              store.storeId: store.storeInfos?['name'] ?? 'Boutique'
+          };
+
+          final productList = cachedProducts
+              .map(
+                  (p) => Product.fromProduit(p, storeName: storeMap[p.storeId]))
+              .toList();
+          final storeList =
+              cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
           emit(HomeClientOffline(
             products: productList,
             stores: storeList,
@@ -343,7 +369,8 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
           ));
         } else {
           emit(HomeClientError(
-            message: 'Aucune donnée disponible hors ligne. Veuillez vérifier votre connexion.',
+            message:
+                'Aucune donnée disponible hors ligne. Veuillez vérifier votre connexion.',
             hasCachedData: false,
           ));
         }
@@ -353,15 +380,21 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       // Récupérer les données depuis Firestore
       final productsStream = _productRepository.getAllActiveProducts();
       final products = await productsStream.first;
-      
+
       final storesStream = _firestoreService.getAllStores();
       final stores = await storesStream.first;
-      final storeList = stores.map((s) => StoreClient.fromStoreModel(s)).toList();
-      
+      final storeList =
+          stores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
       // Créer un map des noms de boutiques pour les produits
-      final storeMap = {for (var store in stores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
-      
-      final productList = products.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
+      final storeMap = {
+        for (var store in stores)
+          store.storeId: store.storeInfos?['name'] ?? 'Boutique'
+      };
+
+      final productList = products
+          .map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId]))
+          .toList();
 
       // Mettre en cache les données
       await CacheManager.cacheProducts(products);
@@ -374,10 +407,10 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
         filteredStores: storeList,
         isFromCache: false,
       ));
-      
+
       // Charger l'état du panier après l'émission des données
       add(LoadCartStatus());
-      
+
       // Démarrer la synchronisation en temps réel
       if (!_isInitialized) {
         add(StartRealtimeSync());
@@ -387,14 +420,20 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       // En cas d'erreur, essayer d'utiliser le cache
       final cachedProducts = CacheManager.getCachedProducts();
       final cachedStores = CacheManager.getCachedStores();
-      
+
       if (cachedProducts.isNotEmpty || cachedStores.isNotEmpty) {
         // Créer un map des noms de boutiques pour les produits en cache
-        final storeMap = {for (var store in cachedStores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
-        
-        final productList = cachedProducts.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
-        final storeList = cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
-        
+        final storeMap = {
+          for (var store in cachedStores)
+            store.storeId: store.storeInfos?['name'] ?? 'Boutique'
+        };
+
+        final productList = cachedProducts
+            .map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId]))
+            .toList();
+        final storeList =
+            cachedStores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
         emit(HomeClientOffline(
           products: productList,
           stores: storeList,
@@ -439,23 +478,33 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
 
         if (event.query.isNotEmpty) {
           final isOnline = await CacheManager.isOnline();
-          
+
           if (isOnline) {
             // Recherche en ligne
-            final searchResults = await _productRepository.searchProducts(event.query);
-            filteredProducts = searchResults.map((p) => Product.fromProduit(p)).toList();
+            final searchResults =
+                await _productRepository.searchProducts(event.query);
+            filteredProducts =
+                searchResults.map((p) => Product.fromProduit(p)).toList();
           } else {
             // Recherche dans le cache
             filteredProducts = allProducts.where((product) {
-              return product.name.toLowerCase().contains(event.query.toLowerCase()) ||
-                  product.description.toLowerCase().contains(event.query.toLowerCase());
+              return product.name
+                      .toLowerCase()
+                      .contains(event.query.toLowerCase()) ||
+                  product.description
+                      .toLowerCase()
+                      .contains(event.query.toLowerCase());
             }).toList();
           }
 
           // Recherche dans les boutiques (toujours depuis le cache)
           filteredStores = allStores.where((store) {
-            return store.name.toLowerCase().contains(event.query.toLowerCase()) ||
-                store.description.toLowerCase().contains(event.query.toLowerCase());
+            return store.name
+                    .toLowerCase()
+                    .contains(event.query.toLowerCase()) ||
+                store.description
+                    .toLowerCase()
+                    .contains(event.query.toLowerCase());
           }).toList();
         }
 
@@ -510,11 +559,13 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
 
         if (event.category != 'Tous') {
           final isOnline = await CacheManager.isOnline();
-          
+
           if (isOnline) {
             // Filtrage en ligne
-            final categoryResults = await _productRepository.getProductsByCategory(event.category);
-            filteredProducts = categoryResults.map((p) => Product.fromProduit(p)).toList();
+            final categoryResults =
+                await _productRepository.getProductsByCategory(event.category);
+            filteredProducts =
+                categoryResults.map((p) => Product.fromProduit(p)).toList();
           } else {
             // Filtrage dans le cache
             filteredProducts = allProducts.where((product) {
@@ -596,7 +647,8 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       // Vérifier la connectivité
       final isOnline = await CacheManager.isOnline();
       if (!isOnline) {
-        print('Pas de connexion internet, synchronisation en temps réel impossible');
+        print(
+            'Pas de connexion internet, synchronisation en temps réel impossible');
         return;
       }
 
@@ -648,19 +700,25 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   void _updateProductsInState(List<Produit> products) {
     if (state is HomeClientLoaded) {
       final currentState = state as HomeClientLoaded;
-      
+
       // Créer un map des noms de boutiques pour les produits
       _firestoreService.getAllStores().first.then((stores) async {
-        final storeMap = {for (var store in stores) store.storeId: store.storeInfos?['name'] ?? 'Boutique'};
-        
-        final productList = products.map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId])).toList();
-        
+        final storeMap = {
+          for (var store in stores)
+            store.storeId: store.storeInfos?['name'] ?? 'Boutique'
+        };
+
+        final productList = products
+            .map((p) => Product.fromProduit(p, storeName: storeMap[p.storeId]))
+            .toList();
+
         // Mettre en cache les nouvelles données
         await CacheManager.cacheProducts(products);
-        
+
         // Appliquer les filtres actuels
-        final filteredProducts = _applyCurrentFilters(productList, currentState);
-        
+        final filteredProducts =
+            _applyCurrentFilters(productList, currentState);
+
         // Utiliser add() pour déclencher un nouvel événement
         add(UpdateProductsEvent(
           products: productList,
@@ -676,14 +734,16 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   void _updateStoresInState(List<Store> stores) {
     if (state is HomeClientLoaded) {
       final currentState = state as HomeClientLoaded;
-      
-      final storeList = stores.map((s) => StoreClient.fromStoreModel(s)).toList();
-      
+
+      final storeList =
+          stores.map((s) => StoreClient.fromStoreModel(s)).toList();
+
       // Mettre en cache les nouvelles données
       CacheManager.cacheStores(stores).then((_) {
         // Appliquer les filtres actuels
-        final filteredStores = _applyCurrentFiltersToStores(storeList, currentState);
-        
+        final filteredStores =
+            _applyCurrentFiltersToStores(storeList, currentState);
+
         // Utiliser add() pour déclencher un nouvel événement
         add(UpdateStoresEvent(
           stores: storeList,
@@ -696,14 +756,16 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
   }
 
   /// Applique les filtres actuels aux produits
-  List<Product> _applyCurrentFilters(List<Product> products, HomeClientLoaded currentState) {
+  List<Product> _applyCurrentFilters(
+      List<Product> products, HomeClientLoaded currentState) {
     // Ici on pourrait appliquer les filtres de recherche et de catégorie actuels
     // Pour l'instant, on retourne tous les produits
     return products;
   }
 
   /// Applique les filtres actuels aux boutiques
-  List<StoreClient> _applyCurrentFiltersToStores(List<StoreClient> stores, HomeClientLoaded currentState) {
+  List<StoreClient> _applyCurrentFiltersToStores(
+      List<StoreClient> stores, HomeClientLoaded currentState) {
     // Ici on pourrait appliquer les filtres de recherche actuels
     // Pour l'instant, on retourne toutes les boutiques
     return stores;
@@ -738,5 +800,4 @@ class HomeClientBloc extends Bloc<HomeClientEvent, HomeClientState> {
       ));
     }
   }
-
 }

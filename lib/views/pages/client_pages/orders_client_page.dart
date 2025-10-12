@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/client/orders_client_bloc.dart';
+import '../../../constants/routes.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_text.dart';
 import '../../colors/app_colors.dart';
-import '../../../constants/routes.dart';
 
 class OrdersClientPage extends StatefulWidget {
   const OrdersClientPage({super.key});
@@ -70,7 +70,7 @@ class _OrdersClientPageState extends State<OrdersClientPage>
                     ],
                   );
                 }
-
+                //'En cours', 'Confirmée'
                 if (state is OrdersClientError) {
                   return Center(
                     child: Column(
@@ -434,12 +434,17 @@ class _OrdersClientPageState extends State<OrdersClientPage>
         Expanded(
           child: AppButton(
             onTap: () {
-                              Navigator.pushNamed(context, AppRoutes.ORDERDETAILS, arguments: order);
+              // Navigation vers la page de tracking de commande
+              Navigator.pushNamed(
+                context,
+                AppRoutes.ORDER_TRACKING,
+                arguments: order.id,
+              );
             },
             color: AppColors.primaryColor,
             height: 40,
             child: AppText(
-              text: 'Voir les détails',
+              text: 'Suivre la commande',
               color: Colors.white,
             ),
           ),
@@ -449,7 +454,8 @@ class _OrdersClientPageState extends State<OrdersClientPage>
           Expanded(
             child: AppButton(
               onTap: () {
-                Navigator.pushNamed(context, AppRoutes.REVIEW, arguments: order);
+                Navigator.pushNamed(context, AppRoutes.REVIEW,
+                    arguments: order);
               },
               color: AppColors.secondaryColor,
               height: 40,

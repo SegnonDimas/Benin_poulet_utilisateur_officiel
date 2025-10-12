@@ -2,8 +2,10 @@ import 'package:benin_poulet/bloc/fiscalty/fiscal_bloc.dart';
 import 'package:benin_poulet/bloc/product/product_bloc.dart';
 import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
 import 'package:benin_poulet/bloc/store/store_bloc.dart';
-import 'package:benin_poulet/bloc/order/order_bloc.dart';
+import 'package:benin_poulet/bloc/order/order_bloc.dart' as old_order;
 import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
+import 'package:benin_poulet/bloc/performance/performance_bloc.dart';
+import 'package:benin_poulet/bloc/orders/order_bloc.dart' as new_order;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
@@ -39,8 +41,8 @@ List<SingleChildWidget> providers = [
   // gestion des boutiques
   BlocProvider(create: (context) => StoreBloc()),
 
-  // gestion des commandes
-  BlocProvider(create: (context) => OrderBloc()),
+  // gestion des commandes (ancien système - à migrer)
+  BlocProvider(create: (context) => old_order.OrderBloc()),
 
   // niveau creation boutique
   //BlocProvider(create: (context) => NiveauCreationBoutiqueBloc()),
@@ -65,6 +67,12 @@ List<SingleChildWidget> providers = [
 
   // avis des produits
   BlocProvider(create: (context) => ProductReviewBloc()),
+
+  // performances vendeur
+  BlocProvider(create: (context) => PerformanceBloc()),
+
+  // gestion des commandes - nouveau système complet (client & vendeur)
+  BlocProvider(create: (context) => new_order.OrderBloc()),
 
   // BLoCs client
   BlocProvider(create: (context) => HomeClientBloc()),

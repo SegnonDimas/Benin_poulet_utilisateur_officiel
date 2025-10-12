@@ -1163,7 +1163,7 @@ class _HomeClientPageState extends State<HomeClientPage>
         children: [
           // En-tête du Drawer
           Container(
-            height: 200,
+            height: 220,
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -1258,9 +1258,8 @@ class _HomeClientPageState extends State<HomeClientPage>
                   icon: Icons.shopping_bag,
                   title: 'Mes Commandes',
                   onTap: () {
-                    AppUtils.showInfoDialog(
-                        context: context,
-                        message: 'Cette fonctionnalité arrive bientôt');
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, AppRoutes.CLIENT_ORDERS_LIST);
                   },
                 ),
 

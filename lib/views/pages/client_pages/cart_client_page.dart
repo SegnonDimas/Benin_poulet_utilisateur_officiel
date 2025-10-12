@@ -1,4 +1,6 @@
 import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:benin_poulet/utils/checkout_helper.dart';
+import 'package:benin_poulet/models/order_model.dart';
 import 'package:benin_poulet/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -295,18 +297,22 @@ class _CartClientPageState extends State<CartClientPage> {
                     if (cartItem.product.originalPrice != null)
                       Row(
                         children: [
-                          AppText(
-                            text:
-                                '${cartItem.product.originalPrice!.toInt()} FCFA',
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                            decoration: TextDecoration.lineThrough,
+                          Flexible(
+                            child: AppText(
+                              text:
+                                  '${cartItem.product.originalPrice!.toInt()} FCFA',
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                              decoration: TextDecoration.lineThrough,
+                            ),
                           ),
                           const SizedBox(width: 8),
-                          AppText(
-                            text: '${cartItem.product.price.toInt()} FCFA',
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: AppText(
+                              text: '${cartItem.product.price.toInt()} FCFA',
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       )
@@ -477,9 +483,7 @@ class _CartClientPageState extends State<CartClientPage> {
           SizedBox(
             width: double.infinity,
             child: AppButton(
-              onTap: () {
-                Navigator.pushNamed(context, AppRoutes.CHECKOUT);
-              },
+              onTap: () => _handleCheckout(state),
               color: AppColors.primaryColor,
               height: 50,
               child: AppText(
@@ -546,5 +550,76 @@ class _CartClientPageState extends State<CartClientPage> {
       confirmTextColor: AppColors.primaryColor,
       cancelTextColor: AppColors.redColor,
     );
+  }
+
+  /// Gérer le processus de checkout
+  Future<void> _handleCheckout(CartClientLoaded state) async {
+    try {
+      // Vérifier qu'il y a des articles
+      if (state.cartItems.isEmpty) {
+        AppUtils.showErrorNotification(
+          context,
+          'Votre panier est vide',
+          null,
+        );
+        return;
+      }
+
+      // Récupérer les informations du vendeur et de la boutique
+      // (On assume que tous les produits du panier sont du même vendeur)
+      final firstProduct = state.cartItems.first.product;
+      final sellerId = firstProduct.sellerId; // ID du vendeur propriétaire
+      final storeId = firstProduct.storeId; // ID de la boutique
+      final sellerName = firstProduct.storeName;
+
+      print('🛒 Checkout: sellerId=$sellerId, storeId=$storeId');
+
+      if (sellerId.isEmpty || sellerId == 'unknown') {
+        AppUtils.showErrorNotification(
+          context,
+          'Erreur: Vendeur non identifié',
+          null,
+        );
+        return;
+      }
+
+      // Convertir les articles du panier en OrderItem
+      final orderItems = state.cartItems.map((cartItem) {
+        return OrderItem(
+          productId: cartItem.product.id,
+          productName: cartItem.product.name,
+          productImage: cartItem.product.imageUrl.isNotEmpty
+              ? cartItem.product.imageUrl
+              : null,
+          quantity: cartItem.quantity,
+          unitPrice: cartItem.product.price,
+          totalPrice: cartItem.totalPrice,
+        );
+      }).toList();
+
+      // Calculer le total (sans les frais de livraison qui seront ajoutés plus tard)
+      final totalAmount = state.subtotal;
+
+      // Lancer le processus de checkout
+      await CheckoutHelper.startCheckout(
+        context: context,
+        items: orderItems,
+        totalAmount: totalAmount,
+        sellerId: sellerId,
+        // ID du vendeur
+        storeId: storeId,
+        // ID de la boutique
+        sellerName: sellerName,
+      );
+
+      // Optionnel: Vider le panier après commande réussie
+      // context.read<CartClientBloc>().add(ClearCart());
+    } catch (e) {
+      AppUtils.showErrorNotification(
+        context,
+        'Erreur lors du passage de commande: $e',
+        null,
+      );
+    }
   }
 }

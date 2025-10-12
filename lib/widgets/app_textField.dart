@@ -43,6 +43,7 @@ class AppTextField extends StatefulWidget {
   TextInputAction? textInputAction;
   TextCapitalization? textCapitalization; // Default capitalization
   final String? Function(String?)? validator;
+  TextStyle? labelStyle;
 
   //bool? isLabelDefined;
 
@@ -86,6 +87,7 @@ class AppTextField extends StatefulWidget {
     this.textInputAction,
     this.textCapitalization,
     this.validator,
+    this.labelStyle,
 
     //this.isLabelDefined = true,
   });
@@ -139,14 +141,17 @@ class _AppTextFieldState extends State<AppTextField> {
                   border: widget.border ?? InputBorder.none,
                   hintText: widget.hintText,
 
-                  label: Text(
-                    widget.label ?? widget.hintText ?? '',
-                    style: TextStyle(
-                        color: widget.hintTextColor ?? Colors.grey,
-                        fontSize: context.mediumText),
-                  ),
+                  label: widget.label != null /*|| widget.hintText != null*/
+                      ? Text(
+                          widget.label! /*?? widget.hintText ?? ''*/,
+                          style: TextStyle(
+                            color: widget.hintTextColor ?? Colors.grey,
+                          ),
+                        )
+                      : null,
 
-                  labelStyle: TextStyle(fontSize: context.mediumText),
+                  labelStyle: widget.labelStyle ??
+                      TextStyle(fontSize: context.mediumText),
                   //labelText: widget.label,
                   //hintStyle: TextStyle(fontSize: context.mediumText),
                   //icon: Icon(Icons.account_circle_rounded, color: Theme.of(context).colorScheme.inversePrimary,),
@@ -220,13 +225,16 @@ class _AppTextFieldState extends State<AppTextField> {
                   border: widget.border ?? InputBorder.none,
                   hintText: widget.hintText,
                   //isDense: true,
-
-                  label: widget.label != null || widget.hintText != null
+                  labelStyle: widget.labelStyle ??
+                      TextStyle(fontSize: context.mediumText),
+                  label: widget.label != null /*|| widget.hintText != null*/
                       ? Text(
-                          widget.label ?? widget.hintText ?? '',
+                          widget.label! /*?? widget.hintText ?? ''*/,
                           style: TextStyle(
-                              color: widget.hintTextColor ?? Colors.grey,
-                              fontSize: context.mediumText),
+                            color: widget.hintTextColor ?? Colors.grey,
+                            fontSize: widget.labelStyle?.fontSize ??
+                                context.mediumText * 0.8,
+                          ),
                         )
                       : null,
                   floatingLabelStyle: TextStyle(

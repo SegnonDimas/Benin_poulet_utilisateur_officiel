@@ -17,12 +17,13 @@ class AppUtils {
   //==============================================
   //AFFICHAGE D'INFOS DANS L'INTERFACE UTILISATEUR
   //==============================================
-  static Widget showInfo({required String info, Color? color}) {
+  static Widget showInfo({required String info, Color? color, double? width}) {
     return Builder(builder: (context) {
       return Padding(
           padding: const EdgeInsets.only(
               top: 1.0, right: 8.0, left: 8.0, bottom: 16.0),
           child: Container(
+            width: width,
             padding:
                 EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
             decoration: BoxDecoration(
@@ -79,6 +80,8 @@ class AppUtils {
     double? contentSize,
     double? confirmTextSize,
     double? cancelTextSize,
+    bool? isContentWidget = false,
+    Widget? contentWidget,
   }) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
@@ -99,14 +102,16 @@ class AppUtils {
 
           // CONTENT
           content: !hideContent
-              ? AppText(
-                  text: content,
-                  textAlign: TextAlign.center,
-                  color: contentTextColor,
-                  fontSize: contentSize ?? context.mediumText * 0.8,
-                  overflow: TextOverflow.visible,
-                  fontFamily: 'PoppinsMedium',
-                )
+              ? !isContentWidget!
+                  ? AppText(
+                      text: content,
+                      textAlign: TextAlign.center,
+                      color: contentTextColor,
+                      fontSize: contentSize ?? context.mediumText * 0.8,
+                      overflow: TextOverflow.visible,
+                      fontFamily: 'PoppinsMedium',
+                    )
+                  : contentWidget
               : Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Stack(

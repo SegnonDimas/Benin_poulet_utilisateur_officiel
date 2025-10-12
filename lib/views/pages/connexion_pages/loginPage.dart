@@ -590,10 +590,10 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                                 initialCountry: number.isoCode,
                                                 fontSize:
                                                     context.mediumText * 0.9,
-                                                maxLength:
+                                                /*maxLength:
                                                     number.dialCode == "+229"
                                                         ? 10
-                                                        : 15,
+                                                        : 15,*/
                                                 // 10 pour le Bénin, 15 pour les autres pays
                                                 fontColor: Theme.of(context)
                                                     .colorScheme

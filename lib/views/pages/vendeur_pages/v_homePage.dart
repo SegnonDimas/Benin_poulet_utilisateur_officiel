@@ -42,21 +42,19 @@ class _VHomePageState extends State<VHomePage> {
     ),
     ModelSession(
       title: 'Mes Commandes',
-      routeName:
-          AppRoutes.VENDEURCOMMANDELISTPAGE /*'/vendeurCommandeListPage'*/,
+      routeName: AppRoutes.VENDOR_ORDERS,
       imgUrl: 'assets/icons/command.png',
       backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
     ModelSession(
       title: 'Campagnes',
-      //routeName: '/vendeurPresentationBoutiquePage',
+      routeName: AppRoutes.PERFORMANCE_MARKETING,
       imgUrl: 'assets/icons/add.png',
       backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
     ModelSession(
       title: 'Performances',
-      /*routeName:
-          AppRoutes.VENDEURPERFORMANCESPAGE,*/
+      routeName: AppRoutes.PERFORMANCES_MAIN,
       imgUrl: 'assets/icons/performance.png',
       backgroundColor: AppColors.primaryColor.withOpacity(0.15),
     ),
@@ -107,12 +105,6 @@ class _VHomePageState extends State<VHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final storeInfoState =
-        context.watch<StoreCreationBloc>().state as StoreCreationGlobalState;
-    const SizedBox espace = SizedBox(
-      height: 20,
-    );
-
     /// corps de la page
     return _shouldInterceptBack
         ? WillPopScope(

@@ -1,20 +1,16 @@
-import 'dart:async';
-
 import 'package:benin_poulet/blocProviders.dart';
+import 'package:benin_poulet/constants/app_attributs.dart';
 import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/constants/userRoles.dart';
 import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
 import 'package:benin_poulet/services/cache_manager.dart';
 import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
 import 'package:benin_poulet/views/themes/dark_mode.dart';
 import 'package:benin_poulet/views/themes/theme_provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +26,7 @@ void main() async {
 
   // Initialiser le cache manager
   await CacheManager.init();
-  
 
-  
   // créer une connexion anonyme au lancement
   final anonymousUser = await AuthServices.createAnonymousAuth();
   anonymousUser;
@@ -50,8 +44,6 @@ void main() async {
     child: const MyApp(),
   ));
 }
-
-
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -93,7 +85,7 @@ class _MyAppState extends State<MyApp> {
         theme: Provider.of<ThemeProvider>(context).themeData,
         darkTheme: darkMode,
         //themeMode: ThemeMode.light,
-        title: 'Bénin Poulet',
+        title: AppAttributes.appName,
 
         routes: routes,
         initialRoute: AppRoutes.FIRSTPAGE,
