@@ -1,4 +1,4 @@
-package com.codeurplus.benin_poulet
+package com.codeurplus.lanhi
 
 import io.flutter.embedding.android.FlutterActivity
 

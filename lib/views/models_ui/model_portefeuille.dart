@@ -1,4 +1,4 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/app_text.dart';

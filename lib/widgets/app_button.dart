@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AppButton extends StatefulWidget {
   final Widget child;
@@ -10,6 +9,7 @@ class AppButton extends StatefulWidget {
   final double? width;
   final VoidCallback? onTap;
   final List<BoxShadow>? boxShadow;
+  final bool? useAligment;
 
   const AppButton({
     super.key,
@@ -18,9 +18,10 @@ class AppButton extends StatefulWidget {
     this.bordeurRadius = 15,
     this.height,
     this.onTap,
-    this.width = 140,
+    this.width,
     this.borderColor = Colors.transparent,
     this.boxShadow,
+    this.useAligment = true,
   });
 
   @override
@@ -33,8 +34,8 @@ class _AppButtonState extends State<AppButton> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        alignment: Alignment.center,
-        height: widget.height ?? context.height * 0.075,
+        alignment: widget.useAligment! ? Alignment.center : null,
+        height: widget.height /*?? context.height * 0.075*/,
         width: widget.width,
         decoration: BoxDecoration(
             color: widget.color ?? Theme.of(context).colorScheme.surface,
@@ -46,7 +47,10 @@ class _AppButtonState extends State<AppButton> {
               right: BorderSide(color: widget.borderColor!),
             ),
             boxShadow: widget.boxShadow),
-        child: widget.child,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: widget.child,
+        ),
       ),
     );
   }

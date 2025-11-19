@@ -1,10 +1,10 @@
-import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/constants/app_attributs.dart';
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:benin_poulet/widgets/notification_widgets.dart';
+import 'package:lanhi/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:lanhi/constants/app_attributs.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
+import 'package:lanhi/widgets/notification_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';

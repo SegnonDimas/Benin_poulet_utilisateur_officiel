@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:get/get.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String title;

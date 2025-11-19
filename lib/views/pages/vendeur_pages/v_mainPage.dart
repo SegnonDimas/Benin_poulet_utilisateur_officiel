@@ -1,10 +1,10 @@
-import 'package:benin_poulet/constants/imagesPaths.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/v_homePage.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/constants/imagesPaths.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/pages/vendeur_pages/v_homePage.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
 
 import '../../../constants/app_attributs.dart';
 import '../../../constants/routes.dart';

@@ -1,8 +1,8 @@
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/models/order_model.dart';
-import 'package:benin_poulet/views/pages/client_pages/order/delivery_info_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/order/payment_method_page.dart';
-import 'package:benin_poulet/views/pages/client_pages/order/order_summary_page.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/models/order_model.dart';
+import 'package:lanhi/views/pages/client_pages/order/delivery_info_page.dart';
+import 'package:lanhi/views/pages/client_pages/order/payment_method_page.dart';
+import 'package:lanhi/views/pages/client_pages/order/order_summary_page.dart';
 import 'package:flutter/material.dart';
 
 /// Helper pour gérer le processus de checkout

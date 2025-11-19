@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/product_review_repository.dart';
-import 'package:benin_poulet/models/product_review.dart';
+import 'package:lanhi/core/firebase/firestore/product_review_repository.dart';
+import 'package:lanhi/models/product_review.dart';
 
 // Événements
 abstract class ProductReviewEvent {}

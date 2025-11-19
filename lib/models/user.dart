@@ -1,8 +1,8 @@
-import 'package:benin_poulet/constants/accountStatus.dart';
-import 'package:benin_poulet/constants/authProviders.dart';
-import 'package:benin_poulet/constants/firebase_collections/usersCollection.dart';
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/constants/user_profilStatus.dart';
+import 'package:lanhi/constants/accountStatus.dart';
+import 'package:lanhi/constants/authProviders.dart';
+import 'package:lanhi/constants/firebase_collections/usersCollection.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/constants/user_profilStatus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {

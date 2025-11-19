@@ -1,32 +1,30 @@
-import 'package:benin_poulet/bloc/fiscalty/fiscal_bloc.dart';
-import 'package:benin_poulet/bloc/product/product_bloc.dart';
-import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
-import 'package:benin_poulet/bloc/store/store_bloc.dart';
-import 'package:benin_poulet/bloc/order/order_bloc.dart' as old_order;
-import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
-import 'package:benin_poulet/bloc/performance/performance_bloc.dart';
-import 'package:benin_poulet/bloc/orders/order_bloc.dart' as new_order;
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lanhi/bloc/fiscalty/fiscal_bloc.dart';
+import 'package:lanhi/bloc/order/order_bloc.dart' as old_order;
+import 'package:lanhi/bloc/orders/order_bloc.dart' as new_order;
+import 'package:lanhi/bloc/performance/performance_bloc.dart';
+import 'package:lanhi/bloc/product/product_bloc.dart';
+import 'package:lanhi/bloc/store/store_bloc.dart';
+import 'package:lanhi/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/authentification/authentification_bloc.dart';
 import 'bloc/choixCategorie/secteur_bloc.dart';
-import 'bloc/delivery/delivery_bloc.dart';
-import 'bloc/store_review/store_review_bloc.dart';
-import 'bloc/product_review/product_review_bloc.dart';
-
+import 'bloc/client/cart_client_bloc.dart';
+import 'bloc/client/chat_client_bloc.dart';
+import 'bloc/client/favorites_client_bloc.dart';
 // BLoCs client
 import 'bloc/client/home_client_bloc.dart';
-import 'bloc/client/store_client_bloc.dart';
-import 'bloc/client/product_client_bloc.dart';
-import 'bloc/client/cart_client_bloc.dart';
 import 'bloc/client/orders_client_bloc.dart';
-import 'bloc/client/chat_client_bloc.dart';
+import 'bloc/client/product_client_bloc.dart';
 import 'bloc/client/profile_client_bloc.dart';
-import 'bloc/client/favorites_client_bloc.dart';
 import 'bloc/client/review_client_bloc.dart';
+import 'bloc/client/store_client_bloc.dart';
+import 'bloc/delivery/delivery_bloc.dart';
+import 'bloc/product_review/product_review_bloc.dart';
+import 'bloc/store_review/store_review_bloc.dart';
 
 List<SingleChildWidget> providers = [
   // authentification

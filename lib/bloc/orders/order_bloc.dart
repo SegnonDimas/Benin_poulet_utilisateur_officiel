@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:benin_poulet/bloc/orders/order_event.dart';
-import 'package:benin_poulet/bloc/orders/order_state.dart';
-import 'package:benin_poulet/models/order_status.dart';
-import 'package:benin_poulet/services/order_service.dart';
+import 'package:lanhi/bloc/orders/order_event.dart';
+import 'package:lanhi/bloc/orders/order_state.dart';
+import 'package:lanhi/models/order_status.dart';
+import 'package:lanhi/services/order_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// BLoC pour la gestion des commandes

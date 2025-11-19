@@ -1,7 +1,7 @@
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/utils/checkout_helper.dart';
-import 'package:benin_poulet/models/order_model.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/utils/checkout_helper.dart';
+import 'package:lanhi/models/order_model.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get_utils/src/extensions/context_extensions.dart';

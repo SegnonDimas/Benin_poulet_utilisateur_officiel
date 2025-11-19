@@ -1,10 +1,10 @@
-import 'package:benin_poulet/views/models_ui/model_releveTranslation.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
+import 'package:lanhi/views/models_ui/model_releveTranslation.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class VPortefeuillePage extends StatefulWidget {
   const VPortefeuillePage({super.key});

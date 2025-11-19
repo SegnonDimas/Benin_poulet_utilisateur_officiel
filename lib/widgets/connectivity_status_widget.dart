@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:flutter/material.dart';
+import 'package:lanhi/services/cache_manager.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class ConnectivityStatusWidget extends StatefulWidget {
   final Widget child;
@@ -14,7 +14,8 @@ class ConnectivityStatusWidget extends StatefulWidget {
   });
 
   @override
-  State<ConnectivityStatusWidget> createState() => _ConnectivityStatusWidgetState();
+  State<ConnectivityStatusWidget> createState() =>
+      _ConnectivityStatusWidgetState();
 }
 
 class _ConnectivityStatusWidgetState extends State<ConnectivityStatusWidget> {
@@ -38,12 +39,15 @@ class _ConnectivityStatusWidgetState extends State<ConnectivityStatusWidget> {
   }
 
   void _listenToConnectivityChanges() {
-    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
       if (mounted) {
         setState(() {
-          _isOnline = results.isNotEmpty && results.first != ConnectivityResult.none;
+          _isOnline =
+              results.isNotEmpty && results.first != ConnectivityResult.none;
         });
-        
+
         // Si on revient en ligne, synchroniser les données
         if (_isOnline) {
           _syncData();
@@ -200,7 +204,8 @@ class OfflineIndicator extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           AppText(
-            text: 'Certaines fonctionnalités peuvent être limitées. Les données affichées proviennent du cache local.',
+            text:
+                'Certaines fonctionnalités peuvent être limitées. Les données affichées proviennent du cache local.',
             fontSize: 12,
             color: Colors.grey[600],
           ),
@@ -213,7 +218,8 @@ class OfflineIndicator extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
             ),
           ],
@@ -255,7 +261,7 @@ class CacheStatusIndicator extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: AppText(
-              text: hasCachedData 
+              text: hasCachedData
                   ? 'Données en cache (peuvent être obsolètes)'
                   : 'Aucune donnée en cache disponible',
               fontSize: 12,

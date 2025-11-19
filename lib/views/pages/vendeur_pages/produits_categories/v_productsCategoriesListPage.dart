@@ -1,12 +1,12 @@
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/categoriesList.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/categoriesList.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/productsList.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../../bloc/product/product_bloc.dart';
 

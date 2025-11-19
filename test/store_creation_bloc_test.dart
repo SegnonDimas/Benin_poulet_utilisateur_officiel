@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/bloc/storeCreation/store_creation_bloc.dart';
+import 'package:lanhi/bloc/storeCreation/store_creation_bloc.dart';
 
 void main() {
   group('StoreCreationBloc', () {
@@ -158,4 +157,3 @@ void main() {
     });
   });
 }
-

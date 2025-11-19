@@ -1,12 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:benin_poulet/constants/authProviders.dart';
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/services/navigation_service.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:lanhi/constants/authProviders.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/services/navigation_service.dart';
+import 'package:lanhi/utils/app_utils.dart';
 
 class SignupService {
   /// Inscription avec email et mot de passe
@@ -53,7 +52,8 @@ class SignupService {
           errorMessage = 'Un compte existe déjà avec cette adresse email.';
           break;
         case 'weak-password':
-          errorMessage = 'Le mot de passe est trop faible. Utilisez au moins 6 caractères.';
+          errorMessage =
+              'Le mot de passe est trop faible. Utilisez au moins 6 caractères.';
           break;
         case 'invalid-email':
           errorMessage = 'L\'adresse email n\'est pas valide.';
@@ -65,7 +65,7 @@ class SignupService {
           errorMessage = 'Erreur lors de l\'inscription: ${e.message}';
           break;
       }
-      
+
       AppUtils.showInfoDialog(
         context: context,
         message: errorMessage,
@@ -74,7 +74,8 @@ class SignupService {
     } catch (e) {
       AppUtils.showInfoDialog(
         context: context,
-        message: 'Une erreur inattendue s\'est produite lors de l\'inscription. Veuillez réessayer.',
+        message:
+            'Une erreur inattendue s\'est produite lors de l\'inscription. Veuillez réessayer.',
         type: InfoType.error,
       );
     }
@@ -90,7 +91,8 @@ class SignupService {
   }) async {
     try {
       // Vérifier si l'utilisateur existe déjà
-      final userExists = await AuthServices.userExistsWithPhone(phoneNumber.phoneNumber!);
+      final userExists =
+          await AuthServices.userExistsWithPhone(phoneNumber.phoneNumber!);
       if (userExists) {
         AppUtils.showInfoDialog(
           context: context,
@@ -126,7 +128,8 @@ class SignupService {
           errorMessage = 'Un compte existe déjà avec ce numéro de téléphone.';
           break;
         case 'weak-password':
-          errorMessage = 'Le mot de passe est trop faible. Utilisez au moins 6 caractères.';
+          errorMessage =
+              'Le mot de passe est trop faible. Utilisez au moins 6 caractères.';
           break;
         case 'invalid-phone-number':
           errorMessage = 'Le numéro de téléphone n\'est pas valide.';
@@ -138,7 +141,7 @@ class SignupService {
           errorMessage = 'Erreur lors de l\'inscription: ${e.message}';
           break;
       }
-      
+
       AppUtils.showInfoDialog(
         context: context,
         message: errorMessage,
@@ -147,7 +150,8 @@ class SignupService {
     } catch (e) {
       AppUtils.showInfoDialog(
         context: context,
-        message: 'Une erreur inattendue s\'est produite lors de l\'inscription. Veuillez réessayer.',
+        message:
+            'Une erreur inattendue s\'est produite lors de l\'inscription. Veuillez réessayer.',
         type: InfoType.error,
       );
     }
@@ -161,7 +165,7 @@ class SignupService {
     try {
       // Créer le compte
       final user = await AuthServices.signUpWithGoogle(role: role);
-      
+
       if (user != null) {
         AppUtils.showAwesomeSnackBar(
           context,
@@ -181,7 +185,8 @@ class SignupService {
           errorMessage = 'Un compte existe déjà avec cette adresse email.';
           break;
         case 'account-exists-with-different-credential':
-          errorMessage = 'Un compte existe déjà avec cette adresse email mais avec une méthode de connexion différente.';
+          errorMessage =
+              'Un compte existe déjà avec cette adresse email mais avec une méthode de connexion différente.';
           break;
         case 'operation-not-allowed':
           errorMessage = 'L\'inscription Google n\'est pas activée.';
@@ -190,7 +195,7 @@ class SignupService {
           errorMessage = 'Erreur lors de l\'inscription Google: ${e.message}';
           break;
       }
-      
+
       AppUtils.showInfoDialog(
         context: context,
         message: errorMessage,
@@ -199,7 +204,8 @@ class SignupService {
     } catch (e) {
       AppUtils.showInfoDialog(
         context: context,
-        message: 'Une erreur inattendue s\'est produite lors de l\'inscription Google. Veuillez réessayer.',
+        message:
+            'Une erreur inattendue s\'est produite lors de l\'inscription Google. Veuillez réessayer.',
         type: InfoType.error,
       );
     }

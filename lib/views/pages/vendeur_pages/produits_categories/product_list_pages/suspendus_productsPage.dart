@@ -1,8 +1,8 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../../../bloc/product/product_bloc.dart';
 import '../../../../../services/products_services.dart';
@@ -28,7 +28,8 @@ class _SuspendusProductsPageState extends State<SuspendusProductsPage> {
       builder: (context, produitsSuspendusState) {
         // liste des produits suspendus filtrés (par recherche utilisateur)
         if (produitsSuspendusState is ProduitFiltre) {
-          final list_produits_suspendus_filtre = produitsSuspendusState.produits;
+          final list_produits_suspendus_filtre =
+              produitsSuspendusState.produits;
 
           if (list_produits_suspendus_filtre.isEmpty) {
             return _buildEmptyState(context, 'Aucun produit suspendu trouvé');
@@ -41,7 +42,9 @@ class _SuspendusProductsPageState extends State<SuspendusProductsPage> {
         // liste de tous les produits suspendus
         if (produitsSuspendusState is ProductsLoaded) {
           final list_produits_suspendus = produitsSuspendusState.products
-              .where((p) => p.productStatus == 'suspended' || p.productStatus == 'suspendu')
+              .where((p) =>
+                  p.productStatus == 'suspended' ||
+                  p.productStatus == 'suspendu')
               .toList();
 
           if (list_produits_suspendus.isEmpty) {

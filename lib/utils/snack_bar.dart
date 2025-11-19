@@ -1,5 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

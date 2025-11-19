@@ -1,11 +1,3 @@
-import 'package:benin_poulet/blocProviders.dart';
-import 'package:benin_poulet/constants/app_attributs.dart';
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/productsList.dart';
-import 'package:benin_poulet/views/themes/dark_mode.dart';
-import 'package:benin_poulet/views/themes/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,8 +5,17 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:lanhi/blocProviders.dart';
+import 'package:lanhi/constants/app_attributs.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/services/cache_manager.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/productsList.dart';
+import 'package:lanhi/views/themes/dark_mode.dart';
+import 'package:lanhi/views/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+// lanhi
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -69,6 +70,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    var appName = AppAttributes.appName;
+    appName = appName.toLowerCase().replaceFirst(
+        AppAttributes.appName[0].toLowerCase(),
+        AppAttributes.appName[0].toUpperCase());
     return MultiBlocProvider(
       providers: providers,
       child: GetMaterialApp(
@@ -85,8 +90,7 @@ class _MyAppState extends State<MyApp> {
         theme: Provider.of<ThemeProvider>(context).themeData,
         darkTheme: darkMode,
         //themeMode: ThemeMode.light,
-        title: AppAttributes.appName,
-
+        title: appName,
         routes: routes,
         initialRoute: AppRoutes.FIRSTPAGE,
 

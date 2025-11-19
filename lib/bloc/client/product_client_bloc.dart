@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/models/produit.dart';
 
 // Modèles temporaires pour les placeholders
 class Product {

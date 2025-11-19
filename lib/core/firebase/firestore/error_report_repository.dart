@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:benin_poulet/constants/firebase_collections/errorReportsCollection.dart';
-import 'package:benin_poulet/models/error_report.dart';
+import 'package:lanhi/constants/firebase_collections/errorReportsCollection.dart';
+import 'package:lanhi/models/error_report.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 

@@ -1,6 +1,6 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class DefaultRoutePage extends StatelessWidget {
   const DefaultRoutePage({super.key});

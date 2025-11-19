@@ -1,4 +1,4 @@
-import 'package:benin_poulet/constants/productStatus.dart' show ProductStatus;
+import 'package:lanhi/constants/productStatus.dart' show ProductStatus;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Produit {

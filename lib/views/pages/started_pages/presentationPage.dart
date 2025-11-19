@@ -1,11 +1,11 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/bloc/userRole/user_role_bloc.dart';
-import 'package:benin_poulet/constants/app_attributs.dart';
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
+import 'package:lanhi/constants/app_attributs.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

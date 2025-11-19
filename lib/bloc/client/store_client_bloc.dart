@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/models/store.dart';
-import 'package:benin_poulet/models/seller.dart';
-import 'package:benin_poulet/models/user.dart';
-import 'package:benin_poulet/models/produit.dart';
-import 'package:benin_poulet/services/store_details_service.dart';
+import 'package:lanhi/models/store.dart';
+import 'package:lanhi/models/seller.dart';
+import 'package:lanhi/models/user.dart';
+import 'package:lanhi/models/produit.dart';
+import 'package:lanhi/services/store_details_service.dart';
 
 // Modèles temporaires pour les placeholders
 class Product {

@@ -1,5 +1,5 @@
-import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
-import 'package:benin_poulet/models/produit.dart';
+import 'package:lanhi/constants/firebase_collections/firebaseCollections.dart';
+import 'package:lanhi/models/produit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductRepository {

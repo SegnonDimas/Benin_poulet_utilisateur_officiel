@@ -1,4 +1,4 @@
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class ModelOptionDeConnexion extends StatefulWidget {

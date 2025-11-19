@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.codeurplus" "\0"
-            VALUE "FileDescription", "benin_poulet" "\0"
+            VALUE "FileDescription", "lanhi" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "benin_poulet" "\0"
+            VALUE "InternalName", "lanhi" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.codeurplus. All rights reserved." "\0"
-            VALUE "OriginalFilename", "benin_poulet.exe" "\0"
-            VALUE "ProductName", "benin_poulet" "\0"
+            VALUE "OriginalFilename", "lanhi.exe" "\0"
+            VALUE "ProductName", "lanhi" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

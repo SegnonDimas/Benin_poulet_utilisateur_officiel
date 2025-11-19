@@ -1,12 +1,12 @@
-import 'package:benin_poulet/bloc/performance/performance_bloc.dart';
-import 'package:benin_poulet/bloc/performance/performance_event.dart';
-import 'package:benin_poulet/bloc/performance/performance_state.dart';
-import 'package:benin_poulet/services/user_data_service.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lanhi/bloc/performance/performance_bloc.dart';
+import 'package:lanhi/bloc/performance/performance_event.dart';
+import 'package:lanhi/bloc/performance/performance_state.dart';
+import 'package:lanhi/services/user_data_service.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class PerformanceProduitPage extends StatefulWidget {
   const PerformanceProduitPage({super.key});

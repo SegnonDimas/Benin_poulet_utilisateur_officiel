@@ -1,6 +1,6 @@
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class ModelAttributProduit extends StatelessWidget {

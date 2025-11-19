@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/order_repository.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/models/order.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/services/sync_service.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/core/firebase/firestore/order_repository.dart';
+import 'package:lanhi/models/order.dart';
+import 'package:lanhi/services/cache_manager.dart';
 
 // Événements
 abstract class OrderEvent {}
@@ -11,28 +10,33 @@ abstract class OrderEvent {}
 class LoadVendorOrders extends OrderEvent {
   final String? sellerId;
   final String? status;
+
   LoadVendorOrders({this.sellerId, this.status});
 }
 
 class LoadOrderById extends OrderEvent {
   final String orderId;
+
   LoadOrderById(this.orderId);
 }
 
 class UpdateOrderStatus extends OrderEvent {
   final String orderId;
   final String status;
+
   UpdateOrderStatus(this.orderId, this.status);
 }
 
 class LoadOrderStats extends OrderEvent {
   final String? sellerId;
+
   LoadOrderStats({this.sellerId});
 }
 
 class RefreshOrders extends OrderEvent {
   final String? sellerId;
   final String? status;
+
   RefreshOrders({this.sellerId, this.status});
 }
 
@@ -46,12 +50,14 @@ class OrderLoading extends OrderState {}
 class OrdersLoaded extends OrderState {
   final List<Order> orders;
   final bool isFromCache;
+
   OrdersLoaded(this.orders, {this.isFromCache = false});
 }
 
 class OrderLoaded extends OrderState {
   final Order order;
   final bool isFromCache;
+
   OrderLoaded(this.order, {this.isFromCache = false});
 }
 
@@ -59,23 +65,27 @@ class OrderStatsLoaded extends OrderState {
   final Map<String, int> stats;
   final double totalRevenue;
   final bool isFromCache;
+
   OrderStatsLoaded(this.stats, this.totalRevenue, {this.isFromCache = false});
 }
 
 class OrderError extends OrderState {
   final String message;
   final bool hasCachedData;
+
   OrderError(this.message, {this.hasCachedData = false});
 }
 
 class OrderUpdated extends OrderState {
   final Order order;
+
   OrderUpdated(this.order);
 }
 
 class OrdersOffline extends OrderState {
   final List<Order> cachedOrders;
   final String message;
+
   OrdersOffline({required this.cachedOrders, required this.message});
 }
 
@@ -96,7 +106,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     Emitter<OrderState> emit,
   ) async {
     emit(OrderLoading());
-    
+
     try {
       final sellerId = event.sellerId ?? AuthServices.userId;
       if (sellerId == null) {
@@ -107,8 +117,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Vérifier d'abord le cache
       final cachedOrders = CacheManager.getCachedVendorOrders(sellerId);
       if (cachedOrders.isNotEmpty) {
-        final filteredOrders = event.status != null 
-            ? cachedOrders.where((order) => order.status == event.status).toList()
+        final filteredOrders = event.status != null
+            ? cachedOrders
+                .where((order) => order.status == event.status)
+                .toList()
             : cachedOrders;
         emit(OrdersLoaded(filteredOrders, isFromCache: true));
       }
@@ -117,8 +129,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final isOnline = await CacheManager.isOnline();
       if (!isOnline) {
         if (cachedOrders.isNotEmpty) {
-          final filteredOrders = event.status != null 
-              ? cachedOrders.where((order) => order.status == event.status).toList()
+          final filteredOrders = event.status != null
+              ? cachedOrders
+                  .where((order) => order.status == event.status)
+                  .toList()
               : cachedOrders;
           emit(OrdersOffline(
             cachedOrders: filteredOrders,
@@ -136,20 +150,26 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       // Récupérer les données depuis Firestore
       Stream<List<Order>> ordersStream;
       if (event.status != null) {
-        _orderRepository.getOrdersBySellerAndStatus(sellerId, event.status!).listen(
+        _orderRepository
+            .getOrdersBySellerAndStatus(sellerId, event.status!)
+            .listen(
           (orders) async {
-            await CacheManager.cacheVendorOrders(sellerId, orders as List<Order>);
+            await CacheManager.cacheVendorOrders(
+                sellerId, orders as List<Order>);
             emit(OrdersLoaded(orders as List<Order>, isFromCache: false));
           },
-          onError: (error) => emit(OrderError('Erreur lors du chargement des commandes: $error')),
+          onError: (error) => emit(
+              OrderError('Erreur lors du chargement des commandes: $error')),
         );
       } else {
         _orderRepository.getOrdersBySeller(sellerId).listen(
           (orders) async {
-            await CacheManager.cacheVendorOrders(sellerId, orders as List<Order>);
+            await CacheManager.cacheVendorOrders(
+                sellerId, orders as List<Order>);
             emit(OrdersLoaded(orders as List<Order>, isFromCache: false));
           },
-          onError: (error) => emit(OrderError('Erreur lors du chargement des commandes: $error')),
+          onError: (error) => emit(
+              OrderError('Erreur lors du chargement des commandes: $error')),
         );
       }
     } catch (e) {
@@ -158,8 +178,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       if (sellerId != null) {
         final cachedOrders = CacheManager.getCachedVendorOrders(sellerId);
         if (cachedOrders.isNotEmpty) {
-          final filteredOrders = event.status != null 
-              ? cachedOrders.where((order) => order.status == event.status).toList()
+          final filteredOrders = event.status != null
+              ? cachedOrders
+                  .where((order) => order.status == event.status)
+                  .toList()
               : cachedOrders;
           emit(OrdersOffline(
             cachedOrders: filteredOrders,
@@ -168,7 +190,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           return;
         }
       }
-      
+
       emit(OrderError('Erreur lors du chargement des commandes: $e'));
     }
   }
@@ -178,7 +200,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     Emitter<OrderState> emit,
   ) async {
     emit(OrderLoading());
-    
+
     try {
       // Vérifier d'abord le cache
       final cachedOrder = CacheManager.getCachedOrder(event.orderId);
@@ -209,10 +231,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         }
         return;
       }
-      
+
       // Mettre en cache la commande
       await CacheManager.cacheOrder(order);
-      
+
       emit(OrderLoaded(order, isFromCache: false));
     } catch (e) {
       // En cas d'erreur, essayer d'utiliser le cache
@@ -221,7 +243,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(OrderLoaded(cachedOrder, isFromCache: true));
         return;
       }
-      
+
       emit(OrderError('Erreur lors du chargement de la commande: $e'));
     }
   }
@@ -232,10 +254,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   ) async {
     try {
       final isOnline = await CacheManager.isOnline();
-      
+
       if (isOnline) {
         await _orderRepository.updateOrderStatus(event.orderId, event.status);
-        
+
         // Recharger la commande mise à jour
         final order = await _orderRepository.getOrder(event.orderId);
         if (order != null) {
@@ -249,7 +271,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           'orderId': event.orderId,
           'status': event.status,
         });
-        
+
         // Mettre à jour le cache local
         final cachedOrder = CacheManager.getCachedOrder(event.orderId);
         if (cachedOrder != null) {
@@ -268,7 +290,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     Emitter<OrderState> emit,
   ) async {
     emit(OrderLoading());
-    
+
     try {
       final sellerId = event.sellerId ?? AuthServices.userId;
       if (sellerId == null) {
@@ -295,8 +317,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       }
 
       final stats = await _orderRepository.getOrderStatsBySeller(sellerId);
-      final totalRevenue = await _orderRepository.getTotalRevenueBySeller(sellerId);
-      
+      final totalRevenue =
+          await _orderRepository.getTotalRevenueBySeller(sellerId);
+
       emit(OrderStatsLoaded(stats, totalRevenue, isFromCache: false));
     } catch (e) {
       emit(OrderError('Erreur lors du chargement des statistiques: $e'));

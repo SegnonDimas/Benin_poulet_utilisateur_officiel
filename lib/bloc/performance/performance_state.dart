@@ -1,9 +1,9 @@
-import 'package:benin_poulet/models/indice_performance.dart';
-import 'package:benin_poulet/models/performance_client.dart';
-import 'package:benin_poulet/models/performance_commercial.dart';
-import 'package:benin_poulet/models/performance_marketing.dart';
-import 'package:benin_poulet/models/performance_production.dart';
-import 'package:benin_poulet/models/performance_produit.dart';
+import 'package:lanhi/models/indice_performance.dart';
+import 'package:lanhi/models/performance_client.dart';
+import 'package:lanhi/models/performance_commercial.dart';
+import 'package:lanhi/models/performance_marketing.dart';
+import 'package:lanhi/models/performance_production.dart';
+import 'package:lanhi/models/performance_produit.dart';
 import 'package:equatable/equatable.dart';
 
 /// États pour le BLoC des performances
@@ -144,3 +144,5 @@ class PerformanceError extends PerformanceState {
   @override
   List<Object?> get props => [message, type];
 }
+
+

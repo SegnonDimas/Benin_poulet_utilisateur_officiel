@@ -1,5 +1,5 @@
-import 'package:benin_poulet/models/order_model.dart';
-import 'package:benin_poulet/models/order_status.dart';
+import 'package:lanhi/models/order_model.dart';
+import 'package:lanhi/models/order_status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Service de gestion des commandes avec Firestore

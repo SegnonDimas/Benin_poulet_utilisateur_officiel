@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
-import 'package:benin_poulet/models/produit.dart';
-import 'package:benin_poulet/models/store.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/services/cart_service.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/core/firebase/firestore/product_repository.dart';
+import 'package:lanhi/models/produit.dart';
+import 'package:lanhi/models/store.dart';
+import 'package:lanhi/services/cache_manager.dart';
+import 'package:lanhi/services/cart_service.dart';
 
 // Modèles adaptés pour l'interface client
 class Product {

@@ -1,12 +1,11 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
-import '../../models_ui/model_commande.dart';
 import '../../../bloc/order/order_bloc.dart';
 import '../../../models/order.dart';
 
@@ -84,9 +83,11 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
 
           if (state is OrdersLoaded) {
             final orders = state.orders;
-            final filteredOrders = _statutSelected == 'Toutes' 
-                ? orders 
-                : orders.where((order) => order.status == _statutSelected).toList();
+            final filteredOrders = _statutSelected == 'Toutes'
+                ? orders
+                : orders
+                    .where((order) => order.status == _statutSelected)
+                    .toList();
 
             return SingleChildScrollView(
               child: SizedBox(
@@ -101,7 +102,8 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: AppText(text: '${filteredOrders.length} commandes'),
+                            child: AppText(
+                                text: '${filteredOrders.length} commandes'),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
@@ -134,9 +136,12 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                                   });
                                   // Recharger les commandes avec le nouveau filtre
                                   if (newValue == 'Toutes') {
-                                    context.read<OrderBloc>().add(LoadVendorOrders());
+                                    context
+                                        .read<OrderBloc>()
+                                        .add(LoadVendorOrders());
                                   } else {
-                                    context.read<OrderBloc>().add(LoadVendorOrders(status: newValue));
+                                    context.read<OrderBloc>().add(
+                                        LoadVendorOrders(status: newValue));
                                   }
                                 },
                               ),
@@ -161,13 +166,19 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                                   Icon(
                                     Icons.shopping_cart_outlined,
                                     size: 64,
-                                    color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary
+                                        .withOpacity(0.5),
                                   ),
                                   const SizedBox(height: 16),
                                   AppText(
                                     text: 'Aucune commande trouvée',
                                     fontSize: mediumText(),
-                                    color: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary
+                                        .withOpacity(0.7),
                                   ),
                                 ],
                               ),
@@ -211,11 +222,11 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
               status = 'Toutes';
               break;
           }
-          
+
           setState(() {
             _statutSelected = status;
           });
-          
+
           if (status == 'Toutes') {
             context.read<OrderBloc>().add(LoadVendorOrders());
           } else {
@@ -315,7 +326,8 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                   SizedBox(
                     child: Row(
                       children: [
-                        AppText(text: '${order.totalAmount.toStringAsFixed(0)}F'),
+                        AppText(
+                            text: '${order.totalAmount.toStringAsFixed(0)}F'),
                         const SizedBox(width: 10),
                         AppText(
                           text: '#${order.orderId.substring(0, 8)}',
@@ -348,7 +360,8 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(order.status),
                       borderRadius: BorderRadius.circular(12),
@@ -437,7 +450,7 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}j';
     } else if (difference.inHours > 0) {
@@ -466,12 +479,14 @@ class _VCommandeListPageState extends State<VCommandeListPage> {
             AppText(text: 'Adresse: ${order.deliveryAddress}'),
             AppText(text: 'Montant: ${order.totalAmount.toStringAsFixed(0)}F'),
             AppText(text: 'Statut: ${_getStatusDisplayName(order.status)}'),
-            AppText(text: 'Date: ${order.orderDate.toString().substring(0, 16)}'),
+            AppText(
+                text: 'Date: ${order.orderDate.toString().substring(0, 16)}'),
             const SizedBox(height: 16),
             AppText(text: 'Produits:', fontWeight: FontWeight.bold),
             ...order.items.map((item) => AppText(
-              text: '• ${item.productName} x${item.quantity} - ${item.totalPrice.toStringAsFixed(0)}F',
-            )),
+                  text:
+                      '• ${item.productName} x${item.quantity} - ${item.totalPrice.toStringAsFixed(0)}F',
+                )),
           ],
         ),
         actions: [

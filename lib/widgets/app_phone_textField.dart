@@ -1,7 +1,7 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class AppPhoneTextField extends StatefulWidget {
   final String? initialCountry;

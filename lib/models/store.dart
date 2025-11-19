@@ -1,6 +1,6 @@
-import 'package:benin_poulet/constants/firebase_collections/storesCollection.dart';
-import 'package:benin_poulet/constants/storeState.dart';
-import 'package:benin_poulet/constants/storeStatus.dart';
+import 'package:lanhi/constants/firebase_collections/storesCollection.dart';
+import 'package:lanhi/constants/storeState.dart';
+import 'package:lanhi/constants/storeStatus.dart';
 
 class Store {
   final String storeId;

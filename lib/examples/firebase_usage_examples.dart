@@ -1,7 +1,7 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/constants/user_profilStatus.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/constants/user_profilStatus.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/models/user.dart';
 
 /// Exemples d'utilisation de la nouvelle architecture Firebase
 class FirebaseUsageExamples {

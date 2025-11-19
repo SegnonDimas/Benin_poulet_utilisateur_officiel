@@ -1,12 +1,12 @@
-import 'package:benin_poulet/bloc/performance/performance_event.dart';
-import 'package:benin_poulet/bloc/performance/performance_state.dart';
-import 'package:benin_poulet/models/indice_performance.dart';
-import 'package:benin_poulet/models/performance_client.dart';
-import 'package:benin_poulet/models/performance_commercial.dart';
-import 'package:benin_poulet/models/performance_marketing.dart';
-import 'package:benin_poulet/models/performance_production.dart';
-import 'package:benin_poulet/models/performance_produit.dart';
-import 'package:benin_poulet/services/performance_service.dart';
+import 'package:lanhi/bloc/performance/performance_event.dart';
+import 'package:lanhi/bloc/performance/performance_state.dart';
+import 'package:lanhi/models/indice_performance.dart';
+import 'package:lanhi/models/performance_client.dart';
+import 'package:lanhi/models/performance_commercial.dart';
+import 'package:lanhi/models/performance_marketing.dart';
+import 'package:lanhi/models/performance_production.dart';
+import 'package:lanhi/models/performance_produit.dart';
+import 'package:lanhi/services/performance_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// BLoC pour gérer les performances du vendeur

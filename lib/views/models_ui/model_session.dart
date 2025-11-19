@@ -1,5 +1,5 @@
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/app_text.dart';

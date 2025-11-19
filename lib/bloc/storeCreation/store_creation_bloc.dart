@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/constants/firebase_collections/sellersCollection.dart';
-import 'package:benin_poulet/constants/firebase_collections/storesCollection.dart';
-import 'package:benin_poulet/constants/storeState.dart';
-import 'package:benin_poulet/constants/storeStatus.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/constants/firebase_collections/sellersCollection.dart';
+import 'package:lanhi/constants/firebase_collections/storesCollection.dart';
+import 'package:lanhi/constants/storeState.dart';
+import 'package:lanhi/constants/storeStatus.dart';
 
 import '../authentification/authentification_bloc.dart';
 

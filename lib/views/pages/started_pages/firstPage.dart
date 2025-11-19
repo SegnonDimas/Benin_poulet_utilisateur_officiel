@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:benin_poulet/constants/imagesPaths.dart';
-import 'package:benin_poulet/tests/blurryContainer.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
+import 'package:lanhi/constants/imagesPaths.dart';
+import 'package:lanhi/tests/blurryContainer.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';

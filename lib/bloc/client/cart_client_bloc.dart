@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:benin_poulet/services/cart_service.dart';
-import 'package:benin_poulet/bloc/client/home_client_bloc.dart';
+import 'package:lanhi/services/cart_service.dart';
+import 'package:lanhi/bloc/client/home_client_bloc.dart';
 
 class CartItem {
   final Product product;

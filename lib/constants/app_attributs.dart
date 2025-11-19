@@ -1,4 +1,4 @@
-import 'package:benin_poulet/constants/imagesPaths.dart';
+import 'package:lanhi/constants/imagesPaths.dart';
 
 class AppAttributes {
   static const String appName = 'LANHI';

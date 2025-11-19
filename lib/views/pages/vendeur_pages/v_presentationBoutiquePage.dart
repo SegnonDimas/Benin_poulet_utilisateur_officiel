@@ -1,14 +1,14 @@
-import 'package:benin_poulet/constants/imagesPaths.dart';
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/constants/imagesPaths.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../bloc/store/store_bloc.dart';
 import '../../models_ui/model_attributBoutique.dart';
@@ -501,21 +501,33 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                           children: [
                             if (store.storeSectors != null)
                               ...store.storeSectors!.map((sector) => AppButton(
-                                  height: appHeightSize(context) * 0.04,
-                                  width: appWidthSize(context) * 0.25,
+                                  //height: appHeightSize(context) * 0.04,
+                                  //width: double.infinity,
+                                  useAligment: false,
                                   color:
-                                      Theme.of(context).colorScheme.background,
-                                  child: AppText(text: sector),
+                                      AppColors.primaryColor.withOpacity(0.1),
+                                  child: AppText(
+                                    text: sector,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.visible,
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.7),
+                                  ),
                                   onTap: () {})),
                             if (store.storeSubsectors != null)
                               ...store.storeSubsectors!.map((subsector) =>
                                   AppButton(
-                                      height: appHeightSize(context) * 0.04,
-                                      width: appWidthSize(context) * 0.25,
+                                      //height: appHeightSize(context) * 0.04,
+                                      //width: null,
+                                      useAligment: false,
                                       color: Theme.of(context)
                                           .colorScheme
                                           .background,
-                                      child: AppText(text: subsector),
+                                      child: AppText(
+                                        text: subsector,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.visible,
+                                      ),
                                       onTap: () {})),
                           ],
                         )
@@ -563,10 +575,14 @@ class _VPresentationBoutiquePageState extends State<VPresentationBoutiquePage> {
                       runSpacing: 5,
                       children: store.storeSectors!
                           .map((sector) => AppButton(
-                              height: appHeightSize(context) * 0.04,
-                              width: appWidthSize(context) * 0.25,
+                              //height: appHeightSize(context) * 0.04,
+                              //width: appWidthSize(context) * 0.25,
+                              useAligment: false,
                               color: Theme.of(context).colorScheme.background,
-                              child: AppText(text: sector),
+                              child: AppText(
+                                  text: sector,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.visible),
                               onTap: () {}))
                           .toList(),
                     ),

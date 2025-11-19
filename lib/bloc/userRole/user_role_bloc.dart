@@ -1,5 +1,5 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/core/firebase/firestore/user_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,10 +1,10 @@
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/core/firebase/firestore/order_repository.dart';
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
-import 'package:benin_poulet/models/order.dart';
-import 'package:benin_poulet/models/store_review.dart';
-import 'package:benin_poulet/models/product_review.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/core/firebase/firestore/order_repository.dart';
+import 'package:lanhi/core/firebase/firestore/product_repository.dart';
+import 'package:lanhi/services/cache_manager.dart';
+import 'package:lanhi/models/order.dart';
+import 'package:lanhi/models/store_review.dart';
+import 'package:lanhi/models/product_review.dart';
 
 class SyncService {
   static final SyncService _instance = SyncService._internal();

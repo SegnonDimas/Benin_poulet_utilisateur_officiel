@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:benin_poulet/bloc/choixCategorie/secteur_bloc.dart';
-import 'package:benin_poulet/models/produit.dart';
-import 'package:benin_poulet/services/products_services.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lanhi/bloc/choixCategorie/secteur_bloc.dart';
+import 'package:lanhi/models/produit.dart';
+import 'package:lanhi/services/products_services.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:reorderables/reorderables.dart';
 

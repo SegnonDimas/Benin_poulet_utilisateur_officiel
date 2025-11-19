@@ -1,8 +1,8 @@
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
-import 'package:benin_poulet/core/firebase/firestore/store_repository.dart';
-import 'package:benin_poulet/core/firebase/firestore/seller_repository.dart';
-import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
-import 'package:benin_poulet/models/produit.dart';
+import 'package:lanhi/core/firebase/firestore/product_repository.dart';
+import 'package:lanhi/core/firebase/firestore/store_repository.dart';
+import 'package:lanhi/core/firebase/firestore/seller_repository.dart';
+import 'package:lanhi/core/firebase/firestore/user_repository.dart';
+import 'package:lanhi/models/produit.dart';
 
 class StoreDetailsService {
   static final StoreDetailsService _instance = StoreDetailsService._internal();

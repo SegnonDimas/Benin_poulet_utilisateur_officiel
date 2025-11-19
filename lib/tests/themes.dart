@@ -1,4 +1,4 @@
-import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class ThemesPage extends StatefulWidget {

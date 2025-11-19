@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/constants/user_profilStatus.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/services/user_data_service.dart';
-import 'package:benin_poulet/utils/app_utils.dart' show AppUtils, InfoType;
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/models_ui/model_ProfilListTile.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/constants/user_profilStatus.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/services/user_data_service.dart';
+import 'package:lanhi/utils/app_utils.dart' show AppUtils, InfoType;
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/models_ui/model_ProfilListTile.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../constants/app_attributs.dart';

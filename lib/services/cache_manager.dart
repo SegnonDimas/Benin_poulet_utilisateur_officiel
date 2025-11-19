@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:benin_poulet/models/store.dart';
-import 'package:benin_poulet/models/produit.dart';
-import 'package:benin_poulet/models/order.dart';
-import 'package:benin_poulet/models/store_review.dart';
-import 'package:benin_poulet/models/product_review.dart';
+import 'package:lanhi/models/store.dart';
+import 'package:lanhi/models/produit.dart';
+import 'package:lanhi/models/order.dart';
+import 'package:lanhi/models/store_review.dart';
+import 'package:lanhi/models/product_review.dart';
 
 class CacheManager {
   static final CacheManager _instance = CacheManager._internal();

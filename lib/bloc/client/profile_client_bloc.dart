@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:benin_poulet/services/user_data_service.dart';
+import 'package:lanhi/services/user_data_service.dart';
 
 // Modèles temporaires pour les placeholders
 class UserProfile {

@@ -1,8 +1,8 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../../../bloc/product/product_bloc.dart';
 import '../../../../../services/products_services.dart';
@@ -28,7 +28,8 @@ class _EnAttenteProductsPageState extends State<EnAttenteProductsPage> {
       builder: (context, produitsEnAttenteState) {
         // liste des produits enAttente filtrés (par recherche utilisateur)
         if (produitsEnAttenteState is ProduitFiltre) {
-          final list_produits_enAttente_filtre = produitsEnAttenteState.produits;
+          final list_produits_enAttente_filtre =
+              produitsEnAttenteState.produits;
 
           if (list_produits_enAttente_filtre.isEmpty) {
             return _buildEmptyState(context, 'Aucun produit en attente trouvé');
@@ -41,7 +42,9 @@ class _EnAttenteProductsPageState extends State<EnAttenteProductsPage> {
         // liste de tous les produits enAttente
         if (produitsEnAttenteState is ProductsLoaded) {
           final list_produits_enAttente = produitsEnAttenteState.products
-              .where((p) => p.productStatus == 'pending' || p.productStatus == 'en attente')
+              .where((p) =>
+                  p.productStatus == 'pending' ||
+                  p.productStatus == 'en attente')
               .toList();
 
           if (list_produits_enAttente.isEmpty) {

@@ -1,11 +1,11 @@
-import 'package:benin_poulet/core/firebase/firestore/error_report_repository.dart';
-import 'package:benin_poulet/models/error_report.dart';
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/core/firebase/firestore/error_report_repository.dart';
+import 'package:lanhi/models/error_report.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../../../bloc/product/product_bloc.dart';
 import '../../../../../services/products_services.dart';
@@ -45,7 +45,8 @@ class _ActifsProductsPageState extends State<ActifsProductsPage> {
         // liste de tous les produits actifs
         if (produitsActifsState is ProductsLoaded) {
           final list_produits_actifs = produitsActifsState.products
-              .where((p) => p.productStatus == 'active' || p.productStatus == 'actif')
+              .where((p) =>
+                  p.productStatus == 'active' || p.productStatus == 'actif')
               .toList();
 
           if (list_produits_actifs.isEmpty) {

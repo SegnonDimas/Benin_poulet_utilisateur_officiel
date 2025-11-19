@@ -1,8 +1,8 @@
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../../../bloc/product/product_bloc.dart';
 import '../../../../../services/products_services.dart';
@@ -41,7 +41,8 @@ class _InactifsProductsPageState extends State<InactifsProductsPage> {
         // liste de tous les produits inactifs
         if (produitsInactifsState is ProductsLoaded) {
           final list_produits_inactifs = produitsInactifsState.products
-              .where((p) => p.productStatus == 'inactive' || p.productStatus == 'inactif')
+              .where((p) =>
+                  p.productStatus == 'inactive' || p.productStatus == 'inactif')
               .toList();
 
           if (list_produits_inactifs.isEmpty) {

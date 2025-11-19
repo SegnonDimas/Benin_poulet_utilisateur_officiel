@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:lanhi/core/firebase/firestore/product_repository.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

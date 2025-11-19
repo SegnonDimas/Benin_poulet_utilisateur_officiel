@@ -2,7 +2,7 @@
 // bloc/secteur_state.dart
 // =========================
 
-import 'package:benin_poulet/models/sellerSector.dart';
+import 'package:lanhi/models/sellerSector.dart';
 
 class SecteurState {
   final List<SellerSector> sectors;

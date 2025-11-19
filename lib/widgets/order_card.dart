@@ -1,10 +1,10 @@
-import 'package:benin_poulet/models/order_model.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
-import 'package:benin_poulet/widgets/order_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lanhi/models/order_model.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
+import 'package:lanhi/widgets/order_status_chip.dart';
 
 /// Widget pour afficher une carte de commande
 class OrderCard extends StatelessWidget {

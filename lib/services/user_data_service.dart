@@ -1,10 +1,10 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
-import 'package:benin_poulet/core/firebase/firestore/seller_repository.dart';
-import 'package:benin_poulet/models/seller.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/core/firebase/firestore/user_repository.dart';
+import 'package:lanhi/core/firebase/firestore/seller_repository.dart';
+import 'package:lanhi/models/seller.dart';
+import 'package:lanhi/models/user.dart';
 
 /// Service pour récupérer les données de l'utilisateur connecté
 class UserDataService {

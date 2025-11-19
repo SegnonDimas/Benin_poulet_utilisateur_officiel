@@ -1,6 +1,6 @@
 /*
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/views/pages/connexion_pages/loginPage.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/views/pages/connexion_pages/loginPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';

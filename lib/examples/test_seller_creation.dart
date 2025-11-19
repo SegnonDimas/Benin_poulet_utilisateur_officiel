@@ -1,6 +1,5 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
 
 /// Exemple de test pour vérifier la création complète d'un vendeur
 class TestSellerCreation {

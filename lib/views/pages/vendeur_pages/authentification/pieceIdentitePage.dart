@@ -1,9 +1,9 @@
-import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
-import 'package:benin_poulet/views/colors/app_colors.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_shaderMask.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
+import 'package:lanhi/bloc/authentification/authentification_bloc.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_shaderMask.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

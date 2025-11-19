@@ -1,6 +1,6 @@
-// import 'package:benin_poulet/widgets/app_button.dart'; // Non utilisé - remplacé par GestureDetector
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_button.dart';
+// import 'package:lanhi/widgets/app_button.dart'; // Non utilisé - remplacé par GestureDetector
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

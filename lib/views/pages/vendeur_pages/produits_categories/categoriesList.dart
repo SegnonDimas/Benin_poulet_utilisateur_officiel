@@ -1,10 +1,9 @@
-import 'package:benin_poulet/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
 
 import '../../../../bloc/choixCategorie/secteur_bloc.dart';
 import '../../../../bloc/product/product_bloc.dart';
-import '../../../../models/produit.dart';
 import '../../../../services/products_services.dart';
 
 class CategoriesList extends StatefulWidget {
@@ -44,7 +43,7 @@ class _CategoriesListState extends State<CategoriesList>
               return ProductServices.showProducts(
                   context, list_produits_filtres);
             }
-            
+
             if (produitsState is ProductsLoaded) {
               final list_produits = produitsState.products
                   .where((p) =>
@@ -53,18 +52,19 @@ class _CategoriesListState extends State<CategoriesList>
                   .toList();
               return ProductServices.showProducts(context, list_produits);
             }
-            
+
             // États de chargement et d'erreur
             if (produitsState is ProductLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (produitsState is ProductError) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text(
                       'Erreur: ${produitsState.message}',
@@ -75,7 +75,7 @@ class _CategoriesListState extends State<CategoriesList>
                 ),
               );
             }
-            
+
             // État initial ou autres états
             return const Center(
               child: Text('Aucun produit trouvé'),

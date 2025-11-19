@@ -1,12 +1,12 @@
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/actifs_productsPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/en_attente_productPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/inactifs_productsPage.dart';
-import 'package:benin_poulet/views/pages/vendeur_pages/produits_categories/product_list_pages/suspendus_productsPage.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/product_list_pages/actifs_productsPage.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/product_list_pages/en_attente_productPage.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/product_list_pages/inactifs_productsPage.dart';
+import 'package:lanhi/views/pages/vendeur_pages/produits_categories/product_list_pages/suspendus_productsPage.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 class ProductsList extends StatefulWidget {
   const ProductsList({super.key});
@@ -123,6 +123,7 @@ class _ProductsListState extends State<ProductsList> {
 
 class ProductImagesPathIndexProvider extends ChangeNotifier {
   int _indexProductImage = 0;
+
   int get indexProductImage => _indexProductImage;
 
   void indexProductImageInitialize() {

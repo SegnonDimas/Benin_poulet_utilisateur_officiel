@@ -160,3 +160,5 @@ class ObjectifPerformance {
   double get progression =>
       cible > 0 ? (actuel / cible * 100).clamp(0, 100) : 0;
 }
+
+

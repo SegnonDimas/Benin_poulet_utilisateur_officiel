@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:benin_poulet/constants/app_attributs.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:lanhi/constants/app_attributs.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

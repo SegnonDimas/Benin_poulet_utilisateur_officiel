@@ -1,5 +1,5 @@
-import 'package:benin_poulet/constants/routes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
+import 'package:lanhi/constants/routes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';

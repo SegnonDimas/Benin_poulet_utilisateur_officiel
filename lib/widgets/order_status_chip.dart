@@ -1,6 +1,6 @@
-import 'package:benin_poulet/models/order_status.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:lanhi/models/order_status.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 /// Widget pour afficher un chip de statut de commande
 class OrderStatusChip extends StatelessWidget {

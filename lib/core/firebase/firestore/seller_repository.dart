@@ -1,6 +1,6 @@
-import 'package:benin_poulet/constants/firebase_collections/firebaseCollections.dart';
-import 'package:benin_poulet/constants/firebase_collections/sellersCollection.dart';
-import 'package:benin_poulet/models/seller.dart';
+import 'package:lanhi/constants/firebase_collections/firebaseCollections.dart';
+import 'package:lanhi/constants/firebase_collections/sellersCollection.dart';
+import 'package:lanhi/models/seller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SellerRepository {

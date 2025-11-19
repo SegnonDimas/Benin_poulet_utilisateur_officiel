@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/store_review_repository.dart';
-import 'package:benin_poulet/models/store_review.dart';
+import 'package:lanhi/core/firebase/firestore/store_review_repository.dart';
+import 'package:lanhi/models/store_review.dart';
 
 // Événements
 abstract class StoreReviewEvent {}

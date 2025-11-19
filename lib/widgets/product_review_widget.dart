@@ -1,8 +1,8 @@
-import 'package:benin_poulet/bloc/product_review/product_review_bloc.dart';
-import 'package:benin_poulet/models/product_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lanhi/bloc/product_review/product_review_bloc.dart';
+import 'package:lanhi/models/product_review.dart';
 
 class ProductReviewWidget extends StatefulWidget {
   final String productId;

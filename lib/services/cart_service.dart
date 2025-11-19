@@ -1,5 +1,5 @@
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/core/firebase/firestore/user_repository.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/core/firebase/firestore/user_repository.dart';
 
 /// Service pour gérer le panier de l'utilisateur
 class CartService {

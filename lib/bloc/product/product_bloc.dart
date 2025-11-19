@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/core/firebase/firestore/product_repository.dart';
-import 'package:benin_poulet/core/firebase/auth/auth_services.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/produit.dart';
-import 'package:benin_poulet/services/cache_manager.dart';
+import 'package:lanhi/core/firebase/firestore/product_repository.dart';
+import 'package:lanhi/core/firebase/auth/auth_services.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/models/produit.dart';
+import 'package:lanhi/services/cache_manager.dart';
 
 // Événements
 abstract class ProductEvent {}

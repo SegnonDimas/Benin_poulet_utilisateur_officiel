@@ -1,6 +1,6 @@
-import 'package:benin_poulet/models/order_model.dart';
-import 'package:benin_poulet/models/order_status.dart';
-import 'package:benin_poulet/services/user_data_service.dart';
+import 'package:lanhi/models/order_model.dart';
+import 'package:lanhi/models/order_status.dart';
+import 'package:lanhi/services/user_data_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Classe utilitaire pour diagnostiquer les problèmes de commandes

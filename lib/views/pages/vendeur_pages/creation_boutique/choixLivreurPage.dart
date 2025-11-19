@@ -1,5 +1,5 @@
-import 'package:benin_poulet/utils/app_utils.dart';
-import 'package:benin_poulet/widgets/app_textField.dart';
+import 'package:lanhi/utils/app_utils.dart';
+import 'package:lanhi/widgets/app_textField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';

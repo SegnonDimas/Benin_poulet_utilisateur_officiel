@@ -1,4 +1,4 @@
-import 'package:benin_poulet/models/order_status.dart';
+import 'package:lanhi/models/order_status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Modèle de commande

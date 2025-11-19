@@ -3,9 +3,9 @@
 // bloc/secteur_bloc.dart
 // =========================
 
-import 'package:benin_poulet/tests/secteur_vendeur/bloc/secteur_event.dart';
-import 'package:benin_poulet/tests/secteur_vendeur/bloc/secteur_state.dart';
-import 'package:benin_poulet/tests/secteur_vendeur/secteur_model.dart';
+import 'package:lanhi/tests/secteur_vendeur/bloc/secteur_event.dart';
+import 'package:lanhi/tests/secteur_vendeur/bloc/secteur_state.dart';
+import 'package:lanhi/tests/secteur_vendeur/secteur_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SecteurBloc extends Bloc<SecteurEvent, SecteurState> {

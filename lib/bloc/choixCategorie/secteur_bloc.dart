@@ -2,9 +2,9 @@
 // bloc/secteur_bloc.dart
 // =========================
 
-import 'package:benin_poulet/bloc/choixCategorie/secteur_event.dart';
-import 'package:benin_poulet/bloc/choixCategorie/secteur_state.dart';
-import 'package:benin_poulet/models/sellerSector.dart';
+import 'package:lanhi/bloc/choixCategorie/secteur_event.dart';
+import 'package:lanhi/bloc/choixCategorie/secteur_state.dart';
+import 'package:lanhi/models/sellerSector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SecteurBloc extends Bloc<SecteurEvent, SecteurState> {

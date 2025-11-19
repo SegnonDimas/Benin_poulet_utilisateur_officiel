@@ -1,9 +1,8 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/constants/user_profilStatus.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/seller.dart';
-import 'package:benin_poulet/models/store.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/constants/user_profilStatus.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/models/seller.dart';
+import 'package:lanhi/models/user.dart';
 
 /// Exemple qui montre que toutes les données sont envoyées vers Firebase,
 /// même si elles sont null
@@ -16,14 +15,17 @@ class NullDataExample {
       userId: 'user_with_nulls',
       authProvider: 'email',
       authIdentifier: 'user@example.com',
-      fullName: null, // Donnée null
-      photoUrl: null, // Donnée null
+      fullName: null,
+      // Donnée null
+      photoUrl: null,
+      // Donnée null
       accountStatus: 'active',
       role: UserRoles.VISITOR,
       isAnonymous: false,
       profilStatus: UserProfilStatus.unverified,
       createdAt: DateTime.now(),
-      lastLogin: null, // Donnée null
+      lastLogin: null,
+      // Donnée null
       password: null, // Donnée null
     );
 
@@ -49,14 +51,21 @@ class NullDataExample {
       sellerId: 'seller_with_nulls',
       userId: 'seller_with_nulls',
       createdAt: DateTime.now(),
-      deliveryInfos: null, // Donnée null
-      documentsVerified: null, // Donnée null
-      fiscality: null, // Donnée null
-      identityCardUrl: null, // Donnée null
-      mobileMoney: null, // Donnée null
-      sectors: null, // Donnée null
+      deliveryInfos: null,
+      // Donnée null
+      documentsVerified: null,
+      // Donnée null
+      fiscality: null,
+      // Donnée null
+      identityCardUrl: null,
+      // Donnée null
+      mobileMoney: null,
+      // Donnée null
+      sectors: null,
+      // Donnée null
       storeIds: [],
-      storeInfos: null, // Donnée null
+      storeInfos: null,
+      // Donnée null
       subSectors: null, // Donnée null
     );
 
@@ -67,21 +76,36 @@ class NullDataExample {
   Future<void> createStoreWithNullData() async {
     final storeId = await _firestoreService.createCompleteStore(
       sellerId: 'seller_with_nulls',
-      mobileMoney: null, // Donnée null
-      sellerOwnDeliver: null, // Donnée null
-      storeAddress: null, // Donnée null
-      storeComments: null, // Donnée null
-      storeCoverPath: null, // Donnée null
-      storeDescription: null, // Donnée null
-      storeFiscalType: null, // Donnée null
-      storeInfos: null, // Donnée null
-      storeLocation: null, // Donnée null
-      storeLogoPath: null, // Donnée null
-      storeProducts: null, // Donnée null
-      storeRatings: null, // Donnée null
-      storeSectors: null, // Donnée null
-      storeState: null, // Donnée null
-      storeStatus: null, // Donnée null
+      mobileMoney: null,
+      // Donnée null
+      sellerOwnDeliver: null,
+      // Donnée null
+      storeAddress: null,
+      // Donnée null
+      storeComments: null,
+      // Donnée null
+      storeCoverPath: null,
+      // Donnée null
+      storeDescription: null,
+      // Donnée null
+      storeFiscalType: null,
+      // Donnée null
+      storeInfos: null,
+      // Donnée null
+      storeLocation: null,
+      // Donnée null
+      storeLogoPath: null,
+      // Donnée null
+      storeProducts: null,
+      // Donnée null
+      storeRatings: null,
+      // Donnée null
+      storeSectors: null,
+      // Donnée null
+      storeState: null,
+      // Donnée null
+      storeStatus: null,
+      // Donnée null
       storeSubsectors: null, // Donnée null
     );
 
@@ -121,9 +145,11 @@ class NullDataExample {
     final storeId = await _firestoreService.createCompleteStore(
       sellerId: 'seller_mixed',
       storeAddress: '123 Rue Test',
-      storeDescription: null, // Null
+      storeDescription: null,
+      // Null
       storeSectors: ['alimentation'],
-      storeSubsectors: null, // Null
+      storeSubsectors: null,
+      // Null
       storeInfos: {
         'name': 'Boutique Test',
         'phone': '+22998765432',
@@ -207,4 +233,3 @@ void main() async {
   // await examples.verifyDataSent();
   // await examples.compareDataBeforeAfter();
 }
-

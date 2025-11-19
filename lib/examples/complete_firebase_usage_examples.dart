@@ -1,6 +1,5 @@
-import 'package:benin_poulet/constants/userRoles.dart';
-import 'package:benin_poulet/core/firebase/firestore/firestore_service.dart';
-import 'package:benin_poulet/models/user.dart';
+import 'package:lanhi/constants/userRoles.dart';
+import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
 
 /// Exemples complets d'utilisation de la nouvelle architecture Firebase
 /// avec toutes les informations selon les collections définies
@@ -49,7 +48,8 @@ class CompleteFirebaseUsageExamples {
         'locationDescription': 'Zone commerciale du centre-ville',
         'sellerOwnDeliver': true,
       },
-      documentsVerified: false, // À vérifier par l'admin
+      documentsVerified: false,
+      // À vérifier par l'admin
       fiscality: {
         'taxId': 'TAX123456',
         'fiscalType': 'auto-entrepreneur',
@@ -72,7 +72,8 @@ class CompleteFirebaseUsageExamples {
         },
       ],
       sectors: ['alimentation', 'boissons'],
-      storeIds: [], // Liste vide au début
+      storeIds: [],
+      // Liste vide au début
       storeInfos: {
         'name': 'Fruits & Légumes Marie',
         'phone': '+22912345678',

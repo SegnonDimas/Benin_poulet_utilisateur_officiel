@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:benin_poulet/bloc/store_review/store_review_bloc.dart';
-import 'package:benin_poulet/models/store_review.dart';
 import 'package:intl/intl.dart';
+import 'package:lanhi/bloc/store_review/store_review_bloc.dart';
+import 'package:lanhi/models/store_review.dart';
 
 class StoreReviewWidget extends StatefulWidget {
   final String storeId;
@@ -27,7 +27,9 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
   void initState() {
     super.initState();
     context.read<StoreReviewBloc>().add(LoadStoreReviews(widget.storeId));
-    context.read<StoreReviewBloc>().add(CheckUserReview(widget.userId, widget.storeId));
+    context
+        .read<StoreReviewBloc>()
+        .add(CheckUserReview(widget.userId, widget.storeId));
     context.read<StoreReviewBloc>().add(GetStoreRatingStats(widget.storeId));
   }
 
@@ -122,9 +124,9 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
               return const SizedBox.shrink();
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Formulaire d'ajout d'avis
           if (!_hasUserReviewed) ...[
             Card(
@@ -141,7 +143,7 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Sélection des étoiles
                     Row(
                       children: [
@@ -154,7 +156,9 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                               });
                             },
                             child: Icon(
-                              index < _selectedStars ? Icons.star : Icons.star_border,
+                              index < _selectedStars
+                                  ? Icons.star
+                                  : Icons.star_border,
                               color: Colors.amber,
                               size: 30,
                             ),
@@ -162,9 +166,9 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                         }),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Champ de message
                     TextField(
                       controller: _messageController,
@@ -175,9 +179,9 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                         hintText: 'Partagez votre expérience...',
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Bouton de soumission
                     SizedBox(
                       width: double.infinity,
@@ -186,13 +190,13 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                             ? null
                             : () {
                                 context.read<StoreReviewBloc>().add(
-                                  AddStoreReview(
-                                    userId: widget.userId,
-                                    storeId: widget.storeId,
-                                    stars: _selectedStars,
-                                    message: _messageController.text.trim(),
-                                  ),
-                                );
+                                      AddStoreReview(
+                                        userId: widget.userId,
+                                        storeId: widget.storeId,
+                                        stars: _selectedStars,
+                                        message: _messageController.text.trim(),
+                                      ),
+                                    );
                               },
                         child: const Text('Publier l\'avis'),
                       ),
@@ -203,7 +207,7 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
             ),
             const SizedBox(height: 16),
           ],
-          
+
           // Liste des avis
           BlocBuilder<StoreReviewBloc, StoreReviewState>(
             builder: (context, state) {
@@ -224,7 +228,7 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                     ),
                   );
                 }
-                
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -250,7 +254,7 @@ class _StoreReviewWidgetState extends State<StoreReviewWidget> {
                   ),
                 );
               }
-              
+
               return const SizedBox.shrink();
             },
           ),

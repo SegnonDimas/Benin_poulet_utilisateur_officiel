@@ -1,13 +1,12 @@
-import 'package:benin_poulet/bloc/authentification/authentification_bloc.dart';
-import 'package:benin_poulet/views/sizes/app_sizes.dart';
-import 'package:benin_poulet/views/sizes/text_sizes.dart';
-import 'package:benin_poulet/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'dart:io';
+import 'package:lanhi/bloc/authentification/authentification_bloc.dart';
+import 'package:lanhi/views/sizes/app_sizes.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 
 import '../../../models_ui/model_photoSelecteur.dart';
 
@@ -78,19 +77,21 @@ class PhotoPageState extends State<PhotoPage> {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: (index == 0 && _photoRecto.isNotEmpty) || 
-                                   (index == 1 && _photoVerso.isNotEmpty)
+                            color: (index == 0 && _photoRecto.isNotEmpty) ||
+                                    (index == 1 && _photoVerso.isNotEmpty)
                                 ? Colors.green
                                 : Colors.grey.withOpacity(0.3),
-                            width: (index == 0 && _photoRecto.isNotEmpty) || 
-                                   (index == 1 && _photoVerso.isNotEmpty) ? 2 : 1,
+                            width: (index == 0 && _photoRecto.isNotEmpty) ||
+                                    (index == 1 && _photoVerso.isNotEmpty)
+                                ? 2
+                                : 1,
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ModelPhotoSelecteur(
                           title: _titrePiece[index],
-                          description: (index == 0 && _photoRecto.isNotEmpty) || 
-                                       (index == 1 && _photoVerso.isNotEmpty)
+                          description: (index == 0 && _photoRecto.isNotEmpty) ||
+                                  (index == 1 && _photoVerso.isNotEmpty)
                               ? 'Photo prise ✓'
                               : _descriptionPiece[index],
                           trailing: _trailing[index],
@@ -160,14 +161,14 @@ class PhotoPageState extends State<PhotoPage> {
 
   Future<void> _takePhoto(int photoIndex) async {
     final ImagePicker picker = ImagePicker();
-    
+
     // Afficher un dialogue pour choisir la source
     final String? source = await _showImageSourceDialog();
     if (source == null) return;
-    
+
     try {
       XFile? image;
-      
+
       if (source == 'camera') {
         image = await picker.pickImage(
           source: ImageSource.camera,
@@ -179,7 +180,7 @@ class PhotoPageState extends State<PhotoPage> {
           imageQuality: 80,
         );
       }
-      
+
       if (image != null) {
         setState(() {
           switch (photoIndex) {
@@ -194,7 +195,7 @@ class PhotoPageState extends State<PhotoPage> {
               break;
           }
         });
-        
+
         _updateAuthentificationState();
       }
     } catch (e) {
@@ -239,13 +240,13 @@ class PhotoPageState extends State<PhotoPage> {
     final currentState = context.read<AuthentificationBloc>().state;
     if (currentState is AuthentificationGlobalState) {
       // Créer un nouvel événement avec les données mises à jour
-              final event = SubmitPhotoDocuments(
-          idDocumentPhoto: {
-            'recto': _photoRecto,
-            'verso': _photoVerso,
-            'selfie': _photoSelfie,
-          },
-        );
+      final event = SubmitPhotoDocuments(
+        idDocumentPhoto: {
+          'recto': _photoRecto,
+          'verso': _photoVerso,
+          'selfie': _photoSelfie,
+        },
+      );
       context.read<AuthentificationBloc>().add(event);
     }
   }
