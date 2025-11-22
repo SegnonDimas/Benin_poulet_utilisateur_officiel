@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lanhi/bloc/authentification/authentification_bloc.dart';
-import 'package:lanhi/views/sizes/app_sizes.dart';
 import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:lanhi/widgets/app_text.dart';
 
@@ -57,7 +56,7 @@ class PhotoPageState extends State<PhotoPage> {
             // texte
             AppText(
               text: 'Prendre en photo votre pièce',
-              fontSize: smallText() * 1.1,
+              fontSize: context.smallText * 1.1,
             ),
             const SizedBox(
               height: 10,
@@ -68,8 +67,7 @@ class PhotoPageState extends State<PhotoPage> {
               child: Column(
                 children: List.generate(_titrePiece.length - 1, (index) {
                   return Padding(
-                    padding:
-                        EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
+                    padding: EdgeInsets.only(bottom: context.height * 0.02),
                     child: GestureDetector(
                       onTap: () {
                         _takePhoto(index);
@@ -110,7 +108,7 @@ class PhotoPageState extends State<PhotoPage> {
             // texte
             AppText(
               text: 'Prendre une photo de vous avec votre pièce',
-              fontSize: smallText() * 1.1,
+              fontSize: context.smallText * 1.1,
             ),
             // espace
             const SizedBox(
@@ -120,8 +118,7 @@ class PhotoPageState extends State<PhotoPage> {
               child: Column(
                 children: List.generate(1, (index) {
                   return Padding(
-                    padding:
-                        EdgeInsets.only(bottom: appHeightSize(context) * 0.02),
+                    padding: EdgeInsets.only(bottom: context.height * 0.02),
                     child: GestureDetector(
                       onTap: () {
                         _takePhoto(2); // Index 2 pour le selfie

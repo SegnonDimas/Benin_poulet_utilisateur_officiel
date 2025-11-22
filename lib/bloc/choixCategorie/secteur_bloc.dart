@@ -2,10 +2,10 @@
 // bloc/secteur_bloc.dart
 // =========================
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lanhi/bloc/choixCategorie/secteur_event.dart';
 import 'package:lanhi/bloc/choixCategorie/secteur_state.dart';
 import 'package:lanhi/models/sellerSector.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SecteurBloc extends Bloc<SecteurEvent, SecteurState> {
   SecteurBloc() : super(SecteurState(sectors: initialSectors)) {
@@ -58,6 +58,22 @@ class SecteurBloc extends Bloc<SecteurEvent, SecteurState> {
 // =========================
 
 final initialSectors = <SellerSector>[
+  /* SellerSector(
+      id: 1, name: "Runinants", isSelected: false, categories: [], image: ''),
+  SellerSector(
+      id: 1,
+      name: "Non runinants",
+      isSelected: false,
+      categories: [
+        Category(name: "Volaille", isSelected: false),
+        Category(name: "Pisciculture", isSelected: false),
+        Category(name: "Porciculture", isSelected: false),
+        Category(name: "Cuniculture", isSelected: false),
+        Category(name: "Apiculture", isSelected: false),
+      ],
+      image: ''),
+  */
+
   SellerSector(
     id: 1,
     name: 'Volaille',
@@ -84,6 +100,7 @@ final initialSectors = <SellerSector>[
       Category(name: 'Poisson Chat', isSelected: false),
     ],
   ),
+/*
   SellerSector(
     id: 3,
     name: 'Betail',
@@ -97,7 +114,7 @@ final initialSectors = <SellerSector>[
       Category(name: 'Accessoires', isSelected: false),
       Category(name: 'Provende', isSelected: false),
     ],
-  ),
+  ),*/
   SellerSector(
     id: 4,
     name: 'Porciculture',
@@ -156,30 +173,3 @@ final initialSectors = <SellerSector>[
     ],
   ),
 ];
-
-/*final initialSectors = <SellerSector>[
-  SellerSector(
-    id: 1,
-    name: 'Volaille',
-    isSelected: false,
-    categories: [
-      Category(name: 'Poulet', isSelected: false),
-      Category(name: 'Pigeon', isSelected: false),
-      Category(name: 'Pintade', isSelected: false),
-      Category(name: 'Dinde', isSelected: false),
-      Category(name: 'Accessoires', isSelected: false),
-      Category(name: 'Provende', isSelected: false),
-    ],
-  ),
-  SellerSector(
-    id: 2,
-    name: 'Pisciculture',
-    isSelected: false,
-    categories: [
-      Category(name: 'Tilapia', isSelected: false),
-      Category(name: 'Carpe', isSelected: false),
-      Category(name: 'Faux Bar', isSelected: false),
-      Category(name: 'Poisson Chat', isSelected: false),
-    ],
-  ),
-];*/

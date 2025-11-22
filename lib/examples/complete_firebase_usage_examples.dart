@@ -1,5 +1,6 @@
 import 'package:lanhi/constants/userRoles.dart';
 import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/utils/app_utils.dart';
 
 /// Exemples complets d'utilisation de la nouvelle architecture Firebase
 /// avec toutes les informations selon les collections définies
@@ -23,7 +24,7 @@ class CompleteFirebaseUsageExamples {
       password: 'hashedPassword123',
     );
 
-    print('Utilisateur complet créé avec succès');
+    AppUtils.debugPrint('Utilisateur complet créé avec succès');
   }
 
   /// Exemple 2: Création d'un vendeur complet avec toutes les informations
@@ -82,7 +83,7 @@ class CompleteFirebaseUsageExamples {
       subSectors: ['fruits', 'légumes'],
     );
 
-    print('Vendeur complet créé avec succès');
+    AppUtils.debugPrint('Vendeur complet créé avec succès');
   }
 
   /// Exemple 3: Création d'une boutique complète avec toutes les informations
@@ -130,7 +131,7 @@ class CompleteFirebaseUsageExamples {
       storeSubsectors: ['fruits', 'légumes'],
     );
 
-    print('Boutique complète créée avec l\'ID: $storeId');
+    AppUtils.debugPrint('Boutique complète créée avec l\'ID: $storeId');
   }
 
   /// Exemple 4: Création d'un vendeur avec boutique en une seule opération
@@ -181,7 +182,8 @@ class CompleteFirebaseUsageExamples {
       },
     );
 
-    print('Vendeur avec boutique créé avec succès. Store ID: $storeId');
+    AppUtils.debugPrint(
+        'Vendeur avec boutique créé avec succès. Store ID: $storeId');
   }
 
   /// Exemple 5: Mise à jour des informations de livraison
@@ -194,7 +196,7 @@ class CompleteFirebaseUsageExamples {
       sellerOwnDeliver: false, // Maintenant utilise un service de livraison
     );
 
-    print('Informations de livraison mises à jour');
+    AppUtils.debugPrint('Informations de livraison mises à jour');
   }
 
   /// Exemple 6: Mise à jour des informations de mobile money
@@ -206,12 +208,12 @@ class CompleteFirebaseUsageExamples {
       phone: '+22912345678',
     );
 
-    print('Informations de mobile money mises à jour');
+    AppUtils.debugPrint('Informations de mobile money mises à jour');
   }
 
   /// Exemple 7: Workflow complet - Création d'un écosystème complet
   Future<void> completeEcosystemExample() async {
-    print('=== Début du workflow complet ===');
+    AppUtils.debugPrint('=== Début du workflow complet ===');
 
     // 1. Créer un utilisateur administrateur
     await _firestoreService.createCompleteUser(
@@ -294,15 +296,17 @@ class CompleteFirebaseUsageExamples {
     final userData = await _firestoreService.getUserWithSellerInfo('seller001');
     final sellerData = await _firestoreService.getSellerWithStores('seller001');
 
-    print('Données utilisateur: ${userData != null ? 'OK' : 'Erreur'}');
-    print('Données vendeur: ${sellerData != null ? 'OK' : 'Erreur'}');
-    print('Boutiques créées: $store1Id, $store2Id');
+    AppUtils.debugPrint(
+        'Données utilisateur: ${userData != null ? 'OK' : 'Erreur'}');
+    AppUtils.debugPrint(
+        'Données vendeur: ${sellerData != null ? 'OK' : 'Erreur'}');
+    AppUtils.debugPrint('Boutiques créées: $store1Id, $store2Id');
 
     // 5. Afficher les statistiques
     final stats = await _firestoreService.getGlobalStats();
-    print('Statistiques: ${stats.toString()}');
+    AppUtils.debugPrint('Statistiques: ${stats.toString()}');
 
-    print('=== Workflow complet terminé ===');
+    AppUtils.debugPrint('=== Workflow complet terminé ===');
   }
 
   /// Exemple 8: Recherche et filtrage
@@ -310,27 +314,30 @@ class CompleteFirebaseUsageExamples {
     // Rechercher des boutiques par secteur
     final alimentationStores =
         await _firestoreService.searchStoresBySector('alimentation');
-    print('Boutiques alimentation trouvées: ${alimentationStores.length}');
+    AppUtils.debugPrint(
+        'Boutiques alimentation trouvées: ${alimentationStores.length}');
 
     // Rechercher des vendeurs par secteur
     final alimentationSellers =
         await _firestoreService.searchSellersBySector('alimentation');
-    print('Vendeurs alimentation trouvés: ${alimentationSellers.length}');
+    AppUtils.debugPrint(
+        'Vendeurs alimentation trouvés: ${alimentationSellers.length}');
 
     // Afficher les détails
     for (final store in alimentationStores) {
-      print('- Boutique: ${store.storeInfos?['name']}');
+      AppUtils.debugPrint('- Boutique: ${store.storeInfos?['name']}');
     }
 
     for (final seller in alimentationSellers) {
-      print('- Vendeur: ${seller.sellerId} (${seller.sectors?.join(', ')})');
+      AppUtils.debugPrint(
+          '- Vendeur: ${seller.sellerId} (${seller.sectors?.join(', ')})');
     }
   }
 
   /// Exemple 9: Suppression d'un écosystème complet
   Future<void> deleteEcosystemExample() async {
     await _firestoreService.deleteSellerAndStores('seller001');
-    print('Écosystème vendeur supprimé avec succès');
+    AppUtils.debugPrint('Écosystème vendeur supprimé avec succès');
   }
 }
 

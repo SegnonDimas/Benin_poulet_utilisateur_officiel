@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:lanhi/views/sizes/text_sizes.dart';
-import 'package:lanhi/widgets/app_text.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lanhi/views/sizes/text_sizes.dart';
+import 'package:lanhi/widgets/app_text.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -25,7 +26,7 @@ class AppUtils {
           child: Container(
             width: width,
             padding:
-                EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
+            EdgeInsets.only(top: 8.0, right: 4.0, left: 8.0, bottom: 8.0),
             decoration: BoxDecoration(
               border: Border.all(color: color ?? Colors.orange),
               borderRadius: BorderRadius.circular(10),
@@ -103,40 +104,40 @@ class AppUtils {
           // CONTENT
           content: !hideContent
               ? !isContentWidget!
-                  ? AppText(
-                      text: content,
-                      textAlign: TextAlign.center,
-                      color: contentTextColor,
-                      fontSize: contentSize ?? context.mediumText * 0.8,
-                      overflow: TextOverflow.visible,
-                      fontFamily: 'PoppinsMedium',
-                    )
-                  : contentWidget
+              ? AppText(
+            text: content,
+            textAlign: TextAlign.center,
+            color: contentTextColor,
+            fontSize: contentSize ?? context.mediumText * 0.8,
+            overflow: TextOverflow.visible,
+            fontFamily: 'PoppinsMedium',
+          )
+              : contentWidget
               : Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AppText(
-                        text: content,
-                        textAlign: TextAlign.center,
-                        color: contentTextColor,
-                        fontSize: contentSize ?? context.mediumText * 0.8,
-                        overflow: TextOverflow.visible,
-                        fontFamily: 'PoppinsMedium',
-                      ),
-                      Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: BlurryContainer(
-                              borderRadius: BorderRadius.circular(0),
-                              blur: 2.2,
-                              child: SizedBox()))
-                    ],
-                  ),
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                AppText(
+                  text: content,
+                  textAlign: TextAlign.center,
+                  color: contentTextColor,
+                  fontSize: contentSize ?? context.mediumText * 0.8,
+                  overflow: TextOverflow.visible,
+                  fontFamily: 'PoppinsMedium',
                 ),
+                Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: BlurryContainer(
+                        borderRadius: BorderRadius.circular(0),
+                        blur: 2.2,
+                        child: SizedBox()))
+              ],
+            ),
+          ),
 
           // ACTIONS
           actions: [
@@ -187,7 +188,7 @@ class AppUtils {
       context: context,
       title: 'Confirmation',
       content:
-          message ?? 'Voulez-vous vraiment abandonner et quitter cette page ?',
+      message ?? 'Voulez-vous vraiment abandonner et quitter cette page ?',
       confirmText: 'Oui',
       cancelText: 'Non',
       isDefaultActionOnCancel: true,
@@ -195,7 +196,7 @@ class AppUtils {
       onConfirm: () => Navigator.of(context).pop(true),
       onCancel: () => Navigator.of(context).pop(false),
     ).then((value) =>
-        value ?? false); // Si l’utilisateur ferme sans choix explicite
+    value ?? false); // Si l’utilisateur ferme sans choix explicite
   }
 
   //========================
@@ -210,15 +211,24 @@ class AppUtils {
           padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 2),
           content: AppText(
             text: message,
-            color: messageColor ?? Theme.of(context).colorScheme.surface,
+            color: messageColor ?? Theme
+                .of(context)
+                .colorScheme
+                .surface,
             overflow: TextOverflow.visible,
           ),
           backgroundColor:
-              backgroundColor ?? Theme.of(context).colorScheme.inverseSurface,
+          backgroundColor ?? Theme
+              .of(context)
+              .colorScheme
+              .inverseSurface,
           elevation: 3,
           duration: const Duration(seconds: 6),
           closeIconColor:
-              closeIconColor ?? Theme.of(context).colorScheme.surface,
+          closeIconColor ?? Theme
+              .of(context)
+              .colorScheme
+              .surface,
           showCloseIcon: true,
           // permettre de
           behavior: SnackBarBehavior.floating,
@@ -235,14 +245,13 @@ class AppUtils {
   //====================================
   // AFFICHAGE D'UN SNACKBAR AVEC ICONES
   //====================================
-  static void showAwesomeSnackBar(
-    BuildContext context,
-    String title,
-    String message,
-    ContentType contentType,
-    Color? color,
-  ) {
+  static void showAwesomeSnackBar(BuildContext context,
+      String title,
+      String message,
+      ContentType contentType,
+      Color? color,) {
     final snackBar = SnackBar(
+
       /// need to set following properties for best effect of awesome_snackbar_content
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -251,7 +260,7 @@ class AppUtils {
         title: title,
         message: message,
         titleTextStyle:
-            TextStyle(fontSize: context.mediumText, color: Colors.white),
+        TextStyle(fontSize: context.mediumText, color: Colors.white),
 
         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
         contentType: contentType,
@@ -267,14 +276,13 @@ class AppUtils {
   //==================================
   //DIALOGE D'AFFICHAGE D'INFORMATIONS
   //==================================
-  static void showInfoDialog(
-      {required BuildContext context,
-      required String message,
-      Duration? duration,
-      Widget? titleIcon,
-      InfoType type = InfoType.info,
-      void Function()? onTitleIconTap,
-      bool? barrierDismissible}) {
+  static void showInfoDialog({required BuildContext context,
+    required String message,
+    Duration? duration,
+    Widget? titleIcon,
+    InfoType type = InfoType.info,
+    void Function()? onTitleIconTap,
+    bool? barrierDismissible}) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     Color iconColor;
@@ -303,8 +311,14 @@ class AppUtils {
         titleIcon = SizedBox(
           height: 80,
           child: Shimmer.fromColors(
-            highlightColor: Theme.of(context).colorScheme.inverseSurface,
-            baseColor: Theme.of(context).colorScheme.inversePrimary,
+            highlightColor: Theme
+                .of(context)
+                .colorScheme
+                .inverseSurface,
+            baseColor: Theme
+                .of(context)
+                .colorScheme
+                .inversePrimary,
             child: Lottie.asset(
               'assets/lotties/loading.json',
             ),
@@ -366,15 +380,15 @@ class AppUtils {
       builder: (context) {
         // Délai avant fermeture automatique
         (type != InfoType.waiting &&
-                type != InfoType.loading &&
-                type != InfoType.networkError)
+            type != InfoType.loading &&
+            type != InfoType.networkError)
             ? Future.delayed(duration ?? const Duration(seconds: 5), () {
-                if (context.mounted) {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                }
-              })
+          if (context.mounted) {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          }
+        })
             : {};
 
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -467,11 +481,9 @@ class AppUtils {
   }
 
   /// Affiche une notification d'erreur avec option de réessayer
-  static void showErrorNotification(
-    BuildContext context,
-    String message,
-    VoidCallback? onRetry,
-  ) {
+  static void showErrorNotification(BuildContext context,
+      String message,
+      VoidCallback? onRetry,) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -497,10 +509,10 @@ class AppUtils {
         ),
         action: onRetry != null
             ? SnackBarAction(
-                label: 'Réessayer',
-                textColor: Colors.white,
-                onPressed: onRetry,
-              )
+          label: 'Réessayer',
+          textColor: Colors.white,
+          onPressed: onRetry,
+        )
             : null,
       ),
     );
@@ -533,6 +545,12 @@ class AppUtils {
         ),
       ),
     );
+  }
+
+  static debugPrint(String message) {
+    if (kDebugMode) {
+      print(message);
+    }
   }
 }
 

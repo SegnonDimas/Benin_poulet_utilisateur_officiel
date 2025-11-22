@@ -3,6 +3,7 @@ import 'package:lanhi/constants/user_profilStatus.dart';
 import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
 import 'package:lanhi/models/seller.dart';
 import 'package:lanhi/models/user.dart';
+import 'package:lanhi/utils/app_utils.dart';
 
 /// Exemple qui montre que toutes les données sont envoyées vers Firebase,
 /// même si elles sont null
@@ -31,7 +32,7 @@ class NullDataExample {
 
     // Toutes les données seront envoyées vers Firebase, même les null
     await _firestoreService.createUser(user);
-    print(
+    AppUtils.debugPrint(
         'Utilisateur créé avec des données null - toutes envoyées vers Firebase');
   }
 
@@ -69,7 +70,8 @@ class NullDataExample {
       subSectors: null, // Donnée null
     );
 
-    print('Vendeur créé avec des données null - toutes envoyées vers Firebase');
+    AppUtils.debugPrint(
+        'Vendeur créé avec des données null - toutes envoyées vers Firebase');
   }
 
   /// Exemple 3: Création d'une boutique avec des données null
@@ -109,7 +111,7 @@ class NullDataExample {
       storeSubsectors: null, // Donnée null
     );
 
-    print(
+    AppUtils.debugPrint(
         'Boutique créée avec des données null - toutes envoyées vers Firebase. Store ID: $storeId');
   }
 
@@ -157,11 +159,11 @@ class NullDataExample {
       },
     );
 
-    print(
+    AppUtils.debugPrint(
         'Vendeur et boutique créés avec des données mixtes (null et non-null)');
-    print(
+    AppUtils.debugPrint(
         'Toutes les données ont été envoyées vers Firebase, y compris les null');
-    print('Store ID: $storeId');
+    AppUtils.debugPrint('Store ID: $storeId');
   }
 
   /// Exemple 5: Comparaison des données avant et après envoi
@@ -184,19 +186,20 @@ class NullDataExample {
     // Convertir en Map (ce qui sera envoyé vers Firebase)
     final mapData = seller.toMap();
 
-    print('=== Données envoyées vers Firebase ===');
+    AppUtils.debugPrint('=== Données envoyées vers Firebase ===');
     mapData.forEach((key, value) {
-      print('$key: $value (type: ${value.runtimeType})');
+      AppUtils.debugPrint('$key: $value (type: ${value.runtimeType})');
     });
 
-    print(
+    AppUtils.debugPrint(
         '\nToutes les données sont présentes dans le Map, même si elles sont null');
-    print('Firebase recevra tous ces champs avec leurs valeurs (null ou non)');
+    AppUtils.debugPrint(
+        'Firebase recevra tous ces champs avec leurs valeurs (null ou non)');
   }
 
   /// Exemple 6: Workflow complet avec données null
   Future<void> completeWorkflowWithNullData() async {
-    print('=== Début du workflow avec données null ===');
+    AppUtils.debugPrint('=== Début du workflow avec données null ===');
 
     // 1. Créer un utilisateur avec des données null
     await createUserWithNullData();
@@ -213,8 +216,8 @@ class NullDataExample {
     // 5. Comparer les données
     await compareDataBeforeAfter();
 
-    print('=== Workflow terminé ===');
-    print(
+    AppUtils.debugPrint('=== Workflow terminé ===');
+    AppUtils.debugPrint(
         'Toutes les données ont été envoyées vers Firebase, y compris les null');
   }
 }

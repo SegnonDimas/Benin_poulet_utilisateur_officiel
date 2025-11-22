@@ -54,9 +54,9 @@ class _AppPhoneTextFieldState extends State<AppPhoneTextField> {
   void initState() {
     initialCountry = widget.initialCountry!;
     //widget.controller = TextEditingController();
-    widget.onInputChanged = (number) {};
-    widget.onInputValidated = (bool) {};
-    widget.onSeved = (number) {};
+    widget.onInputChanged = (PhoneNumber number) {};
+    widget.onInputValidated = (bool b) {};
+    widget.onSeved = (PhoneNumber number) {};
     super.initState();
   }
 

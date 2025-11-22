@@ -1,6 +1,12 @@
 import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
 import 'package:lanhi/constants/app_attributs.dart';
 import 'package:lanhi/constants/routes.dart';
@@ -14,12 +20,6 @@ import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:lanhi/widgets/app_text.dart';
 import 'package:lanhi/widgets/app_textField.dart';
 import 'package:lanhi/widgets/notification_widgets.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../bloc/auth/auth_bloc.dart';
 import '../../../constants/imagesPaths.dart';
@@ -516,7 +516,7 @@ class _SignupWithEmailPageState extends State<SignupWithEmailPage> {
                                                 .withOpacity(0.1),
                                             bordeurRadius: 7,
                                             height:
-                                                context.screenHeight * 0.035,
+                                                context.screenHeight * 0.045,
                                             child: AppText(
                                               text: "ou continuer avec",
                                               color: Theme.of(context)

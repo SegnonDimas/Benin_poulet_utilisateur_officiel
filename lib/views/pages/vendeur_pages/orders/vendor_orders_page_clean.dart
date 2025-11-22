@@ -65,21 +65,21 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
   }
 
   Future<void> _loadSellerInfo() async {
-    print('\n╔════════════════════════════════════════╗');
-    print('║  VENDOR ORDERS: Chargement vendeur     ║');
-    print('╚════════════════════════════════════════╝\n');
+    AppUtils.debugPrint('\n╔════════════════════════════════════════╗');
+    AppUtils.debugPrint('║  VENDOR ORDERS: Chargement vendeur     ║');
+    AppUtils.debugPrint('╚════════════════════════════════════════╝\n');
 
     try {
       final seller = await _userDataService.getCurrentSeller();
 
       if (seller == null) {
-        print('❌ ERREUR: Aucun vendeur connecté !');
+        AppUtils.debugPrint('❌ ERREUR: Aucun vendeur connecté !');
         return;
       }
 
-      print('✅ Vendeur récupéré:');
-      print('   - userId: ${seller.userId}');
-      print('   - sellerId: ${seller.sellerId}');
+      AppUtils.debugPrint('✅ Vendeur récupéré:');
+      AppUtils.debugPrint('   - userId: ${seller.userId}');
+      AppUtils.debugPrint('   - sellerId: ${seller.sellerId}');
 
       if (mounted) {
         setState(() {
@@ -92,11 +92,11 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
               .snapshots();
         });
 
-        print('✅ IDs définis: sellerId=$sellerId');
-        print('✅ Stream créé - Stable pour tous les onglets\n');
+        AppUtils.debugPrint('✅ IDs définis: sellerId=$sellerId');
+        AppUtils.debugPrint('✅ Stream créé - Stable pour tous les onglets\n');
       }
     } catch (e) {
-      print('❌ Erreur: $e');
+      AppUtils.debugPrint('❌ Erreur: $e');
     }
   }
 
@@ -165,8 +165,9 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
     return StreamBuilder<QuerySnapshot>(
       stream: _ordersStream!, // Réutiliser le même stream
       builder: (context, snapshot) {
-        print('───────────────────────────────────');
-        print('📡 Onglet "${tabConfig['title']}": ${snapshot.connectionState}');
+        AppUtils.debugPrint('───────────────────────────────────');
+        AppUtils.debugPrint(
+            '📡 Onglet "${tabConfig['title']}": ${snapshot.connectionState}');
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -200,7 +201,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
           try {
             allOrders.add(OrderModel.fromFirestore(doc));
           } catch (e) {
-            print('❌ Erreur parsing ${doc.id}: $e');
+            AppUtils.debugPrint('❌ Erreur parsing ${doc.id}: $e');
           }
         }
 
@@ -210,9 +211,9 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
         // Filtrer selon l'onglet
         final filteredOrders = _filterOrdersByTab(allOrders, tabConfig);
 
-        print(
+        AppUtils.debugPrint(
             '🎯 Commandes pour "${tabConfig['title']}": ${filteredOrders.length}');
-        print('───────────────────────────────────\n');
+        AppUtils.debugPrint('───────────────────────────────────\n');
 
         return _buildOrdersList(filteredOrders, tabConfig['title'] as String);
       },
@@ -254,14 +255,14 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
                 const SizedBox(height: 16),
                 AppText(
                   text: 'Aucune commande',
-                  fontSize: mediumText(),
+                  fontSize: context.mediumText,
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(height: 8),
                 AppText(
                   text: 'Les commandes "$tabTitle" apparaîtront ici',
-                  fontSize: smallText(),
+                  fontSize: context.smallText,
                   color: Colors.grey.shade600,
                   textAlign: TextAlign.center,
                 ),
@@ -387,7 +388,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
                 const SizedBox(width: 8),
                 AppText(
                   text: dateLabel,
-                  fontSize: smallText(),
+                  fontSize: context.smallText,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
                 ),
@@ -401,7 +402,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
                   ),
                   child: AppText(
                     text: '$count',
-                    fontSize: smallText() * 0.85,
+                    fontSize: context.smallText * 0.85,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryColor,
                   ),
@@ -435,7 +436,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
 
   /// Diagnostic complet
   Future<void> _runFullDiagnostic() async {
-    print('\n🚀 Lancement du diagnostic complet...\n');
+    AppUtils.debugPrint('\n🚀 Lancement du diagnostic complet...\n');
 
     try {
       final result = await OrderDiagnostic.runVendorDiagnostic();
@@ -459,13 +460,13 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
         AppUtils.showInfoDialog(context: context, message: message);
       }
     } catch (e) {
-      print('❌ Erreur diagnostic: $e');
+      AppUtils.debugPrint('❌ Erreur diagnostic: $e');
     }
   }
 
   /// Debug rapide
   Future<void> _quickDebug() async {
-    print('\n🔍 DEBUG RAPIDE\n');
+    AppUtils.debugPrint('\n🔍 DEBUG RAPIDE\n');
 
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -473,7 +474,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
           .where('sellerId', isEqualTo: sellerId)
           .get();
 
-      print('Commandes trouvées: ${snapshot.docs.length}');
+      AppUtils.debugPrint('Commandes trouvées: ${snapshot.docs.length}');
 
       if (mounted) {
         AppUtils.showInfoDialog(
@@ -482,7 +483,7 @@ class _VendorOrdersPageState extends State<VendorOrdersPage>
         );
       }
     } catch (e) {
-      print('❌ Erreur: $e');
+      AppUtils.debugPrint('❌ Erreur: $e');
     }
   }
 }

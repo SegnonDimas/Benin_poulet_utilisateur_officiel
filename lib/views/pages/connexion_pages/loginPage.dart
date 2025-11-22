@@ -1,6 +1,13 @@
 import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lanhi/bloc/auth/auth_bloc.dart';
 import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
 import 'package:lanhi/constants/app_pages_name.dart';
@@ -14,13 +21,6 @@ import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:lanhi/widgets/app_button.dart';
 import 'package:lanhi/widgets/app_text.dart';
 import 'package:lanhi/widgets/app_textField.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../services/authentification_services.dart';
 import '../../../services/navigation_service.dart';
@@ -777,7 +777,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                                                       bordeurRadius: 7,
                                                       height:
                                                           context.screenHeight *
-                                                              0.035,
+                                                              0.045,
                                                       child: AppText(
                                                         text:
                                                             "ou continuer avec",

@@ -9,10 +9,10 @@ class StoreReviewWidget extends StatefulWidget {
   final String userId;
 
   const StoreReviewWidget({
-    Key? key,
+    super.key,
     required this.storeId,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   State<StoreReviewWidget> createState() => _StoreReviewWidgetState();

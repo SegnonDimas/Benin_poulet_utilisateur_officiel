@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lanhi/utils/app_utils.dart';
 
 // Modèles temporaires pour les placeholders
 class Product {
@@ -232,7 +233,7 @@ class ProductClientBloc extends Bloc<ProductClientEvent, ProductClientState> {
   ) async {
     // TODO: Implémenter l'ajout au panier
     // Pour l'instant, on ne fait rien
-    print(
+    AppUtils.debugPrint(
         'Produit ajouté au panier: ${event.product.name} (quantité: ${event.quantity})');
   }
 

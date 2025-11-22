@@ -1,6 +1,13 @@
 import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lanhi/bloc/auth/auth_bloc.dart';
 import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
 import 'package:lanhi/constants/app_attributs.dart';
@@ -16,13 +23,6 @@ import 'package:lanhi/widgets/app_button.dart';
 import 'package:lanhi/widgets/app_phone_textField.dart';
 import 'package:lanhi/widgets/app_text.dart';
 import 'package:lanhi/widgets/app_textField.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../constants/routes.dart';
 import '../../../core/firebase/auth/auth_services.dart';
@@ -870,7 +870,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                     bordeurRadius: 7,
                                                     height:
                                                         context.screenHeight *
-                                                            0.035,
+                                                            0.045,
                                                     child: AppText(
                                                       text: "ou continuer avec",
                                                       color: Theme.of(context)
@@ -908,7 +908,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
                                                   child: ModelOptionDeConnexion(
                                                     onTap: () async {
                                                       context.read<AuthBloc>().add(
-                                                          GoogleSignUpRequested());
+                                                          GoogleSignUpRequested(
+                                                              userRole:
+                                                                  userRoleState
+                                                                      .role));
                                                     },
                                                     child: Image.asset(
                                                       'assets/logos/google.png',

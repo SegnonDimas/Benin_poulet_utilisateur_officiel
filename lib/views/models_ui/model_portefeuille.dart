@@ -1,8 +1,8 @@
-import 'package:lanhi/views/colors/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:lanhi/views/colors/app_colors.dart';
 
 import '../../widgets/app_text.dart';
-import '../sizes/app_sizes.dart';
 import '../sizes/text_sizes.dart';
 import 'model_session.dart';
 
@@ -50,19 +50,20 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(appHeightSize(context) * 0.015),
+      padding: EdgeInsets.all(context.height * 0.015),
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
           height: widget.height,
           width: widget.width,
-          padding: EdgeInsets.all(appHeightSize(context) * 0.01),
+          padding: EdgeInsets.all(context.height * 0.01),
           decoration: BoxDecoration(
-            color: widget.backgroundColor ?? blueColor.withGreen(10000),
+            color:
+                widget.backgroundColor ?? AppColors.blueColor.withGreen(10000),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(
-            padding: EdgeInsets.all(appHeightSize(context) * 0.01),
+            padding: EdgeInsets.all(context.height * 0.01),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,12 +76,12 @@ class _ModelPortefeuilleState extends State<ModelPortefeuille> {
                     children: [
                       AppText(
                         text: widget.titrePrincipal!,
-                        fontSize: smallText() * 0.9,
+                        fontSize: context.smallText * 0.9,
                         color: widget.foregroundColor,
                       ),
                       AppText(
                         text: '${widget.solde} F',
-                        fontSize: mediumText() * 1.2,
+                        fontSize: context.mediumText * 1.2,
                         fontWeight: FontWeight.bold,
                         color: widget.foregroundColor,
                       )

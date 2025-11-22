@@ -13,13 +13,13 @@ class ErrorDialog extends StatelessWidget {
   final bool showRetry;
 
   const ErrorDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     this.actionText,
     this.onAction,
     this.showRetry = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

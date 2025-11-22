@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBJ52clxdKdy8wtn-jzPQVsUNZ1ejllKZA',
-    appId: '1:1095274966890:android:bf9ef0ca7954fd97feff13',
+    appId: '1:1095274966890:android:b08e67dbbe5ec22dfeff13',
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
     databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
@@ -67,6 +67,7 @@ class DefaultFirebaseOptions {
     projectId: 'beninpoulet-8f04a',
     databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
+    androidClientId: '1095274966890-29j39vr0uve515tcfo3fk3iv9vu70o9d.apps.googleusercontent.com',
     iosClientId: '1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com',
     iosBundleId: 'com.codeurplus.beninPoulet',
   );
@@ -78,19 +79,20 @@ class DefaultFirebaseOptions {
     projectId: 'beninpoulet-8f04a',
     databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
+    androidClientId: '1095274966890-29j39vr0uve515tcfo3fk3iv9vu70o9d.apps.googleusercontent.com',
     iosClientId: '1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com',
     iosBundleId: 'com.codeurplus.beninPoulet',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBfy59IlXRgV2AhxRSpisKrDKvxgES3r8o',
-    appId: '1:1095274966890:web:f80777da02b1bd37feff13',
+    appId: '1:1095274966890:web:9e43ecc7086445acfeff13',
     messagingSenderId: '1095274966890',
     projectId: 'beninpoulet-8f04a',
     authDomain: 'beninpoulet-8f04a.firebaseapp.com',
     databaseURL: 'https://beninpoulet-8f04a-default-rtdb.firebaseio.com',
     storageBucket: 'beninpoulet-8f04a.firebasestorage.app',
-    measurementId: 'G-RR231PVTP5',
+    measurementId: 'G-SEKYSR26G4',
   );
 
 }

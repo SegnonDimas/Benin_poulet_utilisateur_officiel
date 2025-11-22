@@ -1,5 +1,6 @@
 import 'package:lanhi/constants/userRoles.dart';
 import 'package:lanhi/core/firebase/firestore/firestore_service.dart';
+import 'package:lanhi/utils/app_utils.dart';
 
 /// Exemple de test pour vérifier la création complète d'un vendeur
 class TestSellerCreation {
@@ -7,7 +8,7 @@ class TestSellerCreation {
 
   /// Test 1: Création d'un vendeur avec toutes les informations
   Future<void> testCompleteSellerCreation() async {
-    print('=== Test de création complète d\'un vendeur ===');
+    AppUtils.debugPrint('=== Test de création complète d\'un vendeur ===');
 
     try {
       // Créer l'utilisateur de base
@@ -62,7 +63,7 @@ class TestSellerCreation {
         },
       );
 
-      print('✅ Vendeur créé avec succès');
+      AppUtils.debugPrint('✅ Vendeur créé avec succès');
 
       // Créer une boutique pour ce vendeur
       final storeId = await _firestoreService.createCompleteStore(
@@ -93,41 +94,44 @@ class TestSellerCreation {
         },
       );
 
-      print('✅ Boutique créée avec succès - ID: $storeId');
+      AppUtils.debugPrint('✅ Boutique créée avec succès - ID: $storeId');
 
       // Récupérer et afficher les informations complètes
       final userWithSellerInfo =
           await _firestoreService.getUserWithSellerInfo('test_seller_123');
       if (userWithSellerInfo != null) {
-        print('✅ Informations utilisateur récupérées:');
-        print('   - Nom: ${userWithSellerInfo['user']?.fullName}');
-        print('   - Rôle: ${userWithSellerInfo['user']?.role}');
-        print('   - Secteurs: ${userWithSellerInfo['seller']?.sectors}');
-        print(
+        AppUtils.debugPrint('✅ Informations utilisateur récupérées:');
+        AppUtils.debugPrint(
+            '   - Nom: ${userWithSellerInfo['user']?.fullName}');
+        AppUtils.debugPrint('   - Rôle: ${userWithSellerInfo['user']?.role}');
+        AppUtils.debugPrint(
+            '   - Secteurs: ${userWithSellerInfo['seller']?.sectors}');
+        AppUtils.debugPrint(
             '   - Sous-secteurs: ${userWithSellerInfo['seller']?.subSectors}');
-        print(
+        AppUtils.debugPrint(
             '   - Mobile Money: ${userWithSellerInfo['seller']?.mobileMoney}');
       }
 
       final sellerWithStores =
           await _firestoreService.getSellerWithStores('test_seller_123');
       if (sellerWithStores != null) {
-        print('✅ Informations vendeur avec boutiques récupérées:');
-        print(
+        AppUtils.debugPrint(
+            '✅ Informations vendeur avec boutiques récupérées:');
+        AppUtils.debugPrint(
             '   - Nombre de boutiques: ${sellerWithStores['stores']?.length}');
         if (sellerWithStores['stores']?.isNotEmpty == true) {
-          print(
+          AppUtils.debugPrint(
               '   - Première boutique: ${sellerWithStores['stores']?.first.storeInfos?['name']}');
         }
       }
     } catch (e) {
-      print('❌ Erreur lors du test: $e');
+      AppUtils.debugPrint('❌ Erreur lors du test: $e');
     }
   }
 
   /// Test 2: Vérifier que toutes les informations sont bien transmises
   Future<void> testInformationTransmission() async {
-    print('\n=== Test de transmission des informations ===');
+    AppUtils.debugPrint('\n=== Test de transmission des informations ===');
 
     try {
       // Créer un vendeur avec des informations spécifiques
@@ -165,32 +169,35 @@ class TestSellerCreation {
       if (seller != null && seller['seller'] != null) {
         final sellerData = seller['seller']!;
 
-        print('✅ Vérification des informations transmises:');
-        print('   - Secteurs: ${sellerData.sectors}');
-        print('   - Sous-secteurs: ${sellerData.subSectors}');
-        print('   - Mobile Money: ${sellerData.mobileMoney}');
-        print('   - Infos livraison: ${sellerData.deliveryInfos}');
-        print('   - Fiscalité: ${sellerData.fiscality}');
-        print('   - Infos boutique: ${sellerData.storeInfos}');
+        AppUtils.debugPrint('✅ Vérification des informations transmises:');
+        AppUtils.debugPrint('   - Secteurs: ${sellerData.sectors}');
+        AppUtils.debugPrint('   - Sous-secteurs: ${sellerData.subSectors}');
+        AppUtils.debugPrint('   - Mobile Money: ${sellerData.mobileMoney}');
+        AppUtils.debugPrint(
+            '   - Infos livraison: ${sellerData.deliveryInfos}');
+        AppUtils.debugPrint('   - Fiscalité: ${sellerData.fiscality}');
+        AppUtils.debugPrint('   - Infos boutique: ${sellerData.storeInfos}');
 
         // Vérifier que les informations sont correctes
         if (sellerData.sectors?.contains('textile') == true &&
             sellerData.subSectors?.contains('vêtements') == true &&
             sellerData.mobileMoney?.isNotEmpty == true) {
-          print('✅ Toutes les informations ont été correctement transmises');
+          AppUtils.debugPrint(
+              '✅ Toutes les informations ont été correctement transmises');
         } else {
-          print(
+          AppUtils.debugPrint(
               '❌ Certaines informations n\'ont pas été transmises correctement');
         }
       }
     } catch (e) {
-      print('❌ Erreur lors du test de transmission: $e');
+      AppUtils.debugPrint('❌ Erreur lors du test de transmission: $e');
     }
   }
 
   /// Test 3: Vérifier que l'ID de la boutique est bien ajouté à la liste storeIds du vendeur
   Future<void> testStoreIdAddition() async {
-    print('\n=== Test d\'ajout de l\'ID de boutique à la liste du vendeur ===');
+    AppUtils.debugPrint(
+        '\n=== Test d\'ajout de l\'ID de boutique à la liste du vendeur ===');
 
     try {
       // Créer un vendeur de test
@@ -206,12 +213,13 @@ class TestSellerCreation {
           await _firestoreService.getUserWithSellerInfo('test_store_ids_123');
       if (sellerBefore != null && sellerBefore['seller'] != null) {
         final storeIdsBefore = sellerBefore['seller']!.storeIds;
-        print('✅ Liste des boutiques avant création: $storeIdsBefore');
+        AppUtils.debugPrint(
+            '✅ Liste des boutiques avant création: $storeIdsBefore');
 
         if (storeIdsBefore.isEmpty) {
-          print('✅ La liste est bien vide au début');
+          AppUtils.debugPrint('✅ La liste est bien vide au début');
         } else {
-          print('❌ La liste n\'est pas vide au début');
+          AppUtils.debugPrint('❌ La liste n\'est pas vide au début');
           return;
         }
       }
@@ -238,23 +246,24 @@ class TestSellerCreation {
         },
       );
 
-      print('✅ Boutique créée avec l\'ID: $storeId');
+      AppUtils.debugPrint('✅ Boutique créée avec l\'ID: $storeId');
 
       // Vérifier que l'ID a été ajouté à la liste du vendeur
       final sellerAfter =
           await _firestoreService.getUserWithSellerInfo('test_store_ids_123');
       if (sellerAfter != null && sellerAfter['seller'] != null) {
         final storeIdsAfter = sellerAfter['seller']!.storeIds;
-        print('✅ Liste des boutiques après création: $storeIdsAfter');
+        AppUtils.debugPrint(
+            '✅ Liste des boutiques après création: $storeIdsAfter');
 
         if (storeIdsAfter.contains(storeId)) {
-          print(
+          AppUtils.debugPrint(
               '✅ L\'ID de la boutique a été correctement ajouté à la liste du vendeur');
         } else {
-          print(
+          AppUtils.debugPrint(
               '❌ L\'ID de la boutique n\'a pas été ajouté à la liste du vendeur');
-          print('   - ID attendu: $storeId');
-          print('   - Liste actuelle: $storeIdsAfter');
+          AppUtils.debugPrint('   - ID attendu: $storeId');
+          AppUtils.debugPrint('   - Liste actuelle: $storeIdsAfter');
         }
       }
 
@@ -263,16 +272,18 @@ class TestSellerCreation {
           await _firestoreService.getSellerWithStores('test_store_ids_123');
       if (sellerWithStores != null) {
         final stores = sellerWithStores['stores'] as List;
-        print('✅ Nombre de boutiques récupérées: ${stores.length}');
+        AppUtils.debugPrint(
+            '✅ Nombre de boutiques récupérées: ${stores.length}');
 
         if (stores.length == 1) {
-          print('✅ La boutique a été correctement liée au vendeur');
+          AppUtils.debugPrint(
+              '✅ La boutique a été correctement liée au vendeur');
         } else {
-          print('❌ Problème avec la liaison boutique-vendeur');
+          AppUtils.debugPrint('❌ Problème avec la liaison boutique-vendeur');
         }
       }
     } catch (e) {
-      print('❌ Erreur lors du test d\'ajout d\'ID: $e');
+      AppUtils.debugPrint('❌ Erreur lors du test d\'ajout d\'ID: $e');
     }
   }
 }

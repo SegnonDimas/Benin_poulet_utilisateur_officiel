@@ -10,11 +10,11 @@ class ProductReviewWidget extends StatefulWidget {
   final String userId;
 
   const ProductReviewWidget({
-    Key? key,
+    super.key,
     required this.productId,
     required this.storeId,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   State<ProductReviewWidget> createState() => _ProductReviewWidgetState();

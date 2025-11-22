@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1095274966890:android:bf9ef0ca7954fd97feff13",
         "android_client_info": {
-          "package_name": "com.codeurplus.lanhi"
+          "package_name": "com.codeurplus.benin_poulet"
         }
       },
       "oauth_client": [
@@ -18,12 +18,64 @@
           "client_id": "1095274966890-29j39vr0uve515tcfo3fk3iv9vu70o9d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.codeurplus.lanhi",
+            "package_name": "com.codeurplus.benin_poulet",
             "certificate_hash": "7c1f3784a26d2dba7d14d4f1df8187654df88176"
           }
         },
         {
           "client_id": "1095274966890-tt6mh1vt1qb1qnig3nr2p7rrt3ljlhc6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codeurplus.benin_poulet",
+            "certificate_hash": "7f8d7902460111382acc361bce42a769b7fa1e03"
+          }
+        },
+        {
+          "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ52clxdKdy8wtn-jzPQVsUNZ1ejllKZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095274966890-4msfv6c113tvefmllqtojrg22f8m1e9r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codeurplus.lanhiAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095274966890:android:b08e67dbbe5ec22dfeff13",
+        "android_client_info": {
+          "package_name": "com.codeurplus.lanhi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095274966890-cv6sblqjvubnqldsise5m5b8d2fln8u7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codeurplus.lanhi",
+            "certificate_hash": "7c1f3784a26d2dba7d14d4f1df8187654df88176"
+          }
+        },
+        {
+          "client_id": "1095274966890-h0tbs2ctcn0okabk1sdh91cjq5d498gf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.codeurplus.lanhi",
@@ -48,10 +100,46 @@
               "client_type": 3
             },
             {
-              "client_id": "1095274966890-u2hopf9emuevijghtgqicjpks6i0uhiv.apps.googleusercontent.com",
+              "client_id": "1095274966890-4msfv6c113tvefmllqtojrg22f8m1e9r.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.codeurplus.beninPoulet"
+                "bundle_id": "com.codeurplus.lanhiAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095274966890:android:fdcdd5cd9eed4adbfeff13",
+        "android_client_info": {
+          "package_name": "com.codeurplus.lanhi_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ52clxdKdy8wtn-jzPQVsUNZ1ejllKZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1095274966890-3mrg5e3f1t2v918jq9d0vbdjmeu09icj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1095274966890-4msfv6c113tvefmllqtojrg22f8m1e9r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.codeurplus.lanhiAdmin"
               }
             }
           ]

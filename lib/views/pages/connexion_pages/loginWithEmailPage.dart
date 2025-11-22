@@ -1,6 +1,11 @@
 import 'dart:ui';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:lanhi/bloc/auth/auth_bloc.dart';
 import 'package:lanhi/bloc/userRole/user_role_bloc.dart';
 import 'package:lanhi/constants/routes.dart';
@@ -11,11 +16,6 @@ import 'package:lanhi/views/sizes/app_sizes.dart';
 import 'package:lanhi/views/sizes/text_sizes.dart';
 import 'package:lanhi/widgets/app_text.dart';
 import 'package:lanhi/widgets/app_textField.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
 import '../../../services/authentification_services.dart';
 import '../../../services/navigation_service.dart';
@@ -457,7 +457,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage>
                                                     .withOpacity(0.1),
                                                 bordeurRadius: 7,
                                                 height: context.screenHeight *
-                                                    0.035,
+                                                    0.045,
                                                 child: AppText(
                                                   text: "ou continuer avec",
                                                   color: Theme.of(context)
@@ -487,7 +487,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage>
                                           children: [
                                             //Google
                                             Hero(
-                                              tag: 'appleTag',
+                                              tag: 'googleTag',
                                               child: ModelOptionDeConnexion(
                                                 onTap: () async {
                                                   context.read<AuthBloc>().add(
@@ -506,7 +506,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage>
 
                                             //Apple
                                             Hero(
-                                              tag: 'googleTag',
+                                              tag: 'appleTag',
                                               child: ModelOptionDeConnexion(
                                                 onTap: () {
                                                   AppUtils.showInfoDialog(
@@ -637,7 +637,7 @@ class _LoginWithEmailPageState extends State<LoginWithEmailPage>
 
   /// emailLogin()
   Future<void> emailLogin() async {
-    print('''
+    AppUtils.debugPrint('''
     :::: numéro => ${_emailcontroller.text}
     :::: mot de passe => ${_passWordController.text}
      ''');
